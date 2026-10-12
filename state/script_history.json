@@ -11,5 +11,12 @@
     "pattern": "pain",
     "spoken_hook": "Her bilgi başka bir uygulamada kayboluyor.",
     "cta": "Bunu dağınık çalışan ekip arkadaşına gönder."
+  },
+  {
+    "tool": "Google EmbeddingGemma 2",
+    "hook": "Aramayı anlamla yapan hafif model",
+    "pattern": "result",
+    "spoken_hook": "Aramayı kelimeyle değil anlamla yapan hafif model buldum.",
+    "cta": "Bunu yazılımcı arkadaşına gönder."
   }
 ]

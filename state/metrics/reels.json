@@ -1,0 +1,15 @@
+[
+  {
+    "id": "2026-10-13_google-embeddinggemma-2",
+    "date": "2026-10-13",
+    "kind": "tool",
+    "tool": "Google EmbeddingGemma 2",
+    "hook_pattern": "result",
+    "headline": "Aramayı anlamla yapan hafif model",
+    "spoken_hook": "Aramayı kelimeyle değil anlamla yapan hafif model buldum.",
+    "cta": "Bunu yazılımcı arkadaşına gönder.",
+    "duration_sec": 24.4,
+    "words": 47,
+    "status": "rejected: Kanıt görseli yanlış: frame 0 ve kapakta 'Gemma 4 released with text, audio and image input...' yazısı var; bu EmbeddingGemma 2 ile ilgisiz, kaynakta yok ve başlığın vaadini (anlamla arama) kanıtlamıyor.; Başlık ile kanıt çelişiyor: kapakta 'hafif model' diyor ama görsel başka bir modelin (Gemma 4) duyurusunu gösteriyor; yanıltıcı.; 'Anlamla arama' vaadi kaynakta desteklenmiyor: kaynak sadece 'açık, hafif çok modlu embedding modeli' diyor. İlk 6 sn içinde ne gösterilmiş ne kanıtlanmış."
+  }
+]
