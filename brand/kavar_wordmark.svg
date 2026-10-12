@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 -26 370 152" width="1110" height="456">
+  <!-- KAVAR wordmark. Pure geometry, no font. Cap height 100, stroke ~18.
+       K = stem + chevron (the same K as the icon); both A drawn as sharp Λ without crossbar;
+       the V is the brand accent in neon. -->
+  <defs>
+    <linearGradient id="neon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1FD5FF"/>
+      <stop offset="1" stop-color="#0A7CFF"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="cap"><rect x="-20" y="0" width="400" height="100"/></clipPath>
+  </defs>
+  <g fill="#F4F8FF">
+    <!-- K: stem + chevron, tip on the stem -->
+    <rect x="0" y="0" width="18" height="100"/>
+    <path d="M72 0 H49 L16 50 L49 100 H72 L39 50 Z"/>
+    <!-- A (Λ) -->
+    <path fill-rule="evenodd" d="M80 100 L116 -2 L152 100 Z M98.1 100 L116 49.3 L133.9 100 Z"/>
+    <!-- A (Λ) -->
+    <path fill-rule="evenodd" d="M200 100 L236 -2 L272 100 Z M218.1 100 L236 49.3 L253.9 100 Z"/>
+  </g>
+  <!-- V, the accent -->
+  <path fill="url(#neon)" filter="url(#glow)" fill-rule="evenodd" d="M140 0 L176 102 L212 0 Z M158.1 0 L176 50.7 L193.9 0 Z"/>
+  <!-- R -->
+  <g clip-path="url(#cap)" fill="none" stroke="#F4F8FF" stroke-width="18">
+    <line x1="291" y1="-10" x2="291" y2="110"/>
+    <path d="M282 9 H316 A27 27 0 0 1 316 63 H291"/>
+    <line x1="308" y1="63" x2="340" y2="112"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+.env
+__pycache__/
+output/
+tools/
+node_modules/
+# Segoe UI is licensed with Windows: never in the repo (the cloud run uses Inter instead)
+templates/hyperframes_news/assets/fonts/
+# HyperFrames / video skills are installed locally (junctions into .agents), not project code
+.agents/
+agent/
+.claude/skills/*
+!.claude/skills/carousel-designer/
+!.claude/skills/reel-hook-writer/
+!.claude/skills/reel-cover-designer/
+!.claude/skills/reel-retention-editor/
+.claude/settings.local.json

@@ -1,0 +1,21 @@
+{
+  "_help": "tools: affiliate links per domain (www. ignored). Tools not listed get default_params added to their real website URL. caption_mode per platform: 'link_in_bio' or 'link'.",
+  "default_params": {
+    "utm_source": "kavar",
+    "utm_medium": "social",
+    "utm_campaign": "{slug}"
+  },
+  "tools": {
+    "example-saas.com": {
+      "url": "https://example-saas.com/?via=YOUR_AFFILIATE_ID",
+      "note": "Template entry: replace with a real tool domain and your affiliate URL"
+    }
+  },
+  "disclosure": "#reklam · ortaklık bağlantısı",
+  "link_in_bio_text": "🔗 Link profilde",
+  "platforms": {
+    "tiktok": {"caption_mode": "link_in_bio", "max_hashtags": 5, "max_caption_chars": 2200},
+    "instagram": {"caption_mode": "link_in_bio", "max_hashtags": 5, "max_caption_chars": 2200},
+    "youtube_shorts": {"caption_mode": "link", "max_hashtags": 3, "max_caption_chars": 5000}
+  }
+}

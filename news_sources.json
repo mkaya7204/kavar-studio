@@ -1,0 +1,13 @@
+{
+  "_help": "RSS feeds for news mode (python carousel.py --news). priority: higher is picked first among fresh items (official company sources over press). Only primary sources and reputable press; never other creators' social posts.",
+  "max_age_hours": 72,
+  "feeds": [
+    {"name": "OpenAI", "url": "https://openai.com/news/rss.xml", "priority": 3},
+    {"name": "Google DeepMind", "url": "https://deepmind.google/blog/rss.xml", "priority": 3},
+    {"name": "Google", "url": "https://blog.google/technology/ai/rss/", "priority": 3},
+    {"name": "NVIDIA", "url": "https://blogs.nvidia.com/feed/", "priority": 2},
+    {"name": "Hugging Face", "url": "https://huggingface.co/blog/feed.xml", "priority": 2},
+    {"name": "The Verge", "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "priority": 1},
+    {"name": "TechCrunch", "url": "https://techcrunch.com/category/artificial-intelligence/feed/", "priority": 1}
+  ]
+}

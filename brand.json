@@ -1,0 +1,9 @@
+{
+  "_help": "Page brand shown on every carousel slide, story frame and video. name is written exactly as given (never locale-uppercased). logo: square icon (SVG/PNG), wordmark: the KAVAR logotype; paths relative to the project root.",
+  "name": "KAVAR",
+  "handle": "@thekavar.ai",
+  "logo": "brand/kavar_icon.svg",
+  "wordmark": "brand/kavar_wordmark.svg",
+  "follow_line": "Yapay zekada olanlar, her gün",
+  "copyright": "© KAVAR (kavar.ai) - izinsiz kullanılamaz"
+}

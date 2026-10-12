@@ -1,0 +1,11 @@
+anthropic
+edge-tts
+playwright
+moviepy
+ffmpeg-python
+python-dotenv
+requests
+pydantic
+azure-cognitiveservices-speech
+numpy
+Pillow

@@ -1,0 +1,856 @@
+<!doctype html>
+<html
+  lang="tr"
+  data-resolution="portrait"
+  data-composition-variables='[
+    {"id":"kicker","type":"string","label":"\u00dcst etiket","default":"ReSO AI"},
+    {"id":"headline","type":"string","label":"B\u00fcy\u00fck ba\u015fl\u0131k (0-3 sn)","default":"Yapay zek\u00e2 markan\u0131 \u00f6neriyor mu?"},
+    {"id":"p1_title","type":"string","label":"Madde 1 ba\u015fl\u0131k","default":"M\u00fc\u015fteriler art\u0131k yapay zek\u00e2ya soruyor"},
+    {"id":"p1_detail","type":"string","label":"Madde 1 detay","default":"\u00dcr\u00fcn \u00f6nerileri ChatGPT gibi asistanlardan geliyor."},
+    {"id":"p2_title","type":"string","label":"Madde 2 ba\u015fl\u0131k","default":"LLM&#39;ler seni nas\u0131l g\u00f6r\u00fcyor?"},
+    {"id":"p2_detail","type":"string","label":"Madde 2 detay","default":"Prompt Intelligence markan\u0131n yapay zek\u00e2daki g\u00f6r\u00fcn\u00fcm\u00fcn\u00fc \u00f6l\u00e7\u00fcyor."},
+    {"id":"p3_title","type":"string","label":"Madde 3 ba\u015fl\u0131k","default":"Ke\u015ffedil, \u00f6nerilen ol"},
+    {"id":"p3_detail","type":"string","label":"Madde 3 detay","default":"AISO ile yapay zek\u00e2 aramalar\u0131nda \u00f6ne \u00e7\u0131k\u0131yorsun."},
+    {"id":"why","type":"string","label":"Neden \u00f6nemli (20-27 sn)","default":"Arama, yapay zek\u00e2 cevaplar\u0131na kay\u0131yor. Orada g\u00f6r\u00fcnmeyen markalar m\u00fc\u015fteriyi daha soru sorulurken kaybediyor."},
+    {"id":"tool_name","type":"string","label":"Ara\u00e7 / kaynak ad\u0131","default":"ReSO AI"},
+    {"id":"domain","type":"string","label":"Site alan ad\u0131","default":"resollm.ai"},
+    {"id":"has_logo","type":"boolean","label":"Logo var m\u0131","default":false},
+    {"id":"fullpage_height","type":"number","label":"fullpage.png y\u00fcksekli\u011fi (px)","default":7680,"min":1920,"step":1},
+    {"id":"why_label","type":"string","label":"Neden \u00f6nemli etiketi","default":"NEDEN \u00d6NEML\u0130?"},
+    {"id":"source_label","type":"string","label":"Kaynak etiketi","default":"KAYNAK"},
+    {"id":"follow_label","type":"string","label":"Takip butonu","default":"TAK\u0130P ET"},
+    {"id":"follow_sub","type":"string","label":"Kapan\u0131\u015f alt yaz\u0131s\u0131","default":"Her g\u00fcn yeni teknoloji haberleri i\u00e7in"},
+    {"id":"brand_handle","type":"string","label":"Sayfa kullanici adi (brand.json)","default":"@thekavar.ai"},
+    {"id":"plan","type":"string","label":"Sahne zamanlar\u0131 (JSON, builder yazar)","default":"{\"hook\":[0,3],\"card1\":[3,4],\"shot1\":[7,2.5],\"card2\":[9.5,4],\"shot2\":[13.5,2.5],\"card3\":[16,4],\"why\":[20,7],\"outro\":[27,3]}"},
+    {"id":"total","type":"number","label":"Video s\u00fcresi (sn, builder yazar)","default":30,"min":5,"step":0.1},
+    {"id":"cta_text","type":"string","label":"Kapan\u0131\u015f c\u00fcmlesi","default":"Sat\u0131\u015f ekibine g\u00f6nder, i\u015fine yarar."},
+    {"id":"captions","type":"string","label":"Altyaz\u0131 gruplar\u0131 (JSON, builder yazar)","default":"[{\"s\":0.3,\"e\":1.6,\"w\":[[\"Yapay\",0.35],[\"zek\u00e2\",0.8],[\"markan\u0131\",1.2]]},{\"s\":1.6,\"e\":2.7,\"w\":[[\"\u00f6neriyor\",1.65],[\"mu\",2.2]]}]"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Haber Kısa Video</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "HF Black";
+        src: url("assets/fonts/seguibl.ttf") format("truetype");
+        font-weight: 900;
+      }
+      @font-face {
+        font-family: "HF Semi";
+        src: url("assets/fonts/seguisb.ttf") format("truetype");
+        font-weight: 600;
+      }
+      :root {
+        --bg: #04060c;
+        --panel: rgba(10, 16, 30, 0.9);
+        --neon: #1fd5ff;
+        --neon-deep: #0a7cff;
+        --ink: #f4f8ff;
+        --muted: #a9b8d0;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "HF Semi", sans-serif;
+      }
+      .layer,
+      .scene {
+        position: absolute;
+        inset: 0;
+      }
+      .scene {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 290px 80px 720px; /* top UI band (~270px) + bottom caption overlay (~35%) */
+      }
+      .black {
+        font-family: "HF Black", sans-serif;
+        font-weight: 900;
+      }
+      .word {
+        display: inline-block;
+        margin-right: 0.24em;
+      }
+
+      /* ---------- persistent background ---------- */
+      #bg-grid {
+        background-image:
+          linear-gradient(rgba(31, 213, 255, 0.07) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(31, 213, 255, 0.07) 2px, transparent 2px);
+        background-size: 90px 90px;
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(40px);
+      }
+      #orb-a {
+        width: 900px;
+        height: 900px;
+        left: -380px;
+        top: -260px;
+        background: radial-gradient(circle, rgba(10, 124, 255, 0.45), transparent 65%);
+      }
+      #orb-b {
+        width: 1000px;
+        height: 1000px;
+        right: -460px;
+        bottom: -300px;
+        background: radial-gradient(circle, rgba(31, 213, 255, 0.3), transparent 65%);
+      }
+      #vignette {
+        background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.75) 100%);
+      }
+
+      /* ---------- persistent chrome ---------- */
+      /* no progress bar, no tool-name pill: both sat in the top UI band and read like an ad */
+      #progress-track,
+      #brand-chip,
+      #hook-kicker {
+        display: none !important;
+      }
+      #progress-track {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: 150px;
+        height: 8px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.12);
+        overflow: hidden;
+      }
+      #progress-fill {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: var(--neon);
+        box-shadow: 0 0 18px var(--neon);
+        transform-origin: left center;
+      }
+      #brand-chip {
+        position: absolute;
+        left: 80px;
+        top: 186px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 26px 12px 20px;
+        border-radius: 999px;
+        background: rgba(4, 6, 12, 0.82);
+        font-size: 34px;
+        letter-spacing: 0.06em;
+        color: var(--ink);
+      }
+      #brand-dot {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--neon);
+        box-shadow: 0 0 16px var(--neon);
+      }
+
+      /* page brand: on every frame, also over site shots (watermark built into the design) */
+      #page-mark {
+        position: absolute;
+        right: 80px;
+        top: 292px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 8px 22px 8px 8px;
+        border-radius: 999px;
+        background: rgba(4, 6, 12, 0.82);
+        font-size: 30px;
+        color: var(--ink);
+      }
+      #page-mark img {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+      }
+      #outro-wordmark {
+        display: block;
+        height: 76px;
+        margin-top: 48px;
+      }
+
+      /* ---------- 0-3s hook ---------- */
+      #hook-kicker {
+        align-self: flex-start;
+        padding: 14px 30px;
+        border: 3px solid var(--neon);
+        border-radius: 999px;
+        color: var(--neon);
+        font-size: 40px;
+        letter-spacing: 0.12em;
+        box-shadow: 0 0 24px rgba(31, 213, 255, 0.45), inset 0 0 18px rgba(31, 213, 255, 0.25);
+        margin-bottom: 56px;
+      }
+      #hook {
+        justify-content: flex-start;
+        padding-top: 300px;
+      }
+      #hook-title {
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+        text-shadow: 0 0 40px rgba(31, 213, 255, 0.35);
+      }
+      #hook-title .accent {
+        color: var(--neon);
+        text-shadow: 0 0 30px var(--neon);
+      }
+      #hook-proof {
+        position: relative;
+        width: 100%;
+        height: 470px;
+        margin-top: 44px;
+        border-radius: 36px;
+        overflow: hidden;
+        border: 4px solid var(--neon);
+        box-shadow: 0 0 40px rgba(31, 213, 255, 0.55);
+        background: #0b1220;
+      }
+      #hook-proof img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 18%;
+        transform-origin: 50% 30%;
+      }
+      #hook-bar {
+        display: block;
+        width: 100%;
+        height: 12px;
+        margin-top: 36px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, var(--neon), var(--neon-deep));
+        box-shadow: 0 0 30px var(--neon);
+        transform-origin: left center;
+      }
+
+      /* ---------- point cards ---------- */
+      .card {
+        position: relative;
+        width: 100%;
+        padding: 56px 60px 60px;
+        border-radius: 44px;
+        overflow: hidden;
+        background: var(--panel);
+        border: 3px solid rgba(31, 213, 255, 0.85);
+        box-shadow:
+          0 0 60px rgba(31, 213, 255, 0.35),
+          inset 0 0 40px rgba(31, 213, 255, 0.08);
+      }
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 36px;
+      }
+      .card-num {
+        font-size: 150px;
+        line-height: 0.85;
+        color: #071626;
+        -webkit-text-stroke: 4px var(--neon);
+        text-shadow: 0 0 30px rgba(31, 213, 255, 0.55);
+      }
+      .card-dots {
+        display: flex;
+        gap: 14px;
+      }
+      .card-dots i {
+        display: block;
+        width: 54px;
+        height: 12px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .card-dots i.on {
+        background: var(--neon);
+        box-shadow: 0 0 14px var(--neon);
+      }
+      .card-title {
+        font-size: 88px;
+        line-height: 1.06;
+        letter-spacing: -0.015em;
+        margin-bottom: 34px;
+      }
+      .card-rule {
+        display: block;
+        width: 180px;
+        height: 10px;
+        border-radius: 5px;
+        background: var(--neon);
+        box-shadow: 0 0 18px var(--neon);
+        margin-bottom: 34px;
+        transform-origin: left center;
+      }
+      .card-detail {
+        font-size: 52px;
+        line-height: 1.3;
+        color: var(--muted);
+      }
+
+      /* ---------- site screenshots ---------- */
+      .shot {
+        overflow: hidden;
+      }
+      .shot-cam {
+        position: absolute;
+        inset: 0;
+        transform-origin: 50% 30%;
+      }
+      .shot-cam img {
+        display: block;
+        width: 1080px;
+      }
+      .shot-shade {
+        background:
+          linear-gradient(180deg, rgba(4, 6, 12, 0.75) 0%, transparent 22%, transparent 62%, rgba(4, 6, 12, 0.95) 100%);
+      }
+      .shot-frame {
+        position: absolute;
+        inset: 40px;
+        border-radius: 48px;
+        border: 4px solid var(--neon);
+        box-shadow: 0 0 40px var(--neon), inset 0 0 40px rgba(31, 213, 255, 0.35);
+      }
+      .shot-tag {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: 390px;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+      }
+      .shot-tag b {
+        padding: 12px 26px;
+        border-radius: 14px;
+        background: var(--neon);
+        color: #001018;
+        font-size: 36px;
+        letter-spacing: 0.1em;
+      }
+      .shot-tag span {
+        padding: 10px 26px;
+        border-radius: 14px;
+        background: rgba(4, 6, 12, 0.85);
+        font-size: 50px;
+        color: var(--ink);
+      }
+
+      /* ---------- 20-27s why it matters ---------- */
+      #why-q {
+        position: absolute;
+        right: -60px;
+        top: 420px;
+        font-size: 1100px;
+        line-height: 1;
+        color: #050a14;
+        -webkit-text-stroke: 5px rgba(31, 213, 255, 0.22);
+      }
+      #why-label {
+        align-self: flex-start;
+        font-size: 64px;
+        letter-spacing: 0.06em;
+        color: #001018;
+        background: var(--neon);
+        padding: 18px 34px;
+        border-radius: 18px;
+        box-shadow: 0 0 40px var(--neon);
+        margin-bottom: 64px;
+      }
+      #why-text {
+        font-size: 74px;
+        line-height: 1.22;
+        letter-spacing: -0.01em;
+      }
+      #why-text .hot {
+        color: var(--neon);
+        text-shadow: 0 0 24px rgba(31, 213, 255, 0.7);
+      }
+
+      /* ---------- 27-30s outro ---------- */
+      #outro {
+        align-items: center;
+        text-align: center;
+      }
+      #outro-mark,
+      #outro-name,
+      #follow-btn,
+      #follow-sub {
+        display: none !important;
+      }
+      #outro-cta {
+        font-size: 92px;
+        line-height: 1.08;
+        letter-spacing: -0.015em;
+        text-shadow: 0 0 36px rgba(31, 213, 255, 0.45);
+        margin-bottom: 40px;
+      }
+      #outro-cta .accent {
+        color: var(--neon);
+        text-shadow: 0 0 30px var(--neon);
+      }
+      #outro-mark {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 300px;
+        height: 300px;
+        border-radius: 72px;
+        background: #ffffff;
+        box-shadow: 0 0 70px rgba(31, 213, 255, 0.6);
+        margin-bottom: 56px;
+        overflow: hidden;
+      }
+      #outro-logo {
+        display: block;
+        max-width: 230px;
+        max-height: 230px;
+        object-fit: contain;
+      }
+      #outro-initial {
+        font-size: 190px;
+        color: #04060c;
+        line-height: 1;
+      }
+      #outro-name {
+        font-size: 104px;
+        line-height: 1.05;
+        margin-bottom: 18px;
+      }
+      #outro-domain {
+        font-size: 44px;
+        color: var(--muted);
+        margin-bottom: 20px;
+      }
+      #follow-btn {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        padding: 34px 76px;
+        border-radius: 999px;
+        background: var(--neon);
+        color: #001018;
+        font-size: 80px;
+        letter-spacing: 0.04em;
+        box-shadow: 0 0 60px var(--neon), 0 0 120px rgba(31, 213, 255, 0.45);
+      }
+      #follow-plus {
+        font-size: 90px;
+        line-height: 1;
+      }
+      #follow-sub {
+        margin-top: 44px;
+        font-size: 46px;
+        color: var(--ink);
+      }
+
+      /* ---------- word-synced captions ---------- */
+      #captions {
+        position: absolute;
+        left: 60px;
+        right: 60px;
+        bottom: 690px; /* above Instagram's caption overlay (bottom ~35%) */
+        height: 150px;
+      }
+      .cap {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+      }
+      .cap-pill {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0 32px;
+        padding: 16px 34px 20px;
+        border-radius: 28px;
+        background: rgba(4, 6, 12, 0.8);
+        border: 2px solid rgba(31, 213, 255, 0.35);
+      }
+      .cap-w {
+        display: inline-block;
+        font-size: 76px;
+        line-height: 1.1;
+        color: var(--ink);
+        text-shadow: 0 0 0px rgba(31, 213, 255, 0);
+      }
+
+      /* ---------- transitions ---------- */
+      #wipe {
+        position: absolute;
+        top: -200px;
+        left: 190px;
+        width: 700px;
+        height: 2320px;
+        transform: skewX(-14deg);
+        background: linear-gradient(90deg, transparent, rgba(31, 213, 255, 0.55) 30%, #e8fbff 50%, rgba(31, 213, 255, 0.55) 70%, transparent);
+        filter: blur(6px);
+        opacity: 0;
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 45%, #ffffff, rgba(31, 213, 255, 0.6) 55%, rgba(10, 124, 255, 0.2));
+        opacity: 0;
+      }
+      .card-shine {
+        position: absolute;
+        top: -10%;
+        left: 0;
+        width: 220px;
+        height: 120%;
+        transform: skewX(-18deg);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- persistent background (0-30) -->
+      <div id="bg" class="layer clip" data-start="0" data-duration="30" data-track-index="0">
+        <div id="bg-grid" class="layer"></div>
+        <div id="orb-a" class="orb"></div>
+        <div id="orb-b" class="orb"></div>
+        <div id="vignette" class="layer"></div>
+      </div>
+
+      <!-- 0-3: hook -->
+      <section id="hook" class="scene clip" data-start="0" data-duration="3" data-track-index="1">
+        <div id="hook-kicker" class="black">GÜNDEM</div>
+        <h1 id="hook-title" class="black">Başlık</h1>
+        <i id="hook-bar"></i>
+        <div id="hook-proof"><img id="hook-proof-img" src="assets/screenshot.png" alt="" /></div>
+      </section>
+
+      <!-- 3-20: three point cards with site screenshots in between -->
+      <section id="card1" class="scene clip" data-start="3" data-duration="4" data-track-index="1">
+        <div class="card" id="card1-box">
+          <i class="card-shine" id="card1-shine" data-layout-allow-overflow data-layout-allow-occlusion></i>
+          <div class="card-top">
+            <div class="card-num black" id="card1-num">01</div>
+            <div class="card-dots"><i class="on"></i><i></i><i></i></div>
+          </div>
+          <h2 class="card-title black" id="card1-title"></h2>
+          <i class="card-rule" id="card1-rule"></i>
+          <p class="card-detail" id="card1-detail"></p>
+        </div>
+      </section>
+
+      <section id="shot1" class="layer shot clip" data-start="7" data-duration="2.5" data-track-index="1">
+        <div class="shot-cam" id="shot1-cam" data-layout-allow-overflow><img id="shot1-img" src="assets/screenshot.png" alt="" /></div>
+        <div class="layer shot-shade"></div>
+        <div class="shot-frame" id="shot1-frame"></div>
+        <div class="shot-tag" id="shot1-tag"><b class="black" data-src-label>KAYNAK</b><span class="black" data-domain>site</span></div>
+      </section>
+
+      <section id="card2" class="scene clip" data-start="9.5" data-duration="4" data-track-index="1">
+        <div class="card" id="card2-box">
+          <i class="card-shine" id="card2-shine" data-layout-allow-overflow data-layout-allow-occlusion></i>
+          <div class="card-top">
+            <div class="card-num black" id="card2-num">02</div>
+            <div class="card-dots"><i class="on"></i><i class="on"></i><i></i></div>
+          </div>
+          <h2 class="card-title black" id="card2-title"></h2>
+          <i class="card-rule" id="card2-rule"></i>
+          <p class="card-detail" id="card2-detail"></p>
+        </div>
+      </section>
+
+      <section id="shot2" class="layer shot clip" data-start="13.5" data-duration="2.5" data-track-index="1">
+        <div class="shot-cam" id="shot2-cam" data-layout-allow-overflow><img id="shot2-img" src="assets/fullpage.png" alt="" /></div>
+        <div class="layer shot-shade"></div>
+        <div class="shot-frame" id="shot2-frame"></div>
+        <div class="shot-tag" id="shot2-tag"><b class="black" data-src-label>KAYNAK</b><span class="black" data-domain>site</span></div>
+      </section>
+
+      <section id="card3" class="scene clip" data-start="16" data-duration="4" data-track-index="1">
+        <div class="card" id="card3-box">
+          <i class="card-shine" id="card3-shine" data-layout-allow-overflow data-layout-allow-occlusion></i>
+          <div class="card-top">
+            <div class="card-num black" id="card3-num">03</div>
+            <div class="card-dots"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+          </div>
+          <h2 class="card-title black" id="card3-title"></h2>
+          <i class="card-rule" id="card3-rule"></i>
+          <p class="card-detail" id="card3-detail"></p>
+        </div>
+      </section>
+
+      <!-- 20-27: why it matters -->
+      <section id="why" class="scene clip" data-start="20" data-duration="7" data-track-index="1">
+        <div id="why-q" class="black" data-layout-allow-overflow data-layout-allow-occlusion data-layout-allow-overlap>?</div>
+        <div id="why-label" class="black">NEDEN ÖNEMLİ?</div>
+        <p id="why-text" class="black"></p>
+      </section>
+
+      <!-- 27-30: outro + follow CTA -->
+      <section id="outro" class="scene clip" data-start="27" data-duration="3" data-track-index="1">
+        <div id="outro-mark">
+          <img id="outro-logo" src="assets/logo.png" alt="" />
+          <span id="outro-initial" class="black">R</span>
+        </div>
+        <h2 id="outro-name" class="black">Araç</h2>
+        <h2 id="outro-cta" class="black">Gönder</h2>
+        <p id="outro-domain">site</p>
+        <div id="follow-btn" class="black"><span id="follow-plus">+</span><span id="follow-label">TAKİP ET</span></div>
+        <p id="follow-sub">Her gün yeni teknoloji haberleri için</p>
+        <img id="outro-wordmark" src="assets/brand_wordmark.svg" alt="" />
+      </section>
+
+      <!-- persistent chrome (0-30) -->
+      <div id="chrome" class="layer clip" data-start="0" data-duration="30" data-track-index="2">
+        <div id="progress-track"><i id="progress-fill"></i></div>
+        <div id="brand-chip" class="black"><i id="brand-dot"></i><span id="brand-name">ReSO AI</span></div>
+        <div id="page-mark" class="black"><img src="assets/brand_icon.svg" alt="" /><span id="page-handle">@thekavar.ai</span></div>
+        <div id="captions" class="black"></div>
+        <i id="wipe" data-layout-allow-overflow data-layout-allow-occlusion data-layout-allow-overlap></i>
+        <i id="flash" data-layout-allow-occlusion data-layout-allow-overlap></i>
+      </div>
+
+      <!-- voice (re-timed) + music bed + SFX, mixed by src/soundtrack.py -->
+      <audio id="soundtrack" src="assets/soundtrack.mp3" data-start="0" data-track-index="3" data-volume="1"></audio>
+    </div>
+
+    <script>
+      const v = window.__hyperframes.getVariables();
+      const up = (s) => String(s || "").toLocaleUpperCase("tr-TR");
+      const $ = (id) => document.getElementById(id);
+
+      // Split text into word spans (deterministic; no layout reads).
+      function words(el, text, accentLast) {
+        el.textContent = "";
+        const parts = String(text || "").trim().split(/\s+/).filter(Boolean);
+        parts.forEach((w, i) => {
+          const s = document.createElement("span");
+          s.className = "word" + (accentLast && i >= parts.length - accentLast ? " accent" : "");
+          s.textContent = w;
+          el.appendChild(s);
+        });
+        return el.querySelectorAll(".word");
+      }
+      // Font size from text length, so long Turkish headlines still fit 920px.
+      const sizeFor = (text, steps) => {
+        const n = String(text || "").length;
+        for (const [max, px] of steps) if (n <= max) return px;
+        return steps[steps.length - 1][1];
+      };
+
+      // ---- content ----
+      const headline = up(v.headline);
+      const hlWords = headline.split(/\s+/).filter(Boolean).length;
+      $("hook-kicker").textContent = up(v.kicker);
+      $("hook-title").style.fontSize = sizeFor(headline, [[16, 170], [26, 148], [38, 128], [52, 110], [999, 94]]) + "px";
+      const hookWords = words($("hook-title"), headline, hlWords > 2 ? 2 : 1);
+
+      const cards = [1, 2, 3].map((n) => {
+        const title = v["p" + n + "_title"];
+        $("card" + n + "-title").style.fontSize = sizeFor(title, [[22, 96], [34, 86], [48, 74], [999, 64]]) + "px";
+        $("card" + n + "-detail").textContent = v["p" + n + "_detail"] || "";
+        return { n, titleWords: words($("card" + n + "-title"), title, 0) };
+      });
+
+      document.querySelectorAll("[data-src-label]").forEach((el) => (el.textContent = up(v.source_label)));
+      document.querySelectorAll("[data-domain]").forEach((el) => (el.textContent = v.domain));
+
+      $("why-label").textContent = up(v.why_label);
+      $("why-text").style.fontSize = sizeFor(v.why, [[70, 84], [110, 74], [150, 66], [999, 58]]) + "px";
+      const whyWords = words($("why-text"), v.why, 0);
+      // Highlight the second sentence (or the last third) in neon.
+      const firstStop = [...whyWords].findIndex((w) => /[.!?]$/.test(w.textContent));
+      const hotFrom = firstStop >= 0 && firstStop < whyWords.length - 1 ? firstStop + 1 : Math.floor(whyWords.length * 0.66);
+      whyWords.forEach((w, i) => i >= hotFrom && w.classList.add("hot"));
+
+      $("brand-name").textContent = v.tool_name;
+      $("outro-name").textContent = v.tool_name;
+      $("outro-domain").textContent = v.domain;
+      $("follow-label").textContent = up(v.follow_label);
+      $("follow-sub").textContent = v.follow_sub;
+      $("page-handle").textContent = v.brand_handle || "";
+      $("outro-initial").textContent = up(String(v.tool_name || "?").trim().charAt(0));
+      $("outro-logo").style.display = v.has_logo ? "block" : "none";
+      $("outro-initial").style.display = v.has_logo ? "none" : "block";
+      $("outro-name").style.fontSize = sizeFor(v.tool_name, [[10, 120], [16, 100], [24, 80], [999, 64]]) + "px";
+      const cta = up(v.cta_text);
+      $("outro-cta").style.fontSize = sizeFor(cta, [[18, 110], [30, 96], [44, 84], [999, 72]]) + "px";
+      const ctaWords = words($("outro-cta"), cta, 2);
+      $("outro-domain").textContent = v.tool_name + " · " + v.domain;
+
+      // Full-page pan distance: fullpage.png is 1080px wide, fullpage_height tall.
+      const panY = -Math.max(0, Math.min(Number(v.fullpage_height) || 1920, 1920 * 3) - 1920);
+
+      // Scene slots [start, duration]; the builder aligns them to the voiceover.
+      const DEFAULT_PLAN = { hook: [0, 3], card1: [3, 4], shot1: [7, 2.5], card2: [9.5, 4], shot2: [13.5, 2.5], card3: [16, 4], why: [20, 7], outro: [27, 3] };
+      const parse = (s, fallback) => {
+        try {
+          return JSON.parse(s);
+        } catch (e) {
+          return fallback;
+        }
+      };
+      const P = Object.assign({}, DEFAULT_PLAN, parse(v.plan, {}));
+      const T = Number(v.total) || 30; // the Reel's length (builder sizes it to the voice)
+      const S = (k) => P[k][0];
+      const D = (k) => P[k][1];
+      const E = (k) => P[k][0] + P[k][1];
+
+      // Caption groups: [{s, e, w: [[word, start], ...]}]
+      const capGroups = parse(v.captions, []).map((g) => {
+        const cap = document.createElement("div");
+        cap.className = "cap";
+        const pill = document.createElement("div");
+        pill.className = "cap-pill";
+        const chars = g.w.reduce((n, w) => n + w[0].length + 1, 0);
+        const els = g.w.map(([text]) => {
+          const s = document.createElement("span");
+          s.className = "cap-w";
+          s.textContent = up(text);
+          if (chars > 15) s.style.fontSize = "64px";
+          pill.appendChild(s);
+          return s;
+        });
+        cap.appendChild(pill);
+        $("captions").appendChild(cap);
+        return { g, cap, els };
+      });
+
+      // ---- timeline ----
+      const tl = gsap.timeline({ paused: true });
+      const NEON = "#1fd5ff";
+      const INK = "#f4f8ff";
+      const GLITCH = "-12px 0 rgba(255, 43, 214, 0.9), 12px 0 rgba(31, 213, 255, 0.9)";
+      const GLOW = "0 0 30px rgba(31, 213, 255, 1), 0 0 0 rgba(31, 213, 255, 0)";
+
+      // persistent: progress bar, drifting orbs, brand chip
+      tl.fromTo("#progress-fill", { scaleX: 0 }, { scaleX: 1, duration: T, ease: "none" }, 0);
+      tl.fromTo("#orb-a", { x: 0, y: 0 }, { x: 260, y: 520, duration: T, ease: "sine.inOut" }, 0);
+      tl.fromTo("#orb-b", { x: 0, y: 0 }, { x: -240, y: -620, duration: T, ease: "sine.inOut" }, 0);
+      tl.fromTo("#bg-grid", { y: 0 }, { y: 90 * 6, duration: T, ease: "none" }, 0);
+      tl.fromTo("#brand-chip", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.2);
+
+      // flashes on the why and outro cuts only: frame 0 must show the headline, not a flash
+      tl.set("#flash", { opacity: 0 }, 0);
+      tl.fromTo("#flash", { opacity: 0.35 }, { opacity: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, S("why"));
+      tl.fromTo("#flash", { opacity: 0.55 }, { opacity: 0, duration: 0.4, ease: "power2.out", immediateRender: false }, S("outro"));
+
+      // neon light sweep across every scene cut
+      ["card1", "shot1", "card2", "shot2", "card3", "why", "outro"].forEach((k) => {
+        tl.fromTo("#wipe", { x: -1300, opacity: 1 }, { x: 1300, opacity: 1, duration: 0.42, ease: "power2.inOut", immediateRender: false }, Math.max(0, S(k) - 0.21));
+      });
+
+      // hook: everything fully visible on frame 0 (it is the first impression and the cover);
+      // motion only adds energy: a slow push-in on the proof, a light sweep, an accent glitch
+      const hookEnd = E("hook");
+      tl.set(hookWords, { opacity: 1, yPercent: 0, scale: 1 }, 0);
+      tl.fromTo("#hook-proof-img", { scale: 1.0 }, { scale: 1.12, duration: Math.max(0.6, hookEnd), ease: "none" }, 0);
+      tl.fromTo("#hook-title", { scale: 1 }, { scale: 1.03, duration: Math.max(0.5, hookEnd), ease: "none" }, 0);
+      const accents = [...hookWords].filter((w) => w.classList.contains("accent"));
+      if (accents.length) {
+        tl.fromTo(accents, { x: -8, textShadow: GLITCH }, { x: 0, textShadow: GLOW, duration: 0.25, ease: "power2.out", immediateRender: false }, 0.45);
+      }
+      tl.fromTo("#wipe", { x: -1300, opacity: 1 }, { x: 1300, opacity: 1, duration: 0.5, ease: "power2.inOut", immediateRender: false }, 0.35);
+      tl.to(["#hook-title", "#hook-bar", "#hook-proof"], { opacity: 0, y: -60, duration: 0.25, ease: "power2.in", stagger: 0.03 }, hookEnd - 0.3);
+
+      // cards: slide in, number pops, title words rise, rule sweeps, detail fades, shine passes; slide out
+      cards.forEach(({ n, titleWords }) => {
+        const t = S("card" + n);
+        const d = D("card" + n);
+        const box = "#card" + n + "-box";
+        tl.fromTo(box, { opacity: 0, x: 420, rotation: 6 }, { opacity: 1, x: 0, rotation: 0, duration: 0.5, ease: "power4.out" }, t);
+        tl.fromTo(box, { scale: 1 }, { scale: 1.03, duration: d, ease: "none" }, t);
+        tl.fromTo("#card" + n + "-num", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, t + 0.18);
+        tl.fromTo(titleWords, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.06 }, t + 0.3);
+        tl.fromTo("#card" + n + "-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, t + 0.65);
+        tl.fromTo("#card" + n + "-detail", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, t + 0.85);
+        tl.fromTo("#card" + n + "-shine", { x: -320, opacity: 1 }, { x: 1150, opacity: 1, duration: 0.9, ease: "power2.inOut" }, t + 0.6);
+        tl.to(box, { opacity: 0, x: -420, rotation: -5, duration: 0.3, ease: "power3.in" }, E("card" + n) - 0.32);
+      });
+
+      // site shots: hide the brand chip (it would sit on the site's own logo), zoom / pan the capture
+      [1, 2].forEach((n) => {
+        const t = S("shot" + n);
+        const d = D("shot" + n);
+        const cam = "#shot" + n + "-cam";
+        tl.to("#brand-chip", { autoAlpha: 0, duration: 0.2, ease: "none" }, t - 0.1);
+        tl.to("#brand-chip", { autoAlpha: 1, duration: 0.3, ease: "none" }, t + d);
+        tl.fromTo(cam, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "none" }, t);
+        if (n === 1) tl.fromTo(cam, { scale: 1.02, y: 0 }, { scale: 1.3, y: 180, duration: d, ease: "sine.inOut" }, t);
+        else tl.fromTo(cam, { y: 0, scale: 1.12 }, { y: panY * 0.55, scale: 1.02, duration: d, ease: "power1.inOut" }, t);
+        tl.fromTo("#shot" + n + "-frame", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }, t + 0.05);
+        tl.fromTo("#shot" + n + "-tag", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, t + 0.25);
+        tl.to(cam, { opacity: 0, duration: 0.2, ease: "none" }, t + d - 0.2);
+      });
+
+      // why: label stamps, big ? drifts, words reveal one by one
+      const wt = S("why");
+      const wd = D("why");
+      tl.fromTo("#why-label", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.8)" }, wt + 0.05);
+      tl.fromTo("#why-q", { opacity: 0, rotation: -12, y: 120 }, { opacity: 1, rotation: 6, y: -60, duration: wd - 0.2, ease: "sine.out" }, wt);
+      tl.fromTo(whyWords, { opacity: 0.08, y: 24 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", stagger: Math.min(0.16, Math.max(0.04, (wd - 1.8) / Math.max(1, whyWords.length))) }, wt + 0.45);
+      tl.to(["#why-label", "#why-text", "#why-q"], { opacity: 0, y: -50, duration: 0.3, ease: "power2.in" }, E("why") - 0.35);
+
+      // outro (~2 s): the spoken send/save line on screen, the source, the page's wordmark - no
+      // logo tile or button (both read like an ad)
+      const ot = S("outro");
+      tl.fromTo(ctaWords, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out", stagger: 0.04 }, ot + 0.05);
+      tl.fromTo("#outro-domain", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "none" }, ot + 0.3);
+      tl.fromTo("#outro-wordmark", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.8)" }, ot + 0.4);
+      // the page mark stays out of the hook (frame 0 = one clear message), then sits under the top UI band
+      tl.set("#page-mark", { opacity: 0 }, 0);
+      tl.fromTo("#page-mark", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, hookEnd);
+      tl.to("#page-mark", { opacity: 0, duration: 0.25, ease: "none" }, ot);
+
+      // captions: each line pops in, the spoken word lights up neon (karaoke)
+      capGroups.forEach(({ g, cap, els }) => {
+        const out = Math.max(g.s + 0.14, g.e - 0.08);
+        tl.fromTo(cap, { opacity: 0, y: 18, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.12, ease: "power2.out" }, g.s);
+        tl.to(cap, { opacity: 0, duration: 0.08, ease: "none" }, out);
+        els.forEach((el, j) => {
+          const on = g.w[j][1];
+          tl.fromTo(el, { color: INK, scale: 1, textShadow: "0 0 0px rgba(31, 213, 255, 0)" }, { color: NEON, scale: 1.05, textShadow: "0 0 26px rgba(31, 213, 255, 0.9)", duration: 0.08, ease: "none" }, on);
+          if (j + 1 < els.length) tl.to(el, { color: INK, scale: 1, textShadow: "0 0 0px rgba(31, 213, 255, 0)", duration: 0.08, ease: "none" }, g.w[j + 1][1]);
+        });
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

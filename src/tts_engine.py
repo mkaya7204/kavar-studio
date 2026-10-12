@@ -1,0 +1,371 @@
+"""Text-to-speech for the voiceover, with word timings, from several providers.
+
+Providers are tried in the order of config.json "tts_providers" (default
+elevenlabs -> azure -> edge); one without credentials in .env is skipped, and one
+that fails hands over to the next:
+  - elevenlabs: most natural voice (ELEVENLABS_API_KEY, optional ELEVENLABS_VOICE_ID / ELEVENLABS_MODEL)
+  - azure:      official Microsoft Speech, same neural voices as edge but reliable
+                (AZURE_SPEECH_KEY + AZURE_SPEECH_REGION, e.g. westeurope)
+  - edge:       free Microsoft Edge online voices (edge-tts), no key, sometimes refuses with 403
+
+Writes the MP3 plus per-word timings (JSON + SRT) that the video builders use for
+captions and scene sync. Keeps the result within the video length by speeding up
+the voice slightly, and refuses text that would need more.
+"""
+
+import asyncio
+import base64
+import json
+import os
+import re
+import subprocess
+from pathlib import Path
+
+import aiohttp
+import edge_tts
+import requests
+from dotenv import load_dotenv
+from edge_tts.exceptions import EdgeTTSException
+
+ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_PATH = ROOT / "output" / "temp" / "voiceover.mp3"
+load_dotenv(ROOT / ".env")  # provider keys
+
+DEFAULT_VOICE = "en-US-AriaNeural"  # alt: "en-US-ChristopherNeural" (male)
+VOICES = {"en": DEFAULT_VOICE, "tr": "tr-TR-AhmetNeural"}  # config.json "language" -> voice; alt tr: "tr-TR-EmelNeural"
+DEFAULT_PROVIDERS = ["elevenlabs", "azure", "edge"]
+ELEVENLABS_VOICE = "JBFqnCBsd6RMkjVDRZzb"  # "George", a premade multilingual voice; override with ELEVENLABS_VOICE_ID
+ELEVENLABS_MODEL = "eleven_multilingual_v2"  # best quality for Turkish
+ELEVENLABS_SEED = 4242  # same seed every run, for a consistent delivery
+MAX_SECONDS = 30.0
+WORDS_PER_SECOND = 2.5  # neural voices at rate +0% ≈ 150 wpm
+MAX_SPEEDUP_PCT = 15  # faster than this sounds rushed
+RETRIES = 3
+HTTP_TIMEOUT = 90
+
+
+def voice_for(language: str) -> str:
+    return VOICES.get(language, DEFAULT_VOICE)
+
+
+class TTSError(Exception):
+    """Voiceover could not be produced (service failure or text unusable)."""
+
+
+class _FatalTTSError(TTSError):
+    """A failure retrying won't fix (bad key, no quota, unknown voice): go to the next provider."""
+
+
+def estimate_seconds(text: str, rate_pct: int = 0) -> float:
+    return len(text.split()) / (WORDS_PER_SECOND * (1 + rate_pct / 100))
+
+
+def _rate_str(rate_pct: int) -> str:
+    return f"{rate_pct:+d}%"
+
+
+def _env(name: str) -> str:
+    value = (os.getenv(name) or "").strip()
+    return "" if value.endswith("...") else value  # untouched placeholder
+
+
+def _probe_duration(path: Path) -> float | None:
+    """Real MP3 duration via ffprobe; None if ffprobe is unavailable."""
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
+            capture_output=True, text=True, check=True, timeout=30,
+        )
+        return float(out.stdout.strip())
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+
+
+def _srt_time(t: float) -> str:
+    ms = round(t * 1000)
+    return f"{ms // 3_600_000:02d}:{ms // 60_000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
+
+
+def _words_to_srt(words: list[dict], per_line: int = 6) -> str:
+    blocks = []
+    for i in range(0, len(words), per_line):
+        chunk = words[i:i + per_line]
+        text = " ".join(w["word"] for w in chunk)
+        blocks.append(f"{len(blocks) + 1}\n{_srt_time(chunk[0]['start'])} --> {_srt_time(chunk[-1]['end'])}\n{text}\n")
+    return "\n".join(blocks)
+
+
+# ---------------------------------------------------------------- providers
+# Each writes the MP3 to `audio_path` and returns [{"word", "start", "end"}] in seconds.
+
+async def _edge(text: str, voice: str, rate_pct: int, audio_path: Path) -> list[dict]:
+    communicate = edge_tts.Communicate(text, voice, rate=_rate_str(rate_pct), boundary="WordBoundary")
+    words = []
+    try:
+        with open(audio_path, "wb") as audio:
+            async for chunk in communicate.stream():
+                if chunk["type"] == "audio":
+                    audio.write(chunk["data"])
+                elif chunk["type"] == "WordBoundary":
+                    start = chunk["offset"] / 10_000_000  # 100-ns ticks -> seconds
+                    words.append({"word": chunk["text"], "start": round(start, 3),
+                                  "end": round(start + chunk["duration"] / 10_000_000, 3)})
+    except (EdgeTTSException, aiohttp.ClientError, asyncio.TimeoutError) as exc:
+        raise TTSError(f"{type(exc).__name__}: {exc}") from exc
+    return words
+
+
+def _elevenlabs_sync(text: str, rate_pct: int, audio_path: Path) -> list[dict]:
+    voice_id = _env("ELEVENLABS_VOICE_ID") or ELEVENLABS_VOICE
+    try:
+        resp = requests.post(
+            f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps",
+            params={"output_format": "mp3_44100_128"},
+            headers={"xi-api-key": _env("ELEVENLABS_API_KEY"), "Content-Type": "application/json"},
+            json={
+                "text": text,
+                "model_id": _env("ELEVENLABS_MODEL") or ELEVENLABS_MODEL,
+                # Higher stability and a fixed seed keep the same voice sounding alike from video to video.
+                "seed": ELEVENLABS_SEED,
+                "voice_settings": {"stability": 0.6, "similarity_boost": 0.8, "style": 0.15,
+                                   "use_speaker_boost": True,
+                                   "speed": max(0.7, min(1.2, 1 + rate_pct / 100))},
+            },
+            timeout=HTTP_TIMEOUT,
+        )
+    except requests.RequestException as exc:
+        raise TTSError(f"ElevenLabs request failed: {exc}") from exc
+    if resp.status_code != 200:
+        detail = resp.text[:300]
+        if resp.status_code in (400, 401, 402, 403, 404, 422):  # key / quota / voice problems
+            raise _FatalTTSError(f"ElevenLabs HTTP {resp.status_code}: {detail}")
+        raise TTSError(f"ElevenLabs HTTP {resp.status_code}: {detail}")
+    data = resp.json()
+    audio_path.write_bytes(base64.b64decode(data["audio_base64"]))
+    align = data.get("alignment") or data.get("normalized_alignment") or {}
+    return _words_from_characters(align.get("characters", []),
+                                  align.get("character_start_times_seconds", []),
+                                  align.get("character_end_times_seconds", []))
+
+
+def _words_from_characters(chars: list[str], starts: list[float], ends: list[float]) -> list[dict]:
+    """Character-level timings (ElevenLabs) -> word timings, punctuation stripped like edge-tts."""
+    words, cur, t0, t1 = [], "", 0.0, 0.0
+    for ch, s, e in zip(chars, starts, ends):
+        if ch.isspace():
+            if cur:
+                words.append((cur, t0, t1))
+            cur = ""
+            continue
+        if not cur:
+            t0 = s
+        cur += ch
+        t1 = e
+    if cur:
+        words.append((cur, t0, t1))
+    out = []
+    for text, s, e in words:
+        clean = re.sub(r"^[^\w]+|[^\w]+$", "", text)
+        if clean:
+            out.append({"word": clean, "start": round(s, 3), "end": round(e, 3)})
+    return out
+
+
+def _azure_sync(text: str, voice: str, rate_pct: int, audio_path: Path) -> list[dict]:
+    import azure.cognitiveservices.speech as speechsdk  # imported here: only needed for azure
+    from xml.sax.saxutils import escape
+
+    config = speechsdk.SpeechConfig(subscription=_env("AZURE_SPEECH_KEY"), region=_env("AZURE_SPEECH_REGION"))
+    config.set_speech_synthesis_output_format(speechsdk.SpeechSynthesisOutputFormat.Audio48Khz192KBitRateMonoMp3)
+    synth = speechsdk.SpeechSynthesizer(speech_config=config, audio_config=None)
+    words = []
+
+    def on_word(evt):
+        if evt.boundary_type == speechsdk.SpeechSynthesisBoundaryType.Word:
+            start = evt.audio_offset / 10_000_000
+            words.append({"word": evt.text, "start": round(start, 3),
+                          "end": round(start + evt.duration.total_seconds(), 3)})
+
+    synth.synthesis_word_boundary.connect(on_word)
+    lang = "-".join(voice.split("-")[:2])
+    ssml = (f"<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='{lang}'>"
+            f"<voice name='{voice}'><prosody rate='{_rate_str(rate_pct)}'>{escape(text)}</prosody></voice></speak>")
+    result = synth.speak_ssml_async(ssml).get()
+    if result.reason != speechsdk.ResultReason.SynthesizingAudioCompleted:
+        details = result.cancellation_details
+        msg = f"Azure: {details.reason} {details.error_details or ''}".strip()
+        if details.error_code in (speechsdk.CancellationErrorCode.AuthenticationFailure,
+                                  speechsdk.CancellationErrorCode.Forbidden,
+                                  speechsdk.CancellationErrorCode.BadRequest):
+            raise _FatalTTSError(msg)
+        raise TTSError(msg)
+    audio_path.write_bytes(result.audio_data)
+    return words
+
+
+async def _elevenlabs(text: str, voice: str, rate_pct: int, audio_path: Path) -> list[dict]:
+    return await asyncio.to_thread(_elevenlabs_sync, text, rate_pct, audio_path)
+
+
+async def _azure(text: str, voice: str, rate_pct: int, audio_path: Path) -> list[dict]:
+    return await asyncio.to_thread(_azure_sync, text, voice, rate_pct, audio_path)
+
+
+PROVIDERS = {"elevenlabs": _elevenlabs, "azure": _azure, "edge": _edge}
+NEEDS = {"elevenlabs": ["ELEVENLABS_API_KEY"], "azure": ["AZURE_SPEECH_KEY", "AZURE_SPEECH_REGION"], "edge": []}
+
+
+def available_providers() -> list[str]:
+    """Configured order, keeping only providers whose credentials are in .env."""
+    try:
+        order = json.loads((ROOT / "config.json").read_text(encoding="utf-8")).get("tts_providers")
+    except (OSError, json.JSONDecodeError):
+        order = None
+    order = [p for p in (order or DEFAULT_PROVIDERS) if p in PROVIDERS]
+    return [p for p in order if all(_env(k) for k in NEEDS[p])]
+
+
+def _voice_label(provider: str, voice: str) -> str:
+    if provider == "elevenlabs":
+        return f"elevenlabs:{_env('ELEVENLABS_VOICE_ID') or ELEVENLABS_VOICE}"
+    return f"{provider}:{voice}"
+
+
+async def _synthesize_once(provider: str, text: str, voice: str, rate_pct: int, out_path: Path) -> list[dict]:
+    tmp_path = out_path.with_suffix(".part")
+    try:
+        words = await PROVIDERS[provider](text, voice, rate_pct, tmp_path)
+    except BaseException:
+        tmp_path.unlink(missing_ok=True)  # don't leave a half-written .part behind
+        raise
+    if not tmp_path.exists() or tmp_path.stat().st_size == 0:
+        tmp_path.unlink(missing_ok=True)
+        raise TTSError(f"{provider} returned no audio")
+    if not words:
+        tmp_path.unlink(missing_ok=True)
+        raise TTSError(f"{provider} returned no word timings")
+    tmp_path.replace(out_path)  # only replace the previous file once complete
+    out_path.with_suffix(".srt").write_text(_words_to_srt(words), encoding="utf-8")
+    return words
+
+
+async def _synthesize_with_retry(provider: str, text: str, voice: str, rate_pct: int, out_path: Path) -> list[dict]:
+    last_exc: Exception | None = None
+    for attempt in range(1, RETRIES + 1):
+        try:
+            return await _synthesize_once(provider, text, voice, rate_pct, out_path)
+        except _FatalTTSError:
+            raise
+        except TTSError as exc:
+            last_exc = exc
+            print(f"[tts] {provider} attempt {attempt}/{RETRIES} failed: {exc}"[:300])
+            if attempt < RETRIES:
+                await asyncio.sleep(2 ** attempt)
+    raise TTSError(f"{provider} failed after {RETRIES} attempts") from last_exc
+
+
+async def _synthesize_provider(provider: str, text: str, out_path: Path, voice: str,
+                               rate_pct: int, max_seconds: float) -> tuple[list[dict], float, int]:
+    words = await _synthesize_with_retry(provider, text, voice, rate_pct, out_path)
+    duration = _probe_duration(out_path) or (words[-1]["end"] if words else 0.0)
+
+    # The estimate can be off; if the real audio overruns, re-render once faster.
+    if duration > max_seconds and rate_pct < MAX_SPEEDUP_PCT:
+        new_rate = min(MAX_SPEEDUP_PCT, rate_pct + int(100 * (duration / max_seconds - 1)) + 1)
+        print(f"[tts] {duration:.1f}s > {max_seconds:.0f}s; re-rendering at {_rate_str(new_rate)}")
+        rate_pct = new_rate
+        words = await _synthesize_with_retry(provider, text, voice, rate_pct, out_path)
+        duration = _probe_duration(out_path) or (words[-1]["end"] if words else 0.0)
+    return words, duration, rate_pct
+
+
+async def synthesize_async(
+    text: str,
+    out_path: Path | str = OUTPUT_PATH,
+    voice: str = DEFAULT_VOICE,
+    max_seconds: float = MAX_SECONDS,
+    providers: list[str] | None = None,
+) -> dict:
+    """`voice` is the Microsoft voice name (azure / edge); ElevenLabs uses ELEVENLABS_VOICE_ID."""
+    text = " ".join(text.split())
+    if not text:
+        raise TTSError("voiceover text is empty")
+
+    # Pick the smallest speed-up that should fit; refuse text that can't fit.
+    rate_pct = 0
+    if estimate_seconds(text) > max_seconds:
+        rate_pct = min(MAX_SPEEDUP_PCT, int(100 * (estimate_seconds(text) / max_seconds - 1)) + 1)
+        if estimate_seconds(text, rate_pct) > max_seconds:
+            raise TTSError(
+                f"text has {len(text.split())} words (~{estimate_seconds(text):.1f}s); "
+                f"too long for {max_seconds:.0f}s even at {_rate_str(MAX_SPEEDUP_PCT)} speed"
+            )
+
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    errors = []
+    for provider in providers or available_providers():
+        try:
+            words, duration, used_rate = await _synthesize_provider(provider, text, out_path, voice,
+                                                                    rate_pct, max_seconds)
+        except TTSError as exc:
+            errors.append(f"{provider}: {exc}")
+            print(f"[tts] {provider} unavailable, trying the next provider. ({exc})"[:300])
+            continue
+        if duration > max_seconds:
+            # Don't leave an over-length voiceover behind for the video builder to pick up.
+            out_path.unlink(missing_ok=True)
+            out_path.with_suffix(".srt").unlink(missing_ok=True)
+            raise TTSError(f"voiceover is {duration:.1f}s, over the {max_seconds:.0f}s limit; shorten the script")
+        words_path = out_path.with_name(out_path.stem + "_words.json")
+        words_path.write_text(json.dumps(words, indent=2), encoding="utf-8")
+        return {
+            "audio_path": str(out_path),
+            "srt_path": str(out_path.with_suffix(".srt")),
+            "words_path": str(words_path),
+            "provider": provider,
+            "voice": _voice_label(provider, voice),
+            "rate": _rate_str(used_rate),
+            "duration_sec": round(duration, 2),
+            "word_count": len(text.split()),
+        }
+    raise TTSError("no TTS provider succeeded: " + " | ".join(errors)[:600])
+
+
+def synthesize(text: str, **kwargs) -> dict:
+    """Sync wrapper: render `text` to MP3 and return paths, duration and settings."""
+    return asyncio.run(synthesize_async(text, **kwargs))
+
+
+if __name__ == "__main__":
+    import sys
+
+    # python src/tts_engine.py [provider]  -> test one provider (default: the configured chain)
+    only = sys.argv[1:] or None
+    print(f"providers: {only or available_providers()}")
+    sample = (
+        "Still writing compliance reports by hand? Meet Regunow. "
+        "Ask it a regulatory question and it turns hours of research into a clear, "
+        "actionable audit in minutes. Founders use it to check what stands between them "
+        "and their next market before they launch. Try it free with the link in bio."
+    )
+    result = synthesize(sample, providers=only)
+    audio = Path(result["audio_path"])
+    assert audio.exists() and audio.stat().st_size > 10_000, "MP3 missing or too small"
+    assert 0 < result["duration_sec"] <= MAX_SECONDS, result
+    words = json.loads(Path(result["words_path"]).read_text(encoding="utf-8"))
+    assert len(words) >= result["word_count"] * 0.8, "word timings look incomplete"
+    print(json.dumps(result, indent=2))
+    print(f"MP3 size: {audio.stat().st_size / 1024:.0f} KB, first words: "
+          + ", ".join(f"{w['word']}@{w['start']}s" for w in words[:4]))
+
+    # Error handling: empty text and text far too long for 30s must raise TTSError.
+    for bad, label in (("   ", "empty"), ("word " * 200, "too long")):
+        try:
+            synthesize(bad, out_path=audio.with_name("should_not_exist.mp3"))
+        except TTSError as exc:
+            print(f"OK ({label}) -> TTSError: {exc}")
+        else:
+            raise AssertionError(f"{label} text did not raise")
+    print("All tts_engine checks passed.")

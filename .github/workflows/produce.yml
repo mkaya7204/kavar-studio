@@ -1,0 +1,94 @@
+# Daily cloud production for KAVAR (@thekavar.ai): the same `python daily.py produce` the PC ran,
+# on a GitHub-hosted Linux machine (7 GB RAM) instead of the 4 GB PC.
+#   - 06:30 Turkey time (03:30 UTC); GitHub may start scheduled runs some minutes late.
+#   - Output (queue, carousels, Reels with covers, logs) is packed into one archive artifact;
+#     on the PC `python daily.py fetch` downloads it, then the posts are scheduled in Meta Business Suite.
+#   - state/ (used news, recent hooks, Reel metrics) is committed back so tomorrow's run sees it.
+# Secrets (repo Settings -> Secrets and variables -> Actions), entered by the owner:
+#   CLAUDE_CODE_OAUTH_TOKEN  from `claude setup-token` (script writing, hook judge, editor review)
+#   ELEVENLABS_API_KEY       voiceover;  ELEVENLABS_VOICE_ID optional
+name: produce
+
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "all | reel | news (news = carousels only)"
+        default: all
+
+permissions:
+  contents: write
+
+concurrency:
+  group: produce
+  cancel-in-progress: false
+
+jobs:
+  produce:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      TZ: Europe/Istanbul
+      PYTHONIOENCODING: utf-8
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: System packages (ffmpeg)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Python packages and Chromium
+        run: |
+          pip install -q -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Claude Code CLI and HyperFrames
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          npx --yes hyperframes@0.8.145 --version || true
+
+      - name: Fonts (Inter, OFL - stands in for Windows-only Segoe UI under the template's file names)
+        run: |
+          curl -sSL -o /tmp/inter.zip https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip
+          unzip -q -o /tmp/inter.zip -d /tmp/inter
+          mkdir -p templates/hyperframes_news/assets/fonts
+          cp "$(find /tmp/inter -name 'Inter-Black.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguibl.ttf
+          cp "$(find /tmp/inter -name 'Inter-SemiBold.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguisb.ttf
+          ls -la templates/hyperframes_news/assets/fonts
+
+      - name: Produce (news carousels + Reel, each reviewed by the editor)
+        run: python daily.py produce ${{ github.event.inputs.only != 'all' && github.event.inputs.only || '' }}
+
+      - name: Pack today's output
+        if: always()
+        run: |
+          D=$(date +%F)
+          tar -czf kavar-$D.tgz --ignore-failed-read output/queue output/logs \
+            $(ls -d output/carousel/${D}_* output/reels/${D}_* 2>/dev/null)
+          ls -la kavar-$D.tgz
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: kavar-output
+          path: kavar-*.tgz
+          retention-days: 7
+
+      - name: Save state (used news, recent hooks, Reel metrics)
+        if: always()
+        run: |
+          git config user.name "kavar-bot"
+          git config user.email "kavar-bot@users.noreply.github.com"
+          git add state
+          git diff --cached --quiet || (git commit -q -m "state: $(date +%F) production" && git pull --rebase -q && git push -q)
