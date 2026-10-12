@@ -14,3 +14,8 @@ jobs:
             code=$(curl -s -o /tmp/body -w "%{http_code}" -A "$UA" -L --max-time 20 "$u")
             echo "$code $(wc -c < /tmp/body) bytes  $u"
           done
+          # Product Hunt's /r/p/ redirect to the maker's site (the feed links there)
+          curl -s -A "$UA" https://www.producthunt.com/feed | grep -o 'https://www.producthunt.com/r/p/[0-9]*' | head -2 | while read r; do
+            echo "redirect $r -> $(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -A "$UA" --max-time 20 "$r")"
+            echo "followed -> $(curl -s -o /dev/null -L -w '%{http_code} %{url_effective}' -A "$UA" --max-time 20 "$r")"
+          done
