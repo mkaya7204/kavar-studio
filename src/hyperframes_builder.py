@@ -273,7 +273,8 @@ def _proof_windows(img: Image.Image, screens: int = 4) -> list[int]:
     end = min(img.height, round(w * 16 / 9 * screens)) - win_h
     edges = img.resize((w // 4, img.height // 4)).convert("L").filter(ImageFilter.FIND_EDGES)
     scored = []
-    for top in range(round(w * 0.1), max(round(w * 0.1), end) + 1, win_h // 2):
+    skip = round(w * 0.2)  # the site's nav bar (its logo + name reads like an ad) and announcement strips
+    for top in range(skip, max(skip, end) + 1, win_h // 2):
         detail = ImageStat.Stat(edges.crop((0, top // 4, w // 4, (top + win_h) // 4))).mean[0]
         if detail > 4:  # not a blank band
             scored.append((detail, top))
@@ -292,12 +293,14 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> int | None:
     if not exe:
         return None
     schema = {"type": "object", "additionalProperties": False, "required": ["best"],
-              "properties": {"best": {"type": "integer", "minimum": 0, "maximum": count - 1}}}
+              "properties": {"best": {"type": "integer", "minimum": -1, "maximum": count - 1}}}
     prompt = (f"Open {sheet.name} with the Read tool. It shows {count} numbered crops (0-{count - 1}) of a "
               f"product's website. A Reel opens with this promise on screen: \"{hint}\". Pick the crop that "
               f"best PROVES it at a glance: the product's real interface, output or a clear workflow diagram. "
-              f"Avoid badges (e.g. 'Featured on Product Hunt'), cookie or announcement bars, logos alone, "
-              f"pricing, plain paragraphs of text, and anything about a different product. Answer with its number.")
+              f"A crop is NOT allowed if it shows any price or currency (even small prices on demo products, "
+              f"$, €, ₺, 'free', 'pricing', plans), the product's own logo or name bar, a badge (e.g. "
+              f"'Featured on Product Hunt'), a cookie or announcement bar, or another product. Avoid plain "
+              f"paragraphs of text. Answer with the number of the best allowed crop, or -1 if none is allowed.")
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
     try:
         proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
@@ -307,13 +310,14 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> int | None:
         best = (json.loads(proc.stdout).get("structured_output") or {}).get("best")
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
         return None
-    return best if isinstance(best, int) and 0 <= best < count else None
+    return best if isinstance(best, int) and -1 <= best < count else None
 
 
-def best_proof_crop(page: Path, out: Path, hint: str = "") -> Path:
+def best_proof_crop(page: Path, out: Path, hint: str = "") -> Path | None:
     """The hook's proof image (the box under the headline on frame 0 / the cover): Claude picks,
-    from up to 8 crops of the page, the one that best proves the hook; the most detailed crop
-    is the fallback."""
+    from up to 8 crops of the page, the one that best proves the hook without prices, logos or
+    badges. Returns None when no crop is allowed (the hook then shows the headline alone); without
+    Claude the first detailed crop is used."""
     from PIL import ImageDraw
 
     with Image.open(page) as img:
@@ -335,6 +339,8 @@ def best_proof_crop(page: Path, out: Path, hint: str = "") -> Path:
         sheet_path = out.with_name("_proof_candidates.jpg")
         sheet.save(sheet_path, quality=85)
         picked = _ask_proof_choice(sheet_path, hint, len(crops))
+        if picked == -1:
+            return None  # every crop shows a price / logo / badge: headline only
         choice = picked if picked is not None else 0
         # fallback (no Claude): the window list is in page order; the first detailed one is usually the hero
     crops[choice].save(out)
@@ -373,7 +379,9 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
             img = img.resize((width, round(img.height * width / img.width)), Image.LANCZOS)
         img.convert("RGB").save(assets / "fullpage.png")
         fullpage_height = img.height
-    best_proof_crop(assets / "fullpage.png", assets / "proof.png", script.get("hook", ""))
+    has_proof = best_proof_crop(assets / "fullpage.png", assets / "proof.png", script.get("hook", "")) is not None
+    if not has_proof:  # keep the asset path valid for the renderer; the template hides the box
+        shutil.copy2(assets / "screenshot.png", assets / "proof.png")
     brand = _load_brand()
     for key, name in (("logo", "brand_icon"), ("wordmark", "brand_wordmark")):
         src = ROOT / brand[key] if brand.get(key) else None
@@ -419,6 +427,7 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
         "plan": json.dumps(plan),
         "captions": json.dumps(captions),
         "total": total,
+        "has_proof": has_proof,
         "cta_text": (seg or {}).get("cta") or labels["follow_label"],
     }
     for i, point in enumerate(points[:3], 1):

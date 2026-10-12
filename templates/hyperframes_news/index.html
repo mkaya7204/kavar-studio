@@ -22,6 +22,7 @@
     {"id":"follow_sub","type":"string","label":"Kapan\u0131\u015f alt yaz\u0131s\u0131","default":"Her g\u00fcn yeni teknoloji haberleri i\u00e7in"},
     {"id":"brand_handle","type":"string","label":"Sayfa kullanici adi (brand.json)","default":"@thekavar.ai"},
     {"id":"plan","type":"string","label":"Sahne zamanlar\u0131 (JSON, builder yazar)","default":"{\"hook\":[0,3],\"card1\":[3,4],\"shot1\":[7,2.5],\"card2\":[9.5,4],\"shot2\":[13.5,2.5],\"card3\":[16,4],\"why\":[20,7],\"outro\":[27,3]}"},
+    {"id":"has_proof","type":"boolean","label":"Kanca altında kanıt görseli","default":true},
     {"id":"total","type":"number","label":"Video s\u00fcresi (sn, builder yazar)","default":30,"min":5,"step":0.1},
     {"id":"cta_text","type":"string","label":"Kapan\u0131\u015f c\u00fcmlesi","default":"Sat\u0131\u015f ekibine g\u00f6nder, i\u015fine yarar."},
     {"id":"captions","type":"string","label":"Altyaz\u0131 gruplar\u0131 (JSON, builder yazar)","default":"[{\"s\":0.3,\"e\":1.6,\"w\":[[\"Yapay\",0.35],[\"zek\u00e2\",0.8],[\"markan\u0131\",1.2]]},{\"s\":1.6,\"e\":2.7,\"w\":[[\"\u00f6neriyor\",1.65],[\"mu\",2.2]]}]"}
@@ -710,6 +711,12 @@
       $("outro-logo").style.display = v.has_logo ? "block" : "none";
       $("outro-initial").style.display = v.has_logo ? "none" : "block";
       $("outro-name").style.fontSize = sizeFor(v.tool_name, [[10, 120], [16, 100], [24, 80], [999, 64]]) + "px";
+      // no clean proof crop (prices / logos everywhere): the headline stands alone, centred and larger
+      if (v.has_proof === false || v.has_proof === "false") {
+        $("hook-proof").style.display = "none";
+        $("hook").style.justifyContent = "center";
+        $("hook").style.paddingBottom = "720px";
+      }
       const cta = up(v.cta_text);
       $("outro-cta").style.fontSize = sizeFor(cta, [[18, 110], [30, 96], [44, 84], [999, 72]]) + "px";
       const ctaWords = words($("outro-cta"), cta, 2);
