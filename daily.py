@@ -144,9 +144,10 @@ def produce_news_items(count: int) -> list[dict]:
 
 def produce_reel() -> dict | None:
     log("reel: running the video pipeline")
-    proc = subprocess.run([sys.executable, "main.py"], cwd=ROOT, capture_output=True, text=True,
+    proc = subprocess.run([sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True, text=True,
                           encoding="utf-8", errors="replace", timeout=3600)
-    for line in proc.stdout.splitlines()[-8:]:
+    lines = proc.stdout.splitlines()
+    for line in [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l][:8] + lines[-8:]:
         log("   " + line)
     if proc.returncode != 0:
         log("   video pipeline failed")

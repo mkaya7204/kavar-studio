@@ -65,7 +65,7 @@ def _rate_str(rate_pct: int) -> str:
 
 
 def _env(name: str) -> str:
-    value = (os.getenv(name) or "").strip()
+    value = (os.getenv(name) or "").strip().lstrip("﻿")  # a BOM from a Windows pipe breaks HTTP headers
     return "" if value.endswith("...") else value  # untouched placeholder
 
 

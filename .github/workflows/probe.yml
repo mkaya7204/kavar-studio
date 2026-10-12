@@ -1,0 +1,16 @@
+# Manual network check from GitHub's machines: which content sources answer the cloud run.
+name: probe
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Sources
+        run: |
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36"
+          for u in https://www.producthunt.com/feed https://hnrss.org/show https://openai.com/news/rss.xml \
+                   https://www.theverge.com/rss/ai-artificial-intelligence/index.xml https://techcrunch.com/category/artificial-intelligence/feed/ \
+                   https://api.elevenlabs.io/v1/models; do
+            code=$(curl -s -o /tmp/body -w "%{http_code}" -A "$UA" -L --max-time 20 "$u")
+            echo "$code $(wc -c < /tmp/body) bytes  $u"
+          done

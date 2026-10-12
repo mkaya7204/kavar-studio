@@ -106,6 +106,8 @@ def main() -> int:
     parser.add_argument("--script", type=Path, help="ready-made script JSON; skips fetching and script writing")
     parser.add_argument("--renderer", choices=["hyperframes", "ffmpeg"], default="hyperframes",
                         help="hyperframes: 30s HTML composition (default); ffmpeg: old slideshow")
+    parser.add_argument("--live-only", action="store_true",
+                        help="fail instead of falling back to the built-in sample tools (daily.py uses this)")
     args = parser.parse_args()
 
     t0 = time.perf_counter()
@@ -137,6 +139,12 @@ def main() -> int:
         for t in tools:
             mark = "  " if t in candidates else "✖ "
             print(f"   {mark}{t['tool_name']} — {t['website_url']}")
+        if args.live_only:  # daily production: never post the built-in sample tools (Notion etc.)
+            sample = {t["tool_name"] for t in fetch_latest_tools(limit=99, use_sample=True)}
+            candidates = [t for t in candidates if t["tool_name"] not in sample]
+            if not candidates:
+                print("✖ No live tool from the feed (sample tools are not used in --live-only mode).")
+                return 1
         if not candidates:
             print("   no candidate has its own website; falling back to sample tools")
             candidates = fetch_latest_tools(limit=CANDIDATES, use_sample=True)
