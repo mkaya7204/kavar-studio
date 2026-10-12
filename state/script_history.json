@@ -4,5 +4,12 @@
     "hook": "Müşteri adaylarını senin yerine araştıran CRM",
     "spoken_hook": "Her müşteri adayını senin yerine araştıran bir CRM buldum.",
     "cta": "Satış ekibine gönder, işine yarar."
+  },
+  {
+    "tool": "Notion",
+    "hook": "Her bilgi başka uygulamada kayboluyor",
+    "pattern": "pain",
+    "spoken_hook": "Her bilgi başka bir uygulamada kayboluyor.",
+    "cta": "Bunu dağınık çalışan ekip arkadaşına gönder."
   }
 ]
