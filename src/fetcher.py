@@ -7,7 +7,11 @@ returned so the rest of the pipeline can still run.
 
 import html
 import json
+import os
 import re
+import shutil
+import subprocess
+import unicodedata
 import xml.etree.ElementTree as ET
 from urllib.parse import urlsplit, urlunsplit
 
@@ -125,6 +129,44 @@ def _resolve_site(redirect_url: str) -> tuple[str, str | None]:
     return _clean_url(resp.url), _meta_description(resp.text)
 
 
+def _fold(text: str) -> str:
+    text = unicodedata.normalize("NFKD", text)
+    return re.sub(r"[^a-z0-9]", "", "".join(c for c in text if not unicodedata.combining(c)).lower())
+
+
+def _find_site_with_claude(name: str, tag_line: str) -> tuple[str, str | None] | None:
+    """Product Hunt answers 403 to cloud machines (GitHub Actions), so its /r/p/ redirect can't be
+    followed there. Ask Claude Code (web search only) for the product's official site, then accept it
+    only if the page loads and names the product."""
+    exe = None if os.getenv("SCRIPT_WRITER_NO_CLI") else shutil.which("claude")
+    if not exe:
+        return None
+    env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
+    schema = {"type": "object", "additionalProperties": False, "required": ["url"],
+              "properties": {"url": {"type": "string"}}}
+    prompt = (f'Find the official website of the software product "{name}" ("{tag_line}"), launched on '
+              f"Product Hunt this week. Return its homepage URL, or \"\" if you are not sure it is this "
+              f"exact product (not a similarly named one). Never return a producthunt.com, social media or "
+              f"app store URL.")
+    try:
+        proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
+                               "--tools", "WebSearch", "--allowedTools", "WebSearch", "--no-session-persistence"],
+                              input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=180, env=env)
+        url = (json.loads(proc.stdout).get("structured_output") or {}).get("url", "").strip()
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
+        return None
+    if not url.startswith("http") or "producthunt.com" in url:
+        return None
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+        resp.raise_for_status()
+    except requests.RequestException:
+        return None
+    if _fold(name)[:12] not in _fold(resp.text[:200_000]):
+        return None  # the page doesn't even mention the product: wrong site
+    return _clean_url(resp.url), _meta_description(resp.text)
+
+
 def _parse_entry(entry: ET.Element) -> tuple[Tool | None, str]:
     """Return (tool, reason); tool is None when the entry is skipped."""
     name = (entry.findtext("a:title", "", ATOM_NS)).strip()
@@ -148,7 +190,9 @@ def _parse_entry(entry: ET.Element) -> tuple[Tool | None, str]:
         try:
             website_url, description = _resolve_site(redirect.group(1))
         except requests.RequestException:
-            pass  # keep the Product Hunt page as the URL
+            # blocked (cloud IPs get 403): look the site up instead; else keep the Product Hunt page
+            if found := _find_site_with_claude(name, tag_line):
+                website_url, description = found
 
     # Re-check with the site's own description, which often reveals what it is.
     is_software, reason = classify_tool(name, tag_line, description or "")
@@ -164,7 +208,8 @@ def _parse_entry(entry: ET.Element) -> tuple[Tool | None, str]:
     return tool, reason
 
 
-def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool = False) -> list[dict]:
+def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool = False,
+                       exclude: set[str] | None = None) -> list[dict]:
     """Return up to `limit` recent SaaS / AI tools as JSON-serialisable dicts.
 
     Keys: tool_name, tag_line, website_url, description.
@@ -177,7 +222,10 @@ def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool =
             resp = requests.get(FEED_URL, headers=HEADERS, timeout=TIMEOUT)
             resp.raise_for_status()
             root = ET.fromstring(resp.content)
+            skip = {_fold(n) for n in exclude or ()}
             for entry in root.findall("a:entry", ATOM_NS):
+                if _fold(entry.findtext("a:title", "", ATOM_NS)) in skip:
+                    continue  # already made into a video
                 tool, reason = _parse_entry(entry)
                 if verbose:
                     name = entry.findtext("a:title", "?", ATOM_NS).strip()
