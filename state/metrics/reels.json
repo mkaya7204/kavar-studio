@@ -11,5 +11,18 @@
     "duration_sec": 24.4,
     "words": 47,
     "status": "rejected: Kanıt görseli yanlış: frame 0 ve kapakta 'Gemma 4 released with text, audio and image input...' yazısı var; bu EmbeddingGemma 2 ile ilgisiz, kaynakta yok ve başlığın vaadini (anlamla arama) kanıtlamıyor.; Başlık ile kanıt çelişiyor: kapakta 'hafif model' diyor ama görsel başka bir modelin (Gemma 4) duyurusunu gösteriyor; yanıltıcı.; 'Anlamla arama' vaadi kaynakta desteklenmiyor: kaynak sadece 'açık, hafif çok modlu embedding modeli' diyor. İlk 6 sn içinde ne gösterilmiş ne kanıtlanmış."
+  },
+  {
+    "id": "2026-10-13_knocket",
+    "date": "2026-10-13",
+    "kind": "tool",
+    "tool": "Knocket",
+    "hook_pattern": "question",
+    "headline": "Sitene gelenle hemen konuşsan?",
+    "spoken_hook": "Sitene gelenle hemen konuşabilsen ne olurdu?",
+    "cta": "Bunu müşteri destek yapan arkadaşına gönder.",
+    "duration_sec": 23.6,
+    "words": 45,
+    "status": "rejected: Kare 0 ve kapakta Knocket logosu ve adı görünüyor (araç adı çubuğu): ilk 3 saniyede reklam görünümü, kural ihlali.; Kapaktaki ürün ekran görüntüsünde fiyatlar görünüyor ($79, $109, $99 gibi): fiyat politikası ihlali.; İlk cümlede araç adı yok, bu iyi; ancak 2.5 sn'de ürün adı 'Knocket' ekranda beliriyor ve sesli anlatım ürün adını 2. cümlede söylüyor, bu tolere edilebilir."
   }
 ]

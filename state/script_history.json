@@ -18,5 +18,12 @@
     "pattern": "result",
     "spoken_hook": "Aramayı kelimeyle değil anlamla yapan hafif model buldum.",
     "cta": "Bunu yazılımcı arkadaşına gönder."
+  },
+  {
+    "tool": "Knocket",
+    "hook": "Sitene gelenle hemen konuşsan?",
+    "pattern": "question",
+    "spoken_hook": "Sitene gelenle hemen konuşabilsen ne olurdu?",
+    "cta": "Bunu müşteri destek yapan arkadaşına gönder."
   }
 ]
