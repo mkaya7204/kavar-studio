@@ -81,7 +81,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 290px 80px 720px; /* top UI band (~270px) + bottom caption overlay (~35%) */
+        padding: 290px 80px 820px; /* top UI band (~270px); below: our captions, then IG's overlay */
       }
       .black {
         font-family: "HF Black", sans-serif;
@@ -210,6 +210,7 @@
       #hook {
         justify-content: flex-start;
         padding-top: 300px;
+        padding-bottom: 600px; /* no captions during the hook: the headline is the spoken line */
       }
       #hook-title {
         line-height: 1.02;
@@ -238,7 +239,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: 50% 18%;
+        object-position: 50% 50%; /* proof.png is already the best crop (hyperframes_builder.best_proof_crop) */
         transform-origin: 50% 30%;
       }
       #hook-bar {
@@ -558,7 +559,7 @@
         <div id="hook-kicker" class="black">GÜNDEM</div>
         <h1 id="hook-title" class="black">Başlık</h1>
         <i id="hook-bar"></i>
-        <div id="hook-proof"><img id="hook-proof-img" src="assets/screenshot.png" alt="" /></div>
+        <div id="hook-proof"><img id="hook-proof-img" src="assets/proof.png" alt="" /></div>
       </section>
 
       <!-- 3-20: three point cards with site screenshots in between -->

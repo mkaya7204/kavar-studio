@@ -19,7 +19,7 @@ import subprocess
 import sys
 import time
 import traceback
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -277,8 +277,9 @@ def fetch() -> None:
         [_gh(), "run", "list", "--workflow", "produce.yml", "--limit", "5",
          "--json", "databaseId,status,conclusion,createdAt"],
         cwd=ROOT, capture_output=True, text=True, encoding="utf-8", check=True).stdout)
-    today = [r for r in runs if r["createdAt"][:10] >= date.today().isoformat()[:10]
-             or r["status"] != "completed"]
+    since = datetime.now(timezone.utc) - timedelta(hours=20)  # createdAt is UTC; 06:30 TRT = 03:30 UTC
+    today = [r for r in runs if r["status"] != "completed"
+             or datetime.fromisoformat(r["createdAt"].replace("Z", "+00:00")) >= since]
     if not today:
         log("no cloud run today yet")
         return

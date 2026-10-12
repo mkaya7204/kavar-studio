@@ -20,6 +20,7 @@ Output: H.264 / AAC MP4 at config.json size and fps.
 import html
 import json
 import math
+import os
 import re
 import shutil
 import subprocess
@@ -256,6 +257,90 @@ def _bake_variable_defaults(index: Path, values: dict) -> None:
     index.write_text(html_text[:m.start(1)] + attr + html_text[m.end(1):], encoding="utf-8")
 
 
+PROOF_SIZE = (920, 470)  # the hook's proof box (templates/hyperframes_news #hook-proof)
+
+
+PROOF_CANDIDATES = 8
+
+
+def _proof_windows(img: Image.Image, screens: int = 4) -> list[int]:
+    """Tops of non-overlapping proof-shaped windows over the page's first screens, skipping the
+    top strip (often a cookie / announcement bar) and near-empty areas."""
+    from PIL import ImageFilter, ImageStat
+
+    w = img.width
+    win_h = round(w * PROOF_SIZE[1] / PROOF_SIZE[0])
+    end = min(img.height, round(w * 16 / 9 * screens)) - win_h
+    edges = img.resize((w // 4, img.height // 4)).convert("L").filter(ImageFilter.FIND_EDGES)
+    scored = []
+    for top in range(round(w * 0.1), max(round(w * 0.1), end) + 1, win_h // 2):
+        detail = ImageStat.Stat(edges.crop((0, top // 4, w // 4, (top + win_h) // 4))).mean[0]
+        if detail > 4:  # not a blank band
+            scored.append((detail, top))
+    picked: list[int] = []
+    for _, top in sorted(scored, reverse=True):
+        if all(abs(top - p) >= win_h for p in picked):
+            picked.append(top)
+        if len(picked) == PROOF_CANDIDATES:
+            break
+    return sorted(picked) or [0]
+
+
+def _ask_proof_choice(sheet: Path, hint: str, count: int) -> int | None:
+    """Claude (Read tool only) looks at the numbered candidates and picks the best proof."""
+    exe = shutil.which("claude")
+    if not exe:
+        return None
+    schema = {"type": "object", "additionalProperties": False, "required": ["best"],
+              "properties": {"best": {"type": "integer", "minimum": 0, "maximum": count - 1}}}
+    prompt = (f"Open {sheet.name} with the Read tool. It shows {count} numbered crops (0-{count - 1}) of a "
+              f"product's website. A Reel opens with this promise on screen: \"{hint}\". Pick the crop that "
+              f"best PROVES it at a glance: the product's real interface, output or a clear workflow diagram. "
+              f"Avoid badges (e.g. 'Featured on Product Hunt'), cookie or announcement bars, logos alone, "
+              f"pricing, plain paragraphs of text, and anything about a different product. Answer with its number.")
+    env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
+    try:
+        proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
+                               "--tools", "Read", "--allowedTools", "Read", "--no-session-persistence"],
+                              input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=300,
+                              cwd=sheet.parent, env=env)
+        best = (json.loads(proc.stdout).get("structured_output") or {}).get("best")
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
+        return None
+    return best if isinstance(best, int) and 0 <= best < count else None
+
+
+def best_proof_crop(page: Path, out: Path, hint: str = "") -> Path:
+    """The hook's proof image (the box under the headline on frame 0 / the cover): Claude picks,
+    from up to 8 crops of the page, the one that best proves the hook; the most detailed crop
+    is the fallback."""
+    from PIL import ImageDraw
+
+    with Image.open(page) as img:
+        img = img.convert("RGB")
+        w = img.width
+        win_h = round(w * PROOF_SIZE[1] / PROOF_SIZE[0])
+        tops = _proof_windows(img)
+        crops = [img.crop((0, t, w, min(img.height, t + win_h))).resize(PROOF_SIZE, Image.LANCZOS) for t in tops]
+    choice = 0
+    if len(crops) > 1:
+        tile = (460, 235)
+        sheet = Image.new("RGB", (tile[0] * 2, (tile[1] + 10) * ((len(crops) + 1) // 2)), "white")
+        draw = ImageDraw.Draw(sheet)
+        for i, c in enumerate(crops):
+            x, y = (i % 2) * tile[0], (i // 2) * (tile[1] + 10)
+            sheet.paste(c.resize(tile), (x, y))
+            draw.rectangle((x, y, x + 54, y + 44), fill="red")
+            draw.text((x + 18, y + 10), str(i), fill="white")
+        sheet_path = out.with_name("_proof_candidates.jpg")
+        sheet.save(sheet_path, quality=85)
+        picked = _ask_proof_choice(sheet_path, hint, len(crops))
+        choice = picked if picked is not None else 0
+        # fallback (no Claude): the window list is in page order; the first detailed one is usually the hero
+    crops[choice].save(out)
+    return out
+
+
 def prepare_project(script: dict, capture: dict | None = None, audio_path: Path | str | None = None,
                     build_dir: Path = BUILD_DIR) -> dict:
     """Copy the template + this video's media into `build_dir`; return the variable values."""
@@ -288,6 +373,7 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
             img = img.resize((width, round(img.height * width / img.width)), Image.LANCZOS)
         img.convert("RGB").save(assets / "fullpage.png")
         fullpage_height = img.height
+    best_proof_crop(assets / "fullpage.png", assets / "proof.png", script.get("hook", ""))
     brand = _load_brand()
     for key, name in (("logo", "brand_icon"), ("wordmark", "brand_wordmark")):
         src = ROOT / brand[key] if brand.get(key) else None
