@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from distribution import build_post  # noqa: E402
 from fetcher import fetch_latest_tools  # noqa: E402
 from hyperframes_builder import BuildError as HFBuildError  # noqa: E402
-from hyperframes_builder import build_video_hyperframes  # noqa: E402
+from hyperframes_builder import best_proof_crop, build_video_hyperframes  # noqa: E402
 from media_capturer import CaptureError, capture_site  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
 from script_writer import VideoScript, _load_history, generate_script  # noqa: E402
@@ -34,7 +34,7 @@ from tts_engine import TTSError, synthesize, voice_for  # noqa: E402
 from video_builder import FINAL_PATH, build_video  # noqa: E402
 
 TEMP_DIR = ROOT / "output" / "temp"
-CANDIDATES = 3
+CANDIDATES = 5  # tools tried in order; one without a clean proof image is skipped
 LANGUAGE = json.loads((ROOT / "config.json").read_text(encoding="utf-8")).get("language", "en")
 
 
@@ -69,6 +69,14 @@ def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyper
         capture = capture_site(tool["website_url"], scroll_seconds=None)  # builder animates its own scenes
         print(f"   \"{capture['title']}\", cookie banner clicked={capture['cookie_accept_clicked']}, "
               f"overlays hidden={capture['overlays_hidden']}, logo={'yes' if capture['logo_path'] else 'no'}")
+
+        # The hook's proof image must come from this site, without prices / logos / badges (the
+        # editor rejects those). No clean crop = skip the tool before spending a script or a voice.
+        proof = best_proof_crop(Path(capture.get("fullpage_path") or capture["screenshot_path"]),
+                                TEMP_DIR / "proof.png", f"{tool['tool_name']}: {tool.get('tag_line', '')}")
+        if proof is None:
+            raise CaptureError("no clean proof image on the site (prices, logos or badges everywhere)")
+        capture["proof_path"] = str(proof)
 
     # the tool data, so the editor review (daily.py) can check the script's facts against it
     (TEMP_DIR / "tool.json").write_text(json.dumps(tool, indent=2, ensure_ascii=False, default=str),

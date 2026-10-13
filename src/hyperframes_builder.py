@@ -379,7 +379,12 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
             img = img.resize((width, round(img.height * width / img.width)), Image.LANCZOS)
         img.convert("RGB").save(assets / "fullpage.png")
         fullpage_height = img.height
-    has_proof = best_proof_crop(assets / "fullpage.png", assets / "proof.png", script.get("hook", "")) is not None
+    picked = capture.get("proof_path")  # main.py picks it right after the capture
+    if picked and Path(picked).exists():
+        shutil.copy2(picked, assets / "proof.png")
+        has_proof = True
+    else:
+        has_proof = best_proof_crop(assets / "fullpage.png", assets / "proof.png", script.get("hook", "")) is not None
     if not has_proof:  # keep the asset path valid for the renderer; the template hides the box
         shutil.copy2(assets / "screenshot.png", assets / "proof.png")
     brand = _load_brand()
