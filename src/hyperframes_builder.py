@@ -299,8 +299,10 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> int | None:
               f"best PROVES it at a glance: the product's real interface, output or a clear workflow diagram. "
               f"A crop is NOT allowed if it shows any price or currency (even small prices on demo products, "
               f"$, €, ₺, 'free', 'pricing', plans), the product's own logo or name bar, a badge (e.g. "
-              f"'Featured on Product Hunt'), a cookie or announcement bar, or another product. Avoid plain "
-              f"paragraphs of text. Answer with the number of the best allowed crop, or -1 if none is allowed.")
+              f"'Featured on Product Hunt'), a cookie or announcement bar, a big call-to-action button "
+              f"('Sign up', 'Create', 'Try', 'Get started'), or another product. Prefer the product's "
+              f"output or interface in use over empty forms; avoid plain paragraphs of text. Answer with the "
+              f"number of the best allowed crop, or -1 if none is allowed.")
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
     try:
         proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),

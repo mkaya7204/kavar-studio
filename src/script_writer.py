@@ -70,7 +70,7 @@ def _script_price_mentions(script: "VideoScript") -> list[str]:
 # promise a profile link that may not exist.
 AD_PATTERN = re.compile(
     r"\byeni araç\b|\bkaçırma\w*|\bhemen (?:dene|indir|kaydol)\w*|\bşimdi indir\w*|link (?:profil|bio)\w*|"
-    r"biyografi\w*|daha fazlası için takip",
+    r"biyografi\w*|daha fazlası için takip|\b(?:denedim|kullandım|çevirdim|bitirdim|hallettim)\b",
     re.I,
 )
 # Brands whose name is itself the news, so a hook may open with it (rule 2).

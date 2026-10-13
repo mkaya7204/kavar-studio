@@ -29,14 +29,17 @@ REEL HOOK + SCRIPT RULES (KAVAR, Turkish AI page)
    (OpenAI, Google, Apple, Meta, Anthropic, NVIDIA, Microsoft): open with brand + strong verb
    ("OpenAI az önce ..."), because the name itself is the news.
 3. Hook patterns (write one candidate per pattern, then choose):
-   - result: the outcome already achieved ("Müşteri araştırmasını 10 saniyede bitirdim" - only
-     with a number the tool data supports)
+   - result: the outcome the viewer gets, in second person or impersonal ("Ekran kaydın eğitim
+     videosuna dönüşüyor", "Müşteri araştırması tek ekranda bitiyor"; a number only if the tool
+     data has it). NEVER first-person experience claims ("denedim", "çevirdim", "bitirdim",
+     "kullandım"): the page has not used the tool, so that would mislead.
    - pain: the problem the viewer feels ("Satışta en çok vakit buraya gidiyor")
    - question: a direct question to the viewer ("Satış ekibin hâlâ elle mi araştırıyor?")
    - curiosity: an open loop the video closes ("Rakiplerin bunu çoktan kullanıyor")
    - news: brand/event + strong verb, for news ("Google az önce ... tanıttı")
-4. Spoken hook: one sentence, 5-9 words, about 2 seconds. First person or "you" (sen), like
-   telling a friend - not a presenter, not a press release. No "Bugün size ...", no "Tanıtayım",
+4. Spoken hook: one sentence, 5-9 words, about 2 seconds. Talk to "you" (sen), like telling a
+   friend - not a presenter, not a press release. "Buldum" (I found) is fine; claims of having
+   used the tool are not (rule 3). No "Bugün size ...", no "Tanıtayım",
    no "Yeni bir araç ...", no "YENİ".
 5. Proof fast. Right after the hook (2-6 s) show and say that the promise is real (what the
    product actually produces). Then one idea per sentence, 4-10 words, varied length, an

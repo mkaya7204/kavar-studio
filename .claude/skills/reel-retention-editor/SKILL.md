@@ -18,14 +18,21 @@ MUST
 - No ad look in the first 3 seconds: no tool logo / tool-name pill at the top, no "YENİ ARAÇ" /
   "NEW" badge, no CTA button shape, no prices. The tool name is not in the headline or the first
   spoken sentence (famous-brand news is the exception).
-- Triple hook: the on-screen headline and the first spoken sentence say the same thing.
-- The promise of the hook is proven within the first ~6 seconds (shown and said).
+- Triple hook: the on-screen headline and the first spoken sentence say the same thing (same
+  promise; small wording differences are fine).
+- The proof image under the headline is from this product's own site and relates to the promise
+  (its interface, output or workflow). It need not show the whole transformation: the Reel is made
+  from website captures, not screen recordings.
+- No first-person experience claims ("denedim", "çevirdim", "kullandım"): the page didn't use it.
 - Length 14-26 s; no dead air longer than ~0.6 s; the closing card is short (≈2 s).
 - Text never sits in the top ~270 px band or the bottom ~35 %, never cut off or overlapping.
 - Facts only from the tool data / source; page policy: no prices, payment models, free/paid,
   trials or discounts anywhere (screen, voice, caption).
 - Natural Turkish, correct İ/ı casing.
 SHOULD (list as problems, don't reject for these alone)
+- The promise is clearly demonstrated within the first ~6 seconds.
+- The shot plan in the script matches the rendered video (the renderer uses its own scene layout,
+  so differences in shot directions are expected and are not a problem).
 - Something changes on screen every 2-3 seconds.
 - The closing line gives a reason to send or save to a specific person.
 - Captions are short (≤3 words) and follow the voice.
