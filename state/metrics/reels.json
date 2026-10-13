@@ -37,5 +37,18 @@
     "duration_sec": 24.7,
     "words": 48,
     "status": "rejected: Kare 0 ve kapak: sadece başlık var, kanıt görseli (ürün/ekran görüntüsü) yok; boş arka plan. Zorunlu kural ihlali.; Hook'un vaadi ilk ~6 sn içinde gösterilmiyor: 0-2.5 sn arası aynı metin kartı, 5. sn'de de sadece metin kartı; hiçbir gerçek veri/ürün ekranı yok.; Plandaki ekran görüntüsü/ekran kaydı çekimleri uygulanmamış; sadece metin kartları var, kanıt yok."
+  },
+  {
+    "id": "2026-10-13_ngram-2-0",
+    "date": "2026-10-13",
+    "kind": "tool",
+    "tool": "ngram 2.0",
+    "hook_pattern": "result",
+    "headline": "Ekran kaydımı eğitim videosuna çevirdim",
+    "spoken_hook": "Ekran kaydımı bir eğitim videosuna çevirdim.",
+    "cta": "Bunu ekip yöneten arkadaşına at.",
+    "duration_sec": 24.6,
+    "words": 46,
+    "status": "rejected: Hook vaadi ilk ~6 sn içinde kanıtlanmıyor: kare 0 ve kapakta sadece boş bir komut ekranı var (Add a file, Create video, Try an example). Ekran kaydından eğitim videosuna dönüşüm gösterilmiyor. 5. sn karesi de sadece metin kartı (01).; Kare 0 ve kapaktaki turuncu 'Create video' butonu CTA butonu gibi görünüyor. İlk 3 sn reklam görünümü kuralına aykırı.; 'Çevirdim' birinci tekil kişi iddiası: sonucu gösteren bir görüntü yok ve kaynak metin bu sonucu doğrulamıyor. Hook yanıltıcı."
   }
 ]

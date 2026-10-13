@@ -32,5 +32,12 @@
     "pattern": "result",
     "spoken_hook": "Ajanıma canlı SEO ve reklam verisi verdim.",
     "cta": "Bunu pazarlamacı arkadaşına gönder."
+  },
+  {
+    "tool": "ngram 2.0",
+    "hook": "Ekran kaydımı eğitim videosuna çevirdim",
+    "pattern": "result",
+    "spoken_hook": "Ekran kaydımı bir eğitim videosuna çevirdim.",
+    "cta": "Bunu ekip yöneten arkadaşına at."
   }
 ]
