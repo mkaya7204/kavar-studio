@@ -50,5 +50,18 @@
     "duration_sec": 24.6,
     "words": 46,
     "status": "rejected: Hook vaadi ilk ~6 sn içinde kanıtlanmıyor: kare 0 ve kapakta sadece boş bir komut ekranı var (Add a file, Create video, Try an example). Ekran kaydından eğitim videosuna dönüşüm gösterilmiyor. 5. sn karesi de sadece metin kartı (01).; Kare 0 ve kapaktaki turuncu 'Create video' butonu CTA butonu gibi görünüyor. İlk 3 sn reklam görünümü kuralına aykırı.; 'Çevirdim' birinci tekil kişi iddiası: sonucu gösteren bir görüntü yok ve kaynak metin bu sonucu doğrulamıyor. Hook yanıltıcı."
+  },
+  {
+    "id": "2026-10-13_scrape-anything-by-context-dev",
+    "date": "2026-10-13",
+    "kind": "tool",
+    "tool": "Scrape Anything by Context.dev",
+    "hook_pattern": "result",
+    "headline": "Her web sitesi tek istekte veriye dönüşüyor",
+    "spoken_hook": "Her web sitesi tek istekte temiz veriye dönüşüyor.",
+    "cta": "Bunu ajan geliştiren arkadaşına at.",
+    "duration_sec": 24.9,
+    "words": 46,
+    "status": "produced"
   }
 ]

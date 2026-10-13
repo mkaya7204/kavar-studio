@@ -39,5 +39,12 @@
     "pattern": "result",
     "spoken_hook": "Ekran kaydımı bir eğitim videosuna çevirdim.",
     "cta": "Bunu ekip yöneten arkadaşına at."
+  },
+  {
+    "tool": "Scrape Anything by Context.dev",
+    "hook": "Her web sitesi tek istekte veriye dönüşüyor",
+    "pattern": "result",
+    "spoken_hook": "Her web sitesi tek istekte temiz veriye dönüşüyor.",
+    "cta": "Bunu ajan geliştiren arkadaşına at."
   }
 ]
