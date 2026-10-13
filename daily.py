@@ -13,6 +13,7 @@ published (the API can't add stickers). Everything is logged to output/logs/<dat
 """
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -178,6 +179,17 @@ def produce_reel() -> dict | None:
 def produce(only: str = "") -> None:
     """only: "" (everything), "reel" or "news" - for test runs; the queue keeps the other slots empty."""
     log(f"=== produce {only} ===".replace("  ", " "))
+    marker = ROOT / "state" / "last_produce.json"
+    if not only and not os.getenv("KAVAR_FORCE"):
+        try:
+            if json.loads(marker.read_text(encoding="utf-8")).get("date") == date.today().isoformat():
+                log("today's production already ran (state/last_produce.json); skipping")
+                return
+        except (OSError, json.JSONDecodeError):
+            pass
+    if not only:
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text(json.dumps({"date": date.today().isoformat()}), encoding="utf-8")
     try:
         from ig_publisher import refresh_token
         log(f"token refresh: {'ok' if refresh_token() else 'not needed / failed'}")
