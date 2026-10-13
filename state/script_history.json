@@ -25,5 +25,12 @@
     "pattern": "question",
     "spoken_hook": "Sitene gelenle hemen konuşabilsen ne olurdu?",
     "cta": "Bunu müşteri destek yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Manifold MCP",
+    "hook": "Ajanıma SEO ve reklam verisi verdim",
+    "pattern": "result",
+    "spoken_hook": "Ajanıma canlı SEO ve reklam verisi verdim.",
+    "cta": "Bunu pazarlamacı arkadaşına gönder."
   }
 ]
