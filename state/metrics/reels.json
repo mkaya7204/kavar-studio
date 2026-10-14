@@ -77,5 +77,18 @@
     "duration_sec": 29.9,
     "words": 55,
     "status": "rejected: Süre 29,9 sn; kural 14-26 sn arası. Bu bir MUST ihlali.; Kanıt görselinde oynatma düğmesi ve 'See it in action' yazısı var. Bu, oynamayan bir video karesi gibi görünüyor ve kapak/kare 0 için yanıltıcı.; Kanıt görseli kötü kırpılmış: üstteki düğme yarım kesilmiş, sol panel okunmuyor, görsel çok küçük."
+  },
+  {
+    "id": "2026-10-14_kai",
+    "date": "2026-10-14",
+    "kind": "tool",
+    "tool": "Kai",
+    "hook_pattern": "result",
+    "headline": "Takvimin ve mailin kendi kendine yönetiliyor",
+    "spoken_hook": "Takvimin ve mail kutun kendi kendine yönetiliyor.",
+    "cta": "Bunu toplantıdan nefes alamayan arkadaşına gönder.",
+    "duration_sec": 23.0,
+    "words": 44,
+    "status": "rejected: 11.5. saniyedeki site görüntüsünde \"No credit card required\" yazıyor. Ödeme ve deneme çağrışımı yapıyor, sayfa politikasına aykırı ve ekranda okunuyor.; 11.5. saniyede \"YERİNE YÜRÜTÜYOR\" altyazısı sitedeki yeşil butonun üstüne biniyor ve butonun yazısını kapatıyor. Üst üste binen metin ve buton şekli var.; 11.5. saniyede @thekavar.ai rozeti sitedeki butonun üstüne biniyor. Aynı karede Product Hunt rozeti de görünüyor, reklam görünümü veriyor."
   }
 ]

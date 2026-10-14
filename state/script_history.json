@@ -53,5 +53,12 @@
     "pattern": "result",
     "spoken_hook": "Tasarım dosyan telefonda kamera deneyimine dönüşüyor.",
     "cta": "Bunu AR işi yapan tasarımcı arkadaşına gönder."
+  },
+  {
+    "tool": "Kai",
+    "hook": "Takvimin ve mailin kendi kendine yönetiliyor",
+    "pattern": "result",
+    "spoken_hook": "Takvimin ve mail kutun kendi kendine yönetiliyor.",
+    "cta": "Bunu toplantıdan nefes alamayan arkadaşına gönder."
   }
 ]
