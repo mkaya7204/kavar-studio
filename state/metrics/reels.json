@@ -64,5 +64,18 @@
     "words": 46,
     "status": "scheduled",
     "measured_at": "2026-10-13"
+  },
+  {
+    "id": "2026-10-14_vincentt",
+    "date": "2026-10-14",
+    "kind": "tool",
+    "tool": "Vincentt",
+    "hook_pattern": "result",
+    "headline": "Tasarımın telefonda kameraya dönüşüyor",
+    "spoken_hook": "Tasarım dosyan telefonda kamera deneyimine dönüşüyor.",
+    "cta": "Bunu AR işi yapan tasarımcı arkadaşına gönder.",
+    "duration_sec": 29.9,
+    "words": 55,
+    "status": "rejected: Süre 29,9 sn; kural 14-26 sn arası. Bu bir MUST ihlali.; Kanıt görselinde oynatma düğmesi ve 'See it in action' yazısı var. Bu, oynamayan bir video karesi gibi görünüyor ve kapak/kare 0 için yanıltıcı.; Kanıt görseli kötü kırpılmış: üstteki düğme yarım kesilmiş, sol panel okunmuyor, görsel çok küçük."
   }
 ]

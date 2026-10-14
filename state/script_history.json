@@ -46,5 +46,12 @@
     "pattern": "result",
     "spoken_hook": "Her web sitesi tek istekte temiz veriye dönüşüyor.",
     "cta": "Bunu ajan geliştiren arkadaşına at."
+  },
+  {
+    "tool": "Vincentt",
+    "hook": "Tasarımın telefonda kameraya dönüşüyor",
+    "pattern": "result",
+    "spoken_hook": "Tasarım dosyan telefonda kamera deneyimine dönüşüyor.",
+    "cta": "Bunu AR işi yapan tasarımcı arkadaşına gönder."
   }
 ]
