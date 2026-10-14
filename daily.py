@@ -143,8 +143,21 @@ def produce_news_items(count: int) -> list[dict]:
     return items
 
 
+REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
+
+
 def produce_reel() -> dict | None:
-    log("reel: running the video pipeline")
+    for attempt in range(1, REEL_ATTEMPTS + 1):
+        log(f"reel: running the video pipeline (attempt {attempt}/{REEL_ATTEMPTS})")
+        item, rendered = _reel_attempt()
+        if item or not rendered:  # queued, or the pipeline found nothing to film
+            return item
+    return None
+
+
+def _reel_attempt() -> tuple[dict | None, bool]:
+    """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
+    A rejected tool is in the script history, so the next run moves on to another tool."""
     proc = subprocess.run([sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True, text=True,
                           encoding="utf-8", errors="replace", timeout=3600)
     lines = proc.stdout.splitlines()
@@ -152,7 +165,7 @@ def produce_reel() -> dict | None:
         log("   " + line)
     if proc.returncode != 0:
         log("   video pipeline failed")
-        return None
+        return None, False
     temp, final = ROOT / "output" / "temp", ROOT / "output" / "final"
     script = json.loads((temp / "script.json").read_text(encoding="utf-8"))
     tool = json.loads((temp / "tool.json").read_text(encoding="utf-8"))
@@ -172,8 +185,8 @@ def produce_reel() -> dict | None:
     if verdict["verdict"] != "publish":
         update_metrics(out.name, status=f"rejected: {'; '.join(verdict['problems'][:3])}")
         log("   reel not queued")
-        return None
-    return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"]}
+        return None, True
+    return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"]}, True
 
 
 def produce(only: str = "") -> None:
