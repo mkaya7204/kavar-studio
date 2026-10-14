@@ -90,5 +90,44 @@
     "duration_sec": 23.0,
     "words": 44,
     "status": "rejected: 11.5. saniyedeki site görüntüsünde \"No credit card required\" yazıyor. Ödeme ve deneme çağrışımı yapıyor, sayfa politikasına aykırı ve ekranda okunuyor.; 11.5. saniyede \"YERİNE YÜRÜTÜYOR\" altyazısı sitedeki yeşil butonun üstüne biniyor ve butonun yazısını kapatıyor. Üst üste binen metin ve buton şekli var.; 11.5. saniyede @thekavar.ai rozeti sitedeki butonun üstüne biniyor. Aynı karede Product Hunt rozeti de görünüyor, reklam görünümü veriyor."
+  },
+  {
+    "id": "2026-10-14_mentionbird",
+    "date": "2026-10-14",
+    "kind": "tool",
+    "tool": "MentionBird",
+    "hook_pattern": "question",
+    "headline": "Yapay zekâ seni mi rakibini mi öneriyor?",
+    "spoken_hook": "Yapay zekâ müşterine seni mi rakibini mi öneriyor?",
+    "cta": "Bunu SEO yapan arkadaşına gönder.",
+    "duration_sec": 27.2,
+    "words": 47,
+    "status": "rejected: Video 27,2 sn; limit 14-26 sn (zorunlu kural ihlali). Kapanış kartı da uzun görünüyor.; En uzun durağan an 7,83 sn; ekranda 2-3 sn'de bir değişim yok (SHOULD).; 13,6. sn karesinde kart içindeki metin bulanık/üst üste biniyor ('ÇIKARIYOR' altyazısı ile arka plan yazıları çakışıyor), okunaksız."
+  },
+  {
+    "id": "2026-10-14_the-drive-ai",
+    "date": "2026-10-14",
+    "kind": "tool",
+    "tool": "The Drive AI",
+    "hook_pattern": "result",
+    "headline": "Dosyaların tek cümleyle düzene giriyor",
+    "spoken_hook": "Dosyaların tek bir cümleyle düzene giriyor.",
+    "cta": "Bunu dosya içinde boğulan arkadaşına gönder.",
+    "duration_sec": 24.9,
+    "words": 45,
+    "status": "rejected: Kanıt görseli zayıf: kapak ve 0-2.5 sn karesinde sitenin sadece kırpılmış 'The AI assistant' başlığı var. Arayüz, çıktı ya da iş akışı görünmüyor, vaat (tek cümleyle düzen) gösterilmiyor.; Kanıt kartındaki 'The AI assistant' yazısı kartın altından kesiliyor (kapakta ve 0, 1, 2.5. sn karelerinde).; 12.4. sn karesinde 'OLUŞTURUYOR' altyazısı kaynak ekran görüntüsündeki metnin üstüne biniyor. Ekran görüntüsü bulanık ve kesik, metin okunmuyor. Örtüşme ve kesilme MUST ihlali."
+  },
+  {
+    "id": "2026-10-14_openwhispr-for-ios",
+    "date": "2026-10-14",
+    "kind": "tool",
+    "tool": "OpenWhispr for iOS",
+    "hook_pattern": "result",
+    "headline": "Konuştuğun her şey anında yazıya dönüşüyor",
+    "spoken_hook": "Konuştuğun her şey anında yazıya dönüşüyor.",
+    "cta": "Bunu toplantı notu tutan arkadaşına gönder.",
+    "duration_sec": 24.6,
+    "words": 47,
+    "status": "produced"
   }
 ]
