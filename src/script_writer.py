@@ -100,6 +100,9 @@ def reel_rule_problems(script: "VideoScript") -> list[str]:
         problems.append(f"headline has {len(script.hook.split())} words; max 7")
     if len(spoken.split()) > 10:
         problems.append(f"spoken hook has {len(spoken.split())} words; max 9")
+    high = TARGET_WORDS_BY_LANGUAGE.get(_load_language(), TARGET_WORDS)[1]
+    if (words := len(script.voiceover.split())) > high + 2:  # 55 Turkish words rendered a 29.9 s Reel (max 26)
+        problems.append(f"voiceover has {words} words; max {high} - cut a sentence")
     if len(script.hook_candidates) < 3:
         problems.append("write 5 hook_candidates (one per pattern) before choosing the hook")
     texts = [script.hook, script.voiceover, script.caption, script.why_it_matters,

@@ -91,7 +91,8 @@ def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000) -> 
         browser = p.chromium.launch()
         try:
             page = browser.new_page(viewport={"width": 1280, "height": 1000}, device_scale_factor=2,
-                                    user_agent=HEADERS["User-Agent"], locale="en-US")
+                                    user_agent=HEADERS["User-Agent"], locale="en-US",
+                                    bypass_csp=True)  # strict CSPs (style-src 'self') would block our cleanup CSS
             try:  # only the first response is required; news pages keep loading ads for ages
                 resp = page.goto(url, wait_until="commit", timeout=timeout_ms)
             except PlaywrightTimeout as exc:
