@@ -348,7 +348,7 @@ def fetch() -> None:
     log("=== fetch (cloud production) ===")
     subprocess.run(["git", "pull", "--rebase", "--autostash", "-q"], cwd=ROOT, check=False)
     runs = json.loads(subprocess.run(
-        [_gh(), "run", "list", "--workflow", "produce.yml", "--limit", "5",
+        [_gh(), "run", "list", "--workflow", "produce.yml", "--branch", "main", "--limit", "8",
          "--json", "databaseId,status,conclusion,createdAt"],
         cwd=ROOT, capture_output=True, text=True, encoding="utf-8", check=True).stdout)
     since = datetime.now(timezone.utc) - timedelta(hours=20)  # createdAt is UTC; 06:30 TRT = 03:30 UTC
@@ -365,7 +365,8 @@ def fetch() -> None:
     tmp = ROOT / "output" / "_download"
     for run in [r for r in today if r["status"] == "completed"]:
         shutil.rmtree(tmp, ignore_errors=True)
-        proc = subprocess.run([_gh(), "run", "download", str(run["databaseId"]), "--dir", str(tmp)], cwd=ROOT,
+        proc = subprocess.run([_gh(), "run", "download", str(run["databaseId"]), "-n", "kavar-output",
+                               "--dir", str(tmp)], cwd=ROOT,
                               capture_output=True, text=True, encoding="utf-8")
         archives = list(tmp.rglob("*.tgz"))
         listing = subprocess.run(["tar", "-tzf", str(archives[0])], capture_output=True, text=True,

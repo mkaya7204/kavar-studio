@@ -24,6 +24,9 @@ on:
       only:
         description: "all | reel | news (news = carousels only)"
         default: all
+      dry:
+        description: "yes = full test run: nothing is committed, and the archive is not today's (fetch ignores it)"
+        default: "no"
 
 permissions:
   contents: write
@@ -120,12 +123,12 @@ jobs:
       - uses: actions/upload-artifact@v7
         if: always() && steps.guard.outputs.skip != 'true'
         with:
-          name: kavar-output
+          name: ${{ github.event.inputs.dry == 'yes' && 'kavar-dryrun' || 'kavar-output' }}
           path: kavar-*.tgz
           retention-days: 7
 
       - name: Save state (used news, recent hooks, Reel metrics)
-        if: always() && steps.guard.outputs.skip != 'true'
+        if: always() && steps.guard.outputs.skip != 'true' && github.event.inputs.dry != 'yes'
         run: |
           git config user.name "kavar-bot"
           git config user.email "kavar-bot@users.noreply.github.com"
