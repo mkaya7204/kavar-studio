@@ -61,7 +61,11 @@ jobs:
 
       - name: Claude Code CLI and HyperFrames
         run: |
-          npm install -g @anthropic-ai/claude-code
+          for i in 1 2 3; do
+            npm install -g @anthropic-ai/claude-code && claude --version && break
+            echo "Claude Code CLI install broken (try $i), reinstalling"; npm uninstall -g @anthropic-ai/claude-code || true
+          done
+          claude --version  # fail here, not later in the run, if all tries broke
           npx --yes hyperframes@0.8.145 --version || true
 
       - name: Fonts (Inter, OFL - stands in for Windows-only Segoe UI under the template's file names)
