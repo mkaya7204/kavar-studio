@@ -16,6 +16,7 @@ from pydantic import BaseModel, ValidationError, field_validator, model_validato
 
 from carousel_writer import MAX_HASHTAGS, STORY_FRAMES, STORY_WORDS, StoryFrame, _ask, _revision_prompt
 from script_writer import NO_PRICE_RULE, price_mentions
+from skill_rules import editor_lessons
 
 SLIDES = (6, 10)
 BODY_WORDS = {"news": (20, 75), "why": (12, 45)}
@@ -180,6 +181,8 @@ context, then "Kaynak: <publisher>". 0-2 emojis. hashtags: 3-{MAX_HASHTAGS}, e.g
 the company / product.
 alt_text: per slide, under 125 characters, Turkish.
 Fill every field; "" / 0 / [] when unused."""
+if _lessons := editor_lessons():  # rules/editor_lessons.md: hand-fixed rejections
+    SYSTEM_PROMPT += "\n\n" + _lessons
 
 
 def _user_message(article: dict) -> str:

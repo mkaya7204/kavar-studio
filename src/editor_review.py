@@ -17,7 +17,7 @@ from PIL import Image
 
 from reel_qa import first_frame_report, make_cover, pacing_report
 from script_writer import CLI_TIMEOUT, NO_PRICE_RULE, _claude_cli
-from skill_rules import skill_rules
+from skill_rules import editor_lessons, skill_rules
 
 REEL_RULES = skill_rules("reel-retention-editor")
 
@@ -58,6 +58,8 @@ Verdict: "publish" if it is ready; "fix" only for text problems you can fix by r
 title/body (give each fix with the 1-based slide number and the complete new title and body, \
 keeping **highlight** marks and similar length); "reject" for anything else that is wrong. \
 List every problem you found in Turkish, short."""
+if _lessons := editor_lessons():  # rules/editor_lessons.md: hand-fixed rejections
+    SYSTEM += "\n\n" + _lessons
 
 
 def contact_sheet(images: list[Path], out: Path, cols: int = 5, w: int = 432) -> Path:

@@ -26,7 +26,7 @@ from pydantic import BaseModel, ValidationError, field_validator, model_validato
 
 from fetcher import Tool
 from reel_metrics import summary_for_prompt
-from skill_rules import skill_rules
+from skill_rules import editor_lessons, skill_rules
 
 ROOT = Path(__file__).resolve().parent.parent
 MODEL = "claude-opus-5-5"
@@ -246,6 +246,8 @@ Fields:
 Only state facts present in the tool data; if something isn't given, keep it general rather than inventing features, prices or numbers.
 
 """ + NO_PRICE_RULE
+if _lessons := editor_lessons():  # rules/editor_lessons.md: hand-fixed rejections
+    SYSTEM_PROMPT += "\n\n" + _lessons
 
 
 def _load_language() -> str:

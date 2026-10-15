@@ -11,6 +11,28 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / ".claude" / "skills"
 
 
+LESSONS = ROOT / "rules" / "editor_lessons.md"
+LESSONS_MAX_CHARS = 8000  # newest lessons are kept when the file grows past this
+
+
+def editor_lessons() -> str:
+    """Lessons from content Claude fixed by hand after the editor rejected it (agreed workflow,
+    rules/editor_lessons.md). The editor and the writers read them, so a mistake fixed once is
+    not made, or wrongly rejected, again. "" if there are none."""
+    try:
+        text = LESSONS.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+    entries = text.split("\n## ")[1:]  # one "## <date> ..." section per lesson
+    out = ""
+    for e in reversed(entries):  # newest first, until the budget is spent
+        if len(out) + len(e) > LESSONS_MAX_CHARS:
+            break
+        out = f"## {e.strip()}\n\n" + out
+    return ("Lessons from earlier posts (each was a real mistake or a wrong rejection, fixed by hand; "
+            "apply them):\n\n" + out.strip()) if out else ""
+
+
 def skill_rules(name: str) -> str:
     """Text between <!-- RULES:START --> and <!-- RULES:END --> ("" if the skill is missing)."""
     try:
