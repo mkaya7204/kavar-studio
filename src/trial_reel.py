@@ -54,7 +54,8 @@ one output, a second honest observation about it.
 article says so.
 - "denedik", "yazdırdık", "sorduk", "çizdirdik" are allowed here, only about these tests (we did \
 them; "we" = the page). Never praise beyond the editor's verdict on each output.
-- Facts only from the article and the KAVAR TEST section. Never mention our internal checks."""
+- Facts only from the article and the KAVAR TEST section. Never mention our internal checks.
+- caption: the same verdicts and verbs as the voiceover, never stronger. No superlatives ("kusursuz", "mükemmel", "harika", "inanılmaz") unless the editor's verdict says exactly that."""
 
 
 def short_name(model: str) -> str:
