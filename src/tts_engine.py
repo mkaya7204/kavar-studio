@@ -34,7 +34,7 @@ load_dotenv(ROOT / ".env")  # provider keys
 DEFAULT_VOICE = "en-US-AriaNeural"  # alt: "en-US-ChristopherNeural" (male)
 VOICES = {"en": DEFAULT_VOICE, "tr": "tr-TR-AhmetNeural"}  # config.json "language" -> voice; alt tr: "tr-TR-EmelNeural"
 DEFAULT_PROVIDERS = ["elevenlabs", "azure", "edge"]
-ELEVENLABS_VOICE = "JBFqnCBsd6RMkjVDRZzb"  # "George", a premade multilingual voice; override with ELEVENLABS_VOICE_ID
+ELEVENLABS_VOICE = "JBFqnCBsd6RMkjVDRZzb"  # "George" (multilingual): the user chose to keep it for Reels, 2026-10-16
 ELEVENLABS_MODEL = "eleven_multilingual_v2"  # best quality for Turkish
 ELEVENLABS_SEED = 4242  # same seed every run, for a consistent delivery
 MAX_SECONDS = 30.0
