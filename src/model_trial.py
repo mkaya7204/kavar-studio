@@ -157,12 +157,36 @@ def _run_llm(model: str, out: Path) -> dict | None:
 
 # --- image models (public Hugging Face Space) ---------------------------------------------------
 
+BLOCKED_SPACE_WORDS = ("nsfw", "nude", "naked", "porn", "hentai", "erotic", "sexy", "uncensored", "lewd")
+
+
 def _spaces(terms: list[str]) -> list[str]:
+    """Public Gradio Spaces whose name really contains the model's name (not look-alikes)."""
+    keys = [_norm(t) for t in terms if len(_norm(t)) >= 4]
     found = []
     for t in terms:
-        r = requests.get(HF_API, params={"search": t, "sort": "likes", "limit": 5, "full": "true"}, timeout=20)
-        found += [s["id"] for s in r.json() if s.get("sdk") == "gradio" and s["id"] not in found]
+        r = requests.get(HF_API, params={"search": t, "sort": "likes", "limit": 20, "full": "true"}, timeout=20)
+        for s in r.json():
+            sid = s["id"]
+            if (s.get("sdk") == "gradio" and sid not in found and any(k in _norm(sid) for k in keys)
+                    and not any(w in sid.lower() for w in BLOCKED_SPACE_WORDS)):
+                found.append(sid)
     return found[:4]
+
+
+def _client(space: str):
+    """gradio_client.Client across versions (hf_token was renamed token; verbose came and went)."""
+    import inspect
+
+    from gradio_client import Client
+
+    params = inspect.signature(Client).parameters
+    kw = {}
+    if tok := os.environ.get("HF_TOKEN"):
+        kw["token" if "token" in params else "hf_token"] = tok
+    if "verbose" in params:
+        kw["verbose"] = False
+    return Client(space, **kw)
 
 
 def _image_from(result) -> Path | None:
@@ -197,15 +221,17 @@ def _space_image(client, prompt: str) -> Path | None:
 
 def _run_image(terms: list[str], out: Path) -> dict | None:
     try:
-        from gradio_client import Client
+        import gradio_client  # noqa: F401
     except ImportError:
         print("[trial] gradio_client not installed; image test skipped")
         return None
-    for space in _spaces(terms):
+    spaces = _spaces(terms)
+    print(f"[trial] Spaces to try: {spaces or 'none'}")
+    for space in spaces:
         try:
-            client = Client(space, hf_token=os.environ.get("HF_TOKEN") or None, verbose=False)
+            client = _client(space)
         except Exception as exc:  # noqa: BLE001
-            print(f"[trial] {space}: can't connect ({type(exc).__name__})")
+            print(f"[trial] {space}: can't connect ({type(exc).__name__}: {str(exc)[:200]})")
             continue
         figures, notes = [], []
         for i, prompt in enumerate(IMAGE_TESTS, 1):
