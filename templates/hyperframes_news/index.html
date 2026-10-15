@@ -468,6 +468,22 @@
         font-size: 90px;
         line-height: 1;
       }
+      /* the page's own part of the outro (user, 2026-10-15): handle + a small follow line, an
+         outlined pill rather than the big glowing button that read like an ad */
+      #outro-follow {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-top: 34px;
+        padding: 16px 34px;
+        border: 3px solid var(--neon);
+        border-radius: 999px;
+        font-size: 44px;
+        color: var(--ink);
+      }
+      #outro-follow b {
+        color: var(--neon);
+      }
       #follow-sub {
         margin-top: 44px;
         font-size: 46px;
@@ -636,6 +652,7 @@
         <div id="follow-btn" class="black"><span id="follow-plus">+</span><span id="follow-label">TAKİP ET</span></div>
         <p id="follow-sub">Her gün yeni teknoloji haberleri için</p>
         <img id="outro-wordmark" src="assets/brand_wordmark.svg" alt="" />
+        <div id="outro-follow" class="black"><span id="outro-handle">@thekavar.ai</span><b id="outro-follow-label">+ TAKİP ET</b></div>
       </section>
 
       <!-- persistent chrome (0-30) -->
@@ -707,6 +724,8 @@
       $("follow-label").textContent = up(v.follow_label);
       $("follow-sub").textContent = v.follow_sub;
       $("page-handle").textContent = v.brand_handle || "";
+      $("outro-handle").textContent = v.brand_handle || "";
+      $("outro-follow-label").textContent = "+ " + up(v.follow_label);
       $("outro-initial").textContent = up(String(v.tool_name || "?").trim().charAt(0));
       $("outro-logo").style.display = v.has_logo ? "block" : "none";
       $("outro-initial").style.display = v.has_logo ? "none" : "block";
@@ -841,6 +860,7 @@
       tl.fromTo(ctaWords, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out", stagger: 0.04 }, ot + 0.05);
       tl.fromTo("#outro-domain", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "none" }, ot + 0.3);
       tl.fromTo("#outro-wordmark", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.8)" }, ot + 0.4);
+      tl.fromTo("#outro-follow", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, ot + 0.55);
       // the page mark stays out of the hook (frame 0 = one clear message), then sits under the top UI band
       tl.set("#page-mark", { opacity: 0 }, 0);
       tl.fromTo("#page-mark", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, hookEnd);
