@@ -52,7 +52,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: main  # a later scheduled run must see the state an earlier run pushed
+          # scheduled runs: main's newest commit (they must see the state an earlier run pushed);
+          # manual runs: the branch they were started on
+          ref: ${{ github.event_name == 'schedule' && 'main' || github.ref }}
 
       - name: Guard (scheduled runs skip a day that is already produced)
         id: guard

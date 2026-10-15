@@ -50,7 +50,7 @@ def test_production_has_three_tries_and_a_guard():
     wf = _wf("produce.yml")
     assert len(wf[True]["schedule"]) == 3  # yaml reads "on" as True
     steps = wf["jobs"]["produce"]["steps"]
-    assert steps[0]["with"]["ref"] == "main"
+    assert "'main'" in steps[0]["with"]["ref"] and "schedule" in steps[0]["with"]["ref"]
     assert steps[1]["id"] == "guard"
     produce = next(s for s in steps if s.get("name", "").startswith("Produce"))
     assert "steps.guard.outputs.skip" in produce["if"]
