@@ -150,6 +150,15 @@ def produce_news(item: dict) -> Path:
                                                   encoding="utf-8")
     print("▶ Writing the news carousel...", flush=True)
     script = generate_news(article)
+    if script is None and article.get("trial_note"):  # the test's extra rules failed every draft:
+        print("   no valid draft with our test; writing it as a normal news carousel", flush=True)
+        article["figures"] = [f for f in article["figures"] if not f.get("credit")]  # keep the story
+        article["cover_path"] = article.pop("article_cover_path", article["cover_path"])
+        for key in ("trial_note", "trial_model", "cover_credit"):
+            article.pop(key, None)
+        (out / "article" / "article.json").write_text(json.dumps(article, indent=2, ensure_ascii=False),
+                                                      encoding="utf-8")
+        script = generate_news(article)
     if script is None:
         raise CaptureError("no Claude source wrote a valid news carousel (news mode has no mock)")
     print(f"   source={script['source']}, {len(script['slides'])} slides, headline: \"{script['slides'][0]['title']}\"")

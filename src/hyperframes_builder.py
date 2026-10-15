@@ -459,7 +459,7 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
         "headline": script["hook"],
         "why": script["why_it_matters"],
         "tool_name": script["tool_name"],
-        "domain": _domain(script["website_url"]),
+        "domain": capture.get("domain_label") or _domain(script["website_url"]),  # "Biz denedik": ours
         "has_logo": has_logo,
         "fullpage_height": fullpage_height,
         "plan": json.dumps(plan),

@@ -12,8 +12,13 @@
 name: produce
 
 on:
+  # GitHub starts scheduled runs late or skips them (hours late on 10-13/14/15), so three tries.
+  # The first that produces something writes state/last_produce.json; the later ones see it in
+  # the guard step and stop within seconds. Minutes avoid :00/:30 (GitHub's busiest marks).
   schedule:
-    - cron: "30 3 * * *"
+    - cron: "17 3 * * *"   # 06:17 TRT
+    - cron: "47 4 * * *"   # 07:47 TRT, if the first was skipped or produced nothing
+    - cron: "17 6 * * *"   # 09:17 TRT, last try
   workflow_dispatch:
     inputs:
       only:
@@ -43,23 +48,40 @@ jobs:
       KAVAR_FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: main  # a later scheduled run must see the state an earlier run pushed
+
+      - name: Guard (scheduled runs skip a day that is already produced)
+        id: guard
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && python3 -c "import json,datetime,sys; sys.exit(0 if json.load(open('state/last_produce.json')).get('date') == datetime.date.today().isoformat() else 1)" 2>/dev/null; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"; echo "today is already produced; nothing to do"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-python@v7
+        if: steps.guard.outputs.skip != 'true'
         with:
           python-version: "3.13"
           cache: pip
       - uses: actions/setup-node@v7
+        if: steps.guard.outputs.skip != 'true'
         with:
           node-version: "22"
 
       - name: System packages (ffmpeg)
+        if: steps.guard.outputs.skip != 'true'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
 
       - name: Python packages and Chromium
+        if: steps.guard.outputs.skip != 'true'
         run: |
           pip install -q -r requirements.txt
           python -m playwright install --with-deps chromium
 
       - name: Claude Code CLI and HyperFrames
+        if: steps.guard.outputs.skip != 'true'
         run: |
           for i in 1 2 3; do
             npm install -g @anthropic-ai/claude-code && claude --version && break
@@ -69,6 +91,7 @@ jobs:
           npx --yes hyperframes@0.8.145 --version || true
 
       - name: Fonts (Inter, OFL - stands in for Windows-only Segoe UI under the template's file names)
+        if: steps.guard.outputs.skip != 'true'
         run: |
           curl -sSL -o /tmp/inter.zip https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip
           unzip -q -o /tmp/inter.zip -d /tmp/inter
@@ -78,10 +101,11 @@ jobs:
           ls -la templates/hyperframes_news/assets/fonts
 
       - name: Produce (news carousels + Reel, each reviewed by the editor)
+        if: steps.guard.outputs.skip != 'true'
         run: python daily.py produce ${{ github.event.inputs.only != 'all' && github.event.inputs.only || '' }}
 
       - name: Pack today's output
-        if: always()
+        if: always() && steps.guard.outputs.skip != 'true'
         run: |
           D=$(date +%F)
           tar -czf kavar-$D.tgz --ignore-failed-read output/queue output/logs \
@@ -89,14 +113,14 @@ jobs:
           ls -la kavar-$D.tgz
 
       - uses: actions/upload-artifact@v7
-        if: always()
+        if: always() && steps.guard.outputs.skip != 'true'
         with:
           name: kavar-output
           path: kavar-*.tgz
           retention-days: 7
 
       - name: Save state (used news, recent hooks, Reel metrics)
-        if: always()
+        if: always() && steps.guard.outputs.skip != 'true'
         run: |
           git config user.name "kavar-bot"
           git config user.email "kavar-bot@users.noreply.github.com"
