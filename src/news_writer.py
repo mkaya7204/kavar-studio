@@ -165,7 +165,8 @@ Never praise more than the output shows; a wrong answer is news too.
 what it can do and who can use it. Leave out developer jargon (GPU names, library, encoder, \
 LoRA, checkpoint, quantization) unless one word is essential; 7-8 slides in total is enough.
 - then why, cta.
-You may write "denedik" only about these tests. Mention the test in the caption, and use the \
+Never mention our internal checks to readers (which image is the cover, that an output has no \
+logo or price). You may write "denedik" only about these tests. Mention the test in the caption, and use the \
 test result in story frame 1.
 
 Story set: frame 1 role "hook" (the headline, short), 1-2 "fact" frames, optionally a "poll" \

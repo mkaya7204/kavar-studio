@@ -332,7 +332,7 @@ def run_trial(article: dict, out_dir: Path) -> dict | None:
 class Judgement(BaseModel):
     class Result(BaseModel):
         test: int
-        assessment: str  # 1-2 English sentences: what is right, what is wrong, concretely
+        assessment: str  # 1-2 English sentences on the output's quality vs the prompt (readers see it)
         usable: bool  # false: shows a price / currency, another brand's logo, or unsafe content
 
     results: list[Result]
@@ -343,7 +343,9 @@ JUDGE_SYSTEM = """You check the outputs of a quick test we ran on a new AI model
 shown on an Instagram page. Use the Read tool to open every image named in the message and look \
 closely. For each test, judge the output against what we asked: what is right, what is wrong \
 (misspelled text, wrong landmarks, extra fingers, wrong math, unnatural Turkish...). Be concrete \
-and fair, no hype, no hedging. usable false if the output shows any price or currency (e.g. \
+and fair, no hype, no hedging. The assessment is retold to readers, so it is only about the \
+output's quality against the prompt: never mention usability, prices, logos or the cover choice \
+there (those go in usable / cover). usable false if the output shows any price or currency (e.g. \
 "50 Kr", "₺", "$"), a real brand's logo other than KAVAR, a real identifiable person, or anything \
 sexual, violent or offensive: our page never shows those. cover: the test whose output is striking and clean enough to be \
 the post's cover image (no visible flaws, works small); 0 if none is."""
