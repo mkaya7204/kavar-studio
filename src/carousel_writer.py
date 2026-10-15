@@ -145,7 +145,7 @@ def carousel_problems(c: CarouselDraft) -> list[str]:
             out.append(f"slide {i}: visual 'page' needs page_section 1-3")
         if len(s.alt_text) > 125:
             out.append(f"slide {i}: alt_text over 125 characters")
-    texts = [c.caption]
+    texts = [c.caption, *c.hashtags]
     for s in c.slides:
         texts += [s.kicker, s.title, s.body, s.stat, s.alt_text, *s.items, *s.items_right]
     for f in c.story:

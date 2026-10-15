@@ -1,0 +1,125 @@
+{
+  "slides": [
+    {
+      "role": "cover",
+      "title": "Yeni açık modeli denedik: neon tabelaya KAVAR yazdırdık",
+      "body": "",
+      "visual": "cover",
+      "visual_index": 8,
+      "alt_text": "Yağmurlu gece sokağında pembe-kırmızı neon KAVAR tabelası"
+    },
+    {
+      "role": "news",
+      "title": "FLUX.3 Image Klein geldi",
+      "body": "Black Forest Labs'in yeni açık görsel üretim modeli **FLUX.3 Image Klein**, 15 Ekim'de Hugging Face'te tanıtıldı. Tek model; **yazıdan görsel**, referans görselden yeni görsel ve **kutularla yerleşim kontrolü** sunuyor.",
+      "visual": "page",
+      "visual_index": 0,
+      "alt_text": "Hugging Face blog yazısının FLUX.3 Image Klein başlık alanı"
+    },
+    {
+      "role": "news",
+      "title": "Biz denedik: KAVAR tabelası",
+      "body": "Modele yağmurlu bir gece sokağı ve \"KAVAR\" yazan neon tabela istedik. **Yazı doğru ve net çıktı.** Yağmur ve ıslak zemin inandırıcı. Eksik: tabela gerçek neon tüpten çok ışıklı bir kutuya benziyor, pencere arkasındaki figür belirsiz.",
+      "visual": "figure",
+      "visual_index": 8,
+      "alt_text": "Modelin ürettiği yağmurlu gece sokağı ve KAVAR neon tabelası"
+    },
+    {
+      "role": "news",
+      "title": "Biz denedik: simitçi",
+      "body": "İstanbul'da gün doğumunda Galata Köprüsü'nde simitçi istedik. Simitler ve martılar iyi, ışık sinematik, yazı da yok. Ama **köprü Galata olarak tanınmıyor**: kule ve siluet yok. Tepsi tutuşu ve elin yanı biraz karışık.",
+      "visual": "figure",
+      "visual_index": 7,
+      "alt_text": "Modelin ürettiği, tepsi taşıyan simitçi ve martılar"
+    },
+    {
+      "role": "news",
+      "title": "Neler yapabiliyor?",
+      "body": "Mevcut bir görseli yazarak değiştirmek, birden fazla referans vermek mümkün. Kutularla yerleşim de tarif edilebiliyor: örneğin örgü şövalyeyi yukarı-sola taşıyıp **diğer bölgeleri yerinde sabit tutmak**. Kendi görsel stilini öğretmek için eğitim araçları da var.",
+      "visual": "figure",
+      "visual_index": 5,
+      "alt_text": "Referans görsel ve şövalyenin taşındığı çıktı, kutular işaretli"
+    },
+    {
+      "role": "news",
+      "title": "Ne kadar hızlı?",
+      "body": "Hugging Face'e göre hızlı sürüm, güçlü bir sunucu ekran kartında **1024×1024 boyutunda görseli yaklaşık 2 saniyede** üretiyor. Referans görsel eklemek süreyi yaklaşık iki katına çıkarıyor.",
+      "visual": "figure",
+      "visual_index": 1,
+      "alt_text": "Tilki, görselden görsel ve kutuyla yerleşim örnekleri"
+    },
+    {
+      "role": "why",
+      "title": "Neden önemli?",
+      "body": "Açık bir model hem görsel üretiyor hem düzenliyor hem yerleşimi kontrol ettirebiliyor. Testimiz yazıyı doğru yazdığını gösterdi; yer tanıma ise zayıf kaldı.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": ""
+    },
+    {
+      "role": "cta",
+      "title": "Yapay zekada olanları ilk sen öğren",
+      "body": "Yeni modelleri denemeye devam ediyoruz.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": ""
+    }
+  ],
+  "story": [
+    {
+      "role": "hook",
+      "kicker": "Biz denedik",
+      "title": "Yeni açık modele KAVAR tabelası yazdırdık",
+      "body": "Yazıyı doğru yazdı.",
+      "visual": "screenshot",
+      "page_section": 0,
+      "poll_options": []
+    },
+    {
+      "role": "fact",
+      "kicker": "Test",
+      "title": "Simitçi sahnesi iyi, köprü değil",
+      "body": "Galata Köprüsü net tanınmadı; simit ve martılar iyi çıktı.",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": []
+    },
+    {
+      "role": "poll",
+      "kicker": "Sen ne dersin?",
+      "title": "Yapay zekâ görsellerinde en büyük sorun?",
+      "body": "",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": [
+        "Yazılar",
+        "Detaylar"
+      ]
+    },
+    {
+      "role": "link",
+      "kicker": "",
+      "title": "Tamamı için linke dokun",
+      "body": "FLUX.3 Image Klein'ın tüm hikâyesi gönderide.",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": []
+    }
+  ],
+  "caption": "FLUX.3 Image Klein yapay zeka görsel modelini denedik: neon tabelaya KAVAR yazısını doğru yazdı.\nBlack Forest Labs'in açık modeli 15 Ekim'de tanıtıldı; görsel üretiyor, düzenliyor, kutularla yerleşim kontrolü veriyor.\nSimitçi testinde Galata Köprüsü ise net tanınmadı.\nKaynak: Hugging Face",
+  "hashtags": [
+    "#yapayzeka",
+    "#FLUX3",
+    "#BlackForestLabs",
+    "#HuggingFace"
+  ],
+  "kind": "news",
+  "tool_name": "huggingface.co",
+  "website_url": "https://huggingface.co/blog/flux-3",
+  "title": "Welcome FLUX.3 Image Klein in Diffusers",
+  "published": "2026-10-15T15:30:52",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "figures": 8,
+  "videos": 0
+}

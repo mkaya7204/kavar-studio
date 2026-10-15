@@ -1,0 +1,98 @@
+{
+ "url": "https://huggingface.co/blog/flux-3",
+ "title": "Welcome FLUX.3 Image Klein in Diffusers",
+ "publisher": "huggingface.co",
+ "domain": "huggingface.co",
+ "published": "2026-10-15T15:30:52",
+ "text": "## Welcome FLUX.3 Image Klein in Diffusers: The latest open image generation model from Black Forest Labs\nBoth open checkpoints are in the FLUX.3 Image Klein collection:\nYou can head on to the Hugging Face space and generate some images right now!\n## TL;DR\nOne model for text-to-image, multi-reference image-to-image, and bounding-box layout control.\nThe distilled checkpoint makes a 1024 × 1024 image in about 2 seconds on an H100.\nNVFP4 and FP8 weights load with from_single_file, for smaller GPUs.\nLoRA training scripts for both text-to-image and image editing.\nShips as a Modular Diffusers pipeline, so you can pop blocks out or add your own.\n## Contents\nGetting started\nWhat FLUX.3 can do\nBase model and quantized variants\nLoRA finetuning\nWhat it costs to run\nThe architecture\nModular Diffusers\nTry it\n## Getting started\nInstall the latest diffusers and transformers (for the Qwen3-VL text encoder):\nLoad the distilled checkpoint and generate an image:\n## What FLUX.3 can do\n## Text-to-image\nFLUX.3 responds best to a full scene description with the subject, the setting, the light, the composition, and the style. The official prompting guide from Black Forest Labs has more tips. The distilled checkpoint generates a 1024 × 1024 image in 16 steps by default. Pass height, width, or num_inference_steps to change them.\n## Image-to-image\nPass a reference image (or more) with the image argument. Write the prompt as a caption of the image you want, with the change included.\nWith several references, refer to them in the prompt as <ref_image_0>, <ref_image_1>, ... in the order they are passed to image:\n## Layout control\nAdd a JSON list of regions after the caption. Each region has an id, a bbox, and a desc, and the caption mentions it as <id>.\nBoxes are written as [y_min, x_min, y_max, x_max], y first, on a 0–1000 scale. Because the scale is normalized, the same box works at any image size.\nFor edits, each region says where its content comes from (src_bbox in the reference) and where it goes (tgt_bbox in the output). A region with the same two boxes stays where it is.\nThis example moves the knitted knight up and to the left, and pins the backdrop, the cliff, the needle, the dragon, and the fire:\n## Base model and quantized variants\n## Base model\nEverything above uses the distilled checkpoint. The base checkpoint runs 50 steps with classifier-free guidance, and it's the one to fine-tune (see LoRA finetuning).\n## Single-file format checkpoints\nBlack Forest Labs also ships the transformer as a single file, in bf16 and in two quantized formats: fp8r (rowwise FP8) and nvfp4. Load any of them with from_single_file, then load the other components by name so the bf16 transformer isn't downloaded too.\nFor the unquantized single file, use https://huggingface.co/{model_id}/blob/main/model.safetensors and drop quantization_config.\n## LoRA finetuning\nFLUX.3 works for both text-to-image and image-to-image, which makes it a great base for custom LoRAs. diffusers ships DreamBooth Lo",
+ "cover_path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/trial/trial_2.png",
+ "page_path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/page.png",
+ "figures": [
+  {
+   "n": 1,
+   "path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/fig_1.png",
+   "size": [
+    1408,
+    328
+   ],
+   "alt": "a red fox in a snowy forest (text-to-image), the same fox re-rendered from that image (image-to-image), a black stippled running silhouette on a chartreuse background, drawn inside its labeled boundin",
+   "caption": ""
+  },
+  {
+   "n": 2,
+   "path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/fig_2.png",
+   "size": [
+    1372,
+    1468
+   ],
+   "alt": "A red fox standing alert in a snow-covered forest clearing, lit by low golden sunlight from the left",
+   "caption": ""
+  },
+  {
+   "n": 3,
+   "path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/fig_3.png",
+   "size": [
+    1372,
+    1470
+   ],
+   "alt": "The fox from the previous image, relit in cold blue light",
+   "caption": ""
+  },
+  {
+   "n": 4,
+   "path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/fig_4.png",
+   "size": [
+    1372,
+    534
+   ],
+   "alt": "Diagram: the caption and the two region descriptions on the left, the two boxes on a 0–1000 grid in the middle, and the generated image on the right, where a black stippled runner fills the silhouette",
+   "caption": ""
+  },
+  {
+   "n": 5,
+   "path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/fig_5.png",
+   "size": [
+    1372,
+    868
+   ],
+   "alt": "Left: the reference with the knight's source box. Right: the output with an arrow from the source box to the target box; the pinned regions are outlined in white",
+   "caption": ""
+  },
+  {
+   "n": 6,
+   "path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/fig_6.png",
+   "size": [
+    1408,
+    858
+   ],
+   "alt": "FLUX.3 tarot-style LoRA across ranks and optimizers: the base model with no LoRA, then rank 16, rank 8 and rank 32 (AdamW, lr 1e-4) and a Prodigy run, on two held-out prompts",
+   "caption": ""
+  },
+  {
+   "path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/trial/trial_1.png",
+   "size": [
+    1024,
+    1024
+   ],
+   "credit": "KAVAR denemesi",
+   "alt": "Yeni modelle ürettiğimiz görsel",
+   "caption": "KAVAR TEST 1: an image we made with the model, unedited",
+   "n": 7
+  },
+  {
+   "path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/trial/trial_2.png",
+   "size": [
+    1024,
+    1024
+   ],
+   "credit": "KAVAR denemesi",
+   "alt": "Yeni modelle ürettiğimiz görsel",
+   "caption": "KAVAR TEST 2: an image we made with the model, unedited",
+   "n": 8
+  }
+ ],
+ "videos": [],
+ "trial_note": "KAVAR TEST: we ran FLUX.3 Image Klein ourselves (huggingface space black-forest-labs/flux-3-image-klein).\n\nTest 1 prompt (written in English for the model): A cinematic photo of a simit seller on the Galata Bridge in Istanbul at sunrise, seagulls, the Bosphorus in the background. No signs, no written text, no prices, no logos\nOur editor looked at the output: A simit seller in an apron and cap holds a tray of sesame rings on a wooden bridge deck, with a decorative iron railing, the water and a hilly shore behind him. Seagulls fly and perch on the railing, and a low sun gives warm golden light. The image has no text, signs or prices, as asked. The simit look right. Flaws: the Galata Bridge isn't clearly recognisable, because there is no Galata Tower or mosque skyline and the shore looks generic. The tray is held awkwardly, and the hand and the simit stack are slightly muddled. The scene is a bit staged, but overall it is clean and cinematic.\n\nTest 2 prompt (written in English for the model): A rainy street at night with a neon shop sign that reads \"KAVAR\" in large letters. No other readable text, no prices, no logos\nOur editor looked at the output: A rainy night street with wet reflective pavement, rain streaks and a pink-red neon sign. The sign reads \"KAVAR\" in large letters, spelled correctly and sharp. The mood is convincing and cinematic. The sign looks more like a lit box with a glowing border than a real neon tube. Small posters near the door show only unreadable marks, so there is no other legible text, no prices and no logos. A figure behind the left window is vague and a little odd.\n\nThe cover image is our test output 2.",
+ "article_cover_path": "/home/runner/work/kavar-studio/kavar-studio/output/carousel/2026-10-16_haber-flux-3/article/cover.jpg",
+ "cover_credit": "KAVAR denemesi"
+}

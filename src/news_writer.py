@@ -111,7 +111,7 @@ def news_problems(c: NewsScript) -> list[str]:
             out.append(f"story frame {i}: over {STORY_WORDS} words")
         if f.role == "poll" and len(f.poll_options) != 2:
             out.append(f"story frame {i}: a poll needs exactly 2 options")
-    texts = [c.caption] + [t for s in c.slides for t in (s.title, s.body, s.alt_text)] + \
+    texts = [c.caption, *c.hashtags] + [t for s in c.slides for t in (s.title, s.body, s.alt_text)] + \
             [t for f in c.story for t in (f.kicker, f.title, f.body, *f.poll_options)]
     if bad := price_mentions(*texts):
         out.append(f"page policy, no prices: remove every price / payment mention ({', '.join(bad)})")
@@ -215,8 +215,9 @@ def _finish(draft: dict, article: dict, source: str, model: str | None) -> NewsS
 
 
 # "Biz denedik" posts are for a general reader: the test leads, details stay short and plain
-JARGON = re.compile(r"\b(H100|H200|B200|GPU|LoRA|DreamBooth|checkpoint|Diffusers|encoder|kodlayıcı|token|"
-                    r"quantiz\w*|FP8|FP4|NVFP4|BF16|MoE|transformer|parametre|ağırlıkları|weights|API)\b", re.I)
+JARGON = re.compile(r"\b(H100|H200|B200|A100|RTX\s?\d+|GPU|VRAM|CUDA|LoRA|DreamBooth|checkpoint\w*|Diffusers|encoder|"
+                    r"kodlayıcı|token\w*|quantiz\w*|kuantizasyon\w*|FP8|FP4|NVFP4|BF16|MoE|transformer\w*|"
+                    r"parametre\w*|ağırlıkları|weights|API|benchmark\w*|MMLU|inference|fine-?tun\w*|\d+B)\b", re.I)
 MAX_DETAIL_SLIDES = 2
 
 

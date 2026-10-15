@@ -18,6 +18,7 @@ import re
 import shutil
 import sys
 import textwrap
+import time
 from pathlib import Path
 from typing import Literal
 
@@ -64,12 +65,18 @@ lowercase forms of the model's name as it would appear in a model id ("gemma-4",
 
 
 class Testable(BaseModel):
-    indices: list[int]  # 0-based indices of the candidates that announce a testable model, best first
+    class Item(BaseModel):
+        index: int  # 0-based index in the list
+        kind: Literal["llm", "image"]
+
+    items: list[Item]  # the candidates that announce a testable model release, best first
 
 
 def testable_first(candidates: list[dict]) -> list[dict]:
-    """The day's news candidates with likely testable model releases moved to the front
-    (one Claude call on titles + summaries); the order is unchanged if the call fails."""
+    """The day's news candidates with testable model releases moved to the front (one Claude call
+    on titles + summaries). Releases we can run right now come first: image models always, language
+    models only with OPENROUTER_API_KEY (2026-10-16 dry run: two untestable LLM releases took both
+    slots and the testable FLUX.3 was never reached). Order unchanged if the call fails."""
     from carousel_writer import _ask
 
     if not candidates:
@@ -78,13 +85,18 @@ def testable_first(candidates: list[dict]) -> list[dict]:
                         for i, c in enumerate(candidates))
     try:
         draft, _, _ = _ask(listing, PICK_SYSTEM + "\n\nYou get a numbered list of news items instead of one "
-                           "article. Return the indices of the items that are such a model release "
-                           "(kind llm or image), best first; [] if none.", Testable)
+                           "article. Return each item that is such a model release with its index and kind "
+                           "(llm or image), best first; [] if none.", Testable)
+        items = Testable(**draft).items if draft else []
     except Exception as exc:  # noqa: BLE001
         print(f"[trial] ranking failed: {type(exc).__name__}")
         return candidates
-    picked = [i for i in dict.fromkeys((draft or {}).get("indices", [])) if 0 <= i < len(candidates)]
-    return [candidates[i] for i in picked] + [c for i, c in enumerate(candidates) if i not in picked]
+    can_llm = bool(os.environ.get("OPENROUTER_API_KEY"))
+    items = [it for it in items if 0 <= it.index < len(candidates)]
+    runnable = [it.index for it in items if it.kind == "image" or can_llm]
+    releases = [it.index for it in items]
+    order = list(dict.fromkeys(runnable + releases))  # runnable first, then the other new releases
+    return [candidates[i] for i in order] + [c for i, c in enumerate(candidates) if i not in order]
 
 
 def _norm(s: str) -> str:
@@ -107,7 +119,9 @@ def _pick(article: dict) -> TrialPick | None:
 
 def _free_llm(terms: list[str]) -> str | None:
     models = requests.get(f"{OPENROUTER}/models", timeout=20).json()["data"]
-    keys = [_norm(t) for t in terms if _norm(t)]
+    keys = [_norm(t) for t in terms if len(_norm(t)) >= 4]
+    if not keys:
+        return None
     hits = [m["id"] for m in models if m["id"].endswith(":free")
             and any(k in _norm(m["id"]) or k in _norm(m.get("name", "")) for k in keys)]
     return min(hits, key=len) if hits else None  # the shortest id is the base model, not a variant
@@ -236,19 +250,27 @@ def _image_from(result) -> Path | None:
     return None
 
 
-def _space_image(client, prompt: str) -> Path | None:
-    """Call the Space's first endpoint that takes a text prompt; other inputs keep their defaults."""
+IMAGE_BUDGET = 600  # seconds for the whole image test; slow or sleeping Spaces must not eat the day's run
+
+
+def _space_image(client, prompt: str, deadline: float) -> Path | None:
+    """Call the Space's first endpoint that takes a text prompt; other inputs keep their defaults.
+    The first endpoint that fails ends the try (no walking every endpoint of a broken Space)."""
     api = client.view_api(return_format="dict", print_info=False)
     for name, ep in (api.get("named_endpoints") or {}).items():
         params = ep.get("parameters") or []
         first = next((p for p in params if p.get("python_type", {}).get("type") == "str"), None)
         if not first or "prompt" not in (first.get("parameter_name") or first.get("label") or "").lower():
             continue
+        left = deadline - time.monotonic()
+        if left < 30:
+            return None
         try:
             job = client.submit(**{first["parameter_name"]: prompt}, api_name=name)
-            return _image_from(job.result(timeout=240))
+            return _image_from(job.result(timeout=min(240, left)))
         except Exception as exc:  # noqa: BLE001  any Space error means "no image", never a crash
             print(f"[trial] {name}: {type(exc).__name__}: {str(exc)[:200]}")
+            return None
     return None
 
 
@@ -260,7 +282,11 @@ def _run_image(terms: list[str], article_text: str, out: Path) -> dict | None:
         return None
     spaces = _spaces(terms, article_text)
     print(f"[trial] Spaces to try: {spaces or 'none'}")
+    deadline = time.monotonic() + IMAGE_BUDGET
     for space in spaces:
+        if time.monotonic() > deadline - 60:
+            print("[trial] image test time budget used up")
+            return None
         try:
             client = _client(space)
         except Exception as exc:  # noqa: BLE001
@@ -268,7 +294,7 @@ def _run_image(terms: list[str], article_text: str, out: Path) -> dict | None:
             continue
         figures, notes = [], []
         for i, prompt in enumerate(IMAGE_TESTS, 1):
-            if src := _space_image(client, prompt):
+            if src := _space_image(client, prompt, deadline):
                 path = out / f"trial_{i}{src.suffix.lower()}"
                 shutil.copy(src, path)
                 with Image.open(path) as im:
@@ -322,7 +348,9 @@ def run_trial(article: dict, out_dir: Path) -> dict | None:
     notes = [f"{notes[i]}\nOur editor looked at the output: {judged['results'][i]['assessment']}" for i in keep]
     trial["figures"] = [trial["figures"][i] for i in keep]
     trial["cover_figure"] = keep.index(cover) + 1 if cover >= 0 else 0
-    trial["note"] = (f"KAVAR TEST: we ran {pick.model_name} ourselves ({trial['route']}).\n\n"
+    trial["note"] = (f"KAVAR TEST: we ran {pick.model_name} ourselves ({trial['route']}, exact model: "
+                     f"{trial['model']}; if that is a smaller or different variant than the news is about, "
+                     f"say so).\n\n"
                      + "\n\n".join(notes))
     print(f"[trial] done: {len(trial['figures'])} outputs from {trial['model']}"
           + f", judged; cover = output {trial['cover_figure'] or 'none'}")
@@ -374,7 +402,7 @@ def _judge(pick: TrialPick, notes: list[str], figures: list[dict], out_dir: Path
             timeout=CLI_TIMEOUT, cwd=out_dir, env=env)
         out = json.loads(proc.stdout).get("structured_output")
         judged = Judgement(**out).model_dump() if out else None
-    except Exception as exc:  # noqa: BLE001  unjudged outputs are still shown, just not interpreted
+    except Exception as exc:  # noqa: BLE001  the caller drops unjudged outputs
         print(f"[trial] judge failed: {type(exc).__name__}: {str(exc)[:200]}")
         return None
     if not judged or len(judged["results"]) != len(figures):

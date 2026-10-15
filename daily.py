@@ -137,11 +137,11 @@ def produce_news_items(count: int) -> list[dict]:
         log(f"news: {item['source']} - {item['title']}")
         try:
             folder = produce_news(item)
-        except (CaptureError, RenderError) as exc:
-            log(f"   failed: {exc}")
+            ok, problems = _reviewed_news(folder)
+        except Exception as exc:  # one bad story never stops the day (any capture / write / render / review error)
+            log(f"   failed: {type(exc).__name__}: {str(exc)[:300]}")
             mark_used(item["url"])
             continue
-        ok, problems = _reviewed_news(folder)
         if ok:
             tested = "trial_note" in json.loads((folder / "article" / "article.json").read_text(encoding="utf-8"))
             items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": tested})
@@ -152,6 +152,7 @@ def produce_news_items(count: int) -> list[dict]:
     return sorted(items, key=lambda i: not i["tested"])
 
 
+REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
 
 
@@ -171,15 +172,23 @@ def produce_trial_reel(news: list[dict]) -> dict | None:
     if not tested:
         return None
     log(f"reel: Biz denedik Reel from {tested['folder']}")
-    item, _ = _reel_attempt([sys.executable, "src/trial_reel.py", str(ROOT / tested["folder"])])
+    try:
+        item, _ = _reel_attempt([sys.executable, "src/trial_reel.py", str(ROOT / tested["folder"])])
+    except Exception as exc:  # the tool Reel is still made
+        log(f"   Biz denedik Reel failed: {type(exc).__name__}: {str(exc)[:300]}")
+        return None
     return item
 
 
 def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
     A rejected tool is in the script history, so the next run moves on to another tool."""
-    proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True, text=True,
-                          encoding="utf-8", errors="replace", timeout=3600)
+    try:
+        proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True,
+                              text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        log(f"   video pipeline timed out after {REEL_TIMEOUT}s")
+        return None, False
     lines = proc.stdout.splitlines()
     for line in [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l][:8] + lines[-8:]:
         log("   " + line)
@@ -220,19 +229,39 @@ def produce(only: str = "") -> None:
                 return
         except (OSError, json.JSONDecodeError):
             pass
-    if not only:
-        marker.parent.mkdir(parents=True, exist_ok=True)
-        marker.write_text(json.dumps({"date": date.today().isoformat()}), encoding="utf-8")
     try:
         from ig_publisher import refresh_token
         log(f"token refresh: {'ok' if refresh_token() else 'not needed / failed'}")
     except Exception as exc:
         log(f"token refresh skipped: {exc}")
     slots = schedule()["slots"]
-    news = produce_news_items(sum(s["kind"] == "carousel" for s in slots)) if only != "reel" else []
+    news = []
+    if only != "reel":
+        try:
+            news = produce_news_items(sum(s["kind"] == "carousel" for s in slots))
+        except Exception as exc:
+            log(f"news production failed: {type(exc).__name__}: {str(exc)[:300]}")
+    save_queue(_build_queue(slots, list(news), None))  # approved carousels survive a Reel crash or job timeout
     reel = None
     if any(s["kind"] == "reel" for s in slots) and only != "news":
-        reel = produce_trial_reel(news) or produce_reel()
+        reel = produce_trial_reel(news)
+        if reel is None:
+            try:
+                reel = produce_reel()
+            except Exception as exc:
+                log(f"reel production failed: {type(exc).__name__}: {str(exc)[:300]}")
+    queue = _build_queue(slots, list(news), reel)
+    save_queue(queue)
+    for q in queue:
+        log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
+    # the day counts as done only when something is ready: a crashed or empty run leaves room for
+    # the later scheduled runs (produce.yml) to try again
+    if not only and any(q["status"] == "ready" for q in queue):
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text(json.dumps({"date": date.today().isoformat()}), encoding="utf-8")
+
+
+def _build_queue(slots: list[dict], news: list[dict], reel: dict | None) -> list[dict]:
     queue = []
     for s in slots:
         item = news.pop(0) if s["kind"] == "carousel" and news else (reel if s["kind"] == "reel" else None)
@@ -240,9 +269,7 @@ def produce(only: str = "") -> None:
             queue.append({**item, "time": s["time"], "status": "ready"})
         else:
             queue.append({"kind": s["kind"], "time": s["time"], "status": "empty"})
-    save_queue(queue)
-    for q in queue:
-        log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
+    return queue
 
 
 # ---------------------------------------------------------------- publish
@@ -321,32 +348,41 @@ def fetch() -> None:
     log("=== fetch (cloud production) ===")
     subprocess.run(["git", "pull", "--rebase", "--autostash", "-q"], cwd=ROOT, check=False)
     runs = json.loads(subprocess.run(
-        [_gh(), "run", "list", "--workflow", "produce.yml", "--limit", "5",
+        [_gh(), "run", "list", "--workflow", "produce.yml", "--branch", "main", "--limit", "8",
          "--json", "databaseId,status,conclusion,createdAt"],
         cwd=ROOT, capture_output=True, text=True, encoding="utf-8", check=True).stdout)
     since = datetime.now(timezone.utc) - timedelta(hours=20)  # createdAt is UTC; 06:30 TRT = 03:30 UTC
-    today = [r for r in runs if r["status"] != "completed"
-             or datetime.fromisoformat(r["createdAt"].replace("Z", "+00:00")) >= since]
+    today = [r for r in runs if datetime.fromisoformat(r["createdAt"].replace("Z", "+00:00")) >= since]
     if not today:
         log("no cloud run today yet")
         return
-    run = today[0]
-    if run["status"] != "completed":
-        log(f"cloud run {run['databaseId']} is still {run['status']}")
-        return
-    log(f"cloud run {run['databaseId']}: {run['conclusion']}")
+    # the newest finished run that actually made today's queue (2026-10-14: a late run that skipped
+    # the day overwrote the good log); runs still going are reported, never waited on
+    for r in today:
+        if r["status"] != "completed":
+            log(f"cloud run {r['databaseId']} is still {r['status']}")
+    want = f"output/queue/{date.today().isoformat()}.json"
     tmp = ROOT / "output" / "_download"
-    shutil.rmtree(tmp, ignore_errors=True)
-    proc = subprocess.run([_gh(), "run", "download", str(run["databaseId"]), "--dir", str(tmp)], cwd=ROOT,
-                          capture_output=True, text=True, encoding="utf-8")
-    archives = list(tmp.rglob("*.tgz"))
-    if not archives:
-        log(f"no archive in that run: {proc.stderr.strip()[:300]}")
+    for run in [r for r in today if r["status"] == "completed"]:
+        shutil.rmtree(tmp, ignore_errors=True)
+        proc = subprocess.run([_gh(), "run", "download", str(run["databaseId"]), "-n", "kavar-output",
+                               "--dir", str(tmp)], cwd=ROOT,
+                              capture_output=True, text=True, encoding="utf-8")
+        archives = list(tmp.rglob("*.tgz"))
+        listing = subprocess.run(["tar", "-tzf", str(archives[0])], capture_output=True, text=True,
+                                 encoding="utf-8", errors="replace").stdout if archives else ""
+        if want not in listing.split():
+            log(f"cloud run {run['databaseId']} ({run['conclusion']}) has no queue for today; skipping it"
+                + ("" if archives else f": {proc.stderr.strip()[:200]}"))
+            continue
+        log(f"cloud run {run['databaseId']}: {run['conclusion']}")
+        subprocess.run(["tar", "-xzf", str(archives[0]), "-C", str(ROOT)], check=True)
+        shutil.rmtree(tmp, ignore_errors=True)
+        log("downloaded; queue:")
+        status()
         return
-    subprocess.run(["tar", "-xzf", str(archives[0]), "-C", str(ROOT)], check=True)
     shutil.rmtree(tmp, ignore_errors=True)
-    log("downloaded; queue:")
-    status()
+    log("no finished cloud run with today's queue yet")
 
 
 def status() -> None:

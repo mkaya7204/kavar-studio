@@ -36,7 +36,9 @@ MAX_VOICEOVER_WORDS = 75  # hard limit; edge-tts AriaNeural reads ~2.0-2.5 words
 TARGET_WORDS = (50, 62)  # asked of Claude: leaves headroom for slower-reading copy (64 words took 32s)
 # Turkish words are longer: tr-TR-AhmetNeural reads ~1.7 words/s (42 words = 25.3s).
 # ElevenLabs reads Turkish at ~2.3 words/s (45 words = 19.7 s): 40-50 words is a 17-22 s voice.
-TARGET_WORDS_BY_LANGUAGE = {"tr": (40, 50)}
+# Measured 2026-10-16 (George): 50 words = 26.8 s of voice, 38 words = 18.7 s; Reels over 26 s are
+# rejected (two on 10-16), so at most 42 words.
+TARGET_WORDS_BY_LANGUAGE = {"tr": (34, 42)}
 CLI_TIMEOUT = 300  # seconds per `claude -p` call
 HISTORY_PATH = ROOT / "state" / "script_history.json"  # recent hooks / CTAs, so videos don't repeat
 HISTORY_SIZE = 10
@@ -46,8 +48,9 @@ HISTORY_SIZE = 10
 # claims stay out of every post. Only a paid collaboration with that brand, decided by the
 # user per post, may change this.
 PRICE_PATTERN = re.compile(
-    r"[$€£₺]|\d\s*(?:TL|USD|EUR)\b|\b(?:dolar\w*|euro\w*|lira\w*|fiyat\w*|ücret\w*|ödeme\w*|"
-    r"abonelik\w*|bedava|indirim\w*|price\w*|pricing|subscription\w*|free)\b",
+    r"[$€£₺¥₹]|\d+(?:[.,]\d+)?\s*(?:bin|milyon|milyar)?\s*(?:TL|TRY|USD|EUR|GBP|Kr|krş)\b|\b(?:TRY|TL)\s*\d|"
+    r"\b(?:dolar\w*|euro\w*|lira\w*|kuruş\w*|fiyat\w*|ücret\w*|ödeme\w*|abonelik\w*|bedava|indirim\w*|"
+    r"paralı|satın al\w*|deneme sürüm\w*|tek seferlik|price\w*|pricing|subscription\w*|free|freemium)\b",
     re.I,
 )
 NO_PRICE_RULE = ("Page policy: never mention prices, costs, currencies, payment models (one-time "
@@ -61,7 +64,7 @@ def price_mentions(*texts: str) -> list[str]:
 
 
 def _script_price_mentions(script: "VideoScript") -> list[str]:
-    return price_mentions(script.hook, script.voiceover, script.why_it_matters, script.caption,
+    return price_mentions(script.hook, script.voiceover, script.why_it_matters, script.caption, *script.hashtags,
                           *(f"{p.title} {p.detail}" for p in script.key_points),
                           *(s.on_screen_text for s in script.shots))
 
