@@ -205,7 +205,32 @@ def _finish(draft: dict, article: dict, source: str, model: str | None) -> NewsS
                              + [f"{f.kicker} {f.title} {f.body} {' '.join(f.poll_options)}" for f in script.story]))
     if bad := used - known:
         raise ValueError(f"these figures are not in the article, remove or fix them: {', '.join(sorted(bad))}")
+    if article.get("trial_note") and (problems := _trial_problems(script, article)):
+        raise ValueError("; ".join(problems))
     return script
+
+
+# "Biz denedik" posts are for a general reader: the test leads, details stay short and plain
+JARGON = re.compile(r"\b(H100|H200|B200|GPU|LoRA|DreamBooth|checkpoint|Diffusers|encoder|kodlayıcı|token|"
+                    r"quantiz\w*|FP8|FP4|NVFP4|BF16|MoE|transformer|parametre|ağırlıkları|weights|API)\b", re.I)
+MAX_DETAIL_SLIDES = 2
+
+
+def _trial_problems(script: NewsScript, article: dict) -> list[str]:
+    ours = {f["n"] for f in article["figures"] if f.get("credit")}
+    news = [(i, s) for i, s in enumerate(script.slides, 1) if s.role == "news"]
+    tests = [i for i, s in news if s.visual == "figure" and s.visual_index in ours]
+    details = [i for i, s in news[1:] if i not in tests]  # news[0] is the what-happened slide
+    out = []
+    if not tests:
+        out.append("show each KAVAR TEST figure on its own news slide")
+    if len(details) > MAX_DETAIL_SLIDES:
+        out.append(f"after the test slides keep at most {MAX_DETAIL_SLIDES} detail slides "
+                   f"(now {len(details)}: slides {details}); merge or drop the least interesting")
+    for i, s in enumerate(script.slides, 1):
+        if hits := set(m.group(0) for m in JARGON.finditer(f"{s.title} {s.body}")):
+            out.append(f"slide {i}: plain Turkish for a general reader, remove the jargon ({', '.join(sorted(hits))})")
+    return out
 
 
 def _numbers(text: str) -> set[str]:

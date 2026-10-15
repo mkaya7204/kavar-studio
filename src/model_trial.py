@@ -42,8 +42,9 @@ LLM_TESTS = [
 ]
 IMAGE_TESTS = [
     "A cinematic photo of a simit seller on the Galata Bridge in Istanbul at sunrise, seagulls, "
-    "the Bosphorus in the background",
-    "A rainy street at night with a neon shop sign that reads \"KAVAR\" in large letters",
+    "the Bosphorus in the background. No signs, no written text, no prices, no logos",
+    "A rainy street at night with a neon shop sign that reads \"KAVAR\" in large letters. No other "
+    "readable text, no prices, no logos",
 ]
 
 
@@ -308,14 +309,23 @@ def run_trial(article: dict, out_dir: Path) -> dict | None:
     trial["kind"] = pick.kind
     notes = trial.pop("notes")
     judged = _judge(pick, notes, trial["figures"], out_dir)
-    if judged:
-        notes = [f"{n}\nOur editor looked at the output: {r['assessment']}"
-                 for n, r in zip(notes, judged["results"])]
-        trial["cover_figure"] = judged["cover"] if pick.kind == "image" else 0
+    if not judged:  # unchecked outputs are never shown: an image may carry a price or a logo
+        print("[trial] outputs could not be checked; not used")
+        return None
+    keep = [i for i, r in enumerate(judged["results"]) if r["usable"]]
+    for i, r in enumerate(judged["results"]):
+        if not r["usable"]:
+            print(f"[trial] test {i + 1} dropped: {r['assessment'][:200]}")
+    if not keep:
+        return None
+    cover = judged["cover"] - 1 if pick.kind == "image" and judged["cover"] - 1 in keep else -1
+    notes = [f"{notes[i]}\nOur editor looked at the output: {judged['results'][i]['assessment']}" for i in keep]
+    trial["figures"] = [trial["figures"][i] for i in keep]
+    trial["cover_figure"] = keep.index(cover) + 1 if cover >= 0 else 0
     trial["note"] = (f"KAVAR TEST: we ran {pick.model_name} ourselves ({trial['route']}).\n\n"
                      + "\n\n".join(notes))
     print(f"[trial] done: {len(trial['figures'])} outputs from {trial['model']}"
-          + (f", judged; cover = test {trial.get('cover_figure') or 'none'}" if judged else ", not judged"))
+          + f", judged; cover = output {trial['cover_figure'] or 'none'}")
     return trial
 
 
@@ -323,6 +333,7 @@ class Judgement(BaseModel):
     class Result(BaseModel):
         test: int
         assessment: str  # 1-2 English sentences: what is right, what is wrong, concretely
+        usable: bool  # false: shows a price / currency, another brand's logo, or unsafe content
 
     results: list[Result]
     cover: int  # the test (1-based) whose output would make a striking, clean cover; 0 for none
@@ -332,7 +343,9 @@ JUDGE_SYSTEM = """You check the outputs of a quick test we ran on a new AI model
 shown on an Instagram page. Use the Read tool to open every image named in the message and look \
 closely. For each test, judge the output against what we asked: what is right, what is wrong \
 (misspelled text, wrong landmarks, extra fingers, wrong math, unnatural Turkish...). Be concrete \
-and fair, no hype, no hedging. cover: the test whose output is striking and clean enough to be \
+and fair, no hype, no hedging. usable false if the output shows any price or currency (e.g. \
+"50 Kr", "₺", "$"), a real brand's logo other than KAVAR, a real identifiable person, or anything \
+sexual, violent or offensive: our page never shows those. cover: the test whose output is striking and clean enough to be \
 the post's cover image (no visible flaws, works small); 0 if none is."""
 
 
