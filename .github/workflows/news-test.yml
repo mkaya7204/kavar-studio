@@ -1,0 +1,65 @@
+# Make one news carousel from a given article URL in the cloud, to try a change (e.g. "Biz denedik")
+# before it runs in the daily production. Nothing is queued, published or committed.
+#   gh workflow run news-test.yml -f url=<article url>      then download the "news-test" artifact
+name: news-test
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "article URL"
+        required: true
+
+jobs:
+  news:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      TZ: Europe/Istanbul
+      PYTHONIOENCODING: utf-8
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Python packages, Chromium and Claude Code CLI
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          mkdir -p output
+          pip install -q -r requirements.txt
+          python -m playwright install --with-deps chromium
+          npm install -g @anthropic-ai/claude-code
+
+      - name: Fonts (same as produce.yml)
+        run: |
+          curl -sSL -o /tmp/inter.zip https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip
+          unzip -q -o /tmp/inter.zip -d /tmp/inter
+          mkdir -p templates/hyperframes_news/assets/fonts
+          cp "$(find /tmp/inter -name 'Inter-Black.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguibl.ttf
+          cp "$(find /tmp/inter -name 'Inter-SemiBold.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguisb.ttf
+
+      - name: News carousel
+        run: python carousel.py --news-url "${{ github.event.inputs.url }}" 2>&1 | tee output/news-test.log
+
+      - name: Editor review
+        if: always()
+        run: |
+          D=$(ls -d output/carousel/*_haber-* 2>/dev/null | head -1)
+          [ -n "$D" ] && python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_carousel; print(json.dumps(review_carousel(Path('$D')), indent=1, ensure_ascii=False))" 2>&1 | tee -a output/news-test.log || true
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: news-test
+          path: |
+            output/news-test.log
+            output/carousel/
+          retention-days: 7

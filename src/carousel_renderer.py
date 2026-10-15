@@ -112,7 +112,7 @@ def _news_assets(assets: Path, article: dict) -> dict:
     for f in article["figures"]:
         with Image.open(f["path"]) as img:
             _fit_width(img).save(assets / f"fig_{f['n']}.jpg", quality=92)
-        figures.append({"src": f"assets/fig_{f['n']}.jpg"})
+        figures.append({"src": f"assets/fig_{f['n']}.jpg", "credit": f.get("credit")})
     with Image.open(article["page_path"]) as img:
         img.convert("RGB").resize((1080, round(img.height * 1080 / img.width)), Image.LANCZOS).save(
             assets / "page.jpg", quality=92)

@@ -149,6 +149,14 @@ means for the reader.
 sen öğren", body "" or one short line; the template draws the page handle and follow button.
 Use 8-10 slides when the article has enough substance, fewer when it doesn't. Don't pad.
 
+"Biz denedik" (only when the user message has a KAVAR TEST section): we ran the new model \
+ourselves and its real outputs are the figures captioned "KAVAR TEST". Show each of them on \
+its own news slide (title like "Biz denedik" / "Türkçesi nasıl?") right after the slides that \
+explain the news, and say honestly what we asked and what came out: right or wrong, good or \
+weak, judged against "what a good answer is". Never praise more than the output shows; a wrong \
+answer is news too. You may write "denedik" only about these tests. Mention the test in the \
+caption and, if the result is striking, in a story frame.
+
 Story set: frame 1 role "hook" (the headline, short), 1-2 "fact" frames, optionally a "poll" \
 (question + 2 short answers; the user adds the sticker by hand), last frame role "link" (title \
 invites to tap the link sticker; body says the full story is in the post). Story visuals: \
@@ -168,7 +176,8 @@ def _user_message(article: dict) -> str:
     return (f"Source: {article['publisher']} ({article['domain']}), published {article['published'] or 'unknown'}\n"
             f"Original title: {article['title']}\n"
             f"Images you can show:\n{figs}\nVideos you can show: {len(article['videos'])}\n\n"
-            f"Article text:\n{article['text']}")
+            f"Article text:\n{article['text']}"
+            + (f"\n\n{article['trial_note']}" if article.get("trial_note") else ""))
 
 
 def _finish(draft: dict, article: dict, source: str, model: str | None) -> NewsScript:
@@ -179,7 +188,8 @@ def _finish(draft: dict, article: dict, source: str, model: str | None) -> NewsS
     except ValidationError as exc:
         raise ValueError("; ".join(e["msg"].removeprefix("Value error, ") for e in exc.errors())) from exc
     # no invented figures: every number on a slide or frame must be in the article
-    known = _numbers(article["text"] + " " + article["title"]) | _date_numbers(article)
+    known = (_numbers(article["text"] + " " + article["title"] + " " + article.get("trial_note", ""))
+             | _date_numbers(article))
     used = _numbers(" ".join([f"{s.title} {s.body}" for s in script.slides]
                              + [f"{f.kicker} {f.title} {f.body} {' '.join(f.poll_options)}" for f in script.story]))
     if bad := used - known:

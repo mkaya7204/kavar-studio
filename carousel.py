@@ -37,6 +37,7 @@ from distribution import build_affiliate_link  # noqa: E402
 from fetcher import fetch_latest_tools  # noqa: E402
 from article_capture import capture_article  # noqa: E402
 from media_capturer import CaptureError, capture_site  # noqa: E402
+from model_trial import run_trial  # noqa: E402
 from news_fetcher import fetch_news, mark_used  # noqa: E402
 from news_writer import NewsScript, generate_news, revise_news  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
@@ -131,12 +132,17 @@ def produce_news(item: dict) -> Path:
     brand = load_brand()
     print(f"\n▶ Capturing article: {item['title']}\n   {item['url']}", flush=True)
     article = capture_article(item["url"], out / "article")
-    (out / "article" / "article.json").write_text(json.dumps(article, indent=2, ensure_ascii=False),
-                                                  encoding="utf-8")
     print(f"   {article['publisher']}, {len(article['text'])} chars, {len(article['figures'])} images, "
           f"{len(article['videos'])} videos, cover={'yes' if article['cover_path'] else 'no'}")
     if not article["cover_path"] or len(article["text"]) < 600:
         raise CaptureError("article has no cover image or too little text")
+    print("▶ Can we run the new model ourselves? (Biz denedik)", flush=True)
+    if trial := run_trial(article, out / "article" / "trial"):
+        for f in trial["figures"]:  # our outputs become the last figures, credited "KAVAR denemesi"
+            article["figures"].append({**f, "n": len(article["figures"]) + 1})
+        article["trial_note"] = trial["note"]
+    (out / "article" / "article.json").write_text(json.dumps(article, indent=2, ensure_ascii=False),
+                                                  encoding="utf-8")
     print("▶ Writing the news carousel...", flush=True)
     script = generate_news(article)
     if script is None:

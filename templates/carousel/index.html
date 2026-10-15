@@ -875,7 +875,9 @@
                 el("img", "", card).src = src;
               }
               el("div", "tag mark black", card, D.brand.handle);
-              const cr = el("div", "ncredit", c, (f.visual === "video" ? "Video: " : "Görsel: ") + D.news.publisher + (D.news.date_label ? ", " + D.news.date_label : ""));
+              // our own test outputs ("Biz denedik") carry their own credit instead of the publisher's
+              const own = f.visual === "figure" && (D.news.figures[f.visual_index - 1] || {}).credit;
+              const cr = el("div", "ncredit", c, own || (f.visual === "video" ? "Video: " : "Görsel: ") + D.news.publisher + (D.news.date_label ? ", " + D.news.date_label : ""));
               cr.dataset.qa = "chrome";
             }
           } else if (NEWS && role === "why") {

@@ -120,7 +120,9 @@ def review_carousel(folder: Path) -> dict:
            f"- Slides in order (contact sheet, left to right, top to bottom): {sheet.name}\n"
            f"- Story frames: {story.name}\n"
            f"- The text (slides, story, caption): carousel.json\n"
-           f"- The source: {source} (field 'text' is the article)\n")
+           f"- The source: {source} (field 'text' is the article; field 'trial_note', when present, "
+           f"is our own test of the model: the 'Biz denedik' slides must match it, and the figures "
+           f"credited 'KAVAR denemesi' are its real outputs)\n")
     return _ask(folder, msg)
 
 

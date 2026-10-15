@@ -9,3 +9,4 @@ pydantic
 azure-cognitiveservices-speech
 numpy
 Pillow
+gradio_client
