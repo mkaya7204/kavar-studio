@@ -46,8 +46,9 @@ HISTORY_SIZE = 10
 # claims stay out of every post. Only a paid collaboration with that brand, decided by the
 # user per post, may change this.
 PRICE_PATTERN = re.compile(
-    r"[$€£₺]|\d\s*(?:TL|USD|EUR)\b|\b(?:dolar\w*|euro\w*|lira\w*|fiyat\w*|ücret\w*|ödeme\w*|"
-    r"abonelik\w*|bedava|indirim\w*|price\w*|pricing|subscription\w*|free)\b",
+    r"[$€£₺¥₹]|\d+(?:[.,]\d+)?\s*(?:bin|milyon|milyar)?\s*(?:TL|TRY|USD|EUR|GBP|Kr|krş)\b|\b(?:TRY|TL)\s*\d|"
+    r"\b(?:dolar\w*|euro\w*|lira\w*|kuruş\w*|fiyat\w*|ücret\w*|ödeme\w*|abonelik\w*|bedava|indirim\w*|"
+    r"paralı|satın al\w*|deneme sürüm\w*|tek seferlik|price\w*|pricing|subscription\w*|free|freemium)\b",
     re.I,
 )
 NO_PRICE_RULE = ("Page policy: never mention prices, costs, currencies, payment models (one-time "
@@ -61,7 +62,7 @@ def price_mentions(*texts: str) -> list[str]:
 
 
 def _script_price_mentions(script: "VideoScript") -> list[str]:
-    return price_mentions(script.hook, script.voiceover, script.why_it_matters, script.caption,
+    return price_mentions(script.hook, script.voiceover, script.why_it_matters, script.caption, *script.hashtags,
                           *(f"{p.title} {p.detail}" for p in script.key_points),
                           *(s.on_screen_text for s in script.shots))
 

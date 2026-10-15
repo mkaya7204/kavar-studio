@@ -100,6 +100,11 @@ jobs:
           cp "$(find /tmp/inter -name 'Inter-SemiBold.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguisb.ttf
           ls -la templates/hyperframes_news/assets/fonts
 
+      - name: Invariant tests (a red result is logged; production still runs, the editor still gates)
+        if: steps.guard.outputs.skip != 'true'
+        continue-on-error: true
+        run: pip install -q pytest pyyaml && python -m pytest -q tests
+
       - name: Produce (news carousels + Reel, each reviewed by the editor)
         if: steps.guard.outputs.skip != 'true'
         run: python daily.py produce ${{ github.event.inputs.only != 'all' && github.event.inputs.only || '' }}

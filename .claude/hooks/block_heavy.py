@@ -8,6 +8,8 @@ import sys
 BLOCKED = [
     (r"\bff(mpeg|probe)\b", "video processing (ffmpeg)"),
     (r"\bmain\.py\b", "video rendering (main.py)"),
+    (r"\btrial_reel\.py\b", "video rendering (trial_reel.py)"),
+    (r"\bcarousel\.py\b", "carousel capture and render (carousel.py)"),
     (r"daily\.py\W+produce\b", "production (daily.py produce)"),
     (r"hyperframes\S*\s+render\b", "HyperFrames render"),
     (r"\brun\s+watch\b", "waiting on a cloud run (gh run watch)"),
