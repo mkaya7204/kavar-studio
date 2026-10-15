@@ -65,12 +65,18 @@ lowercase forms of the model's name as it would appear in a model id ("gemma-4",
 
 
 class Testable(BaseModel):
-    indices: list[int]  # 0-based indices of the candidates that announce a testable model, best first
+    class Item(BaseModel):
+        index: int  # 0-based index in the list
+        kind: Literal["llm", "image"]
+
+    items: list[Item]  # the candidates that announce a testable model release, best first
 
 
 def testable_first(candidates: list[dict]) -> list[dict]:
-    """The day's news candidates with likely testable model releases moved to the front
-    (one Claude call on titles + summaries); the order is unchanged if the call fails."""
+    """The day's news candidates with testable model releases moved to the front (one Claude call
+    on titles + summaries). Releases we can run right now come first: image models always, language
+    models only with OPENROUTER_API_KEY (2026-10-16 dry run: two untestable LLM releases took both
+    slots and the testable FLUX.3 was never reached). Order unchanged if the call fails."""
     from carousel_writer import _ask
 
     if not candidates:
@@ -79,13 +85,18 @@ def testable_first(candidates: list[dict]) -> list[dict]:
                         for i, c in enumerate(candidates))
     try:
         draft, _, _ = _ask(listing, PICK_SYSTEM + "\n\nYou get a numbered list of news items instead of one "
-                           "article. Return the indices of the items that are such a model release "
-                           "(kind llm or image), best first; [] if none.", Testable)
+                           "article. Return each item that is such a model release with its index and kind "
+                           "(llm or image), best first; [] if none.", Testable)
+        items = Testable(**draft).items if draft else []
     except Exception as exc:  # noqa: BLE001
         print(f"[trial] ranking failed: {type(exc).__name__}")
         return candidates
-    picked = [i for i in dict.fromkeys((draft or {}).get("indices", [])) if 0 <= i < len(candidates)]
-    return [candidates[i] for i in picked] + [c for i, c in enumerate(candidates) if i not in picked]
+    can_llm = bool(os.environ.get("OPENROUTER_API_KEY"))
+    items = [it for it in items if 0 <= it.index < len(candidates)]
+    runnable = [it.index for it in items if it.kind == "image" or can_llm]
+    releases = [it.index for it in items]
+    order = list(dict.fromkeys(runnable + releases))  # runnable first, then the other new releases
+    return [candidates[i] for i in order] + [c for i, c in enumerate(candidates) if i not in order]
 
 
 def _norm(s: str) -> str:

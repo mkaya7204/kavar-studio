@@ -44,7 +44,8 @@ REEL HOOK + SCRIPT RULES (KAVAR, Turkish AI page)
 5. Proof fast. Right after the hook (2-6 s) show and say that the promise is real (what the
    product actually produces). Then one idea per sentence, 4-10 words, varied length, an
    occasional bridge ("Ama asıl olay şu:").
-6. Length: the whole voiceover 40-50 Turkish words (about 17-22 seconds of speech). Shorter is
+6. Length: the whole voiceover 34-42 Turkish words (the "George" voice reads about 2 words/s:
+   50 words was 26.8 s and the Reel ran over the 26 s limit, 2026-10-16). Shorter is
    better when the point is made. No filler, no repeated benefit.
 7. Close with a send/save reason fitted to this tool, one short natural sentence
    ("Satış ekibine gönder, işine yarar.", "Bunu tasarımcı arkadaşına at."). Never "Daha fazlası

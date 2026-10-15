@@ -13,9 +13,15 @@ from model_trial import TrialPick
 def test_testable_first_moves_releases_to_the_front(monkeypatch):
     import carousel_writer
 
-    cands = [{"source": "s", "title": f"t{i}"} for i in range(4)]
-    monkeypatch.setattr(carousel_writer, "_ask", lambda *a, **k: ({"indices": [2, 2, 9, 0]}, None, "claude"))
-    assert [c["title"] for c in model_trial.testable_first(cands)] == ["t2", "t0", "t1", "t3"]
+    cands = [{"source": "s", "title": f"t{i}"} for i in range(5)]
+    items = [{"index": 2, "kind": "llm"}, {"index": 9, "kind": "image"}, {"index": 4, "kind": "image"},
+             {"index": 0, "kind": "llm"}, {"index": 2, "kind": "llm"}]
+    monkeypatch.setattr(carousel_writer, "_ask", lambda *a, **k: ({"items": items}, None, "claude"))
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    # without the OpenRouter key only the image release can be tested now: it goes first
+    assert [c["title"] for c in model_trial.testable_first(cands)] == ["t4", "t2", "t0", "t1", "t3"]
+    monkeypatch.setenv("OPENROUTER_API_KEY", "x")
+    assert [c["title"] for c in model_trial.testable_first(cands)] == ["t2", "t4", "t0", "t1", "t3"]
 
 
 def test_testable_first_keeps_the_order_when_claude_fails(monkeypatch):

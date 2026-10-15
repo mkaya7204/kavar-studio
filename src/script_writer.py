@@ -36,7 +36,9 @@ MAX_VOICEOVER_WORDS = 75  # hard limit; edge-tts AriaNeural reads ~2.0-2.5 words
 TARGET_WORDS = (50, 62)  # asked of Claude: leaves headroom for slower-reading copy (64 words took 32s)
 # Turkish words are longer: tr-TR-AhmetNeural reads ~1.7 words/s (42 words = 25.3s).
 # ElevenLabs reads Turkish at ~2.3 words/s (45 words = 19.7 s): 40-50 words is a 17-22 s voice.
-TARGET_WORDS_BY_LANGUAGE = {"tr": (40, 50)}
+# Measured 2026-10-16 (George): 50 words = 26.8 s of voice, 38 words = 18.7 s; Reels over 26 s are
+# rejected (two on 10-16), so at most 42 words.
+TARGET_WORDS_BY_LANGUAGE = {"tr": (34, 42)}
 CLI_TIMEOUT = 300  # seconds per `claude -p` call
 HISTORY_PATH = ROOT / "state" / "script_history.json"  # recent hooks / CTAs, so videos don't repeat
 HISTORY_SIZE = 10
