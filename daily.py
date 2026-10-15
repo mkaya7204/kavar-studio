@@ -164,10 +164,21 @@ def produce_reel() -> dict | None:
     return None
 
 
-def _reel_attempt() -> tuple[dict | None, bool]:
+def produce_trial_reel(news: list[dict]) -> dict | None:
+    """"Biz denedik" Reel (agreed 2026-10-16) from the day's tested carousel; None if there is none
+    or the editor rejects it (the tool Reel is made instead)."""
+    tested = next((n for n in news if n.get("tested")), None)
+    if not tested:
+        return None
+    log(f"reel: Biz denedik Reel from {tested['folder']}")
+    item, _ = _reel_attempt([sys.executable, "src/trial_reel.py", str(ROOT / tested["folder"])])
+    return item
+
+
+def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
     A rejected tool is in the script history, so the next run moves on to another tool."""
-    proc = subprocess.run([sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True, text=True,
+    proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True, text=True,
                           encoding="utf-8", errors="replace", timeout=3600)
     lines = proc.stdout.splitlines()
     for line in [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l][:8] + lines[-8:]:
@@ -219,7 +230,9 @@ def produce(only: str = "") -> None:
         log(f"token refresh skipped: {exc}")
     slots = schedule()["slots"]
     news = produce_news_items(sum(s["kind"] == "carousel" for s in slots)) if only != "reel" else []
-    reel = produce_reel() if any(s["kind"] == "reel" for s in slots) and only != "news" else None
+    reel = None
+    if any(s["kind"] == "reel" for s in slots) and only != "news":
+        reel = produce_trial_reel(news) or produce_reel()
     queue = []
     for s in slots:
         item = news.pop(0) if s["kind"] == "carousel" and news else (reel if s["kind"] == "reel" else None)

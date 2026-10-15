@@ -140,7 +140,7 @@ def produce_news(item: dict) -> Path:
     if trial := run_trial(article, out / "article" / "trial"):
         for f in trial["figures"]:  # our outputs become the last figures, credited "KAVAR denemesi"
             article["figures"].append({**f, "n": len(article["figures"]) + 1})
-        article["trial_note"] = trial["note"]
+        article["trial_note"], article["trial_model"] = trial["note"], trial["model_name"]
         if c := trial.get("cover_figure"):  # our own clean test image leads the post
             article["article_cover_path"] = article["cover_path"]
             article["cover_path"] = trial["figures"][c - 1]["path"]

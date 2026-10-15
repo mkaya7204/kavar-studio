@@ -9,6 +9,9 @@ on:
       url:
         description: "article URL"
         required: true
+      reel:
+        description: "also make the Biz denedik Reel from it (yes / no)"
+        default: "no"
 
 jobs:
   news:
@@ -20,6 +23,8 @@ jobs:
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -41,6 +46,7 @@ jobs:
             echo "Claude Code CLI install broken (try $i), reinstalling"; npm uninstall -g @anthropic-ai/claude-code || true
           done
           claude --version  # fail here, not later in the run, if all tries broke
+          npx --yes hyperframes@0.8.145 --version || true
 
       - name: Fonts (same as produce.yml)
         run: |
@@ -63,6 +69,13 @@ jobs:
           D=$(ls -d output/carousel/*_haber-* 2>/dev/null | head -1)
           [ -n "$D" ] && python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_carousel; print(json.dumps(review_carousel(Path('$D')), indent=1, ensure_ascii=False))" 2>&1 | tee -a output/news-test.log || true
 
+      - name: Biz denedik Reel + editor review
+        if: github.event.inputs.reel == 'yes'
+        run: |
+          D=$(ls -d output/carousel/*_haber-* | head -1)
+          python src/trial_reel.py "$D" 2>&1 | tee output/reel-test.log
+          python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_reel; v=Path('output/final/final_video.mp4'); print(json.dumps(review_reel(v, json.load(open('output/temp/script.json',encoding='utf-8')), json.load(open('output/temp/tool.json',encoding='utf-8'))), indent=1, ensure_ascii=False))" 2>&1 | tee -a output/reel-test.log
+
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -70,4 +83,7 @@ jobs:
           path: |
             output/news-test.log
             output/carousel/
+            output/reel-test.log
+            output/final/
+            output/temp/script.json
           retention-days: 7

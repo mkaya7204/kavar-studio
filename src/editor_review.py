@@ -147,5 +147,10 @@ def review_reel(video: Path, script: dict, tool: dict) -> dict:
            f"- Script (hook candidates, chosen hook, voiceover), caption, hashtags, tool facts and the "
            f"measured first-frame / pacing numbers: {work.name}\n"
            f"Judge the facts against tool_data_source. Apply these rules:\n{REEL_RULES}\n"
-           f"Slide numbers in fixes are not used for Reels, so use 'reject' for real problems.")
+           f"Slide numbers in fixes are not used for Reels, so use 'reject' for real problems."
+           + ("\nThis is a 'Biz denedik' Reel: the page ran the new model itself. Its pictures are our own "
+              "unedited test outputs of the model (they replace the site images, so the 'proof from the "
+              "product's own site' rule is met by them), and 'denedik / yazdırdık / sorduk' about these tests "
+              "is true. Judge every result claim against tool_data_source.kavar_test, the rest against "
+              "tool_data_source.article." if tool.get("kavar_test") else ""))
     return _ask(folder, msg)

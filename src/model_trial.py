@@ -306,7 +306,7 @@ def run_trial(article: dict, out_dir: Path) -> dict | None:
     if trial is None:
         print(f"[trial] {pick.model_name}: no free way to run it today")
         return None
-    trial["kind"] = pick.kind
+    trial["kind"], trial["model_name"] = pick.kind, pick.model_name
     notes = trial.pop("notes")
     judged = _judge(pick, notes, trial["figures"], out_dir)
     if not judged:  # unchecked outputs are never shown: an image may carry a price or a logo
