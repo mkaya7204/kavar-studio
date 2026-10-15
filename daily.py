@@ -109,12 +109,17 @@ def _apply_fixes(folder: Path, fixes: list[dict]) -> bool:
 def _reviewed_news(folder: Path) -> tuple[bool, list[str]]:
     verdict = review_carousel(folder)
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
-    if verdict["verdict"] == "fix" and verdict["fixes"]:
+    for round_ in range(1, FIX_ROUNDS + 1):
+        if verdict["verdict"] != "fix" or not verdict["fixes"]:
+            break
         if not _apply_fixes(folder, verdict["fixes"]):
             return False, verdict["problems"]
         verdict = review_carousel(folder)
-        log(f"   editor (after fixes): {verdict['verdict']} {verdict['problems'][:4]}")
+        log(f"   editor (after fixes {round_}): {verdict['verdict']} {verdict['problems'][:4]}")
     return verdict["verdict"] == "publish", verdict["problems"]
+
+
+FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (one word, one date)
 
 
 def produce_news_items(count: int) -> list[dict]:
