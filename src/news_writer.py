@@ -150,12 +150,20 @@ sen öğren", body "" or one short line; the template draws the page handle and 
 Use 8-10 slides when the article has enough substance, fewer when it doesn't. Don't pad.
 
 "Biz denedik" (only when the user message has a KAVAR TEST section): we ran the new model \
-ourselves and its real outputs are the figures captioned "KAVAR TEST". Show each of them on \
-its own news slide (title like "Biz denedik" / "Türkçesi nasıl?") right after the slides that \
-explain the news, and say honestly what we asked and what came out: right or wrong, good or \
-weak, judged against "what a good answer is". Never praise more than the output shows; a wrong \
-answer is news too. You may write "denedik" only about these tests. Mention the test in the \
-caption and, if the result is striking, in a story frame.
+ourselves and its real outputs are the figures captioned "KAVAR TEST". Our test is the part \
+nobody else has, so it leads the post:
+- cover: the headline is about our test and its result, in plain words a non-developer gets \
+("Yeni açık modeli denedik: İstanbul'u böyle çizdi", "Yeni modele Türkçe sorduk, hesabı \
+şaşırdı"), never library or developer jargon. If "The cover image is our test output" is \
+stated, the cover shows it.
+- slide 2: what the model is, who released it, the date (the usual what-happened slide).
+- slides 3+: each test output on its own news slide (title like "Biz denedik" / "Türkçesi \
+nasıl?" / "Yazıyı doğru yazdı mı?"): what we asked and the verdict, taken from "Our editor \
+looked at the output" (right or wrong, concretely). Never "kendiniz bakın": state the result. \
+Never praise more than the output shows; a wrong answer is news too.
+- then the remaining news details, why, cta.
+You may write "denedik" only about these tests. Mention the test in the caption, and use the \
+test result in story frame 1.
 
 Story set: frame 1 role "hook" (the headline, short), 1-2 "fact" frames, optionally a "poll" \
 (question + 2 short answers; the user adds the sticker by hand), last frame role "link" (title \

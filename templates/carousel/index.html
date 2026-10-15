@@ -843,7 +843,7 @@
             el("i", "hl-rule", c);
             title(c, f.title, "", STORY ? [104, 96, 88, 80, 72, 64] : [92, 84, 76, 68, 62, 56], true);
             if (STORY && f.body) body(c, f.body);
-            const cr = el("div", "credit", s, "Görsel: " + D.news.publisher);
+            const cr = el("div", "credit", s, D.news.cover_credit || "Görsel: " + D.news.publisher);
             cr.style.top = (STORY ? 1530 : 1222) + "px";
             cr.dataset.qa = "chrome";
           } else if (NEWS && role === "news") {
@@ -876,7 +876,8 @@
               }
               el("div", "tag mark black", card, D.brand.handle);
               // our own test outputs ("Biz denedik") carry their own credit instead of the publisher's
-              const own = f.visual === "figure" && (D.news.figures[f.visual_index - 1] || {}).credit;
+              const own = f.visual === "figure" ? (D.news.figures[f.visual_index - 1] || {}).credit
+                : f.visual === "cover" && D.news.cover_credit;
               const cr = el("div", "ncredit", c, own || (f.visual === "video" ? "Video: " : "Görsel: ") + D.news.publisher + (D.news.date_label ? ", " + D.news.date_label : ""));
               cr.dataset.qa = "chrome";
             }

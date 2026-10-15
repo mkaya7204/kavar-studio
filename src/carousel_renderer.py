@@ -119,7 +119,8 @@ def _news_assets(assets: Path, article: dict) -> dict:
     with Image.open(article["cover_path"]) as img:
         cover_ratio = img.width / img.height
     return {"publisher": article["publisher"], "date_label": _date_label(article.get("published", "")),
-            "figures": figures, "cover_ratio": round(cover_ratio, 3)}
+            "figures": figures, "cover_ratio": round(cover_ratio, 3),
+            "cover_credit": article.get("cover_credit")}  # our own test image as the cover
 
 
 def _prepare(build: Path, script: dict, capture: dict, brand: dict) -> None:

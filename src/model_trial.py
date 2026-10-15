@@ -281,10 +281,69 @@ def run_trial(article: dict, out_dir: Path) -> dict | None:
     if trial is None:
         print(f"[trial] {pick.model_name}: no free way to run it today")
         return None
+    trial["kind"] = pick.kind
+    notes = trial.pop("notes")
+    judged = _judge(pick, notes, trial["figures"], out_dir)
+    if judged:
+        notes = [f"{n}\nOur editor looked at the output: {r['assessment']}"
+                 for n, r in zip(notes, judged["results"])]
+        trial["cover_figure"] = judged["cover"] if pick.kind == "image" else 0
     trial["note"] = (f"KAVAR TEST: we ran {pick.model_name} ourselves ({trial['route']}).\n\n"
-                     + "\n\n".join(trial.pop("notes")))
-    print(f"[trial] done: {len(trial['figures'])} outputs from {trial['model']}")
+                     + "\n\n".join(notes))
+    print(f"[trial] done: {len(trial['figures'])} outputs from {trial['model']}"
+          + (f", judged; cover = test {trial.get('cover_figure') or 'none'}" if judged else ", not judged"))
     return trial
+
+
+class Judgement(BaseModel):
+    class Result(BaseModel):
+        test: int
+        assessment: str  # 1-2 English sentences: what is right, what is wrong, concretely
+
+    results: list[Result]
+    cover: int  # the test (1-based) whose output would make a striking, clean cover; 0 for none
+
+
+JUDGE_SYSTEM = """You check the outputs of a quick test we ran on a new AI model, before they are \
+shown on an Instagram page. Use the Read tool to open every image named in the message and look \
+closely. For each test, judge the output against what we asked: what is right, what is wrong \
+(misspelled text, wrong landmarks, extra fingers, wrong math, unnatural Turkish...). Be concrete \
+and fair, no hype, no hedging. cover: the test whose output is striking and clean enough to be \
+the post's cover image (no visible flaws, works small); 0 if none is."""
+
+
+def _judge(pick: TrialPick, notes: list[str], figures: list[dict], out_dir: Path) -> dict | None:
+    """Claude looks at the real outputs (Read tool, limited to the trial folder) and judges each."""
+    import subprocess
+
+    from carousel_writer import _inline_schema
+    from script_writer import CLI_TIMEOUT, _claude_cli
+
+    exe = _claude_cli()
+    if not exe:
+        return None
+    msg = f"Model: {pick.model_name} ({pick.kind}).\n\n" + "\n\n".join(
+        f"{note}\nOutput file: {Path(f['path']).name}" for note, f in zip(notes, figures))
+    env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
+    try:
+        proc = subprocess.run(
+            [exe, "-p", "--output-format", "json",
+             "--json-schema", json.dumps(_inline_schema(Judgement.model_json_schema())),
+             "--system-prompt", JUDGE_SYSTEM, "--tools", "Read", "--allowedTools", "Read",
+             "--no-session-persistence"],
+            input=msg, capture_output=True, text=True, encoding="utf-8",
+            timeout=CLI_TIMEOUT, cwd=out_dir, env=env)
+        out = json.loads(proc.stdout).get("structured_output")
+        judged = Judgement(**out).model_dump() if out else None
+    except Exception as exc:  # noqa: BLE001  unjudged outputs are still shown, just not interpreted
+        print(f"[trial] judge failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+    if not judged or len(judged["results"]) != len(figures):
+        return None
+    judged["results"].sort(key=lambda r: r["test"])
+    if not 0 <= judged["cover"] <= len(figures):
+        judged["cover"] = 0
+    return judged
 
 
 if __name__ == "__main__":

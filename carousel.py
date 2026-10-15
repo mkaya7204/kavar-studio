@@ -141,6 +141,11 @@ def produce_news(item: dict) -> Path:
         for f in trial["figures"]:  # our outputs become the last figures, credited "KAVAR denemesi"
             article["figures"].append({**f, "n": len(article["figures"]) + 1})
         article["trial_note"] = trial["note"]
+        if c := trial.get("cover_figure"):  # our own clean test image leads the post
+            article["article_cover_path"] = article["cover_path"]
+            article["cover_path"] = trial["figures"][c - 1]["path"]
+            article["cover_credit"] = "KAVAR denemesi"
+            article["trial_note"] += f"\n\nThe cover image is our test output {c}."
     (out / "article" / "article.json").write_text(json.dumps(article, indent=2, ensure_ascii=False),
                                                   encoding="utf-8")
     print("▶ Writing the news carousel...", flush=True)
