@@ -161,7 +161,10 @@ stated, the cover shows it.
 nasıl?" / "Yazıyı doğru yazdı mı?"): what we asked and the verdict, taken from "Our editor \
 looked at the output" (right or wrong, concretely). Never "kendiniz bakın": state the result. \
 Never praise more than the output shows; a wrong answer is news too.
-- then the remaining news details, why, cta.
+- then at most 2 slides of the other news details, in plain Turkish for a general reader: \
+what it can do and who can use it. Leave out developer jargon (GPU names, library, encoder, \
+LoRA, checkpoint, quantization) unless one word is essential; 7-8 slides in total is enough.
+- then why, cta.
 You may write "denedik" only about these tests. Mention the test in the caption, and use the \
 test result in story frame 1.
 

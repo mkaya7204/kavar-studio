@@ -50,8 +50,12 @@ jobs:
           cp "$(find /tmp/inter -name 'Inter-Black.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguibl.ttf
           cp "$(find /tmp/inter -name 'Inter-SemiBold.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguisb.ttf
 
+      - name: Today's candidates in the order daily.py would try them (testable models first)
+        run: |
+          python -c "import sys; sys.path.insert(0,'src'); from news_fetcher import fetch_news; from model_trial import testable_first; [print(i, c['source'], '|', c['title']) for i, c in enumerate(testable_first(fetch_news(12)))]" 2>&1 | tee output/news-test.log
+
       - name: News carousel
-        run: python carousel.py --news-url "${{ github.event.inputs.url }}" 2>&1 | tee output/news-test.log
+        run: python carousel.py --news-url "${{ github.event.inputs.url }}" 2>&1 | tee -a output/news-test.log
 
       - name: Editor review
         if: always()

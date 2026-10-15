@@ -62,6 +62,30 @@ lowercase forms of the model's name as it would appear in a model id ("gemma-4",
 [] for none."""
 
 
+class Testable(BaseModel):
+    indices: list[int]  # 0-based indices of the candidates that announce a testable model, best first
+
+
+def testable_first(candidates: list[dict]) -> list[dict]:
+    """The day's news candidates with likely testable model releases moved to the front
+    (one Claude call on titles + summaries); the order is unchanged if the call fails."""
+    from carousel_writer import _ask
+
+    if not candidates:
+        return candidates
+    listing = "\n".join(f"{i}. [{c['source']}] {c['title']} - {c.get('summary', '')[:300]}"
+                        for i, c in enumerate(candidates))
+    try:
+        draft, _, _ = _ask(listing, PICK_SYSTEM + "\n\nYou get a numbered list of news items instead of one "
+                           "article. Return the indices of the items that are such a model release "
+                           "(kind llm or image), best first; [] if none.", Testable)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[trial] ranking failed: {type(exc).__name__}")
+        return candidates
+    picked = [i for i in dict.fromkeys((draft or {}).get("indices", [])) if 0 <= i < len(candidates)]
+    return [candidates[i] for i in picked] + [c for i, c in enumerate(candidates) if i not in picked]
+
+
 def _norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", s.lower())
 

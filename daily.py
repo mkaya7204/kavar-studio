@@ -31,6 +31,7 @@ from carousel_renderer import RenderError  # noqa: E402
 from editor_review import review_carousel, review_reel  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
 from news_fetcher import fetch_news, mark_used  # noqa: E402
+from model_trial import testable_first  # noqa: E402
 from news_writer import NewsScript  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
@@ -124,7 +125,8 @@ FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (on
 
 def produce_news_items(count: int) -> list[dict]:
     items, chosen_titles = [], []
-    candidates = fetch_news(12)
+    # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first
+    candidates = testable_first(fetch_news(12))
     log(f"news: {len(candidates)} fresh candidates")
     for item in candidates[:MAX_NEWS_TRIES]:
         if len(items) >= count:
@@ -141,11 +143,13 @@ def produce_news_items(count: int) -> list[dict]:
             continue
         ok, problems = _reviewed_news(folder)
         if ok:
-            items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"]})
+            tested = "trial_note" in json.loads((folder / "article" / "article.json").read_text(encoding="utf-8"))
+            items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": tested})
             chosen_titles.append(item["title"])
         else:
             log(f"   rejected, not queued: {folder.name}")
-    return items
+    # a carousel with our own test takes the day's first carousel slot
+    return sorted(items, key=lambda i: not i["tested"])
 
 
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
