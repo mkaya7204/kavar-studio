@@ -129,5 +129,31 @@
     "duration_sec": 24.6,
     "words": 47,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-15_pancake",
+    "date": "2026-10-15",
+    "kind": "tool",
+    "tool": "Pancake",
+    "hook_pattern": "result",
+    "headline": "Ajanın satış ve pazarlamayı yürütüyor",
+    "spoken_hook": "Ajanın satış ve pazarlama işlerini senin yerine yürütüyor.",
+    "cta": "Bunu satış ekibi kuran arkadaşına gönder.",
+    "duration_sec": 21.0,
+    "words": 41,
+    "status": "rejected: 10.5. saniye karesinde \"TEK YERDEN\" yazı hapı ekran görüntüsünün metninin (\"From your website, Pancake learns who…\") üstüne biniyor ve metni kesiyor. Bu, üst üste binme/kesilme MUST ihlali.; 5. saniyede \"AJANINA PAZARA\" altyazısı kartın hemen altında duruyor ve alt %35 sınırına çok yakın. Kare kaydırıldığında yazı kartla çakışabilir.; Kaynakta olmayan iddia: \"Tekrarlayan satış işi ajana kalıyor\" (sesli anlatım, ekran yazısı ve kapanış). Kaynak yalnızca ajana beyin, veri ve araç verdiğini söylüyor. Tekrarlayan işlerden hiç söz etmiyor. Bu uydurma bir fayda."
+  },
+  {
+    "id": "2026-10-15_retriever-ai",
+    "date": "2026-10-15",
+    "kind": "tool",
+    "tool": "Retriever AI",
+    "hook_pattern": "question",
+    "headline": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
+    "spoken_hook": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
+    "cta": "Bunu satışla uğraşan arkadaşına at.",
+    "duration_sec": 23.7,
+    "words": 45,
+    "status": "produced"
   }
 ]

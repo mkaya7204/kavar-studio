@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Google EmbeddingGemma 2",
-    "hook": "Aramayı anlamla yapan hafif model",
-    "pattern": "result",
-    "spoken_hook": "Aramayı kelimeyle değil anlamla yapan hafif model buldum.",
-    "cta": "Bunu yazılımcı arkadaşına gönder."
-  },
-  {
-    "tool": "Knocket",
-    "hook": "Sitene gelenle hemen konuşsan?",
-    "pattern": "question",
-    "spoken_hook": "Sitene gelenle hemen konuşabilsen ne olurdu?",
-    "cta": "Bunu müşteri destek yapan arkadaşına gönder."
-  },
-  {
     "tool": "Manifold MCP",
     "hook": "Ajanıma SEO ve reklam verisi verdim",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "result",
     "spoken_hook": "Konuştuğun her şey anında yazıya dönüşüyor.",
     "cta": "Bunu toplantı notu tutan arkadaşına gönder."
+  },
+  {
+    "tool": "Pancake",
+    "hook": "Ajanın satış ve pazarlamayı yürütüyor",
+    "pattern": "result",
+    "spoken_hook": "Ajanın satış ve pazarlama işlerini senin yerine yürütüyor.",
+    "cta": "Bunu satış ekibi kuran arkadaşına gönder."
+  },
+  {
+    "tool": "Retriever AI",
+    "hook": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
+    "pattern": "question",
+    "spoken_hook": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
+    "cta": "Bunu satışla uğraşan arkadaşına at."
   }
 ]
