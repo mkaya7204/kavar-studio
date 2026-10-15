@@ -1,0 +1,124 @@
+{
+  "hook_candidates": [
+    {
+      "pattern": "result",
+      "headline": "Tarayıcıdaki işleri senin yerine ajan yapıyor",
+      "spoken": "Tarayıcıdaki sıkıcı işleri senin yerine bir ajan yapıyor."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Potansiyel müşteri aramak vaktini yiyor",
+      "spoken": "Potansiyel müşteri aramak bütün vaktini yiyor."
+    },
+    {
+      "pattern": "question",
+      "headline": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
+      "spoken": "Müşteri adaylarını hâlâ elle mi buluyorsun?"
+    },
+    {
+      "pattern": "curiosity",
+      "headline": "Sekme açmadan müşteri bulmanın yolu var",
+      "spoken": "Sekme açmadan müşteri bulmanın bir yolu var."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Başvuru ve mesaj işi saatini çalıyor",
+      "spoken": "Başvuru ve mesaj işleri saatlerini çalıyor."
+    }
+  ],
+  "hook_pattern": "question",
+  "hook": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
+  "voiceover": "Müşteri adaylarını hâlâ elle mi buluyorsun? Adı Retriever AI, tarayıcıda çalışan bir yapay zekâ ajanı. Müşteri adaylarını buluyor, iletişime geçiyor. İş başvurularını da senin yerine yapabiliyor. Giriş yaptığın sitelerde de çalışıp bitmiş sonucu getiriyor. Sekmeler arasında kaybolacağın vakit sana kalıyor. Bunu satışla uğraşan arkadaşına at.",
+  "voiceover_segments": {
+    "hook": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
+    "point1": "Adı Retriever AI, tarayıcıda çalışan bir yapay zekâ ajanı. Müşteri adaylarını buluyor, iletişime geçiyor.",
+    "point2": "İş başvurularını da senin yerine yapabiliyor.",
+    "point3": "Giriş yaptığın sitelerde de çalışıp bitmiş sonucu getiriyor.",
+    "why": "Sekmeler arasında kaybolacağın vakit sana kalıyor.",
+    "cta": "Bunu satışla uğraşan arkadaşına at."
+  },
+  "shots": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 2.0,
+      "type": "screenshot",
+      "direction": "Ürün ana sayfası, hook başlığı üstte",
+      "on_screen_text": "Potansiyel müşteri aramak vaktini yiyor"
+    },
+    {
+      "start_sec": 2.0,
+      "end_sec": 6.0,
+      "type": "screen_recording",
+      "direction": "Ajanın tarayıcıda müşteri adayı bulup sonuç getirmesi",
+      "on_screen_text": "Retriever AI"
+    },
+    {
+      "start_sec": 6.0,
+      "end_sec": 10.0,
+      "type": "screen_recording",
+      "direction": "İş başvurusu doldurma akışı",
+      "on_screen_text": "Başvurular senin yerine"
+    },
+    {
+      "start_sec": 10.0,
+      "end_sec": 14.0,
+      "type": "screenshot",
+      "direction": "Giriş yapılmış sitelerde çalışan ajan ve biten sonuç",
+      "on_screen_text": "Bitmiş sonuç geri geliyor"
+    },
+    {
+      "start_sec": 14.0,
+      "end_sec": 17.0,
+      "type": "text_overlay",
+      "direction": "Neden önemli kartı",
+      "on_screen_text": "Vakit sana kalıyor"
+    },
+    {
+      "start_sec": 17.0,
+      "end_sec": 20.0,
+      "type": "text_overlay",
+      "direction": "Gönderme çağrısı",
+      "on_screen_text": "Satışçı arkadaşına at"
+    }
+  ],
+  "key_points": [
+    {
+      "title": "Müşteri adaylarını bulup ulaşıyor",
+      "detail": "Tarayıcıda lead bulur ve iletişime geçer."
+    },
+    {
+      "title": "İş başvuruları senin yerine",
+      "detail": "Başvuru işlerini ajan yapabiliyor."
+    },
+    {
+      "title": "Giriş yaptığın sitelerde de çalışır",
+      "detail": "Açık web ve oturum açtığın sitelerde bitmiş sonucu getirir."
+    }
+  ],
+  "why_it_matters": "Tekrarlayan tarayıcı işleri ajana kalır, sen sonuca bakarsın.",
+  "caption": "Tarayıcıda yapılan lead bulma, mesajlaşma ve başvuru işlerini tek ajana bırakmak mümkün 🤖 Sen en çok hangi tarayıcı işinden sıkılıyorsun?",
+  "hashtags": [
+    "#yapayzeka",
+    "#aitools",
+    "#yapayzekaajan",
+    "#satış",
+    "#otomasyon"
+  ],
+  "tool_name": "Retriever AI",
+  "website_url": "https://rtrvr.ai/",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "voiceover_words": 45,
+  "est_duration_sec": 18.0,
+  "hook_judge": {
+    "scores": [
+      5,
+      6,
+      8,
+      2,
+      5
+    ],
+    "best": 2,
+    "reason": "Aday 2, izleyiciye doğrudan soru soruyor ve satışla uğraşan birine gönderilebilir. Başlık ile seslendirme aynı cümle, devamdaki \"Müşteri adaylarını buluyor\" ile uyuşuyor, ürün adı geçmiyor ve veriyle destekleniyor. Aday 3, \"sekme açmadan\" diyerek veride olmayan bir özellik iddia ediyor."
+  }
+}

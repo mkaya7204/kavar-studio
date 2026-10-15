@@ -1,0 +1,65 @@
+# Re-render one Reel in the cloud from a committed script (rerender/<name>.json): same tool, same
+# words, current template. Used to fix a Reel by hand (memory: rejected-reel-workflow) without the PC.
+name: rerender
+
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: "script file under rerender/ (e.g. 2026-10-15_retriever-ai.json)"
+        required: true
+
+jobs:
+  rerender:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      TZ: Europe/Istanbul
+      PYTHONIOENCODING: utf-8
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: System packages (ffmpeg)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Python packages and Chromium
+        run: |
+          pip install -q -r requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Claude Code CLI and HyperFrames
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          npx --yes hyperframes@0.8.145 --version || true
+      - name: Fonts
+        run: |
+          curl -sSL -o /tmp/inter.zip https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip
+          unzip -q -o /tmp/inter.zip -d /tmp/inter
+          mkdir -p templates/hyperframes_news/assets/fonts
+          cp "$(find /tmp/inter -name 'Inter-Black.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguibl.ttf
+          cp "$(find /tmp/inter -name 'Inter-SemiBold.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguisb.ttf
+      - name: Render
+        run: python main.py --script "rerender/${{ github.event.inputs.script }}"
+      - name: Cover and last frame
+        if: always()
+        run: |
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 output/final/final_video.mp4)
+          ffmpeg -y -loglevel error -ss "$(echo "$D - 0.5" | bc)" -i output/final/final_video.mp4 -frames:v 1 output/final/last_frame.jpg
+          python -c "import sys; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import make_cover; make_cover(Path('output/final/final_video.mp4'), Path('output/final'))" || true
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: rerender
+          path: |
+            output/final/final_video.mp4
+            output/final/cover.jpg
+            output/final/last_frame.jpg
+            output/final/post.json
+          retention-days: 7
