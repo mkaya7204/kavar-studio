@@ -25,13 +25,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from carousel_writer import _ask, _revision_prompt  # noqa: E402
 from distribution import build_post  # noqa: E402
 from hyperframes_builder import FINAL_PATH, PROOF_SIZE, SHOT_NAMES, _shot_frame, build_video_hyperframes  # noqa: E402
-from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, TARGET_WORDS_BY_LANGUAGE, ScriptDraft, VideoScript,  # noqa: E402
+from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
                            _load_language, _save_history, _script_price_mentions, judge_hooks, reel_rule_problems)
 from tts_engine import synthesize, voice_for  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMP_DIR = ROOT / "output" / "temp"
 ATTEMPTS = 3
+# 50 words read in 26.8 s and the Reel ran 27.9 s (rule: 14-26 s, editor rejected, 2026-10-16)
+WORDS = (32, 38)
 
 TRIAL_RULES = """
 
@@ -53,6 +55,15 @@ article says so.
 - "denedik", "yazdırdık", "sorduk", "çizdirdik" are allowed here, only about these tests (we did \
 them; "we" = the page). Never praise beyond the editor's verdict on each output.
 - Facts only from the article and the KAVAR TEST section. Never mention our internal checks."""
+
+
+def short_name(model: str) -> str:
+    """The name said in the Reel: "FLUX.3 Image Klein" -> "FLUX.3", "Gemma 4" -> "Gemma 4".
+    Long names broke the 3-word captions ("ADI FLUX.3 IMAGE")."""
+    words = model.split()
+    if words and any(c.isdigit() for c in words[0]):
+        return words[0]
+    return " ".join(words[:2])
 
 
 def _model_name(article: dict) -> str:
@@ -98,10 +109,12 @@ def _frames(outputs: list[Path], folder: Path) -> dict:
 
 def write_script(article: dict) -> dict | None:
     language = _load_language()
-    low, high = TARGET_WORDS_BY_LANGUAGE.get(language, (50, 62))
-    model = _model_name(article)
-    prompt = (f"Write the Reel in language code '{language}', voiceover {low}-{high} words.\n\n"
-              f"Model: {model}\nSource: {article['publisher']}, published {article.get('published') or '?'}\n"
+    low, high = WORDS
+    full = _model_name(article)
+    model = short_name(full)
+    prompt = (f"Write the Reel in language code '{language}', voiceover {low}-{high} words (hard limit: "
+              f"the Reel must stay under 26 seconds).\n\n"
+              f"Model: {full}; say it as \"{model}\"\nSource: {article['publisher']}, published {article.get('published') or '?'}\n"
               f"Article title: {article['title']}\n\nArticle text:\n{article['text'][:5000]}\n\n"
               f"{article['trial_note']}\n\nOutput order in the Reel (the hook is about output 1):\n"
               f"{_output_order(article)}")
@@ -117,7 +130,9 @@ def write_script(article: dict) -> dict | None:
         except ValueError as exc:
             problems = str(exc)[:600]
         else:
-            if bad := _script_price_mentions(script):
+            if script.voiceover_words > high:
+                problems = f"voiceover has {script.voiceover_words} words; max {high}: cut a sentence"
+            elif bad := _script_price_mentions(script):
                 problems = f"remove every price mention ({', '.join(bad)}). {NO_PRICE_RULE}"
             elif rules := reel_rule_problems(script):
                 fallback = fallback or script
@@ -135,7 +150,8 @@ def make_trial_reel(run: Path) -> int:
     if not article.get("trial_note") or not outputs:
         print("✖ this run has no test outputs of ours")
         return 1
-    tool = {"tool_name": _model_name(article), "website_url": article["url"],
+    tool = {"tool_name": short_name(_model_name(article)), "model_full_name": _model_name(article),
+            "website_url": article["url"],
             "kind": ("Biz denedik: the page really ran these tests on the new model, so first-person-plural "
                      "lines about them ('denedik', 'yazdırdık', 'sorduk') are TRUE, not a fake use claim. "
                      "Frame 0 shows output 1 behind the headline, so the hook must be about output 1."),

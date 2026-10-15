@@ -173,3 +173,12 @@ def test_reel_labels_our_outputs_as_ours(tmp_path):
     cap = trial_reel._frames([img], tmp_path / "f")
     assert cap["domain_label"] == "KAVAR denemesi"
     assert Path(cap["proof_path"]).exists() and Path(cap["screenshot_path"]).exists()
+
+
+def test_reel_uses_short_names_and_stays_under_26_seconds():
+    """2026-10-16: 50 words -> 27.9 s (rule 14-26 s); 'ADI FLUX.3 IMAGE' broken captions."""
+    import trial_reel
+
+    assert trial_reel.short_name("FLUX.3 Image Klein") == "FLUX.3"
+    assert trial_reel.short_name("Gemma 4") == "Gemma 4"
+    assert trial_reel.WORDS[1] <= 38
