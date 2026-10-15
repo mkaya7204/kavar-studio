@@ -160,18 +160,26 @@ def _run_llm(model: str, out: Path) -> dict | None:
 BLOCKED_SPACE_WORDS = ("nsfw", "nude", "naked", "porn", "hentai", "erotic", "sexy", "uncensored", "lewd")
 
 
-def _spaces(terms: list[str]) -> list[str]:
-    """Public Gradio Spaces whose name really contains the model's name (not look-alikes)."""
+TRUSTED_SPACE_OWNERS = {"huggingface", "multimodalart", "hysts", "gradio"}  # HF staff demo accounts
+
+
+def _spaces(terms: list[str], article_text: str) -> list[str]:
+    """Official demo Spaces only: named after the model AND owned by the company the article is
+    about (its name appears in the article) or by Hugging Face's own demo accounts. Random user
+    Spaces are never called: their names and outputs can be anything."""
     keys = [_norm(t) for t in terms if len(_norm(t)) >= 4]
+    text = _norm(article_text)
     found = []
     for t in terms:
         r = requests.get(HF_API, params={"search": t, "sort": "likes", "limit": 20, "full": "true"}, timeout=20)
         for s in r.json():
             sid = s["id"]
+            owner = sid.split("/")[0].lower()
             if (s.get("sdk") == "gradio" and sid not in found and any(k in _norm(sid) for k in keys)
+                    and (owner in TRUSTED_SPACE_OWNERS or (len(_norm(owner)) >= 4 and _norm(owner) in text))
                     and not any(w in sid.lower() for w in BLOCKED_SPACE_WORDS)):
                 found.append(sid)
-    return found[:4]
+    return found[:3]
 
 
 def _client(space: str):
@@ -219,13 +227,13 @@ def _space_image(client, prompt: str) -> Path | None:
     return None
 
 
-def _run_image(terms: list[str], out: Path) -> dict | None:
+def _run_image(terms: list[str], article_text: str, out: Path) -> dict | None:
     try:
         import gradio_client  # noqa: F401
     except ImportError:
         print("[trial] gradio_client not installed; image test skipped")
         return None
-    spaces = _spaces(terms)
+    spaces = _spaces(terms, article_text)
     print(f"[trial] Spaces to try: {spaces or 'none'}")
     for space in spaces:
         try:
@@ -266,7 +274,7 @@ def run_trial(article: dict, out_dir: Path) -> dict | None:
             model = _free_llm(pick.search_terms)
             trial = _run_llm(model, out_dir) if model else None
         else:
-            trial = _run_image(pick.search_terms, out_dir)
+            trial = _run_image(pick.search_terms, article["title"] + " " + article["text"], out_dir)
     except Exception as exc:  # noqa: BLE001  the test is a bonus; the carousel never fails because of it
         print(f"[trial] failed: {type(exc).__name__}: {str(exc)[:300]}")
         return None
