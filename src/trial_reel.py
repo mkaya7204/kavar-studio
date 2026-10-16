@@ -16,6 +16,7 @@ daily.py queues and reviews it like any Reel. Heavy (render): runs in the cloud 
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -213,7 +214,10 @@ def make_trial_reel(run: Path, script_path: Path | None = None) -> int:
     if os.getenv("KAVAR_SILENT_PREVIEW"):
         # design preview only (no voice credits spent): never queued, never published
         print("   SILENT DESIGN PREVIEW: no voice, default timing; not for publishing")
-        voice = {"audio_path": None}
+        silent = TEMP_DIR / "silent_preview.mp3"  # the builder needs an audio file; 22 s of silence
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
+                        "-t", "22", "-q:a", "9", str(silent)], check=True)
+        voice = {"audio_path": str(silent)}
     else:
         voice = synthesize(script["voiceover"], voice=voice_for(_load_language()))
         print(f"   voice {voice['duration_sec']}s ({voice['voice']})")
