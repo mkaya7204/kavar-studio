@@ -159,3 +159,9 @@ the decisions that are currently locked; this file explains why they exist and h
   - collab outreach
   - whether the 11:45 Reel goes out as a Trial Reel
   - unfollowing slowly (D-13, by hand)
+
+## D-23 · 2026-10-16 · Voice quota, API, 11:45 Reel, unfollowing
+- **ElevenLabs quota (user):** "başka hesabım da var onu da bağlarız, hangisi biterse diğerine geçersin ... sonra böyle yapıcaz". **Plan:** a second key (secret `ELEVENLABS_API_KEY_2`) with the same George voice, a premade voice available in every account. When one account's quota runs out, the next key is used. This is still George, so D-07 holds. Built when the user adds the key.
+- **Instagram API (user):** "şimdi alamıyorum, en kısa sürede halledicem". It is the user's step; Claude doesn't push it.
+- **11:45 Reel (user):** "bozmadan olduğu gibi olsun, zamanla karar veririz". It goes out as a normal Reel, not as a Trial Reel, until the user decides.
+- **Unfollowing (user):** "takipten yavaş yavaş çıkıyorum". In progress, by hand (D-13).
