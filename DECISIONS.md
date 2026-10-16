@@ -115,3 +115,10 @@ the decisions that are currently locked; this file explains why they exist and h
   - Carousel cover: 3-6 words (`HEADLINE_WORDS = 6`), bigger type, "KAYDIR →" pill.
 - **One deviation, told to the user:** the research asked for the result on 60-70% of the frame AND for safe zones. Instagram's caption overlay covers the bottom ~35% (also an editor rule), so the result box ends above it: about 1.4x the old box instead of 60-70%.
 - **Before production:** silent design previews (trial-rerender `silent=yes`, news-test) are shown to the user. Merge only after the user's yes.
+
+## D-20 · 2026-10-16 · Version A chosen for Reel openings
+- **User:** "A daha iyi". About B: "B kötü duruyor".
+- **Why B looked bad:** B followed the report. Its one difference was a 3-line headline instead of 2, because Turkish words don't fit 2 lines at 130 px. A tall result box around a wide answer card leaves empty space above and below the card. So the report's spec suits our content poorly; the implementation wasn't the problem.
+- **Merged to main:** A (branch hook-motion), with the carousel cover (3-6 words, "KAYDIR →") and the silent-preview mode. B stays on branch hook-research and is not used.
+- **Note:** A's headline also ran to 3 lines in the preview ("YAPAY ZEKÂ / ATASÖZÜNÜ / AÇIKLADI", 100 px). The user saw it like that and chose A.
+- **Next:** test openings with Trial Reels once the voice quota allows Reels again (D-15, D-17).
