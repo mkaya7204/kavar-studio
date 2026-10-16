@@ -18,9 +18,9 @@ Research: `reports/Reels kapak hook ve izlenme.md`.
 2. Cover = frame 0. The pipeline saves `cover.jpg` (frame 0.3 s) next to every Reel; schedule it as
    the custom cover in Meta Business Suite ("Kapak" / thumbnail step) and send it as `cover_url`
    via the API. Same design, so a random-frame fallback still looks right.
-3. Headline: 3-6 words, at most 2 lines (66-170 px caps by length), from y≈270; the result image
-   below it (920x660) is the biggest thing in the frame and ends above the bottom ~35% that
-   Instagram's caption UI covers (D-17, research 2026-10-16).
+3. Headline: 3-4 words (frame 0 takes 3-6, the cover 1-4), 2 lines at 130 px, from y≈240; the result
+   image below it (920x1100, ~60% of the frame) leads and ends inside the 3:4 band (y ≤ 1680).
+   Check it at 10% size and in the 3:4 crop (D-17, research 2026-10-16).
    One focal point: headline on top, one cropped product screen below - no collage.
 4. Everything important sits in the centre 1080x1350 block (y≈285-1635): the profile grid crops
    240 px top and bottom. Keep the top ~270 px (username / "Sponsored" band) and the right ~230 px

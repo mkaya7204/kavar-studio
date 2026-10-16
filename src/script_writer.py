@@ -114,10 +114,10 @@ def reel_rule_problems(script: "VideoScript") -> list[str]:
                             "lead with the outcome / pain and name the tool in point1")
         if seg and name not in _fold(seg.point1) and name not in _fold(seg.point2):
             problems.append(f"name the tool '{script.tool_name}' in point1 (with what kind of product it is)")
-    if len(script.hook.split()) > 6:
-        problems.append(f"headline has {len(script.hook.split())} words; max 6 (it must fit 2 lines)")
-    if len(script.hook) > 32:
-        problems.append(f"headline has {len(script.hook)} characters; max 32 so it fits 2 lines (shorter words)")
+    if not 3 <= len(script.hook.split()) <= 4:
+        problems.append(f"headline has {len(script.hook.split())} words; 3-4 (frame 0 needs 3-6, the cover 1-4)")
+    if len(script.hook) > 22:
+        problems.append(f"headline has {len(script.hook)} characters; max 22 so it fits 2 lines at 130 px (shorter words)")
     if len(spoken.split()) > 9:
         problems.append(f"spoken hook has {len(spoken.split())} words; max 9")
     high = TARGET_WORDS_BY_LANGUAGE.get(_load_language(), TARGET_WORDS)[1]
@@ -134,7 +134,7 @@ def reel_rule_problems(script: "VideoScript") -> list[str]:
 
 class HookCandidate(BaseModel):
     pattern: Literal["result", "pain", "question", "curiosity", "news"]
-    headline: str  # on-screen, 3-6 words (D-17), at most 32 characters
+    headline: str  # on-screen, 3-4 words (D-17), at most 22 characters
     spoken: str  # first spoken sentence, 5-9 words
 
 
@@ -250,7 +250,7 @@ Write for the ear and the thumb: the Reel is decided in its first 2 seconds, on 
 {skill_rules("reel-hook-writer")}
 
 Fields:
-- hook_candidates: FIRST write 5 candidates, one per pattern (result, pain, question, curiosity, news - for a tool that isn't news, write a second strong candidate of the best pattern instead of news). Each has: pattern, headline (on-screen, 3-6 words and at most 32 characters so it fits 2 lines, no tool name) and spoken (the first spoken sentence, 5-9 words, no tool name; the headline is its core).
+- hook_candidates: FIRST write 5 candidates, one per pattern (result, pain, question, curiosity, news - for a tool that isn't news, write a second strong candidate of the best pattern instead of news). Each has: pattern, headline (on-screen, 3-4 words and at most 22 characters so it fits 2 lines at 130 px, no tool name) and spoken (the first spoken sentence, 5-9 words, no tool name; the headline is its core).
 - hook_pattern / hook / voiceover_segments.hook: the winning candidate's pattern, headline and spoken sentence, copied exactly. Pick the one a stranger would stop for and could send to a specific person, that the tool data fully supports.
 - voiceover: the full narration, in the word range the user message gives. Plain spoken sentences; no emojis, hashtags, URLs or stage directions.
 - voiceover_segments: the same narration split into six parts, joined with spaces they equal the voiceover. Each scene starts when its part is spoken: hook (one sentence, about 2 s), point1 (names the tool for the first time and says what kind of product it is, then the first proof; about 3-4 s), point2 and point3 (one benefit each, about 2.5-3.5 s), why (one short sentence on why it matters to the viewer, about 2.5 s), cta (one short send/save sentence, see the rules).

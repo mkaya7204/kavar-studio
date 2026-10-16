@@ -115,3 +115,18 @@ the decisions that are currently locked; this file explains why they exist and h
   - Carousel cover: 3-6 words (`HEADLINE_WORDS = 6`), bigger type, "KAYDIR →" pill.
 - **One deviation, told to the user:** the research asked for the result on 60-70% of the frame AND for safe zones. Instagram's caption overlay covers the bottom ~35% (also an editor rule), so the result box ends above it: about 1.4x the old box instead of 60-70%.
 - **Before production:** silent design previews (trial-rerender `silent=yes`, news-test) are shown to the user. Merge only after the user's yes.
+
+## D-19 · 2026-10-16 · Version B = the report's spec (b), word for word (branch hook-research)
+- **User:** "raporu olduğu gibi yap ... en ufak bir değişiklik yapma kesin ve net". Then: "Sonra ikisini karşılaştırma yaparız" (A = hook-motion, B = hook-research).
+- **B, line by line from the report:**
+  - Frame 0: the result box is ~60% of the frame, inside the 3:4 band (920x1100, y 575-1675). The headline is 2 lines at 130 px from y 240. The voice starts on frame 0. A small source stamp, no logo or handle.
+  - 0.0-0.4 s: a punch-in from 1.00 to 1.06.
+  - ~1.0 s: the headline steps back to a top label, with a zoom onto the detail (1.06 -> 1.2).
+  - 0.5 s onward: captions, the hook included. 3-word chunks, clear of the bottom ~20%.
+  - The handle and the follow pill appear only in the outro.
+  - The headline is 3-4 words, because frame 0 takes 3-6 and the cover takes 1-4 and the cover is frame 0. At most 22 characters.
+  - The editor checks the cover at 10% size and in the 3:4 crop.
+- **Where the report gives a range or a choice:**
+  - 130 px is the only size in "130-160 px" that fits 2 lines plus the result box in the band.
+  - "zoom onto the key detail" was picked over "a second output", so the change stays about output 1, which the voice is talking about.
+- **A vs B:** both are shown as silent previews and the user compares them. Nothing goes to main before that.

@@ -1,0 +1,124 @@
+{
+  "hook_candidates": [
+    {
+      "pattern": "result",
+      "headline": "Model atasözü açıkladı",
+      "spoken": "Yeni model bir atasözünü açıkladı."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Çocuğa atasözü anlatmak zor",
+      "spoken": "Çocuğa atasözü anlatmak zor, yapay zekâya sorduk."
+    },
+    {
+      "pattern": "question",
+      "headline": "Atasözünü çocuğa nasıl anlatırsın?",
+      "spoken": "Bir atasözünü 10 yaşındaki çocuğa nasıl anlatırsın?"
+    },
+    {
+      "pattern": "curiosity",
+      "headline": "Atasözünü sorduk, cevap şaşırttı",
+      "spoken": "Yapay zekâya Türkçe bir atasözü sorduk, bak ne dedi."
+    },
+    {
+      "pattern": "result",
+      "headline": "Damlaya damlaya göl olur, çocuğa anlatıldı",
+      "spoken": "Damlaya damlaya göl olur'u yapay zekâ çocuğa anlattı."
+    }
+  ],
+  "hook_pattern": "result",
+  "hook": "Model atasözü açıkladı",
+  "voiceover": "Yeni model bir atasözünü açıkladı. Adı Nemotron 3.5, NVIDIA'nın açık dil modeli. Doğal Türkçeyle anlattı. Tren sorusunda 105 yolcu buldu, işlemi doğru. NVIDIA'ya göre görseli de anlıyor. İki testte de doğruydu. Yapay zekâ meraklısı birine gönder.",
+  "voiceover_segments": {
+    "hook": "Yeni model bir atasözünü açıkladı.",
+    "point1": "Adı Nemotron 3.5, NVIDIA'nın açık dil modeli. Doğal Türkçeyle anlattı.",
+    "point2": "Tren sorusunda 105 yolcu buldu, işlemi doğru.",
+    "point3": "NVIDIA'ya göre görseli de anlıyor.",
+    "why": "İki testte de doğruydu.",
+    "cta": "Yapay zekâ meraklısı birine gönder."
+  },
+  "shots": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 2.5,
+      "type": "screenshot",
+      "direction": "KAVAR TEST 1 card: the model's full proverb answer, shown whole, under the headline.",
+      "on_screen_text": "Model atasözü açıkladı"
+    },
+    {
+      "start_sec": 2.5,
+      "end_sec": 6.0,
+      "type": "screenshot",
+      "direction": "Keep test 1 answer card whole; name the model Nemotron 3.5 as a lower-third.",
+      "on_screen_text": "Nemotron 3.5"
+    },
+    {
+      "start_sec": 6.0,
+      "end_sec": 10.0,
+      "type": "screenshot",
+      "direction": "KAVAR TEST 2 card: train question and the answer 105 with the short working, shown whole.",
+      "on_screen_text": "105 yolcu"
+    },
+    {
+      "start_sec": 10.0,
+      "end_sec": 13.0,
+      "type": "text_overlay",
+      "direction": "Text card on the capability: understands images too, per NVIDIA.",
+      "on_screen_text": "Görseli de anlıyor (NVIDIA'ya göre)"
+    },
+    {
+      "start_sec": 13.0,
+      "end_sec": 15.5,
+      "type": "text_overlay",
+      "direction": "Verdict card for both tests.",
+      "on_screen_text": "İki testte de doğru"
+    },
+    {
+      "start_sec": 15.5,
+      "end_sec": 18.0,
+      "type": "text_overlay",
+      "direction": "Outro with handle @thekavar.ai and small + TAKİP ET pill.",
+      "on_screen_text": "@thekavar.ai"
+    }
+  ],
+  "key_points": [
+    {
+      "title": "Atasözünü iki cümlede açıkladı",
+      "detail": "İki cümlede, doğal Türkçeyle ve doğru anlattı."
+    },
+    {
+      "title": "Tren sorusu doğru çıktı",
+      "detail": "105 yolcu dedi, kısa işlemi de doğruydu."
+    },
+    {
+      "title": "Görseli de anlayabiliyor",
+      "detail": "NVIDIA'ya göre görsel anlama yeteneği de var."
+    }
+  ],
+  "why_it_matters": "Türkçe bir atasözü ve bir mantık sorusunda cevapları doğruydu.",
+  "caption": "Nemotron 3.5'e bir atasözü ve bir tren sorusu sorduk. İkisinde de cevap doğruydu; atasözü anlatımı çocuk için biraz ağır kalsa da. Sen ona hangi soruyu sorardın? 🤔",
+  "hashtags": [
+    "#yapayzeka",
+    "#aitools",
+    "#nvidia",
+    "#nemotron",
+    "#kavar"
+  ],
+  "tool_name": "Nemotron 3.5",
+  "website_url": "https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "voiceover_words": 36,
+  "est_duration_sec": 14.8,
+  "hook_judge": {
+    "scores": [
+      8,
+      6,
+      5,
+      3,
+      5
+    ],
+    "best": 0,
+    "reason": "Aday 0, yapay zekânın bir atasözünü çocuğa açıkladığını net söylüyor; \"açıklattık\" Biz denedik kuralıyla doğru, başlık ile seslendirme aynı şeyi söylüyor ve ilk karedeki 1. çıktıyla örtüşüyor; ürün adı da geçmiyor."
+  }
+}

@@ -95,7 +95,7 @@ def _output_order(article: dict) -> str:
     return "\n".join(f"output {i}: {f['caption'].split(':')[0]}" for i, f in enumerate(_ours(article), 1))
 
 
-def _safe_box(zoom: float = 1.12, origin=(0.5, 0.3), margin: int = 14) -> tuple[int, int, int, int]:
+def _safe_box(zoom: float = 1.2, origin=(0.5, 0.3), margin: int = 14) -> tuple[int, int, int, int]:
     """The part of the proof box that stays visible at the hook's end zoom (inside the border)."""
     w, h = PROOF_SIZE
     ox, oy = w * origin[0], h * origin[1]

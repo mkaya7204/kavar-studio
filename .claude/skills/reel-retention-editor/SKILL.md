@@ -25,7 +25,8 @@ MUST
   from website captures, not screen recordings.
 - No first-person experience claims ("denedim", "çevirdim", "kullandım"): the page didn't use it.
 - Length 14-26 s; no dead air longer than ~0.6 s; the closing card is short (≈2 s).
-- Text never sits in the top ~270 px band or the bottom ~35 %, never cut off or overlapping.
+- Headline and captions never above y 240 or in the bottom ~20 %; the result box stays inside the 3:4 band
+  (y 240-1680). Nothing cut off or overlapping. Check the cover at 10% size and in the 3:4 crop (report D-17).
 - Facts only from the tool data / source; page policy: no prices, payment models, free/paid,
   trials or discounts anywhere (screen, voice, caption).
 - Natural Turkish, correct İ/ı casing.

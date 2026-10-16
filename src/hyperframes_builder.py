@@ -185,16 +185,19 @@ def plan_timeline(segments: list[str] | None, words: list[dict], max_total: floa
     return {"plan": plan, "total": total, "cuts": cuts, "pauses": pauses, "owner": owner}
 
 
-def caption_groups(words: list[dict], owner: list[int], pauses: list[float], skip_segments=(0, 5)) -> list[dict]:
+def caption_groups(words: list[dict], owner: list[int], pauses: list[float], skip_segments=(5,),
+                   start_at: float = 0.5) -> list[dict]:
     """Re-timed words grouped into short caption lines: {"s", "e", "w": [[text, start], ...]}.
 
-    The hook (0) and the closing line (5) get no captions: the headline / closing card already
-    show those words on screen (triple hook)."""
+    Captions start at 0.5 s, the hook included (report D-17); the closing line (5) gets none: the
+    closing card shows those words."""
     groups, cur = [], []
     for w, o in zip(words, owner):
         if o in skip_segments:
             continue
         offset = sum(pauses[:o])
+        if w["start"] + offset < start_at:
+            continue
         word = (w["word"], w["start"] + offset, w["end"] + offset, o)
         if cur:
             prev = cur[-1]
@@ -257,7 +260,7 @@ def _bake_variable_defaults(index: Path, values: dict) -> None:
     index.write_text(html_text[:m.start(1)] + attr + html_text[m.end(1):], encoding="utf-8")
 
 
-PROOF_SIZE = (920, 660)  # the hook's proof box (templates/hyperframes_news #hook-proof); D-17: result-first
+PROOF_SIZE = (920, 1100)  # the hook's proof box (templates/hyperframes_news #hook-proof); D-17: result-first
 
 
 PROOF_CANDIDATES = 8

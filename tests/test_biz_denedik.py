@@ -231,5 +231,6 @@ def test_proof_safe_box_matches_the_template_zoom():
     """If the hook zoom in the template changes, trial_reel._safe_box must change with it."""
     html = (Path(__file__).resolve().parent.parent / "templates" / "hyperframes_news" / "index.html").read_text(
         encoding="utf-8")
-    assert 'tl.fromTo("#hook-proof-img", { scale: 1.0 }, { scale: 1.12' in html
+    assert 'tl.fromTo("#hook-proof-img", { scale: 1.0 }, { scale: 1.06' in html
+    assert 'tl.to("#hook-proof-img", { scale: 1.2' in html  # the ~1.0 s zoom onto the detail
     assert "transform-origin: 50% 30%;" in html
