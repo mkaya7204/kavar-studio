@@ -13,6 +13,9 @@ on:
       video:
         description: "video path inside the artifact"
         required: true
+      artifact:
+        description: "artifact name: kavar-output (a tgz, default) or e.g. trial-rerender (plain files)"
+        default: "kavar-output"
 
 permissions:
   actions: read
@@ -29,8 +32,14 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Video from the run
         run: |
-          gh run download "${{ github.event.inputs.run }}" -R "${{ github.repository }}" -n kavar-output -D /tmp/kavar
-          tar -xzf /tmp/kavar/kavar-*.tgz "${{ github.event.inputs.video }}"
+          A="${{ github.event.inputs.artifact }}"
+          if [ "$A" = "kavar-output" ]; then
+            gh run download "${{ github.event.inputs.run }}" -R "${{ github.repository }}" -n kavar-output -D /tmp/kavar
+            tar -xzf /tmp/kavar/kavar-*.tgz "${{ github.event.inputs.video }}"
+          else
+            gh run download "${{ github.event.inputs.run }}" -R "${{ github.repository }}" -n "$A" -D .
+          fi
+          ls -la "${{ github.event.inputs.video }}"
       - name: Two-pass encode to ~9 MB
         run: |
           IN="${{ github.event.inputs.video }}"
