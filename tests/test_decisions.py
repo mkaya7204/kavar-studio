@@ -94,3 +94,10 @@ def test_editor_knows_the_agreed_opening_and_cover():
 
     assert "KAVAR denemesi" in editor_review.REEL_RULES and "D-17" in editor_review.REEL_RULES
     assert "KAYDIR" in editor_review.SYSTEM and "3-6" in editor_review.SYSTEM
+
+
+def test_hook_subject_rule_is_loaded():
+    """D-10: the model / tool is the clear subject of the headline."""
+    import script_writer
+
+    assert "Clear subject" in script_writer.SYSTEM_PROMPT

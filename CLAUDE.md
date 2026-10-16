@@ -17,7 +17,8 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
   RAM. No ffmpeg, renders, main.py, `daily.py produce`, sleep or polling loops locally. Start
   cloud runs (`gh workflow run ...`), check once (`gh run view`), and track with a session cron.
   gh is at `C:\Program Files\GitHub CLI\gh.exe`.
-- **Production window.** `produce.yml` runs at 03:30 UTC (06:30 TRT). Don't push untested changes
+- **Production window.** `produce.yml` runs at 03:17, 04:47 and 06:17 UTC (06:17 / 07:47 / 09:17 TRT); later
+  ones skip a day that is already produced. Don't push untested changes
   to `main` after 02:30 UTC. Test every change first with `news-test.yml` (and `-f reel=yes` for
   the Reel) and with the invariant tests (§3).
 

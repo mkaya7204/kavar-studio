@@ -56,7 +56,7 @@ the decisions that are currently locked; this file explains why they exist and h
 ## D-10 · 2026-10-16 · Hooks: the model is the clear subject
 - **User:** "çocuğa açıklattık" read as if something was done to a child.
 - **Built:** the Nemotron Reel was fixed by hand to "Yapay zekâ atasözünü iki cümlede açıkladı" (rerender/2026-10-16_nemotron-3-5.json).
-- **Still to do:** turn this into a writer rule and a lesson.
+- **Made permanent (2026-10-16):** rule 12 in the reel-hook-writer RULES (loaded by the script writer and the hook judge) and a lesson in rules/editor_lessons.md.
 
 ## D-11 · 2026-10-16 · Browser uploads stay under 10 MB
 - **Why:** the Chrome extension uploads at most 10 MB; the GLM Reel was 16 MB.
@@ -127,3 +127,35 @@ the decisions that are currently locked; this file explains why they exist and h
 - **User:** "Bunları editörde biliyor mu sonra çakışma olmasın".
 - **Found:** two places where the editor could read the new design as a rule break. The Reel rule "no badge or button in the first 3 s" would hit the "KAVAR denemesi" stamp at ~1.3 s. The carousel cover's "KAYDIR →" pill could look like a CTA button.
 - **Built:** the Reel editor rules (reel-retention-editor RULES) and the carousel editor SYSTEM now describe the agreed opening and cover as intended. A test keeps them there (`test_editor_knows_the_agreed_opening_and_cover`). The stale metrics path in the editor skill was also fixed.
+
+## D-22 · 2026-10-16 · What is still open from the report (status check)
+- **User:** "unuttuğumuz yapmadığımız herhangi bir şey kaldı mı".
+- **Done today:**
+  - measurement (D-14)
+  - George-only voice, voice cap, hook price check, caption checks, CLI pin
+  - press photos out (D-12)
+  - new opening A and carousel cover (D-20); the editor knows both (D-21)
+  - two Reels a day (D-09)
+  - decision log (D-16)
+  - the hook-subject rule and lesson (D-10)
+- **Open, Claude can do them, in this order:**
+  1. The editor's fixes reach the caption and story too. After a fix, the number check runs again, and a fresh review (not the same call) approves it.
+  2. News ranking:
+     - interest for Turkish readers
+     - at most 1 story per company per day (3 of 4 carousels were NVIDIA)
+     - no repeat of the same story from another site the next day
+  3. Rotate the "Biz denedik" tests (a test bank; record which model got which test).
+  4. Tool Reels: AI tools only, and a longer used-tool history (10 is too short).
+  5. A later cron makes a missing Reel when the day is "done" with an empty Reel slot.
+  6. Failing invariant tests stop or alert production (today they only log: `continue-on-error`).
+  7. Phone notification when production ends or fails.
+  8. One rules source with rule IDs. Clean up dead code (the old video path, Windows tasks, affiliate captions, unused libraries) and stale docs (RISKS.md D/A1, the daily.py docstring).
+  9. A closing "send it to someone" line in carousels too. Reels already have one.
+  10. Check that the official HF Space owner is on an explicit allow-list, not any word found in the article.
+- **Waiting for the user (D-15):**
+  - the ElevenLabs quota (no Reels until then)
+  - the Instagram API setup
+  - labelling 40-60 items for the editor
+  - collab outreach
+  - whether the 11:45 Reel goes out as a Trial Reel
+  - unfollowing slowly (D-13, by hand)

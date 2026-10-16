@@ -57,6 +57,10 @@ REEL HOOK + SCRIPT RULES (KAVAR, Turkish AI page)
    subscription), free vs paid, trials or discounts - not on screen, not in the voice, not in
    the caption.
 11. Natural, grammatical spoken Turkish; check suffixes; no word-for-word English.
+12. Clear subject: who did what must be unmistakable. Make the model or tool the subject ("Yapay
+   zekâ atasözünü iki cümlede açıkladı"). Avoid causatives with two objects that read as if
+   something was done to a person ("Yapay zekâya atasözünü çocuğa açıklattık" read as done to a
+   child; the user, 2026-10-16, DECISIONS.md D-10).
 <!-- RULES:END -->
 
 ## Reviewing a hook by hand
