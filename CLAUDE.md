@@ -21,6 +21,9 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
   to `main` after 02:30 UTC. Test every change first with `news-test.yml` (and `-f reel=yes` for
   the Reel) and with the invariant tests (§3).
 
+- **Log every decision in `DECISIONS.md`** (user, 2026-10-16): date, the user's words, what was
+  built, where it lives, what test guards it. Same commit as the change. Never delete an entry.
+
 ## 1. Locked decisions (date and source: the user)
 1. **No prices, ever** (2026-10-11): no prices, currencies, payment models, free/paid, trials or
    discounts in any post, image, caption or voiceover. The only exception is a paid collaboration

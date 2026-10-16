@@ -79,3 +79,10 @@ def test_voice_length_is_capped_before_spending_quota():
     import tts_engine
 
     assert tts_engine.MAX_SECONDS <= 24
+
+
+def test_decision_log_exists_and_claude_md_points_to_it():
+    """User 2026-10-16: every decision is written down (DECISIONS.md)."""
+    log = (ROOT / "DECISIONS.md").read_text(encoding="utf-8")
+    assert "D-01" in log and "No prices" in log
+    assert "DECISIONS.md" in (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
