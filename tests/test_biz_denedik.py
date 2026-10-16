@@ -210,16 +210,15 @@ def test_an_answer_cut_by_our_token_limit_is_never_shown(monkeypatch):
 
 def test_reel_proof_shows_a_whole_answer_card(tmp_path):
     """2026-10-16: the Nemotron Reel's proof box cropped the answer card mid-sentence; editor rejected it."""
-    from PIL import Image, ImageChops
+    from PIL import Image, ImageChops, ImageDraw
 
     import trial_reel
 
-    card = model_trial._answer_card("m:free", "Bir soru?", " ".join(["uzun bir cevap cümlesi"] * 12),
-                                    tmp_path / "card.png")
-    with Image.open(card) as img:
-        img = img.convert("RGB")
-        assert trial_reel._is_answer_card(img)
-        proof = trial_reel._proof(img)
+    # an answer card's shape (1080x760, text from top to bottom) without fonts: checks.yml has none
+    img = Image.new("RGB", (1080, 760), trial_reel.ImageColor.getrgb(trial_reel.CARD_BG))
+    ImageDraw.Draw(img).rectangle((70, 60, 1010, 650), fill="white")
+    assert trial_reel._is_answer_card(img)
+    proof = trial_reel._proof(img)
     assert proof.size == trial_reel.PROOF_SIZE
     # nothing touches the top or bottom edge: the whole card was scaled in, not cropped
     bg = Image.new("RGB", proof.size, trial_reel.ImageColor.getrgb(trial_reel.CARD_BG))
