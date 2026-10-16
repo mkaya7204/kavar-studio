@@ -106,3 +106,12 @@ the decisions that are currently locked; this file explains why they exist and h
   - Covers have 1-5 words; carousel slide 1 has at most 6 words plus a swipe cue.
 - **Testing:** Trial Reels change only the first 3 s. Skip rate is the main metric. Each test is repeated 3-4 times because reach is small. It waits for the voice quota (D-15).
 - **Status:** branch hook-motion has only the "first change at ~1.1 s" part; not merged.
+
+## D-18 · 2026-10-16 · D-17 approved and built (branch hook-motion)
+- **User:** "Tamam bunlara sadık kalınarak yap".
+- **Built:**
+  - Reel: headline 3-6 words / at most 32 characters on 2 lines (script_writer check, reel-hook-writer and reel-cover-designer skills).
+  - Reel frame 0: the result box is 920x660 (`PROOF_SIZE`), the biggest thing in the frame. At ~1.1 s the headline becomes a small label, the result steps forward, and the source stamp appears on it.
+  - Carousel cover: 3-6 words (`HEADLINE_WORDS = 6`), bigger type, "KAYDIR →" pill.
+- **One deviation, told to the user:** the research asked for the result on 60-70% of the frame AND for safe zones. Instagram's caption overlay covers the bottom ~35% (also an editor rule), so the result box ends above it: about 1.4x the old box instead of 60-70%.
+- **Before production:** silent design previews (trial-rerender `silent=yes`, news-test) are shown to the user. Merge only after the user's yes.

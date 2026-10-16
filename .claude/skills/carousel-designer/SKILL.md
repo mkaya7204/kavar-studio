@@ -35,7 +35,7 @@ Output: `output/carousel/<date>_<tool>/` with `carousel/NN.jpg`, `story/NN.jpg`,
   Instagram's April 2026 originality rule). Retell in our own Turkish, credit every visual.
 - `article_capture.py` saves the article's own cover (og:image), its headline area (`page`), up
   to 6 images (`fig_N`) and up to 2 of its own MP4 videos (YouTube/social embeds are skipped).
-- `news_writer.py`: cover headline 6-12 words, `news` slides 20-75 words with `**highlights**`,
+- `news_writer.py`: cover headline 3-6 words (D-17), `news` slides 20-75 words with `**highlights**`,
   one visual each (figure / page / video / none), one `why` slide, follow `cta`. Every number
   must appear in the article; no prices.
 - Template: wide covers (most og:images are 1.91:1) are shown whole over a blurred copy; tall

@@ -542,6 +542,18 @@
         white-space: nowrap;
       }
 
+      .swipe {
+        position: absolute;
+        right: var(--side);
+        top: 1206px;
+        padding: 10px 26px;
+        border-radius: 999px;
+        background: var(--neon, #1fd5ff);
+        color: #04060c;
+        font-size: 28px;
+        letter-spacing: 0.08em;
+      }
+
       /* ---------- news mode ---------- */
       .cover-img {
         position: absolute;
@@ -841,11 +853,13 @@
             c.style.top = STORY ? "340px" : "110px";
             c.style.height = STORY ? "1170px" : "1095px";
             el("i", "hl-rule", c);
-            title(c, f.title, "", STORY ? [104, 96, 88, 80, 72, 64] : [92, 84, 76, 68, 62, 56], true);
+            // D-17 (research 2026-10-16): 3-6 big words, and a swipe cue on the feed cover
+            title(c, f.title, "", STORY ? [104, 96, 88, 80, 72, 64] : [112, 100, 92, 84, 76, 68, 62], true);
             if (STORY && f.body) body(c, f.body);
             const cr = el("div", "credit", s, D.news.cover_credit || "Görsel: " + D.news.publisher);
             cr.style.top = (STORY ? 1530 : 1222) + "px";
             cr.dataset.qa = "chrome";
+            if (!STORY) el("div", "swipe black", s, "KAYDIR →").dataset.qa = "chrome";
           } else if (NEWS && role === "news") {
             b.style.display = "none"; // the byline below carries the brand on these slides
             ctr.style.display = "none";
