@@ -825,7 +825,7 @@
       const hookEnd = E("hook");
       tl.set(hookWords, { opacity: 1, yPercent: 0, scale: 1 }, 0);
       tl.fromTo("#hook-proof-img", { scale: 1.0 }, { scale: 1.06, duration: 0.4, ease: "none" }, 0);
-      tl.fromTo("#hook-title", { scale: 1 }, { scale: 1.03, duration: Math.max(0.5, hookEnd), ease: "none" }, 0);
+      tl.fromTo("#hook-title", { scale: 1 }, { scale: 1.03, duration: Math.max(0.3, Math.min(1.0, hookEnd - 1.0)), ease: "none" }, 0);
       const accents = [...hookWords].filter((w) => w.classList.contains("accent"));
       if (accents.length) {
         tl.fromTo(accents, { x: -8, textShadow: GLITCH }, { x: 0, textShadow: GLOW, duration: 0.25, ease: "power2.out", immediateRender: false }, 0.45);
