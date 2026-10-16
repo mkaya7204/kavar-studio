@@ -104,7 +104,8 @@ def _safe_box(zoom: float = 1.12, origin=(0.5, 0.3), margin: int = 14) -> tuple[
             round(ox + (w - margin - ox) / zoom), round(oy + (h - margin - oy) / zoom))
 
 
-PROOF_SAFE = _safe_box()
+STAMP_ROOM = 76  # the "KAVAR denemesi" stamp sits bottom-left on the box: keep the card above it
+PROOF_SAFE = (*_safe_box()[:3], _safe_box()[3] - STAMP_ROOM)
 
 
 def _is_answer_card(img: Image.Image) -> bool:
