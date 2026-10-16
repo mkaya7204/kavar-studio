@@ -1,0 +1,48 @@
+# Make a Reel small enough to upload through the browser in Business Suite (the Chrome extension
+# uploads at most 10 MB). Takes the video from a production run's kavar-output artifact and
+# re-encodes it with two passes to about 9 MB. Nothing is queued, published or committed.
+#   gh workflow run shrink.yml -f run=<produce run id> -f video=output/reels/<date>_<name>/final_video.mp4
+name: shrink
+
+on:
+  workflow_dispatch:
+    inputs:
+      run:
+        description: "produce run id (kavar-output artifact)"
+        required: true
+      video:
+        description: "video path inside the artifact"
+        required: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  shrink:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Video from the run
+        run: |
+          gh run download "${{ github.event.inputs.run }}" -R "${{ github.repository }}" -n kavar-output -D /tmp/kavar
+          tar -xzf /tmp/kavar/kavar-*.tgz "${{ github.event.inputs.video }}"
+      - name: Two-pass encode to ~9 MB
+        run: |
+          IN="${{ github.event.inputs.video }}"
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$IN")
+          V=$(python3 -c "print(int(9.0*8*1024/$D - 128))")   # kbit/s for video, 128k audio
+          echo "duration $D s, video $V kbit/s"
+          ffmpeg -y -loglevel error -i "$IN" -c:v libx264 -preset slow -b:v ${V}k -pass 1 -an -f mp4 /dev/null
+          ffmpeg -y -loglevel error -i "$IN" -c:v libx264 -preset slow -b:v ${V}k -pass 2 -pix_fmt yuv420p \
+            -c:a aac -b:a 128k -movflags +faststart small.mp4
+          ls -la "$IN" small.mp4
+      - uses: actions/upload-artifact@v7
+        with:
+          name: shrink
+          path: small.mp4
+          retention-days: 7
