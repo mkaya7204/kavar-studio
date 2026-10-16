@@ -65,3 +65,16 @@ def test_our_test_images_forbid_prices_and_the_judge_drops_them():
     for prompt in model_trial.IMAGE_TESTS:
         assert "no prices" in prompt and "no logos" in prompt
     assert "usable false" in model_trial.JUDGE_SYSTEM and "price" in model_trial.JUDGE_SYSTEM
+
+
+@pytest.mark.parametrize("tags,caption,ok", [
+    (["#yapayzeka", "#nvidia", "#nemotron"], "NVIDIA yeni modelini duyurdu, biz de iki soru sorduk.", True),
+    (["#yapayzeka", "#İ#nvida", "#nemotron"], "NVIDIA yeni modelini duyurdu, biz de iki soru sorduk.", False),
+    (["#yapayzeka", "#google", "#api"], "", False),  # went live 2026-10-14 with hashtags only
+    (["#yapayzeka", "#google", "#api"], "Kısa #yapayzeka #google", False),
+    (["#yapay-zeka", "#google", "#api"], "NVIDIA yeni modelini duyurdu, biz de iki soru sorduk.", False),
+])
+def test_captions_and_hashtags_are_checked(tags, caption, ok):
+    from script_writer import caption_problems
+
+    assert (not caption_problems(caption, tags)) is ok

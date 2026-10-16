@@ -3,7 +3,7 @@
 Providers are tried in the order of config.json "tts_providers" (default
 elevenlabs -> azure -> edge); one without credentials in .env is skipped, and one
 that fails hands over to the next:
-  - elevenlabs: most natural voice (ELEVENLABS_API_KEY, optional ELEVENLABS_VOICE_ID / ELEVENLABS_MODEL)
+  - elevenlabs: most natural voice (ELEVENLABS_API_KEY; always "George", CLAUDE.md §1.6)
   - azure:      official Microsoft Speech, same neural voices as edge but reliable
                 (AZURE_SPEECH_KEY + AZURE_SPEECH_REGION, e.g. westeurope)
   - edge:       free Microsoft Edge online voices (edge-tts), no key, sometimes refuses with 403
@@ -37,7 +37,7 @@ DEFAULT_PROVIDERS = ["elevenlabs", "azure", "edge"]
 ELEVENLABS_VOICE = "JBFqnCBsd6RMkjVDRZzb"  # "George" (multilingual): the user chose to keep it for Reels, 2026-10-16
 ELEVENLABS_MODEL = "eleven_multilingual_v2"  # best quality for Turkish
 ELEVENLABS_SEED = 4242  # same seed every run, for a consistent delivery
-MAX_SECONDS = 30.0
+MAX_SECONDS = 23.5  # the voice plus ~2 s of outro stays inside the editor's 14-26 s (refused BEFORE spending quota)
 WORDS_PER_SECOND = 2.5  # neural voices at rate +0% ≈ 150 wpm
 MAX_SPEEDUP_PCT = 15  # faster than this sounds rushed
 RETRIES = 3
@@ -117,7 +117,7 @@ async def _edge(text: str, voice: str, rate_pct: int, audio_path: Path) -> list[
 
 
 def _elevenlabs_sync(text: str, rate_pct: int, audio_path: Path) -> list[dict]:
-    voice_id = _env("ELEVENLABS_VOICE_ID") or ELEVENLABS_VOICE
+    voice_id = ELEVENLABS_VOICE  # locked (CLAUDE.md §1.6): no env override, no other voice
     try:
         resp = requests.post(
             f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps",
@@ -228,7 +228,7 @@ def available_providers() -> list[str]:
 
 def _voice_label(provider: str, voice: str) -> str:
     if provider == "elevenlabs":
-        return f"elevenlabs:{_env('ELEVENLABS_VOICE_ID') or ELEVENLABS_VOICE}"
+        return f"elevenlabs:{ELEVENLABS_VOICE}"
     return f"{provider}:{voice}"
 
 
@@ -287,7 +287,7 @@ async def synthesize_async(
     max_seconds: float = MAX_SECONDS,
     providers: list[str] | None = None,
 ) -> dict:
-    """`voice` is the Microsoft voice name (azure / edge); ElevenLabs uses ELEVENLABS_VOICE_ID."""
+    """`voice` is the Microsoft voice name (azure / edge); ElevenLabs always uses George."""
     text = " ".join(text.split())
     if not text:
         raise TTSError("voiceover text is empty")

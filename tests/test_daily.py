@@ -144,7 +144,8 @@ def test_one_reel_goes_to_the_evening(monkeypatch, sandbox):
                                                      ("20:30", "ready")]
 
 
-def test_no_reel_render_starts_without_time_left(monkeypatch):
+def test_no_reel_render_starts_without_time_left(monkeypatch, tmp_path):
+    monkeypatch.setattr(daily, "LOG_DIR", tmp_path)  # never write into the real day log
     monkeypatch.setattr(daily, "_STARTED", daily.time.monotonic() - daily.JOB_BUDGET)
     monkeypatch.setattr(daily, "_reel_attempt", lambda cmd=None: pytest.fail("render started"))
     assert daily.produce_reel() is None

@@ -63,6 +63,21 @@ def price_mentions(*texts: str) -> list[str]:
     return sorted({m.group(0) for t in texts for m in PRICE_PATTERN.finditer(t or "")})
 
 
+HASHTAG = re.compile(r"^#[^\W_]\w*$")  # one word: "#İ#nvida" went live on 2026-10-15
+MIN_CAPTION_CHARS = 40  # two Reels went out with hashtags only (2026-10-13/14)
+
+
+def caption_problems(caption: str, hashtags: list[str]) -> list[str]:
+    """Deterministic caption checks, before any editor sees it."""
+    problems = [f"broken hashtag {t!r}: one word, letters and digits only" for t in hashtags if not HASHTAG.match(t)]
+    text = re.sub(r"#\S+", "", caption).strip()
+    if len(text) < MIN_CAPTION_CHARS:
+        problems.append(f"caption needs real text, not only hashtags (has {len(text)} characters)")
+    if "#" in caption:
+        problems.append("hashtags go in the hashtags list, not in the caption")
+    return problems
+
+
 def _script_price_mentions(script: "VideoScript") -> list[str]:
     return price_mentions(script.hook, script.voiceover, script.why_it_matters, script.caption, *script.hashtags,
                           *(f"{p.title} {p.detail}" for p in script.key_points),
@@ -89,7 +104,7 @@ def _fold(text: str) -> str:
 
 def reel_rule_problems(script: "VideoScript") -> list[str]:
     """Measurable reel-hook-writer rules a draft breaks (empty list = all met)."""
-    problems = []
+    problems = caption_problems(script.caption, script.hashtags)
     seg = script.voiceover_segments
     spoken = seg.hook if seg else script.voiceover.split(".")[0]
     name = _fold(script.tool_name)
@@ -577,6 +592,9 @@ def judge_hooks(script: dict, tool_data: dict | None = None) -> dict:
         print(f"[script_writer] judged hook doesn't validate ({exc.error_count()} errors); keeping the writer's.")
         return {**script, "hook_judge": verdict}
     if reel_rule_problems(checked) and not reel_rule_problems(VideoScript.model_validate(script)):
+        return {**script, "hook_judge": verdict}
+    if bad := _script_price_mentions(checked):  # the candidates were never price-checked (audit 2026-10-16)
+        print(f"[script_writer] judged hook mentions a price ({', '.join(bad)}); keeping the writer's.")
         return {**script, "hook_judge": verdict}
     print(f"[script_writer] hook judge picked #{verdict['best']} ({best['pattern']}): \"{best['headline']}\" "
           f"- {verdict['reason']}")

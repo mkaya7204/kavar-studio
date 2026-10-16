@@ -62,3 +62,20 @@ def test_editor_fix_rounds(monkeypatch, tmp_path):
     monkeypatch.setattr(daily, "LOG_DIR", tmp_path)
     ok, _ = daily._reviewed_news(tmp_path)
     assert ok is False  # still "fix" after 2 rounds: not published
+
+
+def test_only_george_ever_speaks(monkeypatch):
+    """Audit 2026-10-16: a quota error fell through to edge-tts (another voice); an env var could override George."""
+    import tts_engine
+
+    monkeypatch.setenv("ELEVENLABS_API_KEY", "x")
+    monkeypatch.setenv("ELEVENLABS_VOICE_ID", "someone-else")
+    assert tts_engine.available_providers() == ["elevenlabs"]
+    assert tts_engine._voice_label("elevenlabs", "tr-TR-AhmetNeural") == "elevenlabs:JBFqnCBsd6RMkjVDRZzb"
+    assert "ELEVENLABS_VOICE_ID" not in (ROOT / ".github" / "workflows" / "produce.yml").read_text(encoding="utf-8")
+
+
+def test_voice_length_is_capped_before_spending_quota():
+    import tts_engine
+
+    assert tts_engine.MAX_SECONDS <= 24

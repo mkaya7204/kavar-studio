@@ -15,7 +15,7 @@ from typing import Literal
 from pydantic import BaseModel, ValidationError, field_validator, model_validator
 
 from carousel_writer import MAX_HASHTAGS, STORY_FRAMES, STORY_WORDS, StoryFrame, _ask, _revision_prompt
-from script_writer import NO_PRICE_RULE, price_mentions
+from script_writer import NO_PRICE_RULE, caption_problems, price_mentions
 from skill_rules import editor_lessons
 
 SLIDES = (6, 10)
@@ -70,7 +70,7 @@ def _words(text: str) -> int:
 
 
 def news_problems(c: NewsScript) -> list[str]:
-    out = []
+    out = caption_problems(c.caption, c.hashtags)
     n = len(c.slides)
     if not SLIDES[0] <= n <= SLIDES[1]:
         out.append(f"carousel needs {SLIDES[0]}-{SLIDES[1]} slides, got {n}")

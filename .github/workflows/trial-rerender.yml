@@ -30,7 +30,6 @@ jobs:
       PYTHONIOENCODING: utf-8
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-      ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7
@@ -48,7 +47,7 @@ jobs:
           pip install -q -r requirements.txt
           python -m playwright install --with-deps chromium
           for i in 1 2 3; do
-            npm install -g @anthropic-ai/claude-code && claude --version && break
+            npm install -g @anthropic-ai/claude-code@2.1.301 && claude --version && break
             echo "Claude Code CLI install broken (try $i), reinstalling"; npm uninstall -g @anthropic-ai/claude-code || true
           done
           claude --version

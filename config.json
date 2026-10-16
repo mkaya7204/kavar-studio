@@ -4,8 +4,6 @@
   "fps": 30,
   "language": "tr",
   "tts_providers": [
-    "elevenlabs",
-    "azure",
-    "edge"
+    "elevenlabs"
   ]
 }

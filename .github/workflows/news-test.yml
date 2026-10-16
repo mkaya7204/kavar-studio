@@ -24,7 +24,6 @@ jobs:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-      ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -42,7 +41,7 @@ jobs:
           pip install -q -r requirements.txt
           python -m playwright install --with-deps chromium
           for i in 1 2 3; do
-            npm install -g @anthropic-ai/claude-code && claude --version && break
+            npm install -g @anthropic-ai/claude-code@2.1.301 && claude --version && break
             echo "Claude Code CLI install broken (try $i), reinstalling"; npm uninstall -g @anthropic-ai/claude-code || true
           done
           claude --version  # fail here, not later in the run, if all tries broke
