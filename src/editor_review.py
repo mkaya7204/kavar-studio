@@ -54,6 +54,7 @@ region or age limits). Quotes attributed correctly.
 - Turkish: natural and grammatical; uppercase dotted İ correct.
 - Design (contact sheet): text cut off, overlapping, unreadable, broken images, a still with a \
 play button that doesn't play, wrong brand. The handle must be @thekavar.ai.
+- Agreed design (DECISIONS.md D-17/D-20), never a problem: the cover headline is 3-6 big words, and the feed cover has a "KAYDIR →" pill at the bottom right (a swipe cue, not an ad button).
 Verdict: "publish" if it is ready; "fix" only for text problems you can fix by rewriting a slide's \
 title/body (give each fix with the 1-based slide number and the complete new title and body, \
 keeping **highlight** marks and similar length); "reject" for anything else that is wrong. \

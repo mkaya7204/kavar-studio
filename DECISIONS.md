@@ -122,3 +122,8 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Merged to main:** A (branch hook-motion), with the carousel cover (3-6 words, "KAYDIR →") and the silent-preview mode. B stays on branch hook-research and is not used.
 - **Note:** A's headline also ran to 3 lines in the preview ("YAPAY ZEKÂ / ATASÖZÜNÜ / AÇIKLADI", 100 px). The user saw it like that and chose A.
 - **Next:** test openings with Trial Reels once the voice quota allows Reels again (D-15, D-17).
+
+## D-21 · 2026-10-16 · The editor knows the new design
+- **User:** "Bunları editörde biliyor mu sonra çakışma olmasın".
+- **Found:** two places where the editor could read the new design as a rule break. The Reel rule "no badge or button in the first 3 s" would hit the "KAVAR denemesi" stamp at ~1.3 s. The carousel cover's "KAYDIR →" pill could look like a CTA button.
+- **Built:** the Reel editor rules (reel-retention-editor RULES) and the carousel editor SYSTEM now describe the agreed opening and cover as intended. A test keeps them there (`test_editor_knows_the_agreed_opening_and_cover`). The stale metrics path in the editor skill was also fixed.

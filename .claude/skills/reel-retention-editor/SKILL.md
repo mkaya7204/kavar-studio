@@ -29,6 +29,10 @@ MUST
 - Facts only from the tool data / source; page policy: no prices, payment models, free/paid,
   trials or discounts anywhere (screen, voice, caption).
 - Natural Turkish, correct İ/ı casing.
+- The agreed opening (DECISIONS.md D-17/D-20) is intended, never a problem: headline of 3-6 words
+  over a large result box; at ~1.1 s the headline shrinks to a small label at the top, the box moves
+  up, and a "KAVAR denemesi" (or source) stamp appears on the box. That stamp is a source label, not
+  an ad badge or a CTA button.
 SHOULD (list as problems, don't reject for these alone)
 - The promise is clearly demonstrated within the first ~6 seconds.
 - The shot plan in the script matches the rendered video (the renderer uses its own scene layout,
@@ -40,7 +44,8 @@ SHOULD (list as problems, don't reject for these alone)
 
 ## Reading the numbers (Instagram Insights / Meta Business Suite)
 
-Record every Reel's results in `output/metrics/reels.json` with
+Record every post's results in `state/metrics/posts.json` (`python src/post_metrics.py add`); Reel
+script links stay in `state/metrics/reels.json` with
 `python -m reel_metrics update <id> --views N --skip-rate P --avg-watch-pct P --sends N` (run from
 `src/`), or let Claude fill them from Business Suite. Starting targets (vendor rules of thumb, not
 official): skip rate under 30-40 %, average watch ≥ 50-60 %, sends > 0 per 100 views.

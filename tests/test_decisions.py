@@ -86,3 +86,11 @@ def test_decision_log_exists_and_claude_md_points_to_it():
     log = (ROOT / "DECISIONS.md").read_text(encoding="utf-8")
     assert "D-01" in log and "No prices" in log
     assert "DECISIONS.md" in (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+
+
+def test_editor_knows_the_agreed_opening_and_cover():
+    """User 2026-10-16: "Bunları editör de biliyor mu, sonra çakışma olmasın"."""
+    import editor_review
+
+    assert "KAVAR denemesi" in editor_review.REEL_RULES and "D-17" in editor_review.REEL_RULES
+    assert "KAYDIR" in editor_review.SYSTEM and "3-6" in editor_review.SYSTEM
