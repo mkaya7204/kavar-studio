@@ -78,3 +78,13 @@ def test_captions_and_hashtags_are_checked(tags, caption, ok):
     from script_writer import caption_problems
 
     assert (not caption_problems(caption, tags)) is ok
+
+
+def test_no_press_sites_as_news_sources():
+    """User 2026-10-16: own visuals only, never press photos (Getty etc. via The Verge / TechCrunch)."""
+    import json
+    from pathlib import Path
+
+    feeds = json.loads((Path(__file__).resolve().parent.parent / "news_sources.json").read_text(encoding="utf-8"))["feeds"]
+    press = ("theverge", "techcrunch", "wired", "venturebeat", "engadget", "arstechnica", "zdnet", "cnbc", "reuters")
+    assert not [f["url"] for f in feeds if any(p in f["url"] for p in press)]
