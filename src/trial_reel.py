@@ -181,7 +181,8 @@ def write_script(article: dict) -> dict | None:
     return fallback.model_dump(mode="json") if fallback else None
 
 
-def make_trial_reel(run: Path) -> int:
+def make_trial_reel(run: Path, script_path: Path | None = None) -> int:
+    """script_path: a hand-fixed script.json (CLAUDE.md §1.3) to render instead of writing a new one."""
     article = json.loads((run / "article" / "article.json").read_text(encoding="utf-8"))
     outputs = _outputs(article)
     if not article.get("trial_note") or not outputs:
@@ -195,11 +196,15 @@ def make_trial_reel(run: Path) -> int:
             "output_order": _output_order(article), "article": article["text"][:4000],
             "kavar_test": article["trial_note"]}
     print(f"▶ Biz denedik Reel: {tool['tool_name']} ({len(outputs)} outputs)", flush=True)
-    script = write_script(article)
-    if script is None:
-        print("✖ no valid Reel script")
-        return 1
-    script = judge_hooks(script, tool)
+    if script_path:
+        script = json.loads(script_path.read_text(encoding="utf-8"))
+        print(f"   hand-fixed script: {script_path}")
+    else:
+        script = write_script(article)
+        if script is None:
+            print("✖ no valid Reel script")
+            return 1
+        script = judge_hooks(script, tool)
     TEMP_DIR.mkdir(parents=True, exist_ok=True)
     (TEMP_DIR / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
     (TEMP_DIR / "tool.json").write_text(json.dumps(tool, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -217,4 +222,4 @@ def make_trial_reel(run: Path) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(make_trial_reel(Path(sys.argv[1])))
+    sys.exit(make_trial_reel(Path(sys.argv[1]), Path(sys.argv[2]) if len(sys.argv) > 2 else None))

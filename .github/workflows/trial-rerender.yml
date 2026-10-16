@@ -13,6 +13,9 @@ on:
       folder:
         description: "carousel folder, e.g. output/carousel/2026-10-16_haber-..."
         required: true
+      script:
+        description: "optional hand-fixed script under rerender/ (empty = write a new one)"
+        default: ""
 
 permissions:
   actions: read
@@ -68,7 +71,8 @@ jobs:
       - name: Biz denedik Reel + editor review
         run: |
           mkdir -p output/final
-          python src/trial_reel.py "${{ github.event.inputs.folder }}" 2>&1 | tee output/final/reel-test.log
+          S="${{ github.event.inputs.script }}"
+          python src/trial_reel.py "${{ github.event.inputs.folder }}" ${S:+"rerender/$S"} 2>&1 | tee output/final/reel-test.log
           python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_reel, make_cover; v=Path('output/final/final_video.mp4'); print(json.dumps(review_reel(v, json.load(open('output/temp/script.json',encoding='utf-8')), json.load(open('output/temp/tool.json',encoding='utf-8'))), indent=1, ensure_ascii=False)); make_cover(v, Path('output/final'))" 2>&1 | tee -a output/final/reel-test.log
 
       - uses: actions/upload-artifact@v7
