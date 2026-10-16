@@ -165,3 +165,9 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Instagram API (user):** "şimdi alamıyorum, en kısa sürede halledicem". It is the user's step; Claude doesn't push it.
 - **11:45 Reel (user):** "bozmadan olduğu gibi olsun, zamanla karar veririz". It goes out as a normal Reel, not as a Trial Reel, until the user decides.
 - **Unfollowing (user):** "takipten yavaş yavaş çıkıyorum". In progress, by hand (D-13).
+
+## D-24 · 2026-10-16 · Editor calibration page
+- **User:** "hazırla, bir not düşecek bir yer yap ... değerlendirmeye baktığında incelersin gerekçemi".
+- **Built:** https://claude.ai/artifact/CWRtL7nPCKCBXi2nwaU2xY. It shows 42 posts from 10-12 to 10-16 (production and dry runs: 17 carousels, 25 Reels), each with the editor's verdict and reasons. The user marks "Olur / Olmaz" and can write a free note per post, plus a general note.
+- **Where the answers live:** the artifact's database. Each post is a doc in collection `labels` ({item, ok, note, updatedAt}); the general note is `notes/general`. Claude reads them with ArtifactData `list labels`.
+- **Next, when the user has marked them:** compare the editor with the user, per rule (false rejects vs. missed problems). Read every note as the user's reasoning. 11 early posts have no editor verdict (the editor didn't exist yet); run today's editor on them in the cloud to compare. Then loosen or tighten rules, with the user's approval.
