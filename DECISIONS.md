@@ -93,3 +93,16 @@ the decisions that are currently locked; this file explains why they exist and h
 ## D-16 · 2026-10-16 · Every change is logged here
 - **User:** "Yaptıklarını kayıt altına alıyor musun ... şöyle karar aldık şunu uyguluyoruz".
 - **Rule:** every decision, and every change to how the page works, gets an entry here in the same commit. CLAUDE.md points to this file.
+
+## D-17 · 2026-10-16 · Openings and covers follow research, not trial and error
+- **User:** "derinlemesine ... araştırmalara bakıp stratejimizi ona göre yapalım böyle deneme yanılma ile zaman kaybetmeyelim".
+- **Research:** 30+ sources (Meta/Nielsen, TikTok Marketing Science, Google ABCD, YouTube, vidIQ/1of10, eye-tracking and curiosity studies). Strategy page: https://claude.ai/artifact/PjdHvauHUEz7Y1nS8HiRyz
+- **Proposed spec (waiting for the user's approval):**
+  - Frame 0 shows the result (our test output) on 60-70% of the screen.
+  - The headline is 2 lines and 3-6 words.
+  - The voice starts on frame 0, the first related change comes at 1.0-1.3 s, and the curiosity is answered at 2.5-3 s.
+  - No logo or name chip in the opening.
+  - Everything sits inside the 3:4 band.
+  - Covers have 1-5 words; carousel slide 1 has at most 6 words plus a swipe cue.
+- **Testing:** Trial Reels change only the first 3 s. Skip rate is the main metric. Each test is repeated 3-4 times because reach is small. It waits for the voice quota (D-15).
+- **Status:** branch hook-motion has only the "first change at ~1.1 s" part; not merged.
