@@ -67,7 +67,11 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    missing or late, start `gh workflow run produce.yml` and track it with a session cron. Don't
    ask the user "bitti mi".
 2. Read `output/logs/<date>.log`. Handle each rejected item with the §1.3 workflow.
-3. Schedule the queue at its times. For a Reel, upload `upload.mp4` (under the 10 MB browser upload
+3. Record yesterday's numbers (the page's only feedback loop, audit 2026-10-16): in Business Suite
+   Content -> Published, copy Reach / Views / Follows / Likes / Comments / Shares / Saves / average
+   watch for every post at least a day old into `python src/post_metrics.py add rows.json`
+   (kinds: reel, trial_reel, carousel, trial_carousel). Never quote numbers that aren't there.
+4. Schedule the queue at its times. For a Reel, upload `upload.mp4` (under the 10 MB browser upload
    limit; made by produce.yml) and cover.jpg as the thumbnail. For a hand-fixed Reel, `shrink.yml`.
 
 ## 3. Safety net

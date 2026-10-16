@@ -221,7 +221,7 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
     duration = json.loads((out / "reel_qa.json").read_text(encoding="utf-8"))["pacing"]["duration_sec"] \
         if (out / "reel_qa.json").exists() else 0.0
-    log_reel(out.name, script, duration)
+    log_reel(out.name, script, duration, kind="trial" if cmd and any("trial_reel" in c for c in cmd) else "tool")
     if verdict["verdict"] != "publish":
         update_metrics(out.name, status=f"rejected: {'; '.join(verdict['problems'][:3])}")
         log("   reel not queued")
