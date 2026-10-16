@@ -156,8 +156,19 @@ REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
 
 
+JOB_BUDGET = 105 * 60  # produce.yml gives the job 120 min; stop starting Reel renders after this
+_STARTED = time.monotonic()
+
+
+def _time_for_a_reel() -> bool:
+    return time.monotonic() - _STARTED + REEL_TIMEOUT <= JOB_BUDGET + 15 * 60
+
+
 def produce_reel() -> dict | None:
     for attempt in range(1, REEL_ATTEMPTS + 1):
+        if not _time_for_a_reel():
+            log("reel: no time left in the job for another render")
+            return None
         log(f"reel: running the video pipeline (attempt {attempt}/{REEL_ATTEMPTS})")
         item, rendered = _reel_attempt()
         if item or not rendered:  # queued, or the pipeline found nothing to film
@@ -241,16 +252,23 @@ def produce(only: str = "") -> None:
             news = produce_news_items(sum(s["kind"] == "carousel" for s in slots))
         except Exception as exc:
             log(f"news production failed: {type(exc).__name__}: {str(exc)[:300]}")
-    save_queue(_build_queue(slots, list(news), None))  # approved carousels survive a Reel crash or job timeout
-    reel = None
-    if any(s["kind"] == "reel" for s in slots) and only != "news":
-        reel = produce_trial_reel(news)
-        if reel is None:
+    save_queue(_build_queue(slots, list(news), []))  # approved carousels survive a Reel crash or job timeout
+    reels: list[dict] = []  # best first: the "Biz denedik" Reel, then tool Reels
+    wanted = sum(s["kind"] == "reel" for s in slots)
+    if wanted and only != "news":
+        if trial := produce_trial_reel(news):
+            reels.append(trial)
+        while len(reels) < wanted:
             try:
-                reel = produce_reel()
+                tool_reel = produce_reel()
             except Exception as exc:
                 log(f"reel production failed: {type(exc).__name__}: {str(exc)[:300]}")
-    queue = _build_queue(slots, list(news), reel)
+                break
+            if tool_reel is None:
+                break
+            reels.append(tool_reel)
+            save_queue(_build_queue(slots, list(news), reels))
+    queue = _build_queue(slots, list(news), reels)
     save_queue(queue)
     for q in queue:
         log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
@@ -261,10 +279,14 @@ def produce(only: str = "") -> None:
         marker.write_text(json.dumps({"date": date.today().isoformat()}), encoding="utf-8")
 
 
-def _build_queue(slots: list[dict], news: list[dict], reel: dict | None) -> list[dict]:
+def _build_queue(slots: list[dict], news: list[dict], reels: list[dict]) -> list[dict]:
+    """Carousels fill their slots in order. Reels (best first) fill the reel slots from the LAST one
+    back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16)."""
+    reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel"]
+    by_slot = dict(zip(reversed(reel_slots), reels))
     queue = []
-    for s in slots:
-        item = news.pop(0) if s["kind"] == "carousel" and news else (reel if s["kind"] == "reel" else None)
+    for i, s in enumerate(slots):
+        item = news.pop(0) if s["kind"] == "carousel" and news else by_slot.get(i)
         if item:
             queue.append({**item, "time": s["time"], "status": "ready"})
         else:

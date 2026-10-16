@@ -40,7 +40,7 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
 4. **"Biz denedik"** (2026-10-15/16, the user: "kalıcı ... ilerde tekrar kavga etmeyelim"): new
    AI models are run by us and the real result leads the post.
    - daily.py: `testable_first()` ranks news. A tested carousel takes the first carousel slot.
-     `produce_trial_reel()` makes the 20:30 Reel from it before falling back to the tool Reel.
+     `produce_trial_reel()` makes the 20:30 Reel from it; tool Reels fill the other Reel slots.
    - src/model_trial.py: free routes only (OpenRouter `:free` with OPENROUTER_API_KEY; official
      HF Spaces only). The judge drops outputs with prices, logos, real people or unsafe content,
      and unjudged outputs are never used.
@@ -49,7 +49,9 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
 5. **Free model access only** (2026-10-15): no paid AI APIs for tests unless the user says so.
 6. **Reel voice = ElevenLabs "George"** `JBFqnCBsd6RMkjVDRZzb` (2026-10-16): "ses iyi, onu kullan".
    Don't propose another voice.
-7. **Schedule** (schedule.json): 12:30 carousel, 18:00 carousel, 20:30 Reel.
+7. **Schedule** (schedule.json): 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30 Reel (two Reels a
+   day since 2026-10-16: "günde tek reels yeterince takipçi getirmiyor"). The best Reel ("Biz denedik")
+   takes 20:30, a tool Reel 11:45 (`_build_queue`).
 8. **Reel outro** shows the handle @thekavar.ai with a small "+ TAKİP ET" pill (11dcfdc). It
    was once removed without asking; never again.
 9. **Brand:** handle @thekavar.ai (brand.json). Never use other creators' content.
@@ -63,7 +65,8 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    missing or late, start `gh workflow run produce.yml` and track it with a session cron. Don't
    ask the user "bitti mi".
 2. Read `output/logs/<date>.log`. Handle each rejected item with the §1.3 workflow.
-3. Schedule the queue at its times. For a Reel, upload cover.jpg as the thumbnail.
+3. Schedule the queue at its times. For a Reel, upload `upload.mp4` (under the 10 MB browser upload
+   limit; made by produce.yml) and cover.jpg as the thumbnail. For a hand-fixed Reel, `shrink.yml`.
 
 ## 3. Safety net
 - `tests/` holds offline invariant tests for the decisions above. They run on every push
