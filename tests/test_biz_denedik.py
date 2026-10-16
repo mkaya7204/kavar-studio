@@ -188,3 +188,21 @@ def test_reel_uses_short_names_and_stays_under_26_seconds():
     assert trial_reel.short_name("FLUX.3 Image Klein") == "FLUX.3"
     assert trial_reel.short_name("Gemma 4") == "Gemma 4"
     assert trial_reel.WORDS[1] <= 38
+
+
+def test_an_answer_cut_by_our_token_limit_is_never_shown(monkeypatch):
+    """2026-10-16: Nemotron's proverb answer was cut by our 600-token cap and the post said the model "left it half"."""
+    class Resp:
+        status_code = 200
+
+        def __init__(self, reason):
+            self.reason = reason
+
+        def json(self):
+            return {"choices": [{"finish_reason": self.reason, "message": {"content": "Bu atasözü, küçük ama"}}]}
+
+    monkeypatch.setenv("OPENROUTER_API_KEY", "test")
+    monkeypatch.setattr(model_trial.requests, "post", lambda *a, **k: Resp("length"))
+    assert model_trial._ask_llm("m:free", "soru") is None
+    monkeypatch.setattr(model_trial.requests, "post", lambda *a, **k: Resp("stop"))
+    assert model_trial._ask_llm("m:free", "soru") == "Bu atasözü, küçük ama"

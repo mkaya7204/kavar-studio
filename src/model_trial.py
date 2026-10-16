@@ -131,11 +131,16 @@ def _ask_llm(model: str, prompt: str) -> str | None:
     r = requests.post(f"{OPENROUTER}/chat/completions", timeout=120,
                       headers={"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"},
                       json={"model": model, "messages": [{"role": "user", "content": prompt}],
-                            "max_tokens": 600})
+                            "max_tokens": 4000})  # thinking models spend tokens before they answer
     if r.status_code != 200:
         print(f"[trial] {model}: HTTP {r.status_code} {r.text[:200]}")
         return None
-    text = (r.json()["choices"][0]["message"].get("content") or "").strip()
+    choice = r.json()["choices"][0]
+    if choice.get("finish_reason") == "length":
+        # Cut by OUR token limit, not by the model: showing it would blame the model unfairly.
+        print(f"[trial] {model}: answer hit the token limit, not used")
+        return None
+    text = (choice["message"].get("content") or "").strip()
     return re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip() or None
 
 
