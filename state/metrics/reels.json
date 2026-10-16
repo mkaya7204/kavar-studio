@@ -155,5 +155,31 @@
     "duration_sec": 23.7,
     "words": 45,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-16_nemotron-3-5",
+    "date": "2026-10-16",
+    "kind": "tool",
+    "tool": "Nemotron 3.5",
+    "hook_pattern": "result",
+    "headline": "Yapay zekâ atasözünü çocuğa anlatıyor",
+    "spoken_hook": "Yapay zekâ atasözünü on yaşındaki çocuğa anlattı.",
+    "cta": "Meraklı arkadaşına gönder.",
+    "duration_sec": 22.7,
+    "words": 37,
+    "status": "rejected: Kanıt kartındaki cevap metni kartın altında kesiliyor (3. karede \"büyük bir başarıya\" satırı yarım kesik), cevap cümlenin ortasında bitiyor.; Kart ve cevap metni ekranın alt ~%35 bandına taşıyor (ilk üç karede kartın alt kısmı yaklaşık %67-69 yüksekliğinde). Kural ihlali.; İzleyici cevabın sadece yarısını görüyor; \"Atasözünü doğru anlattı\" iddiası ekranda tam doğrulanamıyor."
+  },
+  {
+    "id": "2026-10-16_glm-legal",
+    "date": "2026-10-16",
+    "kind": "tool",
+    "tool": "GLM-Legal",
+    "hook_pattern": "question",
+    "headline": "Sözleşmeleri hâlâ kendin mi okuyorsun?",
+    "spoken_hook": "Sözleşmeleri hâlâ baştan sona kendin mi okuyorsun?",
+    "cta": "Bunu sözleşme imzalayan arkadaşına gönder.",
+    "duration_sec": 22.3,
+    "words": 40,
+    "status": "produced"
   }
 ]
