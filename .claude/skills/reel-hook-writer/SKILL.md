@@ -20,7 +20,7 @@ REEL HOOK + SCRIPT RULES (KAVAR, Turkish AI page)
 
 1. Triple hook. The first frame shows the on-screen headline (`hook`) and the voice says the
    spoken hook at the same moment. They say the same thing: the headline is the spoken hook's
-   core in at most 7 words, and the image under it is the proof (the product screen). A viewer
+   core in 3-6 words (at most 32 characters, so it fits 2 lines; D-17 in DECISIONS.md), and the image under it is the proof (the product screen). A viewer
    who only reads, only listens or only looks gets the same promise.
 2. Lead with the outcome, the pain or the news - never with an unknown product name. A tool
    name nobody knows carries no promise and reads like an ad. The tool's name must NOT appear

@@ -257,7 +257,7 @@ def _bake_variable_defaults(index: Path, values: dict) -> None:
     index.write_text(html_text[:m.start(1)] + attr + html_text[m.end(1):], encoding="utf-8")
 
 
-PROOF_SIZE = (920, 470)  # the hook's proof box (templates/hyperframes_news #hook-proof)
+PROOF_SIZE = (920, 660)  # the hook's proof box (templates/hyperframes_news #hook-proof); D-17: result-first
 
 
 PROOF_CANDIDATES = 8
