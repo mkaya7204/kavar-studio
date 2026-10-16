@@ -27,3 +27,8 @@ Add new lessons at the bottom. Never delete a lesson without the user's approval
 - **What happened:** the first "Biz denedik" Reel (FLUX.3). The voiceover said "Her harf doğru çıktı", but the caption said the neon sign was written "kusursuz", while the test note mentioned a small unreadable note in the window. The editor rejected it, and it was right: the caption claimed more than the test showed. Reels have no fix round, so one word cost the Reel.
 - **Fix:** the Reel writer rule now says the caption uses the same verdicts and verbs as the voiceover, with no superlatives.
 - **Rule:** Caption, story and on-screen text never claim more than the test or article shows. No "kusursuz", "mükemmel", "harika" or "inanılmaz" unless the source says exactly that. Use the same verb in every field.
+
+## 2026-10-16 - Answer cut in the Reel's proof box
+- **What happened:** the first language-model "Biz denedik" Reel (NVIDIA Nemotron 3.5). The proof box under the hook cropped the model's answer card from the top, so the answer stopped mid-sentence ("büyük bir başarıya"). The editor rejected it, and it was right: viewers saw half an answer while the hook said the model explained the proverb.
+- **Fix:** the Reel now scales an answer card into the proof box whole instead of cropping it (`_proof` in src/trial_reel). The same morning the test itself had cut answers with a 600-token limit; answers that hit our limit are now never shown.
+- **Rule:** A quoted answer or text from a test is always shown whole, in every image and frame. If any part is cut off, at an edge or mid-sentence, reject it. Never let a cut of ours look like the model's mistake.

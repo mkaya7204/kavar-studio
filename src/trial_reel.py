@@ -18,7 +18,7 @@ import re
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageChops, ImageColor, ImageOps
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -27,6 +27,7 @@ from distribution import build_post  # noqa: E402
 from hyperframes_builder import FINAL_PATH, PROOF_SIZE, SHOT_NAMES, _shot_frame, build_video_hyperframes  # noqa: E402
 from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
                            _load_language, _save_history, _script_price_mentions, judge_hooks, reel_rule_problems)
+from model_trial import BG as CARD_BG  # noqa: E402
 from tts_engine import synthesize, voice_for  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -93,12 +94,33 @@ def _output_order(article: dict) -> str:
     return "\n".join(f"output {i}: {f['caption'].split(':')[0]}" for i, f in enumerate(_ours(article), 1))
 
 
+def _is_answer_card(img: Image.Image) -> bool:
+    """A language-model answer card from model_trial._answer_card (its background in the corner)."""
+    return img.getpixel((0, 0)) == ImageColor.getrgb(CARD_BG)
+
+
+def _proof(img: Image.Image) -> Image.Image:
+    """The hook's proof box. A picture is cropped to fill it; an answer card is shown WHOLE
+    (cropping cut the answer mid-sentence and the editor rejected the Reel, 2026-10-16)."""
+    if not _is_answer_card(img):
+        return ImageOps.fit(img, PROOF_SIZE, Image.LANCZOS, centering=(0.5, 0.0))
+    bg = ImageColor.getrgb(CARD_BG)
+    box = ImageChops.difference(img, Image.new("RGB", img.size, bg)).getbbox() or (0, 0, *img.size)
+    pad = 24
+    content = img.crop((max(0, box[0] - pad), max(0, box[1] - pad),
+                        min(img.width, box[2] + pad), min(img.height, box[3] + pad)))
+    content = ImageOps.contain(content, PROOF_SIZE, Image.LANCZOS)
+    out = Image.new("RGB", PROOF_SIZE, bg)
+    out.paste(content, ((PROOF_SIZE[0] - content.width) // 2, (PROOF_SIZE[1] - content.height) // 2))
+    return out
+
+
 def _frames(outputs: list[Path], folder: Path) -> dict:
     """proof.png (the hook box) and shot1/shot2 frames from our outputs, as hyperframes_builder expects."""
     folder.mkdir(parents=True, exist_ok=True)
     proof = folder / "proof.png"
     with Image.open(outputs[0]) as img:
-        ImageOps.fit(img.convert("RGB"), PROOF_SIZE, Image.LANCZOS, centering=(0.5, 0.0)).save(proof)
+        _proof(img.convert("RGB")).save(proof)
     for name, src in zip(SHOT_NAMES, [outputs[0], outputs[min(1, len(outputs) - 1)]]):
         with Image.open(src) as img:
             img = img.convert("RGB")

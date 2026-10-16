@@ -206,3 +206,22 @@ def test_an_answer_cut_by_our_token_limit_is_never_shown(monkeypatch):
     assert model_trial._ask_llm("m:free", "soru") is None
     monkeypatch.setattr(model_trial.requests, "post", lambda *a, **k: Resp("stop"))
     assert model_trial._ask_llm("m:free", "soru") == "Bu atasözü, küçük ama"
+
+
+def test_reel_proof_shows_a_whole_answer_card(tmp_path):
+    """2026-10-16: the Nemotron Reel's proof box cropped the answer card mid-sentence; editor rejected it."""
+    from PIL import Image, ImageChops
+
+    import trial_reel
+
+    card = model_trial._answer_card("m:free", "Bir soru?", " ".join(["uzun bir cevap cümlesi"] * 12),
+                                    tmp_path / "card.png")
+    with Image.open(card) as img:
+        img = img.convert("RGB")
+        assert trial_reel._is_answer_card(img)
+        proof = trial_reel._proof(img)
+    assert proof.size == trial_reel.PROOF_SIZE
+    # nothing touches the top or bottom edge: the whole card was scaled in, not cropped
+    bg = Image.new("RGB", proof.size, trial_reel.ImageColor.getrgb(trial_reel.CARD_BG))
+    left, top, right, bottom = ImageChops.difference(proof, bg).getbbox()
+    assert top > 0 and bottom < proof.height
