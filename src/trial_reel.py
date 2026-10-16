@@ -14,6 +14,7 @@ daily.py queues and reviews it like any Reel. Heavy (render): runs in the cloud 
 """
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -209,11 +210,18 @@ def make_trial_reel(run: Path, script_path: Path | None = None) -> int:
     (TEMP_DIR / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
     (TEMP_DIR / "tool.json").write_text(json.dumps(tool, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"   hook: \"{script['hook']}\", {script['voiceover_words']} words")
-    voice = synthesize(script["voiceover"], voice=voice_for(_load_language()))
-    print(f"   voice {voice['duration_sec']}s ({voice['voice']})")
+    if os.getenv("KAVAR_SILENT_PREVIEW"):
+        # design preview only (no voice credits spent): never queued, never published
+        print("   SILENT DESIGN PREVIEW: no voice, default timing; not for publishing")
+        voice = {"audio_path": None}
+    else:
+        voice = synthesize(script["voiceover"], voice=voice_for(_load_language()))
+        print(f"   voice {voice['duration_sec']}s ({voice['voice']})")
     capture = _frames(outputs, TEMP_DIR / "trial_frames")
     video = build_video_hyperframes(script, capture, voice["audio_path"], FINAL_PATH)
     print(f"   {video['duration_sec']}s, {video['scenes']}")
+    if os.getenv("KAVAR_SILENT_PREVIEW"):
+        return 0
     _save_history(VideoScript.model_validate(script))
     post = build_post(script, video)
     (FINAL_PATH.parent / "post.json").write_text(json.dumps(post, indent=2, ensure_ascii=False), encoding="utf-8")

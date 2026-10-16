@@ -254,6 +254,19 @@
         transform-origin: left center;
       }
 
+      #hook-stamp {
+        align-self: center;
+        margin-top: 40px;
+        padding: 14px 34px;
+        border-radius: 999px;
+        background: var(--neon);
+        color: #04060c;
+        font-size: 40px;
+        letter-spacing: 0.1em;
+        box-shadow: 0 0 36px rgba(31, 213, 255, 0.7);
+        opacity: 0; /* frame 0 (the cover) stays headline + proof */
+      }
+
       /* ---------- point cards ---------- */
       .card {
         position: relative;
@@ -577,6 +590,7 @@
         <h1 id="hook-title" class="black">Başlık</h1>
         <i id="hook-bar"></i>
         <div id="hook-proof"><img id="hook-proof-img" src="assets/proof.png" alt="" /></div>
+        <div id="hook-stamp" class="black" data-domain></div>
       </section>
 
       <!-- 3-20: three point cards with site screenshots in between -->
@@ -814,7 +828,15 @@
         tl.fromTo(accents, { x: -8, textShadow: GLITCH }, { x: 0, textShadow: GLOW, duration: 0.25, ease: "power2.out", immediateRender: false }, 0.45);
       }
       tl.fromTo("#wipe", { x: -1300, opacity: 1 }, { x: 1300, opacity: 1, duration: 0.5, ease: "power2.inOut", immediateRender: false }, 0.35);
-      tl.to(["#hook-title", "#hook-bar", "#hook-proof"], { opacity: 0, y: -60, duration: 0.25, ease: "power2.in", stagger: 0.03 }, hookEnd - 0.3);
+      // the first change comes by ~1.2 s: Reels were watched 3-5 s on average and the editor flagged
+      // "no change in the first 3 s" (2026-10-16). The headline steps back, the proof steps forward.
+      const MOVE = Math.min(1.1, Math.max(0.4, hookEnd - 1.0));
+      if (v.has_proof !== false && v.has_proof !== "false") {
+        tl.to(["#hook-title", "#hook-bar"], { y: -150, scale: 0.84, transformOrigin: "left top", duration: 0.45, ease: "power3.inOut" }, MOVE);
+        tl.to("#hook-proof", { y: -230, scale: 1.08, duration: 0.45, ease: "power3.inOut" }, MOVE);
+        tl.fromTo("#hook-stamp", { opacity: 0, y: 30, scale: 0.6 }, { opacity: 1, y: -230, scale: 1, duration: 0.4, ease: "back.out(2)", immediateRender: false }, MOVE + 0.2);
+      }
+      tl.to(["#hook-title", "#hook-bar", "#hook-proof", "#hook-stamp"], { opacity: 0, y: -60, duration: 0.25, ease: "power2.in", stagger: 0.03 }, hookEnd - 0.3);
 
       // cards: slide in, number pops, title words rise, rule sweeps, detail fades, shine passes; slide out
       cards.forEach(({ n, titleWords }) => {
