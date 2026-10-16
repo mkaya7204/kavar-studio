@@ -94,6 +94,17 @@ def _output_order(article: dict) -> str:
     return "\n".join(f"output {i}: {f['caption'].split(':')[0]}" for i, f in enumerate(_ours(article), 1))
 
 
+def _safe_box(zoom: float = 1.12, origin=(0.5, 0.3), margin: int = 14) -> tuple[int, int, int, int]:
+    """The part of the proof box that stays visible at the hook's end zoom (inside the border)."""
+    w, h = PROOF_SIZE
+    ox, oy = w * origin[0], h * origin[1]
+    return (round(ox - (ox - margin) / zoom), round(oy - (oy - margin) / zoom),
+            round(ox + (w - margin - ox) / zoom), round(oy + (h - margin - oy) / zoom))
+
+
+PROOF_SAFE = _safe_box()
+
+
 def _is_answer_card(img: Image.Image) -> bool:
     """A language-model answer card from model_trial._answer_card (its background in the corner)."""
     return img.getpixel((0, 0)) == ImageColor.getrgb(CARD_BG)
@@ -109,9 +120,12 @@ def _proof(img: Image.Image) -> Image.Image:
     pad = 24
     content = img.crop((max(0, box[0] - pad), max(0, box[1] - pad),
                         min(img.width, box[2] + pad), min(img.height, box[3] + pad)))
-    content = ImageOps.contain(content, PROOF_SIZE, Image.LANCZOS)
+    # The template zooms the proof 1.0 -> 1.12 around (50%, 30%) during the hook and the box clips it
+    # (templates/hyperframes_news #hook-proof-img): keep the card inside what stays visible at 1.12.
+    left, top, right, bottom = PROOF_SAFE
+    content = ImageOps.contain(content, (right - left, bottom - top), Image.LANCZOS)
     out = Image.new("RGB", PROOF_SIZE, bg)
-    out.paste(content, ((PROOF_SIZE[0] - content.width) // 2, (PROOF_SIZE[1] - content.height) // 2))
+    out.paste(content, (left + (right - left - content.width) // 2, top + (bottom - top - content.height) // 2))
     return out
 
 

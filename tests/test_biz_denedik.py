@@ -220,7 +220,16 @@ def test_reel_proof_shows_a_whole_answer_card(tmp_path):
     assert trial_reel._is_answer_card(img)
     proof = trial_reel._proof(img)
     assert proof.size == trial_reel.PROOF_SIZE
-    # nothing touches the top or bottom edge: the whole card was scaled in, not cropped
+    # the whole card was scaled in, and it stays visible at the hook's end zoom (2nd rejection, same day)
     bg = Image.new("RGB", proof.size, trial_reel.ImageColor.getrgb(trial_reel.CARD_BG))
     left, top, right, bottom = ImageChops.difference(proof, bg).getbbox()
-    assert top > 0 and bottom < proof.height
+    s_left, s_top, s_right, s_bottom = trial_reel.PROOF_SAFE
+    assert s_left <= left and s_top <= top and right <= s_right and bottom <= s_bottom
+
+
+def test_proof_safe_box_matches_the_template_zoom():
+    """If the hook zoom in the template changes, trial_reel._safe_box must change with it."""
+    html = (Path(__file__).resolve().parent.parent / "templates" / "hyperframes_news" / "index.html").read_text(
+        encoding="utf-8")
+    assert 'tl.fromTo("#hook-proof-img", { scale: 1.0 }, { scale: 1.12' in html
+    assert "transform-origin: 50% 30%;" in html
