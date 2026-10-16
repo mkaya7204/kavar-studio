@@ -48,6 +48,8 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
      slides, no jargon (`_trial_problems`). src/trial_reel.py builds the Reel.
 5. **Free model access only** (2026-10-15): no paid AI APIs for tests unless the user says so.
 6. **Reel voice = ElevenLabs "George"** `JBFqnCBsd6RMkjVDRZzb` (2026-10-16): "ses iyi, onu kullan".
+   Only provider in config.json; no fallback voice, no env override (tests/test_decisions.py). If
+   ElevenLabs fails (quota: 17 of 10,000 credits left on 2026-10-16), no Reel is made; tell the user.
    Don't propose another voice.
 7. **Schedule** (schedule.json): 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30 Reel (two Reels a
    day since 2026-10-16: "günde tek reels yeterince takipçi getirmiyor"). The best Reel ("Biz denedik")
