@@ -76,7 +76,12 @@ jobs:
           S="${{ github.event.inputs.script }}"
           if [ "${{ github.event.inputs.silent }}" = "yes" ]; then export KAVAR_SILENT_PREVIEW=1; fi
           python src/trial_reel.py "${{ github.event.inputs.folder }}" ${S:+"rerender/$S"} 2>&1 | tee output/final/reel-test.log
-          python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_reel, make_cover; v=Path('output/final/final_video.mp4'); print(json.dumps(review_reel(v, json.load(open('output/temp/script.json',encoding='utf-8')), json.load(open('output/temp/tool.json',encoding='utf-8'))), indent=1, ensure_ascii=False)); make_cover(v, Path('output/final'))" 2>&1 | tee -a output/final/reel-test.log
+          if [ "${{ github.event.inputs.silent }}" = "yes" ]; then  # design preview: the user looks at it, no editor
+            python -c "import sys; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import make_cover; make_cover(Path('output/final/final_video.mp4'), Path('output/final'))" || true
+            ffmpeg -v error -y -i output/final/final_video.mp4 -vf "select='eq(n\,0)+eq(n\,30)+eq(n\,75)'" -vsync 0 output/final/_frame_%d.jpg || true
+          else
+            python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_reel, make_cover; v=Path('output/final/final_video.mp4'); print(json.dumps(review_reel(v, json.load(open('output/temp/script.json',encoding='utf-8')), json.load(open('output/temp/tool.json',encoding='utf-8'))), indent=1, ensure_ascii=False)); make_cover(v, Path('output/final'))" 2>&1 | tee -a output/final/reel-test.log
+          fi
 
       - uses: actions/upload-artifact@v7
         if: always()
