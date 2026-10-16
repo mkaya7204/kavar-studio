@@ -20,7 +20,7 @@ from skill_rules import editor_lessons
 
 SLIDES = (6, 10)
 BODY_WORDS = {"news": (20, 75), "why": (12, 45)}
-HEADLINE_WORDS = 12
+HEADLINE_WORDS = 6  # D-17 (research 2026-10-16): 3-6 big words on the cover
 
 
 class NewsSlide(BaseModel):
@@ -81,8 +81,8 @@ def news_problems(c: NewsScript) -> list[str]:
     if sum(s.visual == "video" for s in c.slides) > 2:
         out.append("at most two video slides")
     for i, s in enumerate(c.slides, 1):
-        if s.role == "cover" and not 4 <= _words(s.title) <= HEADLINE_WORDS:
-            out.append(f"slide 1: headline needs 4-{HEADLINE_WORDS} words, has {_words(s.title)}")
+        if s.role == "cover" and not 3 <= _words(s.title) <= HEADLINE_WORDS:
+            out.append(f"slide 1: headline needs 3-{HEADLINE_WORDS} words, has {_words(s.title)}")
         if s.role in BODY_WORDS:
             lo, hi = BODY_WORDS[s.role]
             if not lo <= _words(s.body) <= hi:
@@ -133,9 +133,9 @@ article says something is claimed, write it as a claim ("şirkete göre"). No sp
 - {NO_PRICE_RULE}
 
 Slides (roles):
-- cover (slide 1): title = the headline, 6-12 words, a concrete news sentence with the key \
-number or actor ("Bir OpenAI iç modeli 722 matematik makalesi yazdı"), uppercase is applied by \
-the template. visual "cover" (the article's own image). body "".
+- cover (slide 1): title = the headline, 3-6 words: the result or the open question, with the \
+key number or actor ("OpenAI modeli 722 makale yazdı"); slide 2 says the rest. Uppercase is \
+applied by the template. visual "cover" (the article's own image). body "".
 - news (most slides): title "" or a short heading (max 6 words); body 20-75 words telling one \
 part of the story: what happened, the details, how it works, the reactions or criticism, what is \
 still unknown. Mark the 1-3 phrases a skimming reader must not miss with **double asterisks** \
