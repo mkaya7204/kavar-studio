@@ -29,5 +29,7 @@ jobs:
             [ -n "$K" ] || { echo "key $n: not set"; continue; }
             s=$(curl -s -H "xi-api-key: $K" https://api.elevenlabs.io/v1/user/subscription)
             v=$(curl -s -o /dev/null -w "%{http_code}" -H "xi-api-key: $K" https://api.elevenlabs.io/v1/voices/JBFqnCBsd6RMkjVDRZzb)
+            t=$(curl -s -o /tmp/tts.json -w "%{http_code}" -X POST -H "xi-api-key: $K" -H "Content-Type: application/json"                  -d '{"text":"Merhaba.","model_id":"eleven_multilingual_v2"}'                  "https://api.elevenlabs.io/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb/with-timestamps")
+            echo "key $n: George speaks 'Merhaba.' -> HTTP $t $( [ "$t" = 200 ] || head -c 200 /tmp/tts.json)"
             echo "key $n: $(echo "$s" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("tier"), "used", d.get("character_count"), "of", d.get("character_limit")) if "tier" in d else print("error", str(d)[:200])')  | George voice HTTP $v"
           done
