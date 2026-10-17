@@ -1105,9 +1105,18 @@
         };
 
         // ---- fit, then measure ----
+        // how far the content is too tall: below the box (scrollHeight) and, for bottom-aligned boxes like
+        // the cover, above it, which scrollHeight never sees (10-17: the Itaú cover headline went 5 lines
+        // into the image at full size and the check said "0 layout problems")
+        function tooTall(c) {
+          const box = c.getBoundingClientRect();
+          const kids = [...c.children].map((k) => k.getBoundingClientRect()).filter((r) => r.height);
+          const above = kids.length ? box.top - Math.min(...kids.map((r) => r.top)) : 0;
+          return Math.max(c.scrollHeight - c.clientHeight, Math.round(above));
+        }
         function overflowing(slide) {
           const c = slide.querySelector(".content");
-          if (c.scrollHeight > c.clientHeight + 1) return true;
+          if (tooTall(c) > 1) return true;
           return [...slide.querySelectorAll("[data-qa]")].some((e) => e.scrollWidth > e.clientWidth + 1);
         }
         function fitAll() {
@@ -1151,8 +1160,8 @@
             const x0 = i * W;
             const label = (STORY ? "story frame " : "slide ") + (i + 1);
             const c = slide.querySelector(".content");
-            if (c.scrollHeight > c.clientHeight + 1)
-              problems.push({ frame: i, kind: "overflow", msg: label + ": text is " + (c.scrollHeight - c.clientHeight) + "px too tall for the layout" });
+            if (tooTall(c) > 1)
+              problems.push({ frame: i, kind: "overflow", msg: label + ": text is " + tooTall(c) + "px too tall for the layout" });
             const obstacles = [...slide.querySelectorAll("[data-obstacle]")].map((o) => o.getBoundingClientRect());
             const safe = STORY ? { l: 80, r: 1000, t: 250, b: 1580 } : { l: 72, r: 1008, t: 40, b: 1310 };
             slide.querySelectorAll("[data-qa]").forEach((e) => {
