@@ -47,7 +47,7 @@ def test_refused_article_pages_are_read_through_the_reader():
 def test_cover_headline_never_climbs_into_a_wide_cover_image():
     """10-17: a 4-line headline ran into OpenAI's wide cover image (editor rejected the Itaú carousel)."""
     html = (ROOT / "templates" / "carousel" / "index.html").read_text(encoding="utf-8")
-    assert "top = Math.max(boxTop, Math.round(imgTop + 1080 / D.news.cover_ratio - 40));" in html
+    assert "top = Math.max(boxTop, Math.round(imgTop + 1080 / D.news.cover_ratio + 12));" in html
     assert 'c.style.height = boxBottom - top + "px";' in html
     # overflow above a bottom-aligned box counts too (scrollHeight alone missed it)
     assert "function tooTall(c)" in html and "if (tooTall(c) > 1) return true;" in html
