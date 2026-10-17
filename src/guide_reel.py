@@ -41,7 +41,7 @@ TEMP_DIR = ROOT / "output" / "temp"
 WORK = ROOT / "output" / "guide"
 GUIDE_DAYS = 14  # a feature stays worth explaining for weeks, unlike a news story
 POOL = 30  # candidates sent to the ranker
-TRIES = 3  # pages captured per morning
+TRIES = 6  # pages tried per morning: OpenAI refuses the cloud reader at times, Samsung times out (10-18 dry run)
 WORDS = (32, 38)  # same as the other Reels: under 26 s
 
 GUIDE_RULES = """

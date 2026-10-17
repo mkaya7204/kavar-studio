@@ -261,7 +261,8 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         log(f"   video pipeline timed out after {REEL_TIMEOUT}s")
         return None, False
     lines = proc.stdout.splitlines()
-    for line in [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l][:8] + lines[-8:]:
+    picked = [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l or "▶" in l or "   rank " in l]
+    for line in picked[:16] + lines[-8:]:
         log("   " + line)
     if proc.returncode != 0:
         log("   video pipeline failed")
