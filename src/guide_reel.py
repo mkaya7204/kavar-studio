@@ -56,7 +56,9 @@ not the company's announcement. No "duyurdu", "tanıttı" in the hook.
 - point3: when it is the right choice, or which mode fits which job, or one tip from the page.
 - why: what the viewer gains. key_points follow point1-3 in the same order.
 - Facts only from the COMPANY PAGE below: never add features, menus, steps or limits it doesn't state. \
-If the page says the feature is rolling out or limited to some countries, say so briefly."""
+If the page says the feature is rolling out or limited to some countries, say so briefly.
+- hashtags: the product and the feature first, one guide tag (#ipucu or #nasılyapılır), #yapayzeka only \
+when the feature is AI."""
 
 
 def fetch_guide(limit: int = POOL) -> list[dict]:
@@ -85,11 +87,15 @@ def _frames(page: dict, folder: Path) -> dict | None:
     folder.mkdir(parents=True, exist_ok=True)
     with Image.open(pictures[0]) as img:
         ImageOps.fit(img.convert("RGB"), PROOF_SIZE, Image.LANCZOS, centering=(0.5, 0.35)).save(folder / "proof.png")
-    spare = page["page_path"] if Path(page["page_path"]).exists() else pictures[0]  # a reader-fetched page has no screenshot
+    # Too few pictures: the page's top (title and first lines), never the whole page shrunk to an unreadable
+    # strip (editor, 10-18 dry run: "küçük, okunmaz ekran görüntüsü"). A reader-fetched page has no screenshot.
+    spare = page["page_path"] if Path(page["page_path"]).exists() else pictures[0]
     shots = [pictures[1] if len(pictures) > 1 else spare, pictures[2] if len(pictures) > 2 else spare]
     for name, src in zip(SHOT_NAMES, shots):
         with Image.open(src) as img:
             img = img.convert("RGB")
+            if src == page["page_path"] and img.height > img.width * 1.4:
+                img = img.crop((0, 0, img.width, round(img.width * 1.25)))
             img.thumbnail((960, 1300), Image.LANCZOS)
             _shot_frame(img, folder / name)
     domain = (urlsplit(page["url"]).hostname or "").removeprefix("www.")

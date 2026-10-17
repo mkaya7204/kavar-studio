@@ -183,6 +183,7 @@ def produce_news_items(count: int) -> list[dict]:
 
 REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
+GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no voice, D-30); the rest waits for it
 REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
 
@@ -318,13 +319,16 @@ def _mark_done(stage: str) -> None:
 
 def produce_guide_reel() -> dict | None:
     """The 07:30 guide Reel (D-31); None if no company post fit the concept, or the editor said no."""
-    log("reel: 07:30 Rehber Reel")
-    try:
-        item, _ = _reel_attempt([sys.executable, "src/guide_reel.py"])
-    except Exception as exc:  # noqa: BLE001  the rest of the day still runs
-        log(f"   Rehber Reel failed: {type(exc).__name__}: {str(exc)[:300]}")
-        return None
-    return {**item, "concept": "guide"} if item else None
+    for attempt in range(1, GUIDE_ATTEMPTS + 1):  # a rejected post is marked used, so the next try takes another
+        log(f"reel: 07:30 Rehber Reel (attempt {attempt}/{GUIDE_ATTEMPTS})")
+        try:
+            item, rendered = _reel_attempt([sys.executable, "src/guide_reel.py"])
+        except Exception as exc:  # noqa: BLE001  the rest of the day still runs
+            log(f"   Rehber Reel failed: {type(exc).__name__}: {str(exc)[:300]}")
+            return None
+        if item or not rendered:
+            return {**item, "concept": "guide"} if item else None
+    return None
 
 
 def produce(only: str = "") -> None:
