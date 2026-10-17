@@ -353,6 +353,54 @@ def synthesize(text: str, **kwargs) -> dict:
     return asyncio.run(synthesize_async(text, **kwargs))
 
 
+# The user, 2026-10-18 (D-30): no voice credits on attempts. The editor reviews a Reel built on a silent
+# stand-in; only the Reel it approves is rendered again with George (src/voice_final.py).
+DRAFT_ENV = "KAVAR_DRAFT_VOICE"
+DRAFT_CHARS_PER_SECOND = 13.1  # George's measured pace: 259 letters in 19.7 s (voiceover_words.json, 2026-10-12)
+
+
+def draft_words(text: str, max_seconds: float = MAX_SECONDS) -> list[dict]:
+    """Estimated per-word timings at George's pace, squeezed like the real voice's speed-up (max 15%)."""
+    words, t = [], 0.0
+    for w in " ".join(text.split()).split(" "):
+        d = len(w) / DRAFT_CHARS_PER_SECOND
+        words.append({"word": w, "start": round(t, 3), "end": round(t + d * 0.9, 3)})
+        t += d
+    if not words or not words[0]["word"]:
+        raise TTSError("voiceover text is empty")
+    end = words[-1]["end"]
+    if end > max_seconds:
+        if end > max_seconds * (1 + MAX_SPEEDUP_PCT / 100):
+            raise TTSError(f"voiceover is ~{end:.1f}s, over the {max_seconds:.0f}s limit; shorten the script")
+        k = max_seconds / end
+        words = [{**w, "start": round(w["start"] * k, 3), "end": round(w["end"] * k, 3)} for w in words]
+    return words
+
+
+def draft_voice(text: str, out_path: Path | str = OUTPUT_PATH, max_seconds: float = MAX_SECONDS) -> dict:
+    """Silent MP3 + estimated timings in the same shape as synthesize(); spends no credits."""
+    words = draft_words(text, max_seconds)
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    duration = round(words[-1]["end"] + 0.3, 2)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
+                    "-t", str(duration), "-q:a", "9", str(out_path)], check=True)
+    out_path.with_suffix(".srt").write_text(_words_to_srt(words), encoding="utf-8")
+    words_path = out_path.with_name(out_path.stem + "_words.json")
+    words_path.write_text(json.dumps(words, indent=2), encoding="utf-8")
+    return {"audio_path": str(out_path), "srt_path": str(out_path.with_suffix(".srt")),
+            "words_path": str(words_path), "provider": "draft", "voice": "draft:silent", "rate": "+0%",
+            "duration_sec": duration, "word_count": len(words)}
+
+
+def reel_voice(text: str, **kwargs) -> dict:
+    """The Reel pipelines' voice: the silent draft while KAVAR_DRAFT_VOICE is set (daily.py), else George."""
+    if os.getenv(DRAFT_ENV):
+        print("   [tts] draft: silent voice with estimated timings (George only after the editor approves)")
+        return draft_voice(text)
+    return synthesize(text, **kwargs)
+
+
 if __name__ == "__main__":
     import sys
 

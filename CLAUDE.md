@@ -55,7 +55,8 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    Only provider in config.json; no fallback voice, no env override (tests/test_decisions.py). Two
    accounts (D-26): `ELEVENLABS_API_KEY`, then `ELEVENLABS_API_KEY_2` when the first is refused; both speak
    George. If both fail, no Reel is made; tell the user. `probe.yml` shows both accounts' state.
-   Don't propose another voice.
+   Don't propose another voice. Voice is spent only on the Reel the editor approved (D-30, 2026-10-18):
+   attempts use a silent draft voice, then `src/voice_final.py` voices the approved one once.
 7. **Schedule** (schedule.json): 07:30 Reel (Turkey), 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30
    Reel. Two Reels a day since 2026-10-16 ("günde tek reels yeterince takipçi getirmiyor"); the 07:30
    Reel since 2026-10-17 (D-29): AI and technology in Turkey only (src/tr_reel.py), produced FIRST in

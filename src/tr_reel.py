@@ -36,7 +36,8 @@ from media_capturer import CaptureError  # noqa: E402
 from news_fetcher import SOURCES_PATH, _items, load_history, mark_used  # noqa: E402
 from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
                            _load_language, _save_history, _script_price_mentions, judge_hooks, reel_rule_problems)
-from tts_engine import synthesize, voice_for  # noqa: E402
+from tts_engine import reel_voice, voice_for  # noqa: E402
+from voice_final import save_capture  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMP_DIR = ROOT / "output" / "temp"
@@ -255,7 +256,8 @@ def make_tr_reel() -> int:
         (TEMP_DIR / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
         (TEMP_DIR / "tool.json").write_text(json.dumps(tool, indent=2, ensure_ascii=False), encoding="utf-8")
         print(f"   hook: \"{script['hook']}\", {script['voiceover_words']} words")
-        voice = synthesize(script["voiceover"], voice=voice_for(_load_language()))
+        voice = reel_voice(script["voiceover"], voice=voice_for(_load_language()))
+        save_capture(capture)
         video = build_video_hyperframes(script, capture, voice["audio_path"], FINAL_PATH)
         print(f"   {video['duration_sec']}s, {video['scenes']}")
         _save_history(VideoScript.model_validate(script))

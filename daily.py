@@ -37,6 +37,8 @@ from model_trial import testable_first  # noqa: E402
 from news_writer import NewsScript  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
+from reel_qa import first_frame_report, make_cover, pacing_report  # noqa: E402
+from tts_engine import DRAFT_ENV  # noqa: E402
 
 SCHEDULE_PATH = ROOT / "schedule.json"
 QUEUE_DIR = ROOT / "output" / "queue"
@@ -181,6 +183,7 @@ def produce_news_items(count: int) -> list[dict]:
 
 REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
+REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
 
 JOB_BUDGET = 105 * 60  # produce.yml gives the job 120 min; stop starting Reel renders after this
@@ -218,12 +221,41 @@ def produce_trial_reel(news: list[dict]) -> dict | None:
     return item
 
 
+def _voice_approved_reel(out: Path) -> bool:
+    """D-30 (the user, 2026-10-18): the editor approved the silent draft, so George speaks now, once.
+    The voiced Reel replaces the draft in `out` and must pass the measured first-frame and length checks."""
+    try:
+        proc = subprocess.run([sys.executable, "src/voice_final.py"], cwd=ROOT, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        log(f"   voiced render timed out after {REEL_TIMEOUT}s")
+        return False
+    for line in proc.stdout.splitlines()[-4:]:
+        log("   " + line)
+    if proc.returncode != 0:
+        log("   no voice for the approved Reel (both ElevenLabs accounts refused?): Reel not made")
+        return False
+    final = ROOT / "output" / "final"
+    for name in ("final_video.mp4", "post.json", "reel_qa.json"):
+        if (final / name).exists():
+            shutil.copy(final / name, out / name)
+    make_cover(out / "final_video.mp4", out)
+    first, dur = first_frame_report(out / "final_video.mp4", out), pacing_report(out / "final_video.mp4")["duration_sec"]
+    if not first["ok"] or not REEL_SECONDS[0] <= dur <= REEL_SECONDS[1]:
+        log(f"   voiced Reel failed the measured checks: first frame ok={first['ok']}, {dur:.1f}s")
+        return False
+    log(f"   voiced with George: {dur:.1f}s")
+    return True
+
+
 def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
-    A rejected tool is in the script history, so the next run moves on to another tool."""
+    A rejected tool is in the script history, so the next run moves on to another tool.
+    The run uses the silent draft voice (D-30); only an approved Reel is voiced."""
     try:
         proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True,
-                              text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT)
+                              text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
+                              env={**os.environ, DRAFT_ENV: "1"})
     except subprocess.TimeoutExpired:
         log(f"   video pipeline timed out after {REEL_TIMEOUT}s")
         return None, False
@@ -246,6 +278,9 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         + (f" (judge: {script['hook_judge']['reason']})" if script.get("hook_judge") else ""))
     verdict = review_reel(out / "final_video.mp4", script, tool)
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
+    if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
+        update_metrics(out.name, status="approved draft, but the voiced Reel failed")
+        return None, False  # no voice left (or a broken render): another attempt would fail the same way
     duration = json.loads((out / "reel_qa.json").read_text(encoding="utf-8"))["pacing"]["duration_sec"] \
         if (out / "reel_qa.json").exists() else 0.0
     log_reel(out.name, script, duration, kind="trial" if cmd and any("trial_reel" in c for c in cmd)

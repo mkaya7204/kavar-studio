@@ -30,8 +30,9 @@ from hyperframes_builder import best_proof_crop, build_video_hyperframes  # noqa
 from media_capturer import CaptureError, capture_site  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
 from script_writer import VideoScript, generate_script, used_tools  # noqa: E402
-from tts_engine import TTSError, synthesize, voice_for  # noqa: E402
+from tts_engine import TTSError, reel_voice, voice_for  # noqa: E402
 from video_builder import FINAL_PATH, build_video  # noqa: E402
+from voice_final import save_capture  # noqa: E402
 
 TEMP_DIR = ROOT / "output" / "temp"
 CANDIDATES = 5  # tools tried in order; one without a clean proof image is skipped
@@ -90,8 +91,9 @@ def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyper
             print(f"   opens: \"{script['voiceover'].split('. ')[0]}.\"")
 
     with Step(4, "Generating voiceover (ElevenLabs / Azure / edge-tts)"):
-        voice = synthesize(script["voiceover"], voice=voice_for(LANGUAGE))
+        voice = reel_voice(script["voiceover"], voice=voice_for(LANGUAGE))
         print(f"   {voice['duration_sec']}s at rate {voice['rate']} ({voice['voice']}) -> {voice['audio_path']}")
+    save_capture(capture)  # src/voice_final.py re-renders the approved Reel with the real voice
 
     if renderer == "hyperframes":
         with Step(5, "Rendering final video (HyperFrames)"):

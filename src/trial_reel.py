@@ -30,7 +30,8 @@ from hyperframes_builder import FINAL_PATH, PROOF_SIZE, SHOT_NAMES, _shot_frame,
 from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
                            _load_language, _save_history, _script_price_mentions, judge_hooks, reel_rule_problems)
 from model_trial import BG as CARD_BG  # noqa: E402
-from tts_engine import synthesize, voice_for  # noqa: E402
+from tts_engine import reel_voice, voice_for  # noqa: E402
+from voice_final import save_capture  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMP_DIR = ROOT / "output" / "temp"
@@ -220,9 +221,10 @@ def make_trial_reel(run: Path, script_path: Path | None = None) -> int:
                         "-t", "22", "-q:a", "9", str(silent)], check=True)
         voice = {"audio_path": str(silent)}
     else:
-        voice = synthesize(script["voiceover"], voice=voice_for(_load_language()))
+        voice = reel_voice(script["voiceover"], voice=voice_for(_load_language()))
         print(f"   voice {voice['duration_sec']}s ({voice['voice']})")
     capture = _frames(outputs, TEMP_DIR / "trial_frames")
+    save_capture(capture)
     video = build_video_hyperframes(script, capture, voice["audio_path"], FINAL_PATH)
     print(f"   {video['duration_sec']}s, {video['scenes']}")
     if os.getenv("KAVAR_SILENT_PREVIEW"):
