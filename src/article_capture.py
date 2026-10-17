@@ -63,6 +63,22 @@ EXTRACT_JS = r"""
 """
 
 
+READER = "https://r.jina.ai/"  # a public reader service; it fetches the page from its own machines
+REFUSED = (401, 403, 429)  # openai.com answers 403 to cloud machines (10-17)
+
+
+def _reader_html(url: str) -> str | None:
+    """The page's own HTML as the reader service sees it (user, 10-17: "başka bir yolla almak olsun").
+    Only the public article URL is sent. Images still come from the company's own servers."""
+    try:
+        r = requests.get(READER + url, headers={**HEADERS, "X-Return-Format": "html"}, timeout=90)
+        r.raise_for_status()
+    except requests.RequestException as exc:
+        print(f"[article] reader failed ({type(exc).__name__})")
+        return None
+    return r.text if len(r.text) > 5000 and "<html" in r.text[:2000].lower() else None
+
+
 def _download(url: str, out: Path, max_mb: float) -> Path | None:
     try:
         with requests.get(url, headers=HEADERS, timeout=30, stream=True) as r:
@@ -97,6 +113,16 @@ def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000) -> 
                 resp = page.goto(url, wait_until="commit", timeout=timeout_ms)
             except PlaywrightTimeout as exc:
                 raise CaptureError(f"timed out connecting to {url}") from exc
+            if resp is not None and resp.status in REFUSED and (html := _reader_html(url)):
+                # the site refuses this machine: show the browser the same page from the reader, under the
+                # article's own address, so everything below (text, cover, figures, date) works unchanged
+                print(f"[article] {urlsplit(url).hostname} answered {resp.status}; reading it through the reader")
+                page.route(url, lambda route: route.fulfill(status=200, body=html,
+                                                            content_type="text/html; charset=utf-8"))
+                try:
+                    resp = page.goto(url, wait_until="commit", timeout=timeout_ms)
+                except PlaywrightTimeout as exc:
+                    raise CaptureError(f"timed out loading the reader copy of {url}") from exc
             if resp is not None and resp.status >= 400:
                 raise CaptureError(f"{url} returned HTTP {resp.status}")
             for state, wait_ms in (("domcontentloaded", timeout_ms), ("load", 20_000), ("networkidle", 8_000)):

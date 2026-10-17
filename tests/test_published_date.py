@@ -34,3 +34,11 @@ def test_page_date_when_feed_has_none():
 def test_produce_news_uses_it():
     assert 'article["published"] = feed_published(item, article["published"])' in \
         (ROOT / "carousel.py").read_text(encoding="utf-8")
+
+
+def test_refused_article_pages_are_read_through_the_reader():
+    """User 10-17: OpenAI's pages refuse the cloud (403); get them another way, from OpenAI's own page."""
+    src = (ROOT / "src" / "article_capture.py").read_text(encoding="utf-8")
+    assert 'READER = "https://r.jina.ai/"' in src and "REFUSED = (401, 403, 429)" in src
+    assert "resp.status in REFUSED and (html := _reader_html(url))" in src
+    assert "page.route(url" in src
