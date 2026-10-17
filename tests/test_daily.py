@@ -236,3 +236,35 @@ def test_no_turkey_story_still_lets_the_rest_start(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "produce_tr_reel", lambda: None)
     daily.produce("morning")
     assert daily.stages_done() == ["morning"] and daily.load_queue()[0]["status"] == "empty"
+
+
+def test_turkey_reel_pictures_come_from_the_institution(tmp_path):
+    """User 10-17: the news site's picture only if it is the institution's own image; otherwise any picture
+    from the institution's own site. Never a press photo."""
+    import sys
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import tr_reel
+    from PIL import Image
+
+    def pic(name, color, size=(400, 300)):
+        p = tmp_path / name
+        img = Image.new("RGB", size, color)
+        for x in range(0, size[0], 40):  # a pattern, so the hash has something to see
+            for y in range(size[1]):
+                img.putpixel((x, y), (255, 255, 255))
+        img.save(p)
+        return str(p)
+
+    own_home = pic("home.jpg", (200, 30, 30))
+    same_as_home = pic("press_same.jpg", (200, 30, 30), (800, 600))  # the institution's image, re-sized
+    press_photo = pic("press_other.jpg", (10, 10, 10))
+    press_photo_img = Image.new("RGB", (400, 300), (10, 10, 10))
+    for y in range(0, 300, 30):
+        for x in range(400):
+            press_photo_img.putpixel((x, y), (255, 255, 255))
+    press_photo_img.save(press_photo)
+    home = {"cover_path": own_home, "figures": []}
+    assert tr_reel.pictures_for({"cover_path": same_as_home}, [home])[0] == same_as_home
+    got = tr_reel.pictures_for({"cover_path": press_photo}, [home])
+    assert press_photo not in got and got == [own_home]
+    assert tr_reel.pictures_for({"cover_path": press_photo}, []) == []

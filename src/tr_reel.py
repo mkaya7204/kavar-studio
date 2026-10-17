@@ -41,7 +41,7 @@ from tts_engine import synthesize, voice_for  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 TEMP_DIR = ROOT / "output" / "temp"
 WORK = ROOT / "output" / "tr"
-MAX_AGE_HOURS = 36
+MAX_AGE_HOURS = 72  # Turkey AI news is slow: 36 h left one candidate (10-17 test)
 TRIES = 3  # stories followed to an own page per morning
 WORDS = (32, 38)  # same as the "Biz denedik" Reel: under 26 s
 AI_OR_TECH = re.compile(r"yapay zek|\bai\b|\bYZ\b|chatgpt|gemini|robot|otonom|algoritma|dil modeli|veri merkez|"
@@ -83,20 +83,23 @@ def fetch_tr(limit: int = 20) -> list[dict]:
     return fresh[:limit]
 
 
-def official_page(item: dict, press_text: str) -> tuple[str, str]:
-    """(institution, URL of its own page about this story) via Claude Code web search; ("", "") if none."""
+def official_page(item: dict, press_text: str) -> tuple[str, str, str]:
+    """(institution, its own page about this story or "", its own site's home or newsroom or "") via
+    Claude Code web search."""
     exe = None if os.getenv("SCRIPT_WRITER_NO_CLI") else shutil.which("claude")
     if not exe:
-        return "", ""
+        return "", "", ""
     press_hosts = {urlsplit(f["url"]).hostname for f in tr_feeds()} | {urlsplit(item["url"]).hostname}
-    schema = {"type": "object", "additionalProperties": False, "required": ["institution", "url"],
-              "properties": {"institution": {"type": "string"}, "url": {"type": "string"}}}
+    schema = {"type": "object", "additionalProperties": False, "required": ["institution", "story_url", "home_url"],
+              "properties": {"institution": {"type": "string"}, "story_url": {"type": "string"},
+                             "home_url": {"type": "string"}}}
     prompt = (f"A Turkish tech news site reported this story:\nTitle: {item['title']}\nURL: {item['url']}\n\n"
-              f"{press_text[:3000]}\n\nWhich Turkish institution or company is it about? Find THAT institution's "
-              f"own page about this same news (a press release, announcement or blog post on the institution's "
-              f"own official domain, e.g. turkcell.com.tr, tubitak.gov.tr, baykartech.com). Return the "
-              f"institution's name and that page's URL. Return url \"\" if you can't find the institution's own "
-              f"page for this story. Never return a news site, social media, Wikipedia or a video site.")
+              f"{press_text[:3000]}\n\nWhich Turkish institution or company is it mainly about? Return:\n"
+              f"- institution: its name\n- story_url: THAT institution's own page about this same news (press "
+              f"release, announcement, report or blog post on its own official domain), or \"\" if you can't "
+              f"find one\n- home_url: the institution's own official website (its newsroom / press page if it "
+              f"has one, otherwise its home page)\nNever return a news site, social media, Wikipedia or a "
+              f"video site.")
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
     try:
         proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
@@ -105,18 +108,44 @@ def official_page(item: dict, press_text: str) -> tuple[str, str]:
                               input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=300, env=env)
         out = json.loads(proc.stdout).get("structured_output") or {}
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
-        return "", ""
-    url, name = out.get("url", "").strip(), out.get("institution", "").strip()
-    host = urlsplit(url).hostname or ""
-    if not url.startswith("http") or host in press_hosts or re.search(
-            r"youtube|twitter|x\.com|instagram|facebook|linkedin|wikipedia|tiktok", host):
-        return name, ""
-    return name, url
+        return "", "", ""
+
+    def own(url: str) -> str:
+        host = urlsplit(url).hostname or ""
+        bad = host in press_hosts or re.search(r"youtube|twitter|x\.com|instagram|facebook|linkedin|wikipedia|tiktok", host)
+        return url if url.startswith("http") and not bad else ""
+
+    return out.get("institution", "").strip(), own(out.get("story_url", "").strip()), own(out.get("home_url", "").strip())
 
 
-def _frames(official: dict, folder: Path) -> dict | None:
-    """proof.png and the two site shots, all from the institution's own page."""
-    pictures = [p for p in [official.get("cover_path"), *(f["path"] for f in official.get("figures", []))] if p]
+def _ahash(path: str) -> int:
+    with Image.open(path) as img:
+        small = ImageOps.grayscale(img).resize((8, 8), Image.LANCZOS)
+    px = list(small.getdata())
+    avg = sum(px) / len(px)
+    return sum(1 << i for i, p in enumerate(px) if p > avg)
+
+
+def same_picture(a: str, b: str) -> bool:
+    """The same image (re-sized or re-compressed by a news site) - 8x8 average hash, <= 6 bits apart."""
+    try:
+        return bin(_ahash(a) ^ _ahash(b)).count("1") <= 6
+    except OSError:
+        return False
+
+
+def pictures_for(press: dict, own_pages: list[dict]) -> list[str]:
+    """The institution's pictures, story page first (user, 10-17): the news site's picture only when it is
+    one of the institution's own images; otherwise any picture from the institution's own site."""
+    own = [p for page in own_pages for p in [page.get("cover_path"), *(f["path"] for f in page.get("figures", []))] if p]
+    press_cover = press.get("cover_path")
+    if press_cover and any(same_picture(press_cover, p) for p in own):
+        own = [press_cover] + [p for p in own if not same_picture(press_cover, p)]
+    return own
+
+
+def _frames(official: dict, pictures: list[str], folder: Path) -> dict | None:
+    """proof.png and the two site shots, all from the institution's own site."""
     if not pictures:
         return None
     folder.mkdir(parents=True, exist_ok=True)
@@ -167,9 +196,10 @@ def write_script(institution: str, press: dict, official: dict) -> dict | None:
 
 
 def make_tr_reel() -> int:
-    candidates = [c for c in rank(fetch_tr(), "tr_reel", kind_prefix="tr_reel")
+    fresh = fetch_tr()
+    candidates = [c for c in rank(fresh, "tr_reel", kind_prefix="tr_reel")
                   if (c.get("rank") or {}).get("fits", True) and not (c.get("rank") or {}).get("repeat")]
-    print(f"▶ Türkiye Reel: {len(candidates)} candidates in concept", flush=True)
+    print(f"▶ Türkiye Reel: {len(fresh)} fresh AI / tech stories, {len(candidates)} about Turkey", flush=True)
     for c in candidates:
         r = c.get("rank") or {}
         print(f"   rank {r.get('score', '-'):>2} {c['title'][:80]} ({str(r.get('reason', ''))[:80]})")
@@ -177,26 +207,36 @@ def make_tr_reel() -> int:
         print(f"\n--- {c['source']}: {c['title']}", flush=True)
         try:
             press = capture_article(c["url"], WORK / "press")
-            institution, url = official_page(c, press["text"])
-            if not url:
-                print(f"   no own page of {institution or 'the institution'} for this story: skipped")
-                continue
-            print(f"   own page: {institution} {url}")
-            official = capture_article(url, WORK / "official")
         except CaptureError as exc:
             print(f"   capture failed: {exc}")
             continue
-        capture = _frames(official, TEMP_DIR / "tr_frames")
-        if capture is None:
-            print("   the own page has no picture of its own: skipped (no press photos)")
+        institution, story_url, home_url = official_page(c, press["text"])
+        print(f"   institution: {institution or '?'}; own story page: {story_url or '-'}; own site: {home_url or '-'}")
+        own_pages = []
+        for n, url in (("official", story_url), ("home", home_url)):
+            if url:
+                try:
+                    own_pages.append(capture_article(url, WORK / n))
+                except CaptureError as exc:
+                    print(f"   {n} page capture failed: {exc}")
+        pictures = pictures_for(press, own_pages)
+        if not institution or not own_pages or not pictures:
+            print("   no picture from the institution's own site: skipped (no press photos)")
             continue
+        official = own_pages[0]
+        if not story_url:  # the facts come from the news article; the pictures from the institution
+            official = {**official, "text": press["text"], "url": own_pages[0]["url"]}
+        capture = _frames(own_pages[0], pictures, TEMP_DIR / "tr_frames")
+        url = official["url"]
         script = write_script(institution, press, official)
         if script is None:
             print("   no valid script")
             continue
         tool = {"tool_name": institution, "website_url": url,
                 "kind": "07:30 Turkey Reel (D-29): the facts must come from the institution's own page "
-                        "(official_page) or the press article; the pictures are the institution's own.",
+                        "(official_page) or the press article; the pictures are the institution's own (or the "
+                        "news site's picture when it matched one of the institution's images). When the "
+                        "institution has no page about the story, official_page holds the news article text.",
                 "official_page": official["text"][:4000], "press_article": press["text"][:3000],
                 "press_url": c["url"]}
         script = judge_hooks(script, tool)
