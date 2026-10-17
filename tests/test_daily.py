@@ -149,3 +149,38 @@ def test_no_reel_render_starts_without_time_left(monkeypatch, tmp_path):
     monkeypatch.setattr(daily, "_STARTED", daily.time.monotonic() - daily.JOB_BUDGET)
     monkeypatch.setattr(daily, "_reel_attempt", lambda cmd=None: pytest.fail("render started"))
     assert daily.produce_reel() is None
+
+
+def test_a_second_run_of_the_day_keeps_the_first_runs_queue_and_log():
+    """10-17: the Reel-only run's archive replaced the morning queue (carousels showed "empty")."""
+    old = [{"kind": "reel", "time": "11:45", "status": "empty"},
+           {"kind": "carousel", "time": "12:30", "status": "ready", "folder": "a", "title": "Beam"},
+           {"kind": "reel", "time": "20:30", "status": "empty"}]
+    new = [{"kind": "reel", "time": "11:45", "status": "empty"},
+           {"kind": "carousel", "time": "12:30", "status": "empty"},
+           {"kind": "reel", "time": "20:30", "status": "ready", "folder": "b", "title": "Earnote"}]
+    merged = daily._merge_queue(old, new)
+    assert [q["status"] for q in merged] == ["empty", "ready", "ready"]
+    assert merged[1]["title"] == "Beam" and merged[2]["title"] == "Earnote"
+
+
+def test_a_site_that_refuses_the_cloud_does_not_eat_the_news_tries(monkeypatch, sandbox):
+    """10-17: three openai.com stories failed with HTTP 403 and used half of the six tries."""
+    news = [{"title": f"OpenAI story {i}", "url": f"https://openai.com/index/{i}", "source": "OpenAI"} for i in range(4)]
+    news += [{"title": f"Other {i} unrelated words", "url": f"https://huggingface.co/blog/{i}", "source": "HF"}
+             for i in range(3)]
+    monkeypatch.setattr(daily, "fetch_news", lambda n: news)
+    monkeypatch.setattr(daily, "testable_first", lambda c: c)
+    monkeypatch.setattr(daily, "mark_used", lambda url: None)
+    tried = []
+
+    def produce_news(item):
+        tried.append(item["url"])
+        if "openai.com" in item["url"]:
+            raise RuntimeError(f"capture of {item['url']} returned HTTP 403")
+        raise RuntimeError("render failed")
+
+    monkeypatch.setattr(daily, "produce_news", produce_news)
+    daily.produce_news_items(2)
+    assert sum("openai.com" in u for u in tried) == 1
+    assert sum("huggingface.co" in u for u in tried) == 3

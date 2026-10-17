@@ -160,3 +160,28 @@ def test_cards_must_match_the_voice_under_them():
     assert any("don't match the voiceover" in p for p in reel_rule_problems(bad))
     for good in ("2026-10-17_train-with-pasta.json", "2026-10-17_craft-agents.json", "2026-10-15_retriever-ai.json"):
         assert card_voice_mismatch(load(good)) == [], good
+
+
+def test_price_words_found_in_the_10_17_audit_are_caught():
+    from script_writer import price_mentions
+
+    for text in ("7 day free trial", "paid plans", "a discount for teams", "Premium sürüm", "500 kredi veriyor",
+                 "10,000 credits"):
+        assert price_mentions(text), text
+    for text in ("Kredi kartı dolandırıcılığını yakalayan model", "bir yıllık işlem verisi", "Görsel kredisi"):
+        assert not price_mentions(text), text
+
+
+def test_a_tool_reel_never_repeats_a_tool_under_another_name():
+    """10-17 audit: "Nemotron 3.5 Super VL" was a candidate the day after the "Nemotron 3.5" Reel, and the
+    10-entry history let tools come back after ~3 days."""
+    from fetcher import _fold, already_used
+    import script_writer
+
+    used = {_fold(n) for n in ("Nemotron 3.5", "Kai", "Scrape Anything by Context.dev")}
+    assert already_used("Nemotron 3.5 Super VL", used)
+    assert already_used("KAI", used)
+    assert not already_used("Kaiju", used)
+    assert not already_used("GPU Terminal by Context.dev", used)
+    assert script_writer.USED_TOOLS_SIZE >= 300
+    assert "Nemotron 3.5" in script_writer.used_tools()

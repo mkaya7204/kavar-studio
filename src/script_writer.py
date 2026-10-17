@@ -50,7 +50,9 @@ HISTORY_SIZE = 10
 PRICE_PATTERN = re.compile(
     r"[$€£₺¥₹]|\d+(?:[.,]\d+)?\s*(?:bin|milyon|milyar)?\s*(?:TL|TRY|USD|EUR|GBP|Kr|krş)\b|\b(?:TRY|TL)\s*\d|"
     r"\b(?:dolar\w*|euro\w*|lira\w*|kuruş\w*|fiyat\w*|ücret\w*|ödeme\w*|abonelik\w*|bedava|indirim\w*|"
-    r"paralı|satın al\w*|deneme sürüm\w*|tek seferlik|price\w*|pricing|subscription\w*|free|freemium)\b",
+    r"paralı|satın al\w*|deneme sürüm\w*|tek seferlik|price\w*|pricing|subscription\w*|free|freemium|"
+    # 10-17 audit: English payment words and credit amounts the list missed
+    r"trial\w*|paid|discount\w*|premium)\b|\b\d[\d.,]*\s*(?:kredi\w*|credits?)\b",
     re.I,
 )
 NO_PRICE_RULE = ("Page policy: never mention prices, costs, currencies, payment models (one-time "
@@ -427,6 +429,19 @@ def _load_history() -> list[dict]:
         return []
 
 
+USED_TOOLS_PATH = ROOT / "state" / "used_tools.json"  # every tool / model ever made into a Reel
+USED_TOOLS_SIZE = 500  # 10-17 audit: the 10-entry hook history let a tool come back after ~3 days
+
+
+def used_tools() -> list[str]:
+    """Names of all tools and models already made into a Reel (posted or rejected)."""
+    try:
+        names = json.loads(USED_TOOLS_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        names = []
+    return list(dict.fromkeys(names + [h["tool"] for h in _load_history() if h.get("tool")]))
+
+
 def _save_history(script: VideoScript) -> None:
     seg = script.voiceover_segments
     entry = {"tool": script.tool_name, "hook": script.hook, "pattern": script.hook_pattern,
@@ -434,6 +449,8 @@ def _save_history(script: VideoScript) -> None:
     history = (_load_history() + [entry])[-HISTORY_SIZE:]
     HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
     HISTORY_PATH.write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
+    USED_TOOLS_PATH.write_text(json.dumps((used_tools() + [script.tool_name])[-USED_TOOLS_SIZE:],
+                                          indent=1, ensure_ascii=False), encoding="utf-8")
 
 
 def _user_message(tool: Tool, language: str) -> str:

@@ -159,26 +159,34 @@ def _wrap(draw: ImageDraw.ImageDraw, text: str, font, width: int) -> list[str]:
     return lines
 
 
-def _answer_card(model: str, prompt: str, answer: str, path: Path) -> Path:
-    """A 1080x1080 card: our question, then the model's answer as returned."""
+ANSWER_SIZES = (38, 34, 30, 27)  # the answer's font shrinks until it fits; below 27 it is too small on a phone
+
+
+def _answer_card(model: str, prompt: str, answer: str, path: Path) -> Path | None:
+    """A 1080x1080 card: our question, then the model's whole answer as returned. None if the answer
+    can't fit even at the smallest size: a cut answer would look like the model's mistake (lesson
+    2026-10-16; until 10-17 this card cut long answers with an ellipsis)."""
     img = Image.new("RGB", (1080, 1080), BG)
     d = ImageDraw.Draw(img)
-    small, q_font, a_font = _font(30), _font(36), _font(38)
+    small, q_font = _font(30), _font(36)
+    q_lines = _wrap(d, prompt, q_font, 900)
+    top = 250 + 48 * len(q_lines)
+    for size in ANSWER_SIZES:
+        a_font, step = _font(size), round(size * 1.42)
+        a_lines = _wrap(d, answer, a_font, 920)
+        if top + 50 + step * len(a_lines) <= 1040:
+            break
+    else:
+        return None
     d.text((70, 60), "KAVAR DENEMESİ", font=_font(30, True), fill=NEON)
     d.text((70, 104), model.removesuffix(":free"), font=small, fill=MUTED)
-    q_lines = _wrap(d, prompt, q_font, 900)
     d.rounded_rectangle((60, 170, 1020, 210 + 48 * len(q_lines)), 28, fill=PANEL, outline=NEON, width=2)
     for i, line in enumerate(q_lines):
         d.text((90, 190 + 48 * i), line, font=q_font, fill=INK)
-    top = 250 + 48 * len(q_lines)
-    a_lines = _wrap(d, answer, a_font, 920)
-    room = (1010 - top) // 54
-    if len(a_lines) > room:
-        a_lines = a_lines[:room - 1] + [a_lines[room - 1].rstrip(" .,") + " …"]
     d.text((70, top), "Cevap:", font=_font(32, True), fill=NEON)
     for i, line in enumerate(a_lines):
-        d.text((70, top + 50 + 54 * i), line, font=a_font, fill=INK)
-    img.crop((0, 0, 1080, min(1080, max(760, top + 50 + 54 * len(a_lines) + 70)))).save(path)
+        d.text((70, top + 50 + step * i), line, font=a_font, fill=INK)
+    img.crop((0, 0, 1080, min(1080, max(760, top + 50 + step * len(a_lines) + 40)))).save(path)
     return path
 
 
@@ -189,6 +197,9 @@ def _run_llm(model: str, out: Path) -> dict | None:
         if not answer:
             continue
         path = _answer_card(model, test["prompt"], answer, out / f"trial_{i}.png")
+        if path is None:
+            print(f"[trial] {model}: answer {i} too long to show whole on a card, not used")
+            continue
         with Image.open(path) as im:
             size = list(im.size)
         figures.append({"path": str(path), "size": size, "credit": "KAVAR denemesi",

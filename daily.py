@@ -22,6 +22,7 @@ import time
 import traceback
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
@@ -124,22 +125,30 @@ FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (on
 
 
 def produce_news_items(count: int) -> list[dict]:
-    items, chosen_titles = [], []
+    items, chosen_titles, blocked, tries = [], [], set(), 0
     # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first
     candidates = testable_first(fetch_news(12))
     log(f"news: {len(candidates)} fresh candidates")
-    for item in candidates[:MAX_NEWS_TRIES]:
-        if len(items) >= count:
+    for item in candidates:
+        if len(items) >= count or tries >= MAX_NEWS_TRIES:
             break
+        host = urlsplit(item["url"]).hostname or ""
+        if host in blocked:  # 10-17: openai.com answered 403 to the cloud three times, using half the tries
+            log(f"   skip ({host} refuses this machine): {item['title']}")
+            continue
         if any(_same_story(item["title"], t) for t in chosen_titles):
             log(f"   skip (same story): {item['title']}")
             continue
         log(f"news: {item['source']} - {item['title']}")
+        tries += 1
         try:
             folder = produce_news(item)
             ok, problems = _reviewed_news(folder)
         except Exception as exc:  # one bad story never stops the day (any capture / write / render / review error)
             log(f"   failed: {type(exc).__name__}: {str(exc)[:300]}")
+            if re.search(r"HTTP (401|403|429)\b", str(exc)):
+                blocked.add(host)
+                tries -= 1  # a refusal costs seconds, not a real try
             mark_used(item["url"])
             continue
         if ok:
@@ -364,6 +373,27 @@ def _gh() -> str:
     return exe
 
 
+def _merge_queue(old: list[dict], new: list[dict]) -> list[dict]:
+    """Slot by slot: a later run's ready item wins; otherwise what was already there stays."""
+    by_time = {q["time"]: q for q in old}
+    return [q if q.get("status") == "ready" or q["time"] not in by_time else by_time[q["time"]] for q in new]
+
+
+def _unpack_keeping_today(archive: Path) -> None:
+    """Unpack a cloud archive without losing an earlier run of the same day (10-17: a Reel-only run
+    replaced the morning's queue and log, so the carousels showed "empty" and their editor verdicts
+    were gone). Today's queue is merged slot by slot; today's log gets the new run appended."""
+    log_path = LOG_DIR / f"{date.today().isoformat()}.log"
+    old_queue = load_queue()
+    old_log = log_path.read_text(encoding="utf-8") if log_path.exists() else ""
+    subprocess.run(["tar", "-xzf", str(archive), "-C", str(ROOT)], check=True)
+    if old_queue:
+        save_queue(_merge_queue(old_queue, load_queue()))
+    new_log = log_path.read_text(encoding="utf-8") if log_path.exists() else ""
+    if old_log and new_log and not new_log.startswith(old_log[:200]):
+        log_path.write_text(old_log + new_log, encoding="utf-8")
+
+
 def fetch() -> None:
     """Bring today's cloud production (GitHub Actions, .github/workflows/produce.yml) to this PC:
     pull the state commits, download the run's archive and unpack it into output/."""
@@ -398,7 +428,7 @@ def fetch() -> None:
                 + ("" if archives else f": {proc.stderr.strip()[:200]}"))
             continue
         log(f"cloud run {run['databaseId']}: {run['conclusion']}")
-        subprocess.run(["tar", "-xzf", str(archives[0]), "-C", str(ROOT)], check=True)
+        _unpack_keeping_today(archives[0])
         shutil.rmtree(tmp, ignore_errors=True)
         log("downloaded; queue:")
         status()

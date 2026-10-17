@@ -29,7 +29,7 @@ from hyperframes_builder import BuildError as HFBuildError  # noqa: E402
 from hyperframes_builder import best_proof_crop, build_video_hyperframes  # noqa: E402
 from media_capturer import CaptureError, capture_site  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
-from script_writer import VideoScript, _load_history, generate_script  # noqa: E402
+from script_writer import VideoScript, generate_script, used_tools  # noqa: E402
 from tts_engine import TTSError, synthesize, voice_for  # noqa: E402
 from video_builder import FINAL_PATH, build_video  # noqa: E402
 
@@ -141,7 +141,7 @@ def main() -> int:
         return _report(post, t0)
 
     with Step(1, "Fetching latest SaaS/AI tools"):
-        used = {h["tool"] for h in _load_history()}  # tools already turned into a Reel
+        used = set(used_tools())  # every tool already turned into a Reel (state/used_tools.json)
         tools = fetch_latest_tools(limit=CANDIDATES, use_sample=args.sample, exclude=used)
         # A Product Hunt URL means the real site couldn't be resolved: nothing useful to film.
         candidates = [t for t in tools if "producthunt.com" not in t["website_url"]]

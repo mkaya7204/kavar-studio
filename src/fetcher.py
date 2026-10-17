@@ -208,6 +208,13 @@ def _parse_entry(entry: ET.Element) -> tuple[Tool | None, str]:
     return tool, reason
 
 
+def already_used(title: str, used_folded: set[str]) -> bool:
+    """Same tool under a longer or shorter name counts too: "Nemotron 3.5 Super VL" after the
+    "Nemotron 3.5" Reel (10-17). Names under 5 letters only match exactly ("Kai" vs "Kaiju")."""
+    t = _fold(title)
+    return bool(t) and any(t == u or (min(len(t), len(u)) >= 5 and (u in t or t in u)) for u in used_folded)
+
+
 def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool = False,
                        exclude: set[str] | None = None) -> list[dict]:
     """Return up to `limit` recent SaaS / AI tools as JSON-serialisable dicts.
@@ -224,7 +231,7 @@ def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool =
             root = ET.fromstring(resp.content)
             skip = {_fold(n) for n in exclude or ()}
             for entry in root.findall("a:entry", ATOM_NS):
-                if _fold(entry.findtext("a:title", "", ATOM_NS)) in skip:
+                if already_used(entry.findtext("a:title", "", ATOM_NS), skip):
                     continue  # already made into a video
                 tool, reason = _parse_entry(entry)
                 if verbose:

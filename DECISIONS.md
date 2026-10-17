@@ -192,3 +192,15 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Open item closed (same day, user: "açık kalanı yapalım"):** there was no empty card. frames.yml (new: a cloud contact sheet of any stretch of a Reel) showed card 02 enters at 12.0 s and is full by 12.75 s; the editor's single middle frame (12.05 s) fell on the entrance. The editor now also sees the frame 1 s later, and the lesson was corrected.
 - **Guarded by:** tests/test_biz_denedik.py (`test_hook_box_never_rises_into_the_headline`).
 - **Also (user: "bak"):** Ultracite's cards ran one step ahead of the voice. The writer now rejects a draft whose card N doesn't match pointN (`card_voice_mismatch`, 0 false alarms on 18 past Reels; test `test_cards_must_match_the_voice_under_them`), and a lesson tells the editor to compare them.
+
+## D-28 · 2026-10-17 · Audit: problems nobody had noticed
+- **User:** "başka yerlerde de aklımıza gelmeyen birtakım sorunlar hatalar eksikler varmı diye derinlemesine kapsamlı inceleme yapsak".
+- **Found and fixed (each with a test):**
+  1. `daily.py fetch` unpacked a second run of the day over the first: the Reel-only run replaced the morning queue (carousels showed "empty") and the morning log with the editor's verdicts. Now the queue is merged slot by slot and the log appended (`_unpack_keeping_today`).
+  2. The "Biz denedik" answer card cut long answers with an ellipsis, against the 2026-10-16 lesson. Now the font shrinks (38 to 27 px) and an answer that still doesn't fit is not shown (`_answer_card`).
+  3. The price check missed "trial", "paid", "discount", "premium" and credit amounts ("500 kredi", "10,000 credits"). Added; no false alarm on past posts.
+  4. Used tools were only the last 10 Reels, matched by exact name: a tool could come back after ~3 days, and "Nemotron 3.5 Super VL" was a candidate the day after the "Nemotron 3.5" Reel. Now `state/used_tools.json` keeps 500 names (seeded with all 19 past Reels) and a longer or shorter form of a name counts (`already_used`).
+  5. openai.com refuses the cloud (HTTP 403): 3 of the 6 news tries on 10-17 went to OpenAI and failed. A site that refuses is now skipped for the rest of the run and the refusal doesn't use a try.
+- **Checked, no problem:** feed dates without a time zone, rejected news marked used, sources are company blogs only, price check covers every text field, editor and trial judge drop unchecked output, free-model routes only.
+- **For the user to decide:** OpenAI news can't be captured from the cloud at all. Keep the feed (it is skipped quickly now), drop it, or capture it another way.
+- **Guarded by:** tests/test_daily.py, tests/test_decisions.py, tests/test_biz_denedik.py.

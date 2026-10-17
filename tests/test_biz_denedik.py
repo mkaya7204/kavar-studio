@@ -244,3 +244,17 @@ def test_hook_box_never_rises_into_the_headline():
     assert 'tl.to("#hook-proof", { y: -LIFT' in html and 'y: -150' not in html
     assert '<div id="hook-proof-clip"><img id="hook-proof-img"' in html
     assert "top: calc(100% + 18px)" in html
+
+
+def test_answer_card_never_cuts_an_answer(tmp_path):
+    """Lesson 2026-10-16: a cut answer looks like the model's mistake. Until 10-17 the card cut long
+    answers with "…"; now the font shrinks, and an answer that still can't fit is not shown at all."""
+    if not (model_trial.FONTS / "seguisb.ttf").exists():
+        pytest.skip("fonts are installed by the workflows")
+    short = model_trial._answer_card("x/model:free", "Soru?", "Kısa bir cevap.", tmp_path / "a.png")
+    assert short is not None and short.exists()
+    longer = model_trial._answer_card("x/model:free", "Soru?", "kelime " * 120, tmp_path / "b.png")
+    assert longer is not None  # fits with a smaller font
+    huge = model_trial._answer_card("x/model:free", "Soru?", "kelime " * 900, tmp_path / "c.png")
+    assert huge is None
+    assert "…" not in Path(model_trial.__file__).read_text(encoding="utf-8").split("def _answer_card")[1].split("def ")[0]
