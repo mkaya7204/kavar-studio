@@ -11,6 +11,7 @@ appear in that text. YouTube / social embeds are never downloaded.
 """
 
 import re
+import time
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
@@ -70,12 +71,20 @@ REFUSED = (401, 403, 429)  # openai.com answers 403 to cloud machines (10-17)
 def _reader_html(url: str) -> str | None:
     """The page's own HTML as the reader service sees it (user, 10-17: "başka bir yolla almak olsun").
     Only the public article URL is sent. Images still come from the company's own servers."""
-    try:
-        r = requests.get(READER + url, headers={**HEADERS, "X-Return-Format": "html"}, timeout=90)
-        r.raise_for_status()
-    except requests.RequestException as exc:
-        print(f"[article] reader failed ({type(exc).__name__})")
-        return None
+    # no browser User-Agent here: the probe that worked (10-17) sent none
+    for attempt in (1, 2):
+        try:
+            r = requests.get(READER + url, headers={"X-Return-Format": "html"}, timeout=90)
+        except requests.RequestException as exc:
+            print(f"[article] reader failed ({type(exc).__name__})")
+            return None
+        if r.status_code == 429 and attempt == 1:  # the free reader limits requests per minute
+            time.sleep(20)
+            continue
+        if r.status_code != 200:
+            print(f"[article] reader answered HTTP {r.status_code}: {r.text[:150]!r}")
+            return None
+        break
     return r.text if len(r.text) > 5000 and "<html" in r.text[:2000].lower() else None
 
 
