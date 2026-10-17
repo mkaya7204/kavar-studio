@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Scrape Anything by Context.dev",
-    "hook": "Her web sitesi tek istekte veriye dönüşüyor",
-    "pattern": "result",
-    "spoken_hook": "Her web sitesi tek istekte temiz veriye dönüşüyor.",
-    "cta": "Bunu ajan geliştiren arkadaşına at."
-  },
-  {
-    "tool": "Vincentt",
-    "hook": "Tasarımın telefonda kameraya dönüşüyor",
-    "pattern": "result",
-    "spoken_hook": "Tasarım dosyan telefonda kamera deneyimine dönüşüyor.",
-    "cta": "Bunu AR işi yapan tasarımcı arkadaşına gönder."
-  },
-  {
-    "tool": "Kai",
-    "hook": "Takvimin ve mailin kendi kendine yönetiliyor",
-    "pattern": "result",
-    "spoken_hook": "Takvimin ve mail kutun kendi kendine yönetiliyor.",
-    "cta": "Bunu toplantıdan nefes alamayan arkadaşına gönder."
-  },
-  {
-    "tool": "MentionBird",
-    "hook": "Yapay zekâ seni mi rakibini mi öneriyor?",
-    "pattern": "question",
-    "spoken_hook": "Yapay zekâ müşterine seni mi rakibini mi öneriyor?",
-    "cta": "Bunu SEO yapan arkadaşına gönder."
-  },
-  {
     "tool": "The Drive AI",
     "hook": "Dosyaların tek cümleyle düzene giriyor",
     "pattern": "result",
@@ -68,5 +40,33 @@
     "pattern": "question",
     "spoken_hook": "Sözleşmeleri hâlâ baştan sona kendin mi okuyorsun?",
     "cta": "Bunu sözleşme imzalayan arkadaşına gönder."
+  },
+  {
+    "tool": "Earnote",
+    "hook": "Not tutarken dinleyemiyorsun",
+    "pattern": "pain",
+    "spoken_hook": "Not tutarken dersi ya da toplantıyı dinleyemiyorsun.",
+    "cta": "Bunu derse yetişemeyen arkadaşına gönder."
+  },
+  {
+    "tool": "Train with Pasta",
+    "hook": "Antrenmanda eller serbest mi?",
+    "pattern": "question",
+    "spoken_hook": "Antrenman sırasında telefona hâlâ dokunuyor musun?",
+    "cta": "Bunu spora yeni başlayan arkadaşına gönder."
+  },
+  {
+    "tool": "Craft Agents",
+    "hook": "Ajanlarını nerede yönetiyorsun?",
+    "pattern": "question",
+    "spoken_hook": "Yapay zekâ ajanlarını tam olarak nerede yönetiyorsun?",
+    "cta": "Bunu geliştirici arkadaşına gönder."
+  },
+  {
+    "tool": "Ultracite v8",
+    "hook": "Ajanın kodu tutarlı kalıyor",
+    "pattern": "result",
+    "spoken_hook": "Ajanın yazdığı kod artık tutarlı kalıyor.",
+    "cta": "Bunu ajanla kod yazan arkadaşına gönder."
   }
 ]

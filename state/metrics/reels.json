@@ -181,5 +181,57 @@
     "duration_sec": 22.3,
     "words": 40,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-17_earnote",
+    "date": "2026-10-17",
+    "kind": "tool",
+    "tool": "Earnote",
+    "hook_pattern": "pain",
+    "headline": "Not tutarken dinleyemiyorsun",
+    "spoken_hook": "Not tutarken dersi ya da toplantıyı dinleyemiyorsun.",
+    "cta": "Bunu derse yetişemeyen arkadaşına gönder.",
+    "duration_sec": 23.0,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-17_train-with-pasta",
+    "date": "2026-10-17",
+    "kind": "tool",
+    "tool": "Train with Pasta",
+    "hook_pattern": "question",
+    "headline": "Antrenmanda eller serbest mi?",
+    "spoken_hook": "Antrenman sırasında telefona hâlâ dokunuyor musun?",
+    "cta": "Bunu spora yeni başlayan arkadaşına gönder.",
+    "duration_sec": 21.0,
+    "words": 41,
+    "status": "rejected: 2,5 sn karesinde küçülen başlık etiketi (“ANTRENMANDA ELLER SERBEST Mİ?”) iki satır kalıyor ve ikinci satırı sonuç kutusunun üst kenarı kesiyor. Yazı üst üste biniyor ve okunmuyor. Bu, etiketin üstteki yasak ~270 px bandına da giriyor.; Hashtag yazım hatası: #applentelligence (doğrusu #appleintelligence). Reel'de düzeltme turu olmadığı için bu da hata sayılır.; SHOULD: 10,5 sn karesinde kutu neredeyse görünmüyor, ekranda büyük bir parlama ve soluk bir görsel var. Vaat, ilk ~6 sn içinde arayüz dışında gösterilmiyor."
+  },
+  {
+    "id": "2026-10-17_craft-agents",
+    "date": "2026-10-17",
+    "kind": "tool",
+    "tool": "Craft Agents",
+    "hook_pattern": "question",
+    "headline": "Ajanlarını nerede yönetiyorsun?",
+    "spoken_hook": "Yapay zekâ ajanlarını tam olarak nerede yönetiyorsun?",
+    "cta": "Bunu geliştirici arkadaşına gönder.",
+    "duration_sec": 20.6,
+    "words": 40,
+    "status": "rejected: 2,5 sn karesinde küçülen başlık etiketi ('YÖNETİYORSUN?') kutunun üstüne biniyor ve ikinci satırı kesik/üst üste görünüyor.; 2,5 sn karesinde kaynak damgası (agents.craft.do) kutudaki 'OpenRouter... and more.' metninin üstüne biniyor; son satır kesik. Metin üst üste biniyor ve kesiliyor (MUST ihlali).; Kanıt görseli sitenin İngilizce slogan kartı; arayüzü, çıktıyı ya da iş akışını göstermiyor. Vaadi (ajanları nerede yönetiyorsun) kanıtlamıyor (zayıf)."
+  },
+  {
+    "id": "2026-10-17_ultracite-v8",
+    "date": "2026-10-17",
+    "kind": "tool",
+    "tool": "Ultracite v8",
+    "hook_pattern": "result",
+    "headline": "Ajanın kodu tutarlı kalıyor",
+    "spoken_hook": "Ajanın yazdığı kod artık tutarlı kalıyor.",
+    "cta": "Bunu ajanla kod yazan arkadaşına gönder.",
+    "duration_sec": 24.1,
+    "words": 41,
+    "status": "rejected: 12.1. saniyede kart tamamen boş: içeriksiz, yarım yüklenmiş bir kutu görünüyor. Bu ölü hava gibi duruyor ve bozuk görünüyor.; Kanıt görseli (kapak ve 0-5. saniye) Ultracite sitesinin arayüzü ya da çıktısı değil. Rastgele bir değişiklik notu parçası: 'Fixing all 11: typing the users, adding teamId...'. Tutarlı kod vaadini göstermiyor.; Kanıt görselindeki metin İngilizce, bağlamsız ve yarım bir madde işareti. Kenarlarda kırmızı şeritler var, yani kırpılmış bir yakalama. Okuyan ne olduğunu anlamaz."
   }
 ]
