@@ -42,3 +42,23 @@ Add new lessons at the bottom. Never delete a lesson without the user's approval
 - **What happened:** two Hugging Face carousels (IBM Granite Switch 4.1, NVIDIA Indic pretraining). The slides and footers said "2 Ekim" and "7 Eylül", but the posts were published on 15 and 16 Oct, as the screenshot on slide 2 showed. The editor rejected both, and it was right. Our capture took the first `<time>` on the page, which on Hugging Face is not the post date.
 - **Fix:** the date now comes from the news feed (`feed_published` in carousel.py, `feed_item` in src/news_fetcher.py). Both posts were made again in the cloud.
 - **Rule:** A date in the text or footer must match the date the source page shows. If they differ, or the source shows no date, reject it. The writer only names a date the article text or the feed gives.
+
+## 2026-10-17 - Shrunken headline under the proof box (template)
+- **What happened:** three of four tool Reels. At ~2.5 s the headline shrinks into a label and the proof box moves up. The box always moved up 150 px, so a two-line headline's second line ended up under the box's top edge (Train with Pasta "ANTRENMANDA ELLER SERBEST Mİ?", Craft Agents "YÖNETİYORSUN?"; Earnote was tight). The domain stamp also sat on the proof's own text (Craft Agents: "agents.craft.do" on "OpenRouter, local models"). The editor rejected both, and it was right: overlapping, cut text is never allowed.
+- **Fix:** the template now lifts the box only into the room the shrinking headline frees (`LIFT` in templates/hyperframes_news), and the stamp sits under the box, not on it. Train with Pasta rendered again by hand (rerender/2026-10-17_train-with-pasta.json): at 2.5 s the label sits clear above the box and the stamp under it; the editor passed it.
+- **Rule:** Check the ~2.5 s frame: the small headline, the bar and the proof box never touch or overlap, and no stamp or label covers the proof's text. If they do, reject and name the frame. A writer never works around this by shortening a good headline; it is a template fault, so say "template" in the reason.
+
+## 2026-10-17 - Empty card in the middle of a Reel
+- **What happened:** Ultracite v8. The editor said the second card at 12.1 s was an empty glass box, with a 6.7 s stretch where nothing moved. Claude first took it for a frame caught while the card slides in (its text arrives 0.3-0.85 s after the box), but the hand-made second render showed the same empty card at the same time and the same long still stretch. The editor was right. The voice was ~16 s while the video ran 24 s, so the plan had time with nothing to show.
+- **Fix:** not fixed; the Reel was dropped (its proof also failed, next lesson). The cause in the builder (a card shown without its text when the plan is longer than the voice) is an open item.
+- **Rule:** A card whose box is on screen must show its text within 1 s. Check the frames around it: if the box is still empty 1 s later, or nothing moves for more than ~3 s, reject and name the time.
+
+## 2026-10-17 - Proof that does not prove the hook
+- **What happened:** Craft Agents' proof was the site's English slogan card ("Work with most powerful agents..."), and Ultracite v8's proof was a random changelog bullet ("Fixing all 11: typing the users...") with red capture edges and an empty lower half. Neither shows the promise the hook makes. The editor rejected both, and it was right.
+- **Fix:** both were rendered again by hand. Craft Agents: the fresh capture found no clean proof on the site, so it was dropped. Ultracite v8: the same changelog bullet came back and the editor rejected it again, so it was dropped. A tool whose site shows no proof of the promise is skipped.
+- **Rule:** The proof under the hook shows the product doing what the hook promises: its interface, its output, or a result. A slogan, a feature list, a changelog line, a pricing box or a cut-off block is not proof. Reject it, and the writer chooses a hook the proof can show, or the tool is skipped.
+
+## 2026-10-17 - Misspelled hashtag
+- **What happened:** Train with Pasta. The hashtags had "#applentelligence" instead of "#appleintelligence". Reels have no fix round, so the editor rejected it, and it was right.
+- **Fix:** corrected by hand in rerender/2026-10-17_train-with-pasta.json.
+- **Rule:** Every hashtag is a real, correctly spelled word or name, all lower case, without Turkish characters when the brand has none (#appleintelligence, #opensource). The writer checks each brand name letter by letter against the source.

@@ -184,3 +184,10 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Built:** src/tts_engine.py tries `ELEVENLABS_API_KEY`, and on HTTP 401/402/403 (key or quota) `ELEVENLABS_API_KEY_2`. Both use the locked George voice, so D-07 holds. The user added the secret; the key needed the "Text to Speech: Access" permission (the first try returned "missing the permission text_to_speech"). All workflows that speak pass both keys. `probe.yml` makes George say one word per key and prints the first account's credits.
 - **Verified (probe run 39012493164):** key 1 HTTP 200, 9,991 of 10,000 credits used; key 2 HTTP 200.
 - **Guarded by:** tests/test_decisions.py (`test_second_elevenlabs_account_takes_over_with_george`).
+
+## D-27 · 2026-10-17 · Rejected Reels fixed by hand, editor taught
+- **User:** "diğer red edilen reel incele düzeltilecek doğru şekilde düzelt editörede öğret nasıl yapacağını ... kuralına göre doğru bizim istediğimiz şekilde".
+- **Built:** templates/hyperframes_news lifts the hook's proof box only into the room the shrinking headline frees (`LIFT`, was a fixed 150 px), and the domain stamp sits under the box. rerender.yml now runs the editor and uploads its verdict. Four lessons in rules/editor_lessons.md (2.5 s overlap, empty card, proof that proves the hook, hashtag spelling).
+- **Result:** Train with Pasta passed the editor after the hand fix; Claude checked the 2.5 s frame and the site (hands-free, Apple Intelligence and plans are on pppasta.com, no prices). Craft Agents (no clean proof on a fresh capture) and Ultracite v8 (same changelog proof, empty card) were dropped.
+- **Open:** the builder can show a card box without text when the plan is longer than the voice (Ultracite, 12.1 s).
+- **Guarded by:** tests/test_biz_denedik.py (`test_hook_box_never_rises_into_the_headline`).
