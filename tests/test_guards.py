@@ -56,6 +56,15 @@ def test_production_has_three_tries_and_a_guard():
     assert "steps.guard.outputs.skip" in produce["if"]
 
 
+def test_cron_job_org_start_is_guarded():
+    """D-25: cron-job.org dispatches with auto=yes; that run must skip a produced day, not force one."""
+    wf = _wf("produce.yml")
+    assert wf[True]["workflow_dispatch"]["inputs"]["auto"]["default"] == "no"
+    guard = wf["jobs"]["produce"]["steps"][1]["run"]
+    assert 'github.event.inputs.auto }}" = "yes"' in guard
+    assert "inputs.auto != 'yes'" in wf["jobs"]["produce"]["env"]["KAVAR_FORCE"]
+
+
 @pytest.mark.parametrize("name", ["produce.yml", "news-test.yml"])
 def test_claude_cli_is_verified_after_install(name):
     text = (ROOT / ".github" / "workflows" / name).read_text(encoding="utf-8")
