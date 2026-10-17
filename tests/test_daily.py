@@ -207,13 +207,13 @@ def test_off_concept_and_repeat_stories_are_never_used(monkeypatch, sandbox):
     assert tried == ["Tested model"]
 
 
-TR_SLOTS = [{"time": "07:30", "kind": "reel", "concept": "tr"}] + SLOTS["slots"]
+GUIDE_SLOTS = [{"time": "07:30", "kind": "reel", "concept": "guide"}] + SLOTS["slots"]
 
 
-def test_morning_stage_makes_only_the_turkey_reel_and_next_runs_the_rest(monkeypatch, sandbox):
-    """D-29: the 07:30 Turkey Reel first, on its own; the rest after it (cron-job.org 06:17 and 08:00 "next")."""
-    monkeypatch.setattr(daily, "schedule", lambda: {"slots": TR_SLOTS})
-    monkeypatch.setattr(daily, "produce_tr_reel", lambda: {"kind": "reel", "folder": "tr", "title": "TR", "concept": "tr"})
+def test_morning_stage_makes_only_the_guide_reel_and_next_runs_the_rest(monkeypatch, sandbox):
+    """D-29/D-31: the 07:30 guide Reel first, on its own; the rest after it (cron-job.org 06:17 and 08:00 "next")."""
+    monkeypatch.setattr(daily, "schedule", lambda: {"slots": GUIDE_SLOTS})
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: {"kind": "reel", "folder": "g", "title": "Guide", "concept": "guide"})
     calls = []
     monkeypatch.setattr(daily, "produce_news_items", lambda n: calls.append("news") or [])
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
@@ -221,70 +221,37 @@ def test_morning_stage_makes_only_the_turkey_reel_and_next_runs_the_rest(monkeyp
     daily.produce("next")
     assert calls == [] and daily.stages_done() == ["morning"]
     q = daily.load_queue()
-    assert q[0]["time"] == "07:30" and q[0]["status"] == "ready" and q[0]["title"] == "TR"
+    assert q[0]["time"] == "07:30" and q[0]["status"] == "ready" and q[0]["title"] == "Guide"
     daily.produce("next")
     assert calls == ["news"] and daily.stages_done() == ["morning", "rest"]
     q = daily.load_queue()
-    assert q[0]["title"] == "TR"  # the morning Reel stays when the rest is made
-    assert all(x.get("concept") != "tr" for x in q[1:])  # the Turkey Reel never lands in another slot
+    assert q[0]["title"] == "Guide"  # the morning Reel stays when the rest is made
+    assert all(x.get("concept") != "guide" for x in q[1:])  # the guide Reel never lands in another slot
     daily.produce("next")  # both done: nothing runs
     assert calls == ["news"]
 
 
-def test_no_turkey_story_still_lets_the_rest_start(monkeypatch, sandbox):
-    monkeypatch.setattr(daily, "schedule", lambda: {"slots": TR_SLOTS})
-    monkeypatch.setattr(daily, "produce_tr_reel", lambda: None)
+def test_no_guide_reel_still_lets_the_rest_start(monkeypatch, sandbox):
+    monkeypatch.setattr(daily, "schedule", lambda: {"slots": GUIDE_SLOTS})
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: None)
     daily.produce("morning")
     assert daily.stages_done() == ["morning"] and daily.load_queue()[0]["status"] == "empty"
 
 
-def test_turkey_reel_pictures_come_from_the_institution(tmp_path):
-    """User 10-17: the news site's picture only if it is the institution's own image; otherwise any picture
-    from the institution's own site. Never a press photo."""
-    import sys
-    sys.path.insert(0, str(daily.ROOT / "src"))
-    import tr_reel
-    from PIL import Image
-
-    def pic(name, color, size=(400, 300)):
-        p = tmp_path / name
-        img = Image.new("RGB", size, color)
-        for x in range(0, size[0], 40):  # a pattern, so the hash has something to see
-            for y in range(size[1]):
-                img.putpixel((x, y), (255, 255, 255))
-        img.save(p)
-        return str(p)
-
-    own_home = pic("home.jpg", (200, 30, 30))
-    same_as_home = pic("press_same.jpg", (200, 30, 30), (800, 600))  # the institution's image, re-sized
-    press_photo = pic("press_other.jpg", (10, 10, 10))
-    press_photo_img = Image.new("RGB", (400, 300), (10, 10, 10))
-    for y in range(0, 300, 30):
-        for x in range(400):
-            press_photo_img.putpixel((x, y), (255, 255, 255))
-    press_photo_img.save(press_photo)
-    home = {"cover_path": own_home, "figures": []}
-    assert tr_reel.pictures_for({"cover_path": same_as_home}, [home])[0] == same_as_home
-    got = tr_reel.pictures_for({"cover_path": press_photo}, [home])
-    assert press_photo not in got and got == [own_home]
-    assert tr_reel.pictures_for({"cover_path": press_photo}, []) == []
-
-
-def test_a_startup_profile_feed_keeps_its_stories_for_two_weeks(monkeypatch):
-    """User 10-17: Webrazzi's Girişim section profiles Turkish AI startups a few times a week; a profile
-    stays news for days, so that feed has a 14-day window while news feeds keep 72 h."""
+def test_guide_candidates_are_unused_company_posts_of_two_weeks(monkeypatch, tmp_path):
+    """D-31: guide Reels come from the companies' own blogs; a feature stays worth explaining for 14 days."""
     import sys
     from datetime import datetime, timedelta, timezone
     sys.path.insert(0, str(daily.ROOT / "src"))
-    import tr_reel
+    import guide_reel
 
     now = datetime.now(timezone.utc)
-    feeds = [{"name": "Girişim", "url": "https://g/feed", "max_age_hours": 336}, {"name": "News", "url": "https://n/feed"}]
-    items = {"https://g/feed": [{"title": "ShadowX: yerli yapay zeka güvenlik platformu", "url": "https://g/1",
-                                 "date": now - timedelta(days=9), "summary": ""}],
-             "https://n/feed": [{"title": "Yerli yapay zeka modeli", "url": "https://n/1", "date": now - timedelta(days=9),
-                                 "summary": ""}]}
-    monkeypatch.setattr(tr_reel, "tr_feeds", lambda: feeds)
-    monkeypatch.setattr(tr_reel, "_items", lambda feed: [dict(i) for i in items[feed["url"]]])
-    monkeypatch.setattr(tr_reel, "load_history", lambda: [])
-    assert [i["url"] for i in tr_reel.fetch_tr()] == ["https://g/1"]
+    posts = [{"title": "New in Gemini", "url": "https://g/1", "date": now - timedelta(days=9), "summary": ""},
+             {"title": "Old", "url": "https://g/2", "date": now - timedelta(days=20), "summary": ""},
+             {"title": "Used", "url": "https://g/3", "date": now - timedelta(days=1), "summary": ""}]
+    sources = tmp_path / "news_sources.json"
+    sources.write_text('{"feeds": [{"name": "Gemini", "url": "u"}]}', encoding="utf-8")
+    monkeypatch.setattr(guide_reel, "SOURCES_PATH", sources)
+    monkeypatch.setattr(guide_reel, "_items", lambda feed: [dict(i) for i in posts])
+    monkeypatch.setattr(guide_reel, "load_history", lambda: ["https://g/3"])
+    assert [i["url"] for i in guide_reel.fetch_guide()] == ["https://g/1"]

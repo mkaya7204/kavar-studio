@@ -34,8 +34,11 @@ CONCEPTS = {
                      "on the Hugging Face blog counts as its own. Off concept: gaming or hardware promotions, "
                      "launch events, sales, and stories with no AI in them.",
     "tool_reel": "11:45 tool Reel: one AI tool a Turkish viewer could use today, shown working.",
-    "tr_reel": "07:30 morning Reel: AI and technology developments in Turkey (Turkish institutions, "
-               "companies, universities, public services, Turkish users).",
+    "guide_reel": "07:30 guide Reel (D-31): a feature of a known AI product (ChatGPT, Gemini, Claude, Copilot, "
+                  "YouTube, Android, WhatsApp, Google Search, Workspace...) that a Turkish viewer can use today, "
+                  "and how to use it right: where it is, what to ask, which mode fits which job. Off concept: "
+                  "research papers, company or business news, partnerships, events, chips and data centres, "
+                  "enterprise-only or developer-only APIs, anything the viewer cannot try themselves.",
 }
 
 SYSTEM = """You choose content for KAVAR (@thekavar.ai), a Turkish Instagram page about AI. The page \

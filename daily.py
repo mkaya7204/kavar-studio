@@ -284,7 +284,7 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     duration = json.loads((out / "reel_qa.json").read_text(encoding="utf-8"))["pacing"]["duration_sec"] \
         if (out / "reel_qa.json").exists() else 0.0
     log_reel(out.name, script, duration, kind="trial" if cmd and any("trial_reel" in c for c in cmd)
-             else "tr" if cmd and any("tr_reel" in c for c in cmd) else "tool")
+             else "guide" if cmd and any("guide_reel" in c for c in cmd) else "tool")
     if verdict["verdict"] != "publish":
         update_metrics(out.name, status=f"rejected: {'; '.join(verdict['problems'][:3])}")
         log("   reel not queued")
@@ -292,7 +292,7 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"]}, True
 
 
-STAGES = ("morning", "rest")  # D-29: the 07:30 Turkey Reel first, the rest after it is scheduled
+STAGES = ("morning", "rest")  # D-29/D-31: the 07:30 guide Reel first, the rest after it is scheduled
 
 
 def _marker() -> Path:
@@ -316,15 +316,15 @@ def _mark_done(stage: str) -> None:
                                   "stages": sorted(set(stages_done()) | {stage}, key=STAGES.index)}), encoding="utf-8")
 
 
-def produce_tr_reel() -> dict | None:
-    """The 07:30 Turkey Reel (D-29); None if no story had the institution's own page, or the editor said no."""
-    log("reel: 07:30 Türkiye Reel")
+def produce_guide_reel() -> dict | None:
+    """The 07:30 guide Reel (D-31); None if no company post fit the concept, or the editor said no."""
+    log("reel: 07:30 Rehber Reel")
     try:
-        item, _ = _reel_attempt([sys.executable, "src/tr_reel.py"])
+        item, _ = _reel_attempt([sys.executable, "src/guide_reel.py"])
     except Exception as exc:  # noqa: BLE001  the rest of the day still runs
-        log(f"   Türkiye Reel failed: {type(exc).__name__}: {str(exc)[:300]}")
+        log(f"   Rehber Reel failed: {type(exc).__name__}: {str(exc)[:300]}")
         return None
-    return {**item, "concept": "tr"} if item else None
+    return {**item, "concept": "guide"} if item else None
 
 
 def produce(only: str = "") -> None:
@@ -348,7 +348,7 @@ def produce(only: str = "") -> None:
             only = "rest"
     slots = schedule()["slots"]
     if only in ("", "morning"):
-        morning = produce_tr_reel() if any(s.get("concept") == "tr" for s in slots) else None
+        morning = produce_guide_reel() if any(s.get("concept") == "guide" for s in slots) else None
         save_queue(_build_queue(slots, [], [], morning))
         log(f"queued 07:30: reel {morning['title'] if morning else '-'} [{'ready' if morning else 'empty'}]")
         _mark_done("morning")  # tried: the rest of the day starts even without a morning Reel
@@ -370,11 +370,11 @@ def _produce_rest(slots: list[dict], only: str) -> None:
             news = produce_news_items(sum(s["kind"] == "carousel" for s in slots))
         except Exception as exc:
             log(f"news production failed: {type(exc).__name__}: {str(exc)[:300]}")
-    # the morning stage's Turkey Reel stays in its slot when the rest is made in the same run
-    morning = next((q for q in load_queue() if q.get("concept") == "tr" and q["status"] == "ready"), None)
+    # the morning stage's guide Reel stays in its slot when the rest is made in the same run
+    morning = next((q for q in load_queue() if q.get("concept") == "guide" and q["status"] == "ready"), None)
     save_queue(_build_queue(slots, list(news), [], morning))  # approved carousels survive a Reel crash or timeout
     reels: list[dict] = []  # best first: the "Biz denedik" Reel, then tool Reels
-    wanted = sum(s["kind"] == "reel" and s.get("concept") != "tr" for s in slots)
+    wanted = sum(s["kind"] == "reel" and s.get("concept") != "guide" for s in slots)
     if wanted and only != "news":
         if trial := produce_trial_reel(news):
             reels.append(trial)
@@ -401,10 +401,10 @@ def _produce_rest(slots: list[dict], only: str) -> None:
 def _build_queue(slots: list[dict], news: list[dict], reels: list[dict], morning: dict | None = None) -> list[dict]:
     """Carousels fill their slots in order. Reels (best first) fill the reel slots from the LAST one
     back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16).
-    The 07:30 slot (concept "tr", D-29) takes only the Turkey Reel, and the Turkey Reel only that slot."""
-    reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel" and s.get("concept") != "tr"]
+    The 07:30 slot (concept "guide", D-31) takes only the guide Reel, and the guide Reel only that slot."""
+    reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel" and s.get("concept") != "guide"]
     by_slot = dict(zip(reversed(reel_slots), reels))
-    by_slot.update({i: morning for i, s in enumerate(slots) if s.get("concept") == "tr" and morning})
+    by_slot.update({i: morning for i, s in enumerate(slots) if s.get("concept") == "guide" and morning})
     queue = []
     for i, s in enumerate(slots):
         item = news.pop(0) if s["kind"] == "carousel" and news else by_slot.get(i)

@@ -42,7 +42,7 @@ def reel_sandbox(monkeypatch, tmp_path):
 def test_attempt_is_silent_and_only_the_approved_reel_is_voiced(monkeypatch, reel_sandbox):
     daily, calls = reel_sandbox
     monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "publish", "problems": []})
-    item, rendered = daily._reel_attempt(["python", "src/tr_reel.py"])
+    item, rendered = daily._reel_attempt(["python", "src/guide_reel.py"])
     assert item and rendered
     assert calls[0][1] == "1"  # the attempt: draft voice, no credits
     assert "src/voice_final.py" in calls[1][0] and calls[1][1] is None  # George, once, after approval
@@ -78,6 +78,6 @@ def test_draft_timings_follow_georges_pace_and_length_cap():
 
 
 def test_the_pipelines_never_call_the_paid_voice_directly():
-    for path in ("main.py", "src/trial_reel.py", "src/tr_reel.py"):
+    for path in ("main.py", "src/trial_reel.py", "src/guide_reel.py"):
         src = (ROOT / path).read_text(encoding="utf-8")
         assert "reel_voice(" in src and "synthesize(" not in src, path

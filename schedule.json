@@ -1,11 +1,11 @@
 {
-  "_help": "Daily autopilot (daily.py). produce_at: when content is made and reviewed; slots: publish times in order (queue item 1, 2, 3). kind: carousel (news) or reel. Change times here, then run setup_tasks.ps1 again. concept tr = the 07:30 Turkey Reel (D-29), made first in its own stage.",
+  "_help": "Daily autopilot (daily.py). produce_at: when content is made and reviewed; slots: publish times in order (queue item 1, 2, 3). kind: carousel (news) or reel. Change times here, then run setup_tasks.ps1 again. concept guide = the 07:30 guide Reel (D-31), made first in its own stage.",
   "produce_at": "06:30",
   "slots": [
     {
       "time": "07:30",
       "kind": "reel",
-      "concept": "tr"
+      "concept": "guide"
     },
     {
       "time": "11:45",
