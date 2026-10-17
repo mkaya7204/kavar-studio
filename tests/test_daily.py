@@ -185,3 +185,23 @@ def test_a_site_that_refuses_the_cloud_does_not_eat_the_news_tries(monkeypatch, 
     daily.produce_news_items(2)
     assert sum("openai.com" in u for u in tried) == 1
     assert sum("huggingface.co" in u for u in tried) == 3
+
+
+def test_off_concept_and_repeat_stories_are_never_used(monkeypatch, sandbox):
+    """10-17 dry run: a gaming promotion reached the 18:00 slot because it was only moved down."""
+    news = [{"title": "DLSS on GeForce NOW", "url": "https://blogs.nvidia.com/a", "source": "NVIDIA",
+             "rank": {"score": 17, "category": "gaming_hardware", "company": "NVIDIA", "reason": "", "fits": False,
+                      "repeat": False}},
+            {"title": "Same as yesterday", "url": "https://x.com/b", "source": "X",
+             "rank": {"score": 25, "category": "model_release", "company": "X", "reason": "", "fits": True,
+                      "repeat": True}},
+            {"title": "Tested model", "url": "https://hf.co/c", "source": "HF", "testable": True,
+             "rank": {"score": 10, "category": "model_release", "company": "Y", "reason": "", "fits": False,
+                      "repeat": False}}]
+    monkeypatch.setattr(daily, "fetch_news", lambda n: news)
+    monkeypatch.setattr(daily, "testable_first", lambda c: c)
+    monkeypatch.setattr(daily, "mark_used", lambda url: None)
+    tried = []
+    monkeypatch.setattr(daily, "produce_news", lambda item: tried.append(item["title"]) or (_ for _ in ()).throw(RuntimeError("x")))
+    daily.produce_news_items(2)
+    assert tried == ["Tested model"]

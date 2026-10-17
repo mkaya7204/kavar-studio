@@ -2,13 +2,80 @@
   "_help": "RSS feeds for news mode (python carousel.py --news). priority: higher is picked first among fresh items (official company sources over press). Only the companies' own blogs, whose images are their own press assets: no press sites (The Verge, TechCrunch... removed 2026-10-16, user: own visuals only) and never other creators' social posts.",
   "max_age_hours": 72,
   "feeds": [
-    {"name": "OpenAI", "url": "https://openai.com/news/rss.xml", "priority": 3},
-    {"name": "Google DeepMind", "url": "https://deepmind.google/blog/rss.xml", "priority": 3},
-    {"name": "Google", "url": "https://blog.google/technology/ai/rss/", "priority": 3},
-    {"name": "NVIDIA", "url": "https://blogs.nvidia.com/feed/", "priority": 2},
-    {"name": "Hugging Face", "url": "https://huggingface.co/blog/feed.xml", "priority": 2},
-    {"name": "Qwen", "url": "https://qwenlm.github.io/blog/index.xml", "priority": 3},
-    {"name": "Google Research", "url": "https://blog.research.google/feeds/posts/default", "priority": 2},
-    {"name": "Microsoft Research", "url": "https://www.microsoft.com/en-us/research/feed/", "priority": 2}
+    {
+      "name": "OpenAI",
+      "url": "https://openai.com/news/rss.xml",
+      "priority": 3
+    },
+    {
+      "name": "Google DeepMind",
+      "url": "https://deepmind.google/blog/rss.xml",
+      "priority": 3
+    },
+    {
+      "name": "Google",
+      "url": "https://blog.google/technology/ai/rss/",
+      "priority": 3
+    },
+    {
+      "name": "NVIDIA",
+      "url": "https://blogs.nvidia.com/feed/",
+      "priority": 2
+    },
+    {
+      "name": "Hugging Face",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "priority": 2
+    },
+    {
+      "name": "Qwen",
+      "url": "https://qwenlm.github.io/blog/index.xml",
+      "priority": 3
+    },
+    {
+      "name": "Google Research",
+      "url": "https://blog.research.google/feeds/posts/default",
+      "priority": 2
+    },
+    {
+      "name": "Microsoft Research",
+      "url": "https://www.microsoft.com/en-us/research/feed/",
+      "priority": 2
+    },
+    {
+      "name": "Meta",
+      "url": "https://about.fb.com/news/feed/",
+      "priority": 3
+    },
+    {
+      "name": "Gemini",
+      "url": "https://blog.google/products/gemini/rss/",
+      "priority": 3
+    },
+    {
+      "name": "Google Workspace",
+      "url": "https://blog.google/products/workspace/rss/",
+      "priority": 2
+    },
+    {
+      "name": "Android",
+      "url": "https://blog.google/products/android/rss/",
+      "priority": 2
+    },
+    {
+      "name": "YouTube",
+      "url": "https://blog.youtube/rss/",
+      "priority": 2
+    },
+    {
+      "name": "Samsung",
+      "url": "https://news.samsung.com/global/feed",
+      "priority": 2
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.blog/feed/",
+      "priority": 1
+    }
   ]
 }

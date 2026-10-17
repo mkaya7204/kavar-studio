@@ -129,7 +129,7 @@ def produce_news_items(count: int) -> list[dict]:
     items, chosen_titles, chosen_companies, blocked, tries = [], [], set(), set(), 0
     # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first; then the stories
     # that reach more people (D-29, src/content_ranker.py)
-    candidates = rank(testable_first(fetch_news(12)), "news_carousel")
+    candidates = rank(testable_first(fetch_news(20)), "news_carousel")  # 20: more sources since D-29
     log(f"news: {len(candidates)} fresh candidates")
     for c in candidates:
         if r := c.get("rank"):
@@ -138,7 +138,13 @@ def produce_news_items(count: int) -> list[dict]:
     for item in candidates:
         if len(items) >= count or tries >= MAX_NEWS_TRIES:
             break
-        company = ((item.get("rank") or {}).get("company") or "").strip().lower()
+        r = item.get("rank") or {}
+        if r and not item.get("testable") and (not r["fits"] or r["repeat"]):
+            # 10-17 dry run: a gaming promotion (DLSS on GeForce NOW) reached 18:00 because off-concept
+            # stories were only moved down; now they are never used
+            log(f"   skip ({'repeat' if r['repeat'] else 'off-concept'}): {item['title']}")
+            continue
+        company = (r.get("company") or "").strip().lower()
         if company and company in chosen_companies:  # one story per company a day (3 of 4 were NVIDIA, 10-16)
             log(f"   skip (already a {company} story today): {item['title']}")
             continue

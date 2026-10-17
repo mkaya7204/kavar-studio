@@ -29,8 +29,10 @@ Category = Literal["everyday_ai_product", "model_release", "ai_tool", "research_
                    "chips_infrastructure", "gaming_hardware", "policy_business", "turkey_tech"]
 
 CONCEPTS = {
-    "news_carousel": "12:30 / 18:00 news carousel: a fresh AI news story from the company's own blog, "
-                     "explained for Turkish readers (what happened, why it matters to them).",
+    "news_carousel": "12:30 / 18:00 news carousel: a fresh AI news story, explained for Turkish readers (what "
+                     "happened, why it matters to them). The sources are companies' own blogs; a company's post "
+                     "on the Hugging Face blog counts as its own. Off concept: gaming or hardware promotions, "
+                     "launch events, sales, and stories with no AI in them.",
     "tool_reel": "11:45 tool Reel: one AI tool a Turkish viewer could use today, shown working.",
     "tr_reel": "07:30 morning Reel: AI and technology developments in Turkey (Turkish institutions, "
                "companies, universities, public services, Turkish users).",
