@@ -67,3 +67,8 @@ Add new lessons at the bottom. Never delete a lesson without the user's approval
 - **What happened:** Ultracite v8. Card 02 read "Ayar yapmadan hazır preset" while the voice and captions said "Ajanın yazdığı kod tutarlı kalıyor"; card 03 read "Tutarlı ve tip güvenli kod" under "Tip güvenliği de korunuyor". The writer had put two benefits into point1, so every later card ran one step ahead of the voice. Neither the writer's checks nor the editor caught it.
 - **Fix:** the writer now measures it (`card_voice_mismatch` in src/script_writer.py): each card must share words with the part spoken under it, more than with any other part, or the draft is written again.
 - **Rule:** Card N is on screen while pointN is spoken, so key_points[N-1] and pointN say the same benefit, one benefit per point, in the same order. The editor compares each card with the words spoken under it and rejects a Reel whose cards and voice disagree.
+
+## 2026-10-17 - "No information about Turkey" is not a fact from the source
+- **What happened:** OpenAI / Itaú carousel, three test renders. Each time the writer ended a slide with "Türkiye'ye dair bir bilgi yok" (or similar), and each time the editor flagged it as something the source doesn't say, costing a fix round.
+- **Fix:** the line was removed in the fix round; this lesson stops the writer from adding it.
+- **Rule:** Mention Turkey only when the source does. If the news is limited to some countries or customers, say who can use it in the source's own words ("Brezilya'daki Itaú müşterileri") and stop there; never add "no information about Turkey".
