@@ -46,3 +46,4 @@ but not covered by a test, 🔴 open.
 - The Instagram API token is missing, so publishing is manual via Business Suite (Chrome Profile 2, low RAM).
 - Hook scenes can be static for 2.5-5 s (the editor notes it); caption grouping can split long names (e.g. "KLEIN BLACK"). The Reel writer now uses short model names.
 - The ELEVENLABS_VOICE_ID secret would override George if someone set it. It is not set today.
+- Editor lessons grow; past `LESSONS_MAX_CHARS` (src/skill_rules.py) the oldest stop reaching the editor and writers. Raised 8000 → 16000 on 10-17 when the file hit 10 kB; tests/test_guards.py checks the oldest lesson still arrives.

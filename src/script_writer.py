@@ -102,6 +102,35 @@ def _fold(text: str) -> str:
     return re.sub(r"[^a-z0-9]", "", "".join(c for c in text if not unicodedata.combining(c)).lower())
 
 
+_MATCH_STOP = {"icin", "daha", "gibi", "bunu", "senin", "olarak", "ile", "bir", "adi", "artik", "ustelik"}
+
+
+def _stems(text: str, name: str) -> set[str]:
+    """Word stems (first 5 folded letters) for a rough "same subject" test; the tool's name is left out."""
+    folded = unicodedata.normalize("NFKD", text.replace("ı", "i").replace("İ", "i"))
+    folded = "".join(c for c in folded if not unicodedata.combining(c)).lower()
+    return {w[:5] for w in re.findall(r"[a-z0-9]+", folded)
+            if len(w) >= 3 and w not in _MATCH_STOP and not (name and w in name)}
+
+
+def card_voice_mismatch(script: "VideoScript") -> list[int]:
+    """Cards (1-3) that don't match the part spoken under them: card i must share words with point i, and
+    more than with any other point. Ultracite v8, 10-17: point1 covered cards 1 and 2, so every later card
+    showed one thing while the voice said another. 0 false alarms on the 18 Reels of 10-12..10-17."""
+    seg = script.voiceover_segments
+    if not seg:
+        return []
+    name = _fold(script.tool_name)
+    spoken = [_stems(p, name) for p in (seg.point1, seg.point2, seg.point3)]
+    bad = []
+    for i, kp in enumerate(script.key_points):
+        card = _stems(f"{kp.title} {kp.detail}", name)
+        score = [len(card & s) for s in spoken]
+        if score[i] == 0 or score[i] < max(score[j] for j in range(3) if j != i):
+            bad.append(i + 1)
+    return bad
+
+
 def reel_rule_problems(script: "VideoScript") -> list[str]:
     """Measurable reel-hook-writer rules a draft breaks (empty list = all met)."""
     problems = caption_problems(script.caption, script.hashtags)
@@ -125,6 +154,10 @@ def reel_rule_problems(script: "VideoScript") -> list[str]:
         problems.append(f"voiceover has {words} words; max {high} - cut a sentence")
     if len(script.hook_candidates) < 3:
         problems.append("write 5 hook_candidates (one per pattern) before choosing the hook")
+    if bad := card_voice_mismatch(script):
+        problems.append(f"key_points {bad} don't match the voiceover part spoken under them: card N is shown "
+                        "while pointN is spoken, so key_points[N-1] must say the same thing as pointN "
+                        "(one benefit per point, in the same order)")
     texts = [script.hook, script.voiceover, script.caption, script.why_it_matters,
              *(f"{p.title} {p.detail}" for p in script.key_points)]
     if ads := sorted({m.group(0) for t in texts for m in AD_PATTERN.finditer(t or "")}):

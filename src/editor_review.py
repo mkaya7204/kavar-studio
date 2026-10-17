@@ -138,14 +138,18 @@ def review_reel(video: Path, script: dict, tool: dict) -> dict:
     if not first["ok"]:  # no need to ask anyone: a blank first frame never goes out
         return {"verdict": "reject", "problems": [f"ilk kare boş / okunaksız: {first}"], "fixes": []}
     dur = pace["duration_sec"]
-    times = [0.0, 1.0, 2.5, 5.0, round(dur * 0.5, 1), round(max(0.0, dur - 1.0), 1)]
-    sheet = contact_sheet(video_frames(video, folder, times), folder / "_review_sheet.jpg", cols=6, w=270)
+    # the middle frame plus one 1 s later: a single middle frame can fall on a card's first moment, when
+    # its box is in but its text is still arriving (Ultracite 10-17: "empty card" at 12.1 s, full at 12.5 s)
+    mid = round(dur * 0.5, 1)
+    times = [0.0, 1.0, 2.5, 5.0, mid, round(min(mid + 1.0, max(0.0, dur - 1.5)), 1), round(max(0.0, dur - 1.0), 1)]
+    sheet = contact_sheet(video_frames(video, folder, times), folder / "_review_sheet.jpg", cols=7, w=270)
     cover = make_cover(video, folder)
     work = folder / "_review_script.json"
     work.write_text(json.dumps({"tool_data_source": tool, "script": script, "measured": {
         "first_frame": first, "pacing": pace}}, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
     msg = (f"Review this {dur:.0f}-second Reel before publishing, as its retention editor.\n"
-           f"- Frames at {'/'.join(f'{t:g}' for t in times)} s (frame 0 first): {sheet.name}\n"
+           f"- Frames at {'/'.join(f'{t:g}' for t in times)} s (frame 0 first): {sheet.name}. Scenes animate "
+           f"in over ~1 s, so judge a half-built card by the frame 1 s later before calling it empty.\n"
            f"- The cover as the profile grid crops it: {Path(cover['grid']).name}\n"
            f"- Script (hook candidates, chosen hook, voiceover), caption, hashtags, tool facts and the "
            f"measured first-frame / pacing numbers: {work.name}\n"

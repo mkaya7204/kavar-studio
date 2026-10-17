@@ -48,17 +48,22 @@ Add new lessons at the bottom. Never delete a lesson without the user's approval
 - **Fix:** the template now lifts the box only into the room the shrinking headline frees (`LIFT` in templates/hyperframes_news), and the stamp sits under the box, not on it. Train with Pasta rendered again by hand (rerender/2026-10-17_train-with-pasta.json): at 2.5 s the label sits clear above the box and the stamp under it; the editor passed it.
 - **Rule:** Check the ~2.5 s frame: the small headline, the bar and the proof box never touch or overlap, and no stamp or label covers the proof's text. If they do, reject and name the frame. A writer never works around this by shortening a good headline; it is a template fault, so say "template" in the reason.
 
-## 2026-10-17 - Empty card in the middle of a Reel
-- **What happened:** Ultracite v8. The editor said the second card at 12.1 s was an empty glass box, with a 6.7 s stretch where nothing moved. Claude first took it for a frame caught while the card slides in (its text arrives 0.3-0.85 s after the box), but the hand-made second render showed the same empty card at the same time and the same long still stretch. The editor was right. The voice was ~16 s while the video ran 24 s, so the plan had time with nothing to show.
-- **Fix:** not fixed; the Reel was dropped (its proof also failed, next lesson). The cause in the builder (a card shown without its text when the plan is longer than the voice) is an open item.
-- **Rule:** A card whose box is on screen must show its text within 1 s. Check the frames around it: if the box is still empty 1 s later, or nothing moves for more than ~3 s, reject and name the time.
+## 2026-10-17 - A card caught while it enters is not an empty card
+- **What happened:** Ultracite v8. The editor said the card at 12.1 s was an empty glass box, twice (the hand-made second render had the same timing). A frame-by-frame sheet (frames.yml) showed card 02 enters at 12.0 s, its title arrives at 12.25-12.5 s and its detail at 12.75 s. The editor only sees one middle frame (half the length, 12.05 s here), which fell on the entrance. The editor was wrong on this point; its proof reasons were right (next lesson).
+- **Fix:** the editor now also gets the frame 1 s after the middle one (src/editor_review.py `review_reel`).
+- **Rule:** A card whose box is on screen and whose text arrives within 1 s is an entrance, not dead air. Before calling a card empty, look at the frame 1 s later; call it empty only if it is still empty there.
 
 ## 2026-10-17 - Proof that does not prove the hook
 - **What happened:** Craft Agents' proof was the site's English slogan card ("Work with most powerful agents..."), and Ultracite v8's proof was a random changelog bullet ("Fixing all 11: typing the users...") with red capture edges and an empty lower half. Neither shows the promise the hook makes. The editor rejected both, and it was right.
-- **Fix:** both were rendered again by hand. Craft Agents: the fresh capture found no clean proof on the site, so it was dropped. Ultracite v8: the same changelog bullet came back and the editor rejected it again, so it was dropped. A tool whose site shows no proof of the promise is skipped.
+- **Fix:** both were rendered again by hand. Craft Agents: the fresh capture found no clean proof on the site, so it was dropped. Ultracite v8: the same changelog bullet came back (it also filled the 13-15 s site shot) and the editor rejected it again, so it was dropped. A tool whose site shows no proof of the promise is skipped.
 - **Rule:** The proof under the hook shows the product doing what the hook promises: its interface, its output, or a result. A slogan, a feature list, a changelog line, a pricing box or a cut-off block is not proof. Reject it, and the writer chooses a hook the proof can show, or the tool is skipped.
 
 ## 2026-10-17 - Misspelled hashtag
 - **What happened:** Train with Pasta. The hashtags had "#applentelligence" instead of "#appleintelligence". Reels have no fix round, so the editor rejected it, and it was right.
 - **Fix:** corrected by hand in rerender/2026-10-17_train-with-pasta.json.
 - **Rule:** Every hashtag is a real, correctly spelled word or name, all lower case, without Turkish characters when the brand has none (#appleintelligence, #opensource). The writer checks each brand name letter by letter against the source.
+
+## 2026-10-17 - Card says one thing, the voice another
+- **What happened:** Ultracite v8. Card 02 read "Ayar yapmadan hazır preset" while the voice and captions said "Ajanın yazdığı kod tutarlı kalıyor"; card 03 read "Tutarlı ve tip güvenli kod" under "Tip güvenliği de korunuyor". The writer had put two benefits into point1, so every later card ran one step ahead of the voice. Neither the writer's checks nor the editor caught it.
+- **Fix:** the writer now measures it (`card_voice_mismatch` in src/script_writer.py): each card must share words with the part spoken under it, more than with any other part, or the draft is written again.
+- **Rule:** Card N is on screen while pointN is spoken, so key_points[N-1] and pointN say the same benefit, one benefit per point, in the same order. The editor compares each card with the words spoken under it and rejects a Reel whose cards and voice disagree.

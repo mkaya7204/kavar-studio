@@ -12,7 +12,7 @@ SKILLS = ROOT / ".claude" / "skills"
 
 
 LESSONS = ROOT / "rules" / "editor_lessons.md"
-LESSONS_MAX_CHARS = 8000  # newest lessons are kept when the file grows past this
+LESSONS_MAX_CHARS = 16000  # all lessons must reach the prompts; at 8000 the oldest (the price lesson) fell out on 10-17
 
 
 def editor_lessons() -> str:

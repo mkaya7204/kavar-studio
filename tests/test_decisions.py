@@ -131,3 +131,32 @@ def test_hook_subject_rule_is_loaded():
     import script_writer
 
     assert "Clear subject" in script_writer.SYSTEM_PROMPT
+
+
+def test_reel_editor_sees_the_middle_frame_and_one_second_later(monkeypatch, tmp_path):
+    """10-17: the single middle frame fell on card 2's entrance (Ultracite), so the editor called it empty."""
+    import editor_review
+
+    seen = {}
+    monkeypatch.setattr(editor_review, "first_frame_report", lambda v, f: {"ok": True})
+    monkeypatch.setattr(editor_review, "pacing_report", lambda v: {"duration_sec": 24.0})
+    monkeypatch.setattr(editor_review, "video_frames", lambda v, f, times: seen.setdefault("times", times) and [])
+    monkeypatch.setattr(editor_review, "contact_sheet", lambda imgs, out, **kw: out)
+    monkeypatch.setattr(editor_review, "make_cover", lambda v, f: {"grid": str(f / "g.jpg")})
+    monkeypatch.setattr(editor_review, "_ask", lambda folder, msg: {"verdict": "publish", "problems": [], "fixes": []})
+    editor_review.review_reel(tmp_path / "v.mp4", {}, {})
+    assert 12.0 in seen["times"] and 13.0 in seen["times"]
+
+
+def test_cards_must_match_the_voice_under_them():
+    """10-17: Ultracite's card 2 said "preset" while the voice said "consistent code" (point1 covered two cards)."""
+    from script_writer import VideoScript, card_voice_mismatch, reel_rule_problems
+
+    def load(name):
+        return VideoScript.model_validate(json.loads((ROOT / "rerender" / name).read_text(encoding="utf-8")))
+
+    bad = load("2026-10-17_ultracite-v8.json")
+    assert card_voice_mismatch(bad) == [2, 3]
+    assert any("don't match the voiceover" in p for p in reel_rule_problems(bad))
+    for good in ("2026-10-17_train-with-pasta.json", "2026-10-17_craft-agents.json", "2026-10-15_retriever-ai.json"):
+        assert card_voice_mismatch(load(good)) == [], good
