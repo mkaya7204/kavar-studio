@@ -29,6 +29,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from carousel import produce_news  # noqa: E402
 from carousel_renderer import RenderError  # noqa: E402
+from content_ranker import rank  # noqa: E402
 from editor_review import review_carousel, review_reel  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
 from news_fetcher import fetch_news, mark_used  # noqa: E402
@@ -125,13 +126,22 @@ FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (on
 
 
 def produce_news_items(count: int) -> list[dict]:
-    items, chosen_titles, blocked, tries = [], [], set(), 0
-    # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first
-    candidates = testable_first(fetch_news(12))
+    items, chosen_titles, chosen_companies, blocked, tries = [], [], set(), set(), 0
+    # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first; then the stories
+    # that reach more people (D-29, src/content_ranker.py)
+    candidates = rank(testable_first(fetch_news(12)), "news_carousel")
     log(f"news: {len(candidates)} fresh candidates")
+    for c in candidates:
+        if r := c.get("rank"):
+            log(f"   rank {r['score']:>2} {r['category']:<20} {'' if r['fits'] else 'off-concept '}"
+                f"{'repeat ' if r['repeat'] else ''}{c['title'][:70]} ({r['reason'][:90]})")
     for item in candidates:
         if len(items) >= count or tries >= MAX_NEWS_TRIES:
             break
+        company = ((item.get("rank") or {}).get("company") or "").strip().lower()
+        if company and company in chosen_companies:  # one story per company a day (3 of 4 were NVIDIA, 10-16)
+            log(f"   skip (already a {company} story today): {item['title']}")
+            continue
         host = urlsplit(item["url"]).hostname or ""
         if host in blocked:  # 10-17: openai.com answered 403 to the cloud three times, using half the tries
             log(f"   skip ({host} refuses this machine): {item['title']}")
@@ -153,8 +163,10 @@ def produce_news_items(count: int) -> list[dict]:
             continue
         if ok:
             tested = "trial_note" in json.loads((folder / "article" / "article.json").read_text(encoding="utf-8"))
-            items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": tested})
+            items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": tested,
+                          "category": (item.get("rank") or {}).get("category", "")})
             chosen_titles.append(item["title"])
+            chosen_companies.add(company)
         else:
             log(f"   rejected, not queued: {folder.name}")
     # a carousel with our own test takes the day's first carousel slot

@@ -21,6 +21,7 @@ def sandbox(monkeypatch, tmp_path):
     monkeypatch.setattr(daily, "schedule", lambda: SLOTS)
     monkeypatch.setitem(sys.modules, "ig_publisher", types.SimpleNamespace(refresh_token=lambda: False))
     monkeypatch.delenv("KAVAR_FORCE", raising=False)
+    monkeypatch.setattr(daily, "rank", lambda c, *a, **k: c)  # no Claude call in tests
     return tmp_path
 
 

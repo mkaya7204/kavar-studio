@@ -96,7 +96,9 @@ def testable_first(candidates: list[dict]) -> list[dict]:
     runnable = [it.index for it in items if it.kind == "image" or can_llm]
     releases = [it.index for it in items]
     order = list(dict.fromkeys(runnable + releases))  # runnable first, then the other new releases
-    return [candidates[i] for i in order] + [c for i, c in enumerate(candidates) if i not in order]
+    # marked, so the audience ranking (content_ranker) never moves a runnable release down
+    return ([{**candidates[i], "testable": i in runnable} for i in order]
+            + [c for i, c in enumerate(candidates) if i not in order])
 
 
 def _norm(s: str) -> str:
