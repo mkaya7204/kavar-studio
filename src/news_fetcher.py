@@ -87,6 +87,19 @@ def fetch_news(limit: int = 5) -> list[dict]:
     return fresh[:limit]
 
 
+def feed_item(url: str) -> dict | None:
+    """The feed entry for one article URL, used or not (its date is the real publish date)."""
+    config = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
+    for feed in config["feeds"]:
+        try:
+            for i in _items(feed):
+                if i["url"].rstrip("/") == url.rstrip("/"):
+                    return {**i, "date": i["date"].isoformat() if i["date"] else None}
+        except (requests.RequestException, ET.ParseError):
+            continue
+    return None
+
+
 if __name__ == "__main__":
     for n in fetch_news(10):
         print(f"{n['date'][:16]}  [{n['source']}]  {n['title']}\n    {n['url']}")

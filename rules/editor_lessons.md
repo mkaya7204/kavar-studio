@@ -37,3 +37,8 @@ Add new lessons at the bottom. Never delete a lesson without the user's approval
 - **What happened:** the Nemotron "Biz denedik" Reel passed the editor with the headline "Yapay zekâya atasözünü çocuğa açıklattık". The user read it as if something had been done to a child. The editor missed it.
 - **Fix:** the headline and the spoken hook were changed by hand to "Yapay zekâ atasözünü iki cümlede açıkladı" (rerender/2026-10-16_nemotron-3-5.json).
 - **Rule:** In every headline and hook, who did what must be unmistakable. The model or tool is the subject. A causative with two objects that can be read the wrong way is a problem.
+
+## 2026-10-17 - Wrong publish date from the page
+- **What happened:** two Hugging Face carousels (IBM Granite Switch 4.1, NVIDIA Indic pretraining). The slides and footers said "2 Ekim" and "7 Eylül", but the posts were published on 15 and 16 Oct, as the screenshot on slide 2 showed. The editor rejected both, and it was right. Our capture took the first `<time>` on the page, which on Hugging Face is not the post date.
+- **Fix:** the date now comes from the news feed (`feed_published` in carousel.py, `feed_item` in src/news_fetcher.py). Both posts were made again in the cloud.
+- **Rule:** A date in the text or footer must match the date the source page shows. If they differ, or the source shows no date, reject it. The writer only names a date the article text or the feed gives.

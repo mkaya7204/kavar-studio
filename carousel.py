@@ -38,7 +38,7 @@ from fetcher import fetch_latest_tools  # noqa: E402
 from article_capture import capture_article  # noqa: E402
 from media_capturer import CaptureError, capture_site  # noqa: E402
 from model_trial import run_trial  # noqa: E402
-from news_fetcher import fetch_news, mark_used  # noqa: E402
+from news_fetcher import feed_item, fetch_news, mark_used  # noqa: E402
 from news_writer import NewsScript, generate_news, revise_news  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
 
@@ -124,6 +124,15 @@ def _finish_run(out: Path, script: dict, result: dict, brand: dict, label: str, 
     return out
 
 
+def feed_published(item: dict, page_date: str) -> str:
+    """The feed's publish date wins over the page's: on Hugging Face the first <time> on the page
+    is not the post date (10-17: "2 Ekim" / "7 Eylül" on posts from 15/16 Oct, editor rejected both)."""
+    d = item.get("date")
+    if d:
+        return d.isoformat() if hasattr(d, "isoformat") else str(d)
+    return page_date
+
+
 def produce_news(item: dict) -> Path:
     """News mode: article -> capture -> Claude news carousel -> render."""
     t0 = time.perf_counter()
@@ -132,6 +141,7 @@ def produce_news(item: dict) -> Path:
     brand = load_brand()
     print(f"\n▶ Capturing article: {item['title']}\n   {item['url']}", flush=True)
     article = capture_article(item["url"], out / "article")
+    article["published"] = feed_published(item, article["published"])
     print(f"   {article['publisher']}, {len(article['text'])} chars, {len(article['figures'])} images, "
           f"{len(article['videos'])} videos, cover={'yes' if article['cover_path'] else 'no'}")
     if not article["cover_path"] or len(article["text"]) < 600:
@@ -222,7 +232,8 @@ def main() -> int:
         return 0
 
     if args.news or args.news_url:
-        items = ([{"title": args.news_url.rstrip("/").rsplit("/", 1)[-1], "url": args.news_url}]
+        items = ([feed_item(args.news_url) or {"title": args.news_url.rstrip("/").rsplit("/", 1)[-1],
+                                                "url": args.news_url}]
                  if args.news_url else fetch_news(5))
         if not items:
             print("✖ No fresh, unused news in the feeds (see news_sources.json).")
