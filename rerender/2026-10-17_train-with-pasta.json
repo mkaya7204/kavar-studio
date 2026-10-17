@@ -1,0 +1,124 @@
+{
+  "hook_candidates": [
+    {
+      "pattern": "result",
+      "headline": "Cebinde kişisel antrenör var",
+      "spoken": "iPhone'un cebindeki kişisel antrenöre dönüşüyor."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Antrenman planı yorucu",
+      "spoken": "Antrenman planı hazırlamak seni hep yoruyor."
+    },
+    {
+      "pattern": "question",
+      "headline": "Antrenmanda eller serbest mi?",
+      "spoken": "Antrenman sırasında telefona hâlâ dokunuyor musun?"
+    },
+    {
+      "pattern": "curiosity",
+      "headline": "Telefonun artık seni çalıştırıyor",
+      "spoken": "iPhone'un artık seni çalıştırıyor, hem de dokunmadan."
+    },
+    {
+      "pattern": "result",
+      "headline": "Eller serbest kişisel antrenör",
+      "spoken": "iPhone'unda eller serbest bir kişisel antrenör çalışıyor."
+    }
+  ],
+  "hook_pattern": "question",
+  "hook": "Antrenmanda eller serbest mi?",
+  "voiceover": "Antrenman sırasında telefona hâlâ dokunuyor musun? Adı Train with Pasta, iPhone için yapay zekâlı bir kişisel antrenör. Antrenmanlar eller serbest, yapay zekâ eşliğinde ilerliyor. Antrenman planlarını da senin için hazırlıyor. Üstelik arkasında Apple Intelligence var. Bunu spora yeni başlayan arkadaşına gönder.",
+  "voiceover_segments": {
+    "hook": "Antrenman sırasında telefona hâlâ dokunuyor musun?",
+    "point1": "Adı Train with Pasta, iPhone için yapay zekâlı bir kişisel antrenör.",
+    "point2": "Antrenmanlar eller serbest, yapay zekâ eşliğinde ilerliyor.",
+    "point3": "Antrenman planlarını da senin için hazırlıyor.",
+    "why": "Üstelik arkasında Apple Intelligence var.",
+    "cta": "Bunu spora yeni başlayan arkadaşına gönder."
+  },
+  "shots": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 3.0,
+      "type": "screenshot",
+      "direction": "Site hero: uygulamanın iPhone ekranı, başlık altında kanıt görseli",
+      "on_screen_text": "Antrenmanda eller serbest mi?"
+    },
+    {
+      "start_sec": 3.0,
+      "end_sec": 8.0,
+      "type": "screen_recording",
+      "direction": "Sitede uygulamanın adı ve 'cebinde kişisel antrenör' bölümüne kaydır",
+      "on_screen_text": "Train with Pasta"
+    },
+    {
+      "start_sec": 8.0,
+      "end_sec": 12.0,
+      "type": "screenshot",
+      "direction": "Eller serbest yapay zekâ antrenman görseli",
+      "on_screen_text": "Eller serbest antrenman"
+    },
+    {
+      "start_sec": 12.0,
+      "end_sec": 16.0,
+      "type": "screenshot",
+      "direction": "Antrenman planı bölümü",
+      "on_screen_text": "Planını da hazırlıyor"
+    },
+    {
+      "start_sec": 16.0,
+      "end_sec": 19.0,
+      "type": "text_overlay",
+      "direction": "Apple Intelligence vurgusu, sade metin kartı",
+      "on_screen_text": "Arkasında Apple Intelligence"
+    },
+    {
+      "start_sec": 19.0,
+      "end_sec": 22.0,
+      "type": "text_overlay",
+      "direction": "Gönder önerisi ve @thekavar.ai kapanışı",
+      "on_screen_text": "Spora başlayan arkadaşına gönder"
+    }
+  ],
+  "key_points": [
+    {
+      "title": "Cebinde kişisel antrenör",
+      "detail": "iPhone için yapay zekâlı bir antrenman uygulaması."
+    },
+    {
+      "title": "Dokunmadan antrenman yaparsın",
+      "detail": "Antrenmanlar eller serbest ilerliyor."
+    },
+    {
+      "title": "Planın hazır gelir",
+      "detail": "Uygulama antrenman planlarını senin için hazırlıyor."
+    }
+  ],
+  "why_it_matters": "Telefona dokunmadan, yapay zekâ eşliğinde antrenman yapabilirsin.",
+  "caption": "Apple Intelligence ile çalışan, iPhone için eller serbest bir kişisel antrenör 💪 Antrenman planlarını da hazırlıyor. Spora başlamak isteyen birini hatırladın mı?",
+  "hashtags": [
+    "#yapayzeka",
+    "#aitools",
+    "#iphone",
+    "#fitness",
+    "#appleintelligence"
+  ],
+  "tool_name": "Train with Pasta",
+  "website_url": "https://pppasta.com/",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "voiceover_words": 41,
+  "est_duration_sec": 16.4,
+  "hook_judge": {
+    "scores": [
+      3,
+      6,
+      7,
+      3,
+      6
+    ],
+    "best": 2,
+    "reason": "Aday 2, sessiz izleyen biri için bile net ve gerçek bir sıkıntıya (antrenmanda telefona dokunmak) seslenen, \"eller serbest\" vaadini araç verisiyle destekleyen, doğal Türkçe ve 32 karakter sınırı içinde bir soru; 3 numara başlıkta 33 karakter olduğu için elendi, 0 ise başlık ile söylenen cümle farklı ve \"iPhone'un cebindeki ... dönüşüyor\" cümlesi bozuk."
+  }
+}

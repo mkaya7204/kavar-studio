@@ -53,6 +53,11 @@ jobs:
           D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 output/final/final_video.mp4)
           ffmpeg -y -loglevel error -ss "$(echo "$D - 0.5" | bc)" -i output/final/final_video.mp4 -frames:v 1 output/final/last_frame.jpg
           python -c "import sys; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import make_cover; make_cover(Path('output/final/final_video.mp4'), Path('output/final'))" || true
+      - name: Editor review (the same check production uses; prints the verdict)
+        if: always()
+        continue-on-error: true
+        run: |
+          python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_reel; v=review_reel(Path('output/final/final_video.mp4'), json.load(open('rerender/${{ github.event.inputs.script }}',encoding='utf-8')), json.load(open('output/temp/tool.json',encoding='utf-8'))); print(json.dumps(v, indent=1, ensure_ascii=False)); Path('output/final/editor.json').write_text(json.dumps(v, indent=1, ensure_ascii=False), encoding='utf-8')"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -62,4 +67,6 @@ jobs:
             output/final/cover.jpg
             output/final/last_frame.jpg
             output/final/post.json
+            output/final/editor.json
+            output/final/_review_sheet.jpg
           retention-days: 7

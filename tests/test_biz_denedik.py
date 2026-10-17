@@ -233,3 +233,14 @@ def test_proof_safe_box_matches_the_template_zoom():
         encoding="utf-8")
     assert 'tl.fromTo("#hook-proof-img", { scale: 1.0 }, { scale: 1.12' in html
     assert "transform-origin: 50% 30%;" in html
+
+
+def test_hook_box_never_rises_into_the_headline():
+    """10-17: a fixed 150 px lift put a two-line headline under the proof box, and the domain stamp
+    sat on the proof's text (editor rejected Train with Pasta and Craft Agents)."""
+    html = (Path(__file__).resolve().parent.parent / "templates" / "hyperframes_news" / "index.html").read_text(
+        encoding="utf-8")
+    assert 'const LIFT = Math.min(150, Math.round(0.38 * $("hook-title").offsetHeight + 54));' in html
+    assert 'tl.to("#hook-proof", { y: -LIFT' in html and 'y: -150' not in html
+    assert '<div id="hook-proof-clip"><img id="hook-proof-img"' in html
+    assert "top: calc(100% + 18px)" in html

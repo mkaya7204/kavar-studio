@@ -231,10 +231,16 @@
         height: 660px; /* PROOF_SIZE in src/hyperframes_builder.py; ends above the bottom ~35% that Instagram's caption UI covers */
         margin-top: 34px;
         border-radius: 36px;
-        overflow: hidden;
         border: 4px solid var(--neon);
         box-shadow: 0 0 40px rgba(31, 213, 255, 0.55);
         background: #0b1220;
+      }
+      /* the image is clipped here, so the domain stamp can sit under the box, never on the proof (10-17) */
+      #hook-proof-clip {
+        position: absolute;
+        inset: 0;
+        border-radius: 32px;
+        overflow: hidden;
       }
       #hook-proof img {
         position: absolute;
@@ -260,7 +266,7 @@
       #hook-stamp {
         position: absolute;
         left: 24px;
-        bottom: 24px;
+        top: calc(100% + 18px); /* under the box: on the box it covered the proof's text (Craft Agents, 10-17) */
         padding: 12px 30px;
         border-radius: 999px;
         background: var(--neon);
@@ -593,7 +599,7 @@
         <div id="hook-kicker" class="black">GÜNDEM</div>
         <h1 id="hook-title" class="black">Başlık</h1>
         <i id="hook-bar"></i>
-        <div id="hook-proof"><img id="hook-proof-img" src="assets/proof.png" alt="" /><div id="hook-stamp" class="black" data-domain></div></div>
+        <div id="hook-proof"><div id="hook-proof-clip"><img id="hook-proof-img" src="assets/proof.png" alt="" /></div><div id="hook-stamp" class="black" data-domain></div></div>
       </section>
 
       <!-- 3-20: three point cards with site screenshots in between -->
@@ -835,9 +841,13 @@
       // "no change in the first 3 s" (2026-10-16). The headline steps back, the proof steps forward.
       const MOVE = Math.min(1.1, Math.max(0.4, hookEnd - 1.0));
       if (v.has_proof !== false && v.has_proof !== "false") {
+        // the box rises only into the room the shrinking headline frees: a fixed 150 px put a two-line
+        // headline's second line under the box top (editor rejects, 10-17). Room = 0.38 x title height
+        // + its 40 px lift, minus the box's 1.06 growth (~20 px) and the bar with its gaps (~36 px).
+        const LIFT = Math.min(150, Math.round(0.38 * $("hook-title").offsetHeight + 54));
         tl.to("#hook-title", { y: -40, scale: 0.62, transformOrigin: "left top", duration: 0.45, ease: "power3.inOut" }, MOVE);
-        tl.to("#hook-bar", { y: -150, scaleX: 0.5, duration: 0.45, ease: "power3.inOut" }, MOVE);
-        tl.to("#hook-proof", { y: -150, scale: 1.06, duration: 0.45, ease: "power3.inOut" }, MOVE);
+        tl.to("#hook-bar", { y: -LIFT, scaleX: 0.5, duration: 0.45, ease: "power3.inOut" }, MOVE);
+        tl.to("#hook-proof", { y: -LIFT, scale: 1.06, duration: 0.45, ease: "power3.inOut" }, MOVE);
         tl.fromTo("#hook-stamp", { opacity: 0, y: 20, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(2)", immediateRender: false }, MOVE + 0.2);
       }
       tl.to(["#hook-title", "#hook-bar", "#hook-proof", "#hook-stamp"], { opacity: 0, y: -60, duration: 0.25, ease: "power2.in", stagger: 0.03 }, hookEnd - 0.3);

@@ -1,0 +1,117 @@
+{
+  "hook_candidates": [
+    {
+      "pattern": "result",
+      "headline": "Ajanlar tek uygulamada çalışıyor",
+      "spoken": "Yapay zekâ ajanların tek uygulamada çalışıyor."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Ajan işleri dört yana dağılıyor",
+      "spoken": "Ajan işlerin her yere dağılıyor, değil mi?"
+    },
+    {
+      "pattern": "question",
+      "headline": "Ajanlarını nerede yönetiyorsun?",
+      "spoken": "Yapay zekâ ajanlarını tam olarak nerede yönetiyorsun?"
+    },
+    {
+      "pattern": "curiosity",
+      "headline": "Ajanlar için açık kaynak çözüm",
+      "spoken": "Ajanlar için açık kaynaklı bir uygulama buldum."
+    },
+    {
+      "pattern": "question",
+      "headline": "Ajanlara API bağlamak bu kadar mı?",
+      "spoken": "Ajanına istediğin API'yi bağlayabilsen ne olurdu?"
+    }
+  ],
+  "hook_pattern": "question",
+  "hook": "Ajanlarını nerede yönetiyorsun?",
+  "voiceover": "Yapay zekâ ajanlarını tam olarak nerede yönetiyorsun? Adı Craft Agents, ajanlar için açık kaynaklı bir masaüstü uygulaması. Herhangi bir API ya da MCP sunucusunu bağlıyorsun. Birden fazla işi aynı anda yürütüyorsun. Ajan işlerin tek pencerede toplanıyor. Bunu geliştirici arkadaşına gönder.",
+  "voiceover_segments": {
+    "hook": "Yapay zekâ ajanlarını tam olarak nerede yönetiyorsun?",
+    "point1": "Adı Craft Agents, ajanlar için açık kaynaklı bir masaüstü uygulaması.",
+    "point2": "Herhangi bir API ya da MCP sunucusunu bağlıyorsun.",
+    "point3": "Birden fazla işi aynı anda yürütüyorsun.",
+    "why": "Ajan işlerin tek pencerede toplanıyor.",
+    "cta": "Bunu geliştirici arkadaşına gönder."
+  },
+  "shots": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 3.0,
+      "type": "screenshot",
+      "direction": "Craft Agents ana ekranı, masaüstü uygulama penceresi, yavaş zoom",
+      "on_screen_text": "Ajanlarını nerede yönetiyorsun?"
+    },
+    {
+      "start_sec": 3.0,
+      "end_sec": 8.0,
+      "type": "screen_recording",
+      "direction": "Sitedeki uygulama arayüzü, açık kaynak masaüstü uygulaması vurgusu",
+      "on_screen_text": "Açık kaynak masaüstü uygulaması"
+    },
+    {
+      "start_sec": 8.0,
+      "end_sec": 12.0,
+      "type": "screenshot",
+      "direction": "API ve MCP sunucusu bağlama bölümü",
+      "on_screen_text": "API ve MCP bağla"
+    },
+    {
+      "start_sec": 12.0,
+      "end_sec": 16.0,
+      "type": "screen_recording",
+      "direction": "Birden fazla ajan işinin aynı anda yürütüldüğü ekran",
+      "on_screen_text": "Aynı anda çoklu iş"
+    },
+    {
+      "start_sec": 16.0,
+      "end_sec": 20.0,
+      "type": "text_overlay",
+      "direction": "Kısa özet kartı ve KAVAR çıkışı",
+      "on_screen_text": "Ajan işlerin tek pencerede"
+    }
+  ],
+  "key_points": [
+    {
+      "title": "Açık kaynak masaüstü uygulaması",
+      "detail": "Ajanlarla çalışmak için tasarlanmış bir uygulama."
+    },
+    {
+      "title": "İstediğin API'yi bağlarsın",
+      "detail": "Herhangi bir API ya da MCP sunucusu bağlanıyor."
+    },
+    {
+      "title": "Birden fazla işi paralel yürüt",
+      "detail": "Ajan işlerini aynı anda doğal biçimde yürütürsün."
+    }
+  ],
+  "why_it_matters": "Ajanlarla çalışırken her şey tek bir pencerede toplanıyor.",
+  "caption": "Craft Agents, yapay zekâ ajanlarıyla çalışmak için açık kaynaklı bir masaüstü uygulaması. API ya da MCP sunucusu bağlayıp birden fazla işi aynı anda yürütebiliyorsun. 🤖 Sen ajanlarını şu an nerede yönetiyorsun?",
+  "hashtags": [
+    "#yapayzeka",
+    "#aitools",
+    "#aiagents",
+    "#mcp",
+    "#opensource"
+  ],
+  "tool_name": "Craft Agents",
+  "website_url": "https://agents.craft.do/",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "voiceover_words": 40,
+  "est_duration_sec": 16.0,
+  "hook_judge": {
+    "scores": [
+      6,
+      5,
+      7,
+      4,
+      3
+    ],
+    "best": 2,
+    "reason": "Aday 2 doğrudan izleyiciye soruyor, başlık 31 karakterle sınırın içinde, başlıkla seslendirme aynı şeyi söylüyor, araç adı geçmiyor ve veriyle çelişen bir iddiası yok; aday 4 ise başlığı 34 karakter olduğu için sınırı aşıyor."
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "hook_candidates": [
+    {
+      "pattern": "result",
+      "headline": "Ajanın kodu tutarlı kalıyor",
+      "spoken": "Ajanın yazdığı kod artık tutarlı kalıyor."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Ajanın kodu hep farklı çıkıyor",
+      "spoken": "Ajanın yazdığı kod her seferinde farklı çıkıyor."
+    },
+    {
+      "pattern": "question",
+      "headline": "Ajan kodunu kim denetliyor?",
+      "spoken": "Yapay zekâ ajanın yazdığı kodu kim denetliyor?"
+    },
+    {
+      "pattern": "curiosity",
+      "headline": "Ajan kodunun tek eksiği bu",
+      "spoken": "Ajanla kod yazanların çoğu bunu atlıyor."
+    },
+    {
+      "pattern": "result",
+      "headline": "Ajan kodu tip güvenli çıkıyor",
+      "spoken": "Ajanın yazdığı kod tip güvenli çıkıyor."
+    }
+  ],
+  "hook_pattern": "result",
+  "hook": "Ajanın kodu tutarlı kalıyor",
+  "voiceover": "Ajanın yazdığı kod artık tutarlı kalıyor. Adı Ultracite v8, ajanlı geliştirme için linter ve formatlayıcı. Oxlint, Biome, ESLint için sıfır ayarlı preset. Ajanın yazdığı kod tutarlı kalıyor. Tip güvenliği de korunuyor. Kod ekipte aynı kalır. Bunu ajanla kod yazan arkadaşına gönder.",
+  "voiceover_segments": {
+    "hook": "Ajanın yazdığı kod artık tutarlı kalıyor.",
+    "point1": "Adı Ultracite v8, ajanlı geliştirme için linter ve formatlayıcı. Oxlint, Biome, ESLint için sıfır ayarlı preset.",
+    "point2": "Ajanın yazdığı kod tutarlı kalıyor.",
+    "point3": "Tip güvenliği de korunuyor.",
+    "why": "Kod ekipte aynı kalır.",
+    "cta": "Bunu ajanla kod yazan arkadaşına gönder."
+  },
+  "shots": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 2.0,
+      "type": "text_overlay",
+      "direction": "Hook headline over the Ultracite site hero as the proof image, slow zoom.",
+      "on_screen_text": "Ajanın kodu hep farklı çıkıyor"
+    },
+    {
+      "start_sec": 2.0,
+      "end_sec": 7.0,
+      "type": "screenshot",
+      "direction": "Site capture of the Ultracite hero with tagline; name shown as it is spoken.",
+      "on_screen_text": "Ultracite v8"
+    },
+    {
+      "start_sec": 7.0,
+      "end_sec": 11.0,
+      "type": "screen_recording",
+      "direction": "Scroll the site section showing Oxlint, Biome and ESLint presets.",
+      "on_screen_text": "Sıfır ayarlı preset"
+    },
+    {
+      "start_sec": 11.0,
+      "end_sec": 14.0,
+      "type": "screenshot",
+      "direction": "Site section on consistent, type-safe agent-written code.",
+      "on_screen_text": "Tutarlı kod"
+    },
+    {
+      "start_sec": 14.0,
+      "end_sec": 17.0,
+      "type": "text_overlay",
+      "direction": "Why-it-matters card over the site capture.",
+      "on_screen_text": "Kod ekipte aynı kalır"
+    },
+    {
+      "start_sec": 17.0,
+      "end_sec": 20.0,
+      "type": "b_roll",
+      "direction": "Outro with handle @thekavar.ai and small + TAKİP ET pill.",
+      "on_screen_text": "@thekavar.ai"
+    }
+  ],
+  "key_points": [
+    {
+      "title": "Ajan kodu için linter ve formatlayıcı",
+      "detail": "Ajanlı geliştirme için hazırlanmış bir linter ve formatlayıcı."
+    },
+    {
+      "title": "Ayar yapmadan hazır preset",
+      "detail": "Oxlint, Biome ve ESLint için sıfır ayarlı preset sunuyor."
+    },
+    {
+      "title": "Tutarlı ve tip güvenli kod",
+      "detail": "Ajanın yazdığı kod tutarlı ve tip güvenli kalıyor."
+    }
+  ],
+  "why_it_matters": "Ajanla yazılan kod, ekipte aynı düzende ve tip güvenli kalıyor.",
+  "caption": "Ajanlar hızlı kod yazıyor ama her biri farklı bir tarz tutturabiliyor. Ultracite v8 bu işi Oxlint, Biome ve ESLint için hazır bir preset ile ele alıyor 🧑‍💻 Sen ajanla kod yazarken hangi linter'ı kullanıyorsun?",
+  "hashtags": [
+    "#yapayzeka",
+    "#aitools",
+    "#yazılım",
+    "#kodlama",
+    "#ultracite"
+  ],
+  "tool_name": "Ultracite v8",
+  "website_url": "https://www.ultracite.ai/",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "voiceover_words": 41,
+  "est_duration_sec": 16.4,
+  "hook_judge": {
+    "scores": [
+      7,
+      6,
+      6,
+      2,
+      5
+    ],
+    "best": 0,
+    "reason": "Aday 0, sonucu doğrudan araç verisine (\"tutarlı kalıyor\") dayanarak söylüyor, başlık 27 karakter, ad yok, ilk karede ve seste aynı vaat var. Aday 3 verideki hiçbir şeyle desteklenmeyen \"çoğu atlıyor\" iddiasını uydurduğu için 3 puanı geçemiyor."
+  }
+}
