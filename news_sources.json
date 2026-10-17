@@ -77,5 +77,44 @@
       "url": "https://github.blog/feed/",
       "priority": 1
     }
-  ]
+  ],
+  "tr_feeds": [
+    {
+      "name": "Webtekno",
+      "url": "https://www.webtekno.com/rss.xml"
+    },
+    {
+      "name": "Webrazzi",
+      "url": "https://webrazzi.com/feed/"
+    },
+    {
+      "name": "AA Bilim-Teknoloji",
+      "url": "https://www.aa.com.tr/tr/rss/default?cat=bilim-teknoloji"
+    },
+    {
+      "name": "ShiftDelete",
+      "url": "https://shiftdelete.net/feed"
+    },
+    {
+      "name": "DonanımHaber",
+      "url": "https://www.donanimhaber.com/rss/tum/"
+    },
+    {
+      "name": "Chip",
+      "url": "https://www.chip.com.tr/rss"
+    },
+    {
+      "name": "Egirişim",
+      "url": "https://egirisim.com/feed/"
+    },
+    {
+      "name": "Log",
+      "url": "https://www.log.com.tr/feed/"
+    },
+    {
+      "name": "TÜBİTAK",
+      "url": "https://www.tubitak.gov.tr/tr/rss.xml"
+    }
+  ],
+  "_tr_help": "07:30 Turkey Reel (D-29): Turkish tech sites find the story; pictures come only from the institution's own page (src/tr_reel.py)."
 }

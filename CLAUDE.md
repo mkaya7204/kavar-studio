@@ -56,9 +56,12 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    accounts (D-26): `ELEVENLABS_API_KEY`, then `ELEVENLABS_API_KEY_2` when the first is refused; both speak
    George. If both fail, no Reel is made; tell the user. `probe.yml` shows both accounts' state.
    Don't propose another voice.
-7. **Schedule** (schedule.json): 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30 Reel (two Reels a
-   day since 2026-10-16: "günde tek reels yeterince takipçi getirmiyor"). The best Reel ("Biz denedik")
-   takes 20:30, a tool Reel 11:45 (`_build_queue`).
+7. **Schedule** (schedule.json): 07:30 Reel (Turkey), 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30
+   Reel. Two Reels a day since 2026-10-16 ("günde tek reels yeterince takipçi getirmiyor"); the 07:30
+   Reel since 2026-10-17 (D-29): AI and technology in Turkey only (src/tr_reel.py), produced FIRST in
+   its own stage, the rest after it is scheduled (08:00 at the latest). The best Reel ("Biz denedik")
+   takes 20:30, a tool Reel 11:45 (`_build_queue`). In every slot, content_ranker picks what reaches
+   more people inside the slot's concept; the concepts don't change.
 8. **Reel outro** shows the handle @thekavar.ai with a small "+ TAKİP ET" pill (11dcfdc). It
    was once removed without asking; never again.
 9. **Brand:** handle @thekavar.ai (brand.json). Never use other creators' content. No press-site photos

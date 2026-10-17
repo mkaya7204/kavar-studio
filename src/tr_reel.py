@@ -1,0 +1,221 @@
+"""07:30 morning Reel (D-29, user 2026-10-17): AI and technology developments in Turkey.
+
+One concept only: what Turkish institutions, companies, universities and public services do with AI
+and technology, and what changes for people in Turkey. Steps:
+  1. candidates   Turkish tech news sites and institutions' own feeds (news_sources.json "tr_feeds"),
+                  last 36 h, unused, ranked by content_ranker inside this concept
+  2. own page     the story is followed to the institution's own announcement page (Claude, web
+                  search). Pictures come only from there: the institution's own images. No own page
+                  with an image = the story is skipped (press photos stay banned, CLAUDE.md §1.9)
+  3. Reel         script (facts only from the two texts), George voice, the same template and editor
+                  as every Reel. Writes output/temp/script.json, tool.json and output/final/ like main.py.
+
+    python src/tr_reel.py            # heavy (render): cloud only
+"""
+
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from urllib.parse import urlsplit
+
+from PIL import Image, ImageOps
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from article_capture import capture_article  # noqa: E402
+from carousel_writer import _ask, _revision_prompt  # noqa: E402
+from content_ranker import rank  # noqa: E402
+from distribution import build_post  # noqa: E402
+from hyperframes_builder import FINAL_PATH, PROOF_SIZE, SHOT_NAMES, _shot_frame, build_video_hyperframes  # noqa: E402
+from media_capturer import CaptureError  # noqa: E402
+from news_fetcher import SOURCES_PATH, _items, load_history, mark_used  # noqa: E402
+from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
+                           _load_language, _save_history, _script_price_mentions, judge_hooks, reel_rule_problems)
+from tts_engine import synthesize, voice_for  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+TEMP_DIR = ROOT / "output" / "temp"
+WORK = ROOT / "output" / "tr"
+MAX_AGE_HOURS = 36
+TRIES = 3  # stories followed to an own page per morning
+WORDS = (32, 38)  # same as the "Biz denedik" Reel: under 26 s
+AI_OR_TECH = re.compile(r"yapay zek|\bai\b|\bYZ\b|chatgpt|gemini|robot|otonom|algoritma|dil modeli|veri merkez|"
+                        r"yazılım|siber|dijital|uydu|5g|yerli (?:çip|işlemci|model)|teknoloji", re.I)
+
+TR_RULES = """
+
+THIS REEL IS DIFFERENT: it is KAVAR's 07:30 morning Reel about AI and technology developments in \
+TURKEY, not a tool's website. The "tool" is the Turkish institution or company in the news.
+- hook: the development and what it means for people in Turkey, in plain words; no institution name \
+in the hook.
+- point1: names the institution and says what it did (~3 s). point2 and point3: one concrete detail \
+each, from the texts. key_points follow point1-3 in the same order.
+- Facts only from OFFICIAL PAGE and PRESS ARTICLE below. Numbers only if they appear there. If the \
+two disagree, use the official page. Neutral and factual: no political praise or criticism, no \
+"gurur", "dev adım", "tarihi" unless the official page itself says it, and then as its words.
+- The pictures are the institution's own (from its page)."""
+
+
+def tr_feeds() -> list[dict]:
+    return json.loads(SOURCES_PATH.read_text(encoding="utf-8")).get("tr_feeds", [])
+
+
+def fetch_tr(limit: int = 20) -> list[dict]:
+    """Fresh, unused AI / tech stories from the Turkish feeds, newest first."""
+    since = datetime.now(timezone.utc) - timedelta(hours=MAX_AGE_HOURS)
+    used = set(load_history())
+    items = []
+    for feed in tr_feeds():
+        try:
+            items += _items(feed)
+        except Exception as exc:  # noqa: BLE001  one dead feed never stops the morning
+            print(f"[tr] {feed['name']} skipped: {type(exc).__name__}")
+    fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used
+             and AI_OR_TECH.search(f"{i['title']} {i.get('summary', '')}")]
+    fresh.sort(key=lambda i: i["date"], reverse=True)
+    for i in fresh:
+        i["date"] = i["date"].isoformat()
+    return fresh[:limit]
+
+
+def official_page(item: dict, press_text: str) -> tuple[str, str]:
+    """(institution, URL of its own page about this story) via Claude Code web search; ("", "") if none."""
+    exe = None if os.getenv("SCRIPT_WRITER_NO_CLI") else shutil.which("claude")
+    if not exe:
+        return "", ""
+    press_hosts = {urlsplit(f["url"]).hostname for f in tr_feeds()} | {urlsplit(item["url"]).hostname}
+    schema = {"type": "object", "additionalProperties": False, "required": ["institution", "url"],
+              "properties": {"institution": {"type": "string"}, "url": {"type": "string"}}}
+    prompt = (f"A Turkish tech news site reported this story:\nTitle: {item['title']}\nURL: {item['url']}\n\n"
+              f"{press_text[:3000]}\n\nWhich Turkish institution or company is it about? Find THAT institution's "
+              f"own page about this same news (a press release, announcement or blog post on the institution's "
+              f"own official domain, e.g. turkcell.com.tr, tubitak.gov.tr, baykartech.com). Return the "
+              f"institution's name and that page's URL. Return url \"\" if you can't find the institution's own "
+              f"page for this story. Never return a news site, social media, Wikipedia or a video site.")
+    env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
+    try:
+        proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
+                               "--tools", "WebSearch,WebFetch", "--allowedTools", "WebSearch,WebFetch",
+                               "--no-session-persistence"],
+                              input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=300, env=env)
+        out = json.loads(proc.stdout).get("structured_output") or {}
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
+        return "", ""
+    url, name = out.get("url", "").strip(), out.get("institution", "").strip()
+    host = urlsplit(url).hostname or ""
+    if not url.startswith("http") or host in press_hosts or re.search(
+            r"youtube|twitter|x\.com|instagram|facebook|linkedin|wikipedia|tiktok", host):
+        return name, ""
+    return name, url
+
+
+def _frames(official: dict, folder: Path) -> dict | None:
+    """proof.png and the two site shots, all from the institution's own page."""
+    pictures = [p for p in [official.get("cover_path"), *(f["path"] for f in official.get("figures", []))] if p]
+    if not pictures:
+        return None
+    folder.mkdir(parents=True, exist_ok=True)
+    with Image.open(pictures[0]) as img:
+        ImageOps.fit(img.convert("RGB"), PROOF_SIZE, Image.LANCZOS, centering=(0.5, 0.35)).save(folder / "proof.png")
+    shots = [official["page_path"], pictures[1] if len(pictures) > 1 else pictures[0]]
+    for name, src in zip(SHOT_NAMES, shots):
+        with Image.open(src) as img:
+            img = img.convert("RGB")
+            img.thumbnail((960, 1300), Image.LANCZOS)
+            _shot_frame(img, folder / name)
+    domain = (urlsplit(official["url"]).hostname or "").removeprefix("www.")
+    return {"screenshot_path": str(folder / SHOT_NAMES[0]), "fullpage_path": str(folder / SHOT_NAMES[1]),
+            "proof_path": str(folder / "proof.png"), "logo_path": None, "domain_label": domain}
+
+
+def write_script(institution: str, press: dict, official: dict) -> dict | None:
+    language = _load_language()
+    low, high = WORDS
+    prompt = (f"Write the Reel in language code '{language}', voiceover {low}-{high} words (hard limit: under "
+              f"26 seconds).\n\nInstitution: {institution}\n\nOFFICIAL PAGE ({official['url']}, published "
+              f"{official.get('published') or '?'}):\n{official['text'][:4000]}\n\nPRESS ARTICLE "
+              f"({press['publisher']}):\n{press['text'][:3000]}")
+    system = SYSTEM_PROMPT + TR_RULES
+    fallback = None
+    for attempt in range(1, 4):
+        draft, used_model, source = _ask(prompt, system, ScriptDraft)
+        if draft is None:
+            return fallback
+        try:
+            script = VideoScript(**draft, tool_name=institution, website_url=official["url"],
+                                 source=source, model=used_model)
+        except ValueError as exc:
+            problems = str(exc)[:600]
+        else:
+            if script.voiceover_words > high:
+                problems = f"voiceover has {script.voiceover_words} words; max {high}: cut a sentence"
+            elif bad := _script_price_mentions(script):
+                problems = f"remove every price mention ({', '.join(bad)}). {NO_PRICE_RULE}"
+            elif rules := reel_rule_problems(script):
+                fallback = fallback or script
+                problems = "; ".join(rules)
+            else:
+                return script.model_dump(mode="json")
+        print(f"[tr_reel] draft {attempt} rejected: {problems[:400]}")
+        prompt = _revision_prompt(prompt, draft, problems).replace("carousel", "Reel script")
+    return fallback.model_dump(mode="json") if fallback else None
+
+
+def make_tr_reel() -> int:
+    candidates = [c for c in rank(fetch_tr(), "tr_reel", kind_prefix="tr_reel")
+                  if (c.get("rank") or {}).get("fits", True) and not (c.get("rank") or {}).get("repeat")]
+    print(f"▶ Türkiye Reel: {len(candidates)} candidates in concept", flush=True)
+    for c in candidates:
+        r = c.get("rank") or {}
+        print(f"   rank {r.get('score', '-'):>2} {c['title'][:80]} ({str(r.get('reason', ''))[:80]})")
+    for c in candidates[:TRIES]:
+        print(f"\n--- {c['source']}: {c['title']}", flush=True)
+        try:
+            press = capture_article(c["url"], WORK / "press")
+            institution, url = official_page(c, press["text"])
+            if not url:
+                print(f"   no own page of {institution or 'the institution'} for this story: skipped")
+                continue
+            print(f"   own page: {institution} {url}")
+            official = capture_article(url, WORK / "official")
+        except CaptureError as exc:
+            print(f"   capture failed: {exc}")
+            continue
+        capture = _frames(official, TEMP_DIR / "tr_frames")
+        if capture is None:
+            print("   the own page has no picture of its own: skipped (no press photos)")
+            continue
+        script = write_script(institution, press, official)
+        if script is None:
+            print("   no valid script")
+            continue
+        tool = {"tool_name": institution, "website_url": url,
+                "kind": "07:30 Turkey Reel (D-29): the facts must come from the institution's own page "
+                        "(official_page) or the press article; the pictures are the institution's own.",
+                "official_page": official["text"][:4000], "press_article": press["text"][:3000],
+                "press_url": c["url"]}
+        script = judge_hooks(script, tool)
+        TEMP_DIR.mkdir(parents=True, exist_ok=True)
+        (TEMP_DIR / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
+        (TEMP_DIR / "tool.json").write_text(json.dumps(tool, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(f"   hook: \"{script['hook']}\", {script['voiceover_words']} words")
+        voice = synthesize(script["voiceover"], voice=voice_for(_load_language()))
+        video = build_video_hyperframes(script, capture, voice["audio_path"], FINAL_PATH)
+        print(f"   {video['duration_sec']}s, {video['scenes']}")
+        _save_history(VideoScript.model_validate(script))
+        mark_used(c["url"])
+        post = build_post(script, video)
+        (FINAL_PATH.parent / "post.json").write_text(json.dumps(post, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(f"✅ Reel: {FINAL_PATH}")
+        return 0
+    print("✖ no Turkey story with the institution's own page and picture this morning")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(make_tr_reel())

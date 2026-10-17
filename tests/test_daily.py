@@ -94,7 +94,7 @@ def test_an_empty_day_is_not_marked_done(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
     monkeypatch.setattr(daily, "produce_reel", lambda: None)
     daily.produce()
-    assert not (sandbox / "state" / "last_produce.json").exists()
+    assert "rest" not in daily.stages_done()  # the 08:00 run and the backups may try the rest again
 
 
 def test_a_done_day_is_skipped(monkeypatch, sandbox):
@@ -205,3 +205,34 @@ def test_off_concept_and_repeat_stories_are_never_used(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "produce_news", lambda item: tried.append(item["title"]) or (_ for _ in ()).throw(RuntimeError("x")))
     daily.produce_news_items(2)
     assert tried == ["Tested model"]
+
+
+TR_SLOTS = [{"time": "07:30", "kind": "reel", "concept": "tr"}] + SLOTS["slots"]
+
+
+def test_morning_stage_makes_only_the_turkey_reel_and_next_runs_the_rest(monkeypatch, sandbox):
+    """D-29: the 07:30 Turkey Reel first, on its own; the rest after it (cron-job.org 06:17 and 08:00 "next")."""
+    monkeypatch.setattr(daily, "schedule", lambda: {"slots": TR_SLOTS})
+    monkeypatch.setattr(daily, "produce_tr_reel", lambda: {"kind": "reel", "folder": "tr", "title": "TR", "concept": "tr"})
+    calls = []
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: calls.append("news") or [])
+    monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda: {"kind": "reel", "folder": "t", "title": "Tool"})
+    daily.produce("next")
+    assert calls == [] and daily.stages_done() == ["morning"]
+    q = daily.load_queue()
+    assert q[0]["time"] == "07:30" and q[0]["status"] == "ready" and q[0]["title"] == "TR"
+    daily.produce("next")
+    assert calls == ["news"] and daily.stages_done() == ["morning", "rest"]
+    q = daily.load_queue()
+    assert q[0]["title"] == "TR"  # the morning Reel stays when the rest is made
+    assert all(x.get("concept") != "tr" for x in q[1:])  # the Turkey Reel never lands in another slot
+    daily.produce("next")  # both done: nothing runs
+    assert calls == ["news"]
+
+
+def test_no_turkey_story_still_lets_the_rest_start(monkeypatch, sandbox):
+    monkeypatch.setattr(daily, "schedule", lambda: {"slots": TR_SLOTS})
+    monkeypatch.setattr(daily, "produce_tr_reel", lambda: None)
+    daily.produce("morning")
+    assert daily.stages_done() == ["morning"] and daily.load_queue()[0]["status"] == "empty"

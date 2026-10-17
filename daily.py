@@ -248,7 +248,8 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
     duration = json.loads((out / "reel_qa.json").read_text(encoding="utf-8"))["pacing"]["duration_sec"] \
         if (out / "reel_qa.json").exists() else 0.0
-    log_reel(out.name, script, duration, kind="trial" if cmd and any("trial_reel" in c for c in cmd) else "tool")
+    log_reel(out.name, script, duration, kind="trial" if cmd and any("trial_reel" in c for c in cmd)
+             else "tr" if cmd and any("tr_reel" in c for c in cmd) else "tool")
     if verdict["verdict"] != "publish":
         update_metrics(out.name, status=f"rejected: {'; '.join(verdict['problems'][:3])}")
         log("   reel not queued")
@@ -256,32 +257,89 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"]}, True
 
 
+STAGES = ("morning", "rest")  # D-29: the 07:30 Turkey Reel first, the rest after it is scheduled
+
+
+def _marker() -> Path:
+    return ROOT / "state" / "last_produce.json"
+
+
+def stages_done(day: date | None = None) -> list[str]:
+    """Stages already produced today (an old marker without "stages" means the whole day)."""
+    try:
+        m = json.loads(_marker().read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    if m.get("date") != (day or date.today()).isoformat():
+        return []
+    return m.get("stages", list(STAGES))
+
+
+def _mark_done(stage: str) -> None:
+    _marker().parent.mkdir(parents=True, exist_ok=True)
+    _marker().write_text(json.dumps({"date": date.today().isoformat(),
+                                  "stages": sorted(set(stages_done()) | {stage}, key=STAGES.index)}), encoding="utf-8")
+
+
+def produce_tr_reel() -> dict | None:
+    """The 07:30 Turkey Reel (D-29); None if no story had the institution's own page, or the editor said no."""
+    log("reel: 07:30 Türkiye Reel")
+    try:
+        item, _ = _reel_attempt([sys.executable, "src/tr_reel.py"])
+    except Exception as exc:  # noqa: BLE001  the rest of the day still runs
+        log(f"   Türkiye Reel failed: {type(exc).__name__}: {str(exc)[:300]}")
+        return None
+    return {**item, "concept": "tr"} if item else None
+
+
 def produce(only: str = "") -> None:
-    """only: "" (everything), "reel" or "news" - for test runs; the queue keeps the other slots empty."""
+    """only: "" (both stages), "next" (the first stage not done today: cron-job.org 06:17 and 08:00),
+    "morning" / "rest" (one stage), or "reel" / "news" for test runs (part of "rest")."""
     log(f"=== produce {only} ===".replace("  ", " "))
-    marker = ROOT / "state" / "last_produce.json"
-    if not only and not os.getenv("KAVAR_FORCE"):
-        try:
-            if json.loads(marker.read_text(encoding="utf-8")).get("date") == date.today().isoformat():
-                log("today's production already ran (state/last_produce.json); skipping")
-                return
-        except (OSError, json.JSONDecodeError):
-            pass
+    forced = bool(os.getenv("KAVAR_FORCE"))
+    if only == "next":
+        todo = [s for s in STAGES if s not in stages_done()]
+        if not todo:
+            log("today's production already ran (state/last_produce.json); skipping")
+            return
+        only = todo[0]
+        log(f"next stage: {only}")
+    elif not only and not forced:  # scheduled backups: only the stages not done yet
+        done = stages_done()
+        if len(done) == len(STAGES):
+            log("today's production already ran (state/last_produce.json); skipping")
+            return
+        if "morning" in done:
+            only = "rest"
+    slots = schedule()["slots"]
+    if only in ("", "morning"):
+        morning = produce_tr_reel() if any(s.get("concept") == "tr" for s in slots) else None
+        save_queue(_build_queue(slots, [], [], morning))
+        log(f"queued 07:30: reel {morning['title'] if morning else '-'} [{'ready' if morning else 'empty'}]")
+        _mark_done("morning")  # tried: the rest of the day starts even without a morning Reel
+        if only == "morning":
+            return
+    _produce_rest(slots, only)
+
+
+def _produce_rest(slots: list[dict], only: str) -> None:
+    """11:45, 12:30, 18:00 and 20:30 (only: "" / "rest" = all, "reel" / "news" = part of it)."""
     try:
         from ig_publisher import refresh_token
         log(f"token refresh: {'ok' if refresh_token() else 'not needed / failed'}")
     except Exception as exc:
         log(f"token refresh skipped: {exc}")
-    slots = schedule()["slots"]
     news = []
     if only != "reel":
         try:
             news = produce_news_items(sum(s["kind"] == "carousel" for s in slots))
         except Exception as exc:
             log(f"news production failed: {type(exc).__name__}: {str(exc)[:300]}")
-    save_queue(_build_queue(slots, list(news), []))  # approved carousels survive a Reel crash or job timeout
+    # the morning stage's Turkey Reel stays in its slot when the rest is made in the same run
+    morning = next((q for q in load_queue() if q.get("concept") == "tr" and q["status"] == "ready"), None)
+    save_queue(_build_queue(slots, list(news), [], morning))  # approved carousels survive a Reel crash or timeout
     reels: list[dict] = []  # best first: the "Biz denedik" Reel, then tool Reels
-    wanted = sum(s["kind"] == "reel" for s in slots)
+    wanted = sum(s["kind"] == "reel" and s.get("concept") != "tr" for s in slots)
     if wanted and only != "news":
         if trial := produce_trial_reel(news):
             reels.append(trial)
@@ -294,23 +352,24 @@ def produce(only: str = "") -> None:
             if tool_reel is None:
                 break
             reels.append(tool_reel)
-            save_queue(_build_queue(slots, list(news), reels))
-    queue = _build_queue(slots, list(news), reels)
+            save_queue(_build_queue(slots, list(news), reels, morning))
+    queue = _build_queue(slots, list(news), reels, morning)
     save_queue(queue)
     for q in queue:
         log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
-    # the day counts as done only when something is ready: a crashed or empty run leaves room for
-    # the later scheduled runs (produce.yml) to try again
-    if not only and any(q["status"] == "ready" for q in queue):
-        marker.parent.mkdir(parents=True, exist_ok=True)
-        marker.write_text(json.dumps({"date": date.today().isoformat()}), encoding="utf-8")
+    # the rest counts as done only when something is ready: a crashed or empty run leaves room for
+    # the later runs (08:00 cron-job.org, produce.yml backups) to try again
+    if only in ("", "rest") and any(q["status"] == "ready" for q in queue):
+        _mark_done("rest")
 
 
-def _build_queue(slots: list[dict], news: list[dict], reels: list[dict]) -> list[dict]:
+def _build_queue(slots: list[dict], news: list[dict], reels: list[dict], morning: dict | None = None) -> list[dict]:
     """Carousels fill their slots in order. Reels (best first) fill the reel slots from the LAST one
-    back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16)."""
-    reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel"]
+    back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16).
+    The 07:30 slot (concept "tr", D-29) takes only the Turkey Reel, and the Turkey Reel only that slot."""
+    reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel" and s.get("concept") != "tr"]
     by_slot = dict(zip(reversed(reel_slots), reels))
+    by_slot.update({i: morning for i, s in enumerate(slots) if s.get("concept") == "tr" and morning})
     queue = []
     for i, s in enumerate(slots):
         item = news.pop(0) if s["kind"] == "carousel" and news else by_slot.get(i)

@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
     inputs:
       only:
-        description: "all | reel | news (news = carousels only)"
+        description: "all | next (first stage not done today) | morning (07:30 Turkey Reel) | rest | reel | news"
         default: all
       dry:
         description: "yes = full test run: nothing is committed, and the archive is not today's (fetch ignores it)"
@@ -62,7 +62,7 @@ jobs:
       - name: Guard (scheduled and cron-job.org runs skip a day that is already produced)
         id: guard
         run: |
-          if { [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.auto }}" = "yes" ]; } && python3 -c "import json,datetime,sys; sys.exit(0 if json.load(open('state/last_produce.json')).get('date') == datetime.date.today().isoformat() else 1)" 2>/dev/null; then
+          if { [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.auto }}" = "yes" ]; } && python3 -c "import json,datetime,sys; m=json.load(open('state/last_produce.json')); d=m.get('stages',['morning','rest']) if m.get('date')==datetime.date.today().isoformat() else []; sys.exit(0 if {'morning','rest'} <= set(d) else 1)" 2>/dev/null; then
             echo "skip=true" >> "$GITHUB_OUTPUT"; echo "today is already produced; nothing to do"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"

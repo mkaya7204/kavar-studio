@@ -16,10 +16,12 @@ def test_voice_is_george(monkeypatch):
 
 
 def test_schedule_slots():
-    """User 2026-10-16: two Reels a day, 11:45 and 20:30 ("bunu artık standart hale getirelim")."""
+    """User 2026-10-16: two Reels a day, 11:45 and 20:30 ("bunu artık standart hale getirelim").
+    User 2026-10-17 (D-29): a 07:30 Reel about AI and technology in Turkey, its own concept."""
     slots = json.loads((ROOT / "schedule.json").read_text(encoding="utf-8"))["slots"]
-    assert [(s["time"], s["kind"]) for s in slots] == [("11:45", "reel"), ("12:30", "carousel"), ("18:00", "carousel"),
-                                                          ("20:30", "reel")]
+    assert [(s["time"], s["kind"]) for s in slots] == [("07:30", "reel"), ("11:45", "reel"), ("12:30", "carousel"),
+                                                          ("18:00", "carousel"), ("20:30", "reel")]
+    assert slots[0].get("concept") == "tr" and all(s.get("concept") != "tr" for s in slots[1:])
 
 
 def test_brand_handle():
