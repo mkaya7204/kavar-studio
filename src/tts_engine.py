@@ -116,31 +116,46 @@ async def _edge(text: str, voice: str, rate_pct: int, audio_path: Path) -> list[
     return words
 
 
+ELEVENLABS_KEYS = ("ELEVENLABS_API_KEY", "ELEVENLABS_API_KEY_2")  # two accounts, same George (D-23)
+
+
+def _elevenlabs_keys() -> list[str]:
+    return [k for k in (_env(n) for n in ELEVENLABS_KEYS) if k]
+
+
 def _elevenlabs_sync(text: str, rate_pct: int, audio_path: Path) -> list[dict]:
     voice_id = ELEVENLABS_VOICE  # locked (CLAUDE.md §1.6): no env override, no other voice
-    try:
-        resp = requests.post(
-            f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps",
-            params={"output_format": "mp3_44100_128"},
-            headers={"xi-api-key": _env("ELEVENLABS_API_KEY"), "Content-Type": "application/json"},
-            json={
-                "text": text,
-                "model_id": _env("ELEVENLABS_MODEL") or ELEVENLABS_MODEL,
-                # Higher stability and a fixed seed keep the same voice sounding alike from video to video.
-                "seed": ELEVENLABS_SEED,
-                "voice_settings": {"stability": 0.6, "similarity_boost": 0.8, "style": 0.15,
-                                   "use_speaker_boost": True,
-                                   "speed": max(0.7, min(1.2, 1 + rate_pct / 100))},
-            },
-            timeout=HTTP_TIMEOUT,
-        )
-    except requests.RequestException as exc:
-        raise TTSError(f"ElevenLabs request failed: {exc}") from exc
-    if resp.status_code != 200:
+    keys = _elevenlabs_keys()
+    for n, key in enumerate(keys, 1):
+        try:
+            resp = requests.post(
+                f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps",
+                params={"output_format": "mp3_44100_128"},
+                headers={"xi-api-key": key, "Content-Type": "application/json"},
+                json={
+                    "text": text,
+                    "model_id": _env("ELEVENLABS_MODEL") or ELEVENLABS_MODEL,
+                    # Higher stability and a fixed seed keep the same voice sounding alike from video to video.
+                    "seed": ELEVENLABS_SEED,
+                    "voice_settings": {"stability": 0.6, "similarity_boost": 0.8, "style": 0.15,
+                                       "use_speaker_boost": True,
+                                       "speed": max(0.7, min(1.2, 1 + rate_pct / 100))},
+                },
+                timeout=HTTP_TIMEOUT,
+            )
+        except requests.RequestException as exc:
+            raise TTSError(f"ElevenLabs request failed: {exc}") from exc
+        if resp.status_code == 200:
+            break
         detail = resp.text[:300]
+        if resp.status_code in (401, 402, 403) and n < len(keys):  # this account's key or quota: next account
+            print(f"[tts] ElevenLabs key {n} refused (HTTP {resp.status_code}); trying key {n + 1}")
+            continue
         if resp.status_code in (400, 401, 402, 403, 404, 422):  # key / quota / voice problems
             raise _FatalTTSError(f"ElevenLabs HTTP {resp.status_code}: {detail}")
         raise TTSError(f"ElevenLabs HTTP {resp.status_code}: {detail}")
+    else:
+        raise _FatalTTSError("ElevenLabs: no API key set")
     data = resp.json()
     audio_path.write_bytes(base64.b64decode(data["audio_base64"]))
     align = data.get("alignment") or data.get("normalized_alignment") or {}
@@ -223,7 +238,7 @@ def available_providers() -> list[str]:
     except (OSError, json.JSONDecodeError):
         order = None
     order = [p for p in (order or DEFAULT_PROVIDERS) if p in PROVIDERS]
-    return [p for p in order if all(_env(k) for k in NEEDS[p])]
+    return [p for p in order if (_elevenlabs_keys() if p == "elevenlabs" else all(_env(k) for k in NEEDS[p]))]
 
 
 def _voice_label(provider: str, voice: str) -> str:

@@ -24,6 +24,7 @@ jobs:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}  # second account, same George (D-23)
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7

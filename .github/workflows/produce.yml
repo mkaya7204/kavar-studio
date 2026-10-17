@@ -47,6 +47,7 @@ jobs:
       PYTHONIOENCODING: utf-8
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}  # second account, same George (D-23)
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       # a late scheduled run must not redo a day already produced by hand (state/last_produce.json)

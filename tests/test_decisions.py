@@ -75,6 +75,36 @@ def test_only_george_ever_speaks(monkeypatch):
     assert "ELEVENLABS_VOICE_ID" not in (ROOT / ".github" / "workflows" / "produce.yml").read_text(encoding="utf-8")
 
 
+def test_second_elevenlabs_account_takes_over_with_george(monkeypatch, tmp_path):
+    """D-23/D-26: when the first account's quota is gone, the second key is used, same George voice."""
+    import tts_engine
+
+    calls = []
+
+    class Resp:
+        def __init__(self, code):
+            self.status_code, self.text = code, "quota_exceeded" if code == 401 else ""
+
+        def json(self):
+            return {"audio_base64": "", "alignment": {}}
+
+    def post(url, headers, **kw):
+        calls.append((url, headers["xi-api-key"]))
+        return Resp(401 if headers["xi-api-key"] == "first" else 200)
+
+    monkeypatch.setenv("ELEVENLABS_API_KEY", "first")
+    monkeypatch.setenv("ELEVENLABS_API_KEY_2", "second")
+    monkeypatch.setattr(tts_engine.requests, "post", post)
+    tts_engine._elevenlabs_sync("merhaba", 0, tmp_path / "a.mp3")
+    assert [k for _, k in calls] == ["first", "second"]
+    assert all("JBFqnCBsd6RMkjVDRZzb" in u for u, _ in calls)
+
+    monkeypatch.delenv("ELEVENLABS_API_KEY")  # only the second account set: still ElevenLabs
+    assert tts_engine.available_providers() == ["elevenlabs"]
+    for wf in ("produce.yml", "news-test.yml", "rerender.yml", "trial-rerender.yml"):
+        assert "secrets.ELEVENLABS_API_KEY_2" in (ROOT / ".github" / "workflows" / wf).read_text(encoding="utf-8")
+
+
 def test_voice_length_is_capped_before_spending_quota():
     import tts_engine
 

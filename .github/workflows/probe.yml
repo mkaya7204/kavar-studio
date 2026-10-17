@@ -19,3 +19,15 @@ jobs:
             echo "redirect $r -> $(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -A "$UA" --max-time 20 "$r")"
             echo "followed -> $(curl -s -o /dev/null -L -w '%{http_code} %{url_effective}' -A "$UA" --max-time 20 "$r")"
           done
+      - name: ElevenLabs accounts (credits left, George reachable; spends nothing)
+        env:
+          K1: ${{ secrets.ELEVENLABS_API_KEY }}
+          K2: ${{ secrets.ELEVENLABS_API_KEY_2 }}
+        run: |
+          for n in 1 2; do
+            eval K=\$K$n
+            [ -n "$K" ] || { echo "key $n: not set"; continue; }
+            s=$(curl -s -H "xi-api-key: $K" https://api.elevenlabs.io/v1/user/subscription)
+            v=$(curl -s -o /dev/null -w "%{http_code}" -H "xi-api-key: $K" https://api.elevenlabs.io/v1/voices/JBFqnCBsd6RMkjVDRZzb)
+            echo "key $n: $(echo "$s" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("tier"), "used", d.get("character_count"), "of", d.get("character_limit")) if "tier" in d else print("error", str(d)[:200])')  | George voice HTTP $v"
+          done
