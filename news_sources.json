@@ -80,6 +80,15 @@
   ],
   "tr_feeds": [
     {
+      "name": "Webrazzi Yatırım",
+      "url": "https://webrazzi.com/kategori/yatirim/feed/"
+    },
+    {
+      "name": "Webrazzi Girişim",
+      "url": "https://webrazzi.com/kategori/girisimler/feed/",
+      "max_age_hours": 336
+    },
+    {
       "name": "Webtekno",
       "url": "https://www.webtekno.com/rss.xml"
     },

@@ -268,3 +268,23 @@ def test_turkey_reel_pictures_come_from_the_institution(tmp_path):
     got = tr_reel.pictures_for({"cover_path": press_photo}, [home])
     assert press_photo not in got and got == [own_home]
     assert tr_reel.pictures_for({"cover_path": press_photo}, []) == []
+
+
+def test_a_startup_profile_feed_keeps_its_stories_for_two_weeks(monkeypatch):
+    """User 10-17: Webrazzi's Girişim section profiles Turkish AI startups a few times a week; a profile
+    stays news for days, so that feed has a 14-day window while news feeds keep 72 h."""
+    import sys
+    from datetime import datetime, timedelta, timezone
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import tr_reel
+
+    now = datetime.now(timezone.utc)
+    feeds = [{"name": "Girişim", "url": "https://g/feed", "max_age_hours": 336}, {"name": "News", "url": "https://n/feed"}]
+    items = {"https://g/feed": [{"title": "ShadowX: yerli yapay zeka güvenlik platformu", "url": "https://g/1",
+                                 "date": now - timedelta(days=9), "summary": ""}],
+             "https://n/feed": [{"title": "Yerli yapay zeka modeli", "url": "https://n/1", "date": now - timedelta(days=9),
+                                 "summary": ""}]}
+    monkeypatch.setattr(tr_reel, "tr_feeds", lambda: feeds)
+    monkeypatch.setattr(tr_reel, "_items", lambda feed: [dict(i) for i in items[feed["url"]]])
+    monkeypatch.setattr(tr_reel, "load_history", lambda: [])
+    assert [i["url"] for i in tr_reel.fetch_tr()] == ["https://g/1"]

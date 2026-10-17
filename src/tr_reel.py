@@ -71,15 +71,17 @@ def tr_feeds() -> list[dict]:
 
 def fetch_tr(limit: int = 40) -> list[dict]:
     """Fresh, unused AI / tech stories from the Turkish feeds, newest first."""
-    since = datetime.now(timezone.utc) - timedelta(hours=MAX_AGE_HOURS)
     used = set(load_history())
     items = []
+    now = datetime.now(timezone.utc)
     for feed in tr_feeds():
         try:
-            items += _items(feed)
+            # a feed may keep its stories longer: a startup profile (Webrazzi Girişim) stays news for two weeks
+            items += [{**i, "since": now - timedelta(hours=feed.get("max_age_hours", MAX_AGE_HOURS))}
+                      for i in _items(feed)]
         except Exception as exc:  # noqa: BLE001  one dead feed never stops the morning
             print(f"[tr] {feed['name']} skipped: {type(exc).__name__}")
-    fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used
+    fresh = [i for i in items if i["date"] and i["date"] >= i.pop("since") and i["url"] not in used
              and AI_OR_TECH.search(f"{i['title']} {i.get('summary', '')}")]
     # Turkey first: "teknoloji" is broad, and generic tech news pushed the Turkey stories past the limit (10-17)
     fresh.sort(key=lambda i: (bool(TURKEY.search(f"{i['title']} {i.get('summary', '')}")), i["date"]), reverse=True)
