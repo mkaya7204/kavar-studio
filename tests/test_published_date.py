@@ -42,3 +42,10 @@ def test_refused_article_pages_are_read_through_the_reader():
     assert 'READER = "https://r.jina.ai/"' in src and "REFUSED = (401, 403, 429)" in src
     assert "resp.status in REFUSED and (html := _reader_html(url))" in src
     assert "page.route(url" in src
+
+
+def test_cover_headline_never_climbs_into_a_wide_cover_image():
+    """10-17: a 4-line headline ran into OpenAI's wide cover image (editor rejected the Itaú carousel)."""
+    html = (ROOT / "templates" / "carousel" / "index.html").read_text(encoding="utf-8")
+    assert "top = Math.max(boxTop, Math.round(imgTop + 1080 / D.news.cover_ratio - 40));" in html
+    assert 'c.style.height = boxBottom - top + "px";' in html

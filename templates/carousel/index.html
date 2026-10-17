@@ -842,16 +842,23 @@
             const ci = el("img", "cover-img" + (wide ? " cover-blur" : ""));
             ci.src = "assets/cover.jpg";
             s.prepend(el("div", "cover-shade"));
+            const boxTop = STORY ? 340 : 110;
+            const boxBottom = STORY ? 1510 : 1205;
+            let top = boxTop;
             if (wide) {
               const fg = el("img", "cover-wide");
               fg.src = "assets/cover.jpg";
-              fg.style.top = (STORY ? 330 : 128) + "px";
-              s.prepend(fg); // the headline may overlap its shaded lower edge on purpose
+              const imgTop = STORY ? 330 : 128;
+              fg.style.top = imgTop + "px";
+              s.prepend(fg);
+              // the headline may touch the image's shaded lower edge, never more: a 4-line headline used
+              // to climb into the image (OpenAI / Itaú, 10-17). Less room makes fit() pick a smaller size.
+              top = Math.max(boxTop, Math.round(imgTop + 1080 / D.news.cover_ratio - 40));
             }
             s.prepend(ci);
             c.classList.add("bottom");
-            c.style.top = STORY ? "340px" : "110px";
-            c.style.height = STORY ? "1170px" : "1095px";
+            c.style.top = top + "px";
+            c.style.height = boxBottom - top + "px";
             el("i", "hl-rule", c);
             // D-17 (research 2026-10-16): 3-6 big words, and a swipe cue on the feed cover
             title(c, f.title, "", STORY ? [104, 96, 88, 80, 72, 64] : [112, 100, 92, 84, 76, 68, 62], true);
