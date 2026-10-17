@@ -9,7 +9,7 @@ but not covered by a test, 🔴 open.
 
 | Risk | Mitigation | Status |
 |---|---|---|
-| GitHub starts the scheduled run hours late or skips it (10-13/14/15) | produce.yml has 3 crons (06:17, 07:47, 09:17 TRT). A guard step skips a day already produced, in seconds. `daily.py fetch` takes the newest finished run that has today's queue | ✅ test_guards, test_daily |
+| GitHub starts the scheduled run hours late or skips it (10-13/14/15) | Root cause: GitHub's schedule is best effort, ~5 h late every day (D-25). cron-job.org starts it with `workflow_dispatch` at 06:17 TRT; produce.yml's 3 crons (06:17, 07:47, 09:17 TRT) are the backup. A guard step skips a day already produced, in seconds. `daily.py fetch` takes the newest finished run that has today's queue | ✅ test_guards, test_daily |
 | A crashed or empty run marks the day as done and blocks the retries | `state/last_produce.json` is written only when the queue has a ready item | ✅ test_daily |
 | The Reel stage crashes or the 120-min job times out after the carousels passed | The queue is saved right after the carousels. The Reel stage is wrapped. Each Reel run times out at 30 min | ✅ test_daily |
 | One story raises an unexpected error and stops the whole run | Each story is wrapped; it is logged, marked used, and the next story is tried | ✅ test_daily |
