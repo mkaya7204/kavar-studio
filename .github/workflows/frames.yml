@@ -1,0 +1,53 @@
+# Look at a stretch of a rendered Reel frame by frame without the PC (no ffmpeg on the 4 GB PC):
+# takes the video from a run's artifact and makes one contact sheet of frames.
+#   gh workflow run frames.yml -f run=<run id> -f artifact=rerender -f video=final_video.mp4 -f start=10 -f end=15
+name: frames
+
+on:
+  workflow_dispatch:
+    inputs:
+      run:
+        description: "run id that holds the video"
+        required: true
+      artifact:
+        description: "artifact name (plain files, e.g. rerender)"
+        default: "rerender"
+      video:
+        description: "video path inside the artifact"
+        default: "final_video.mp4"
+      start:
+        description: "first second"
+        default: "0"
+      end:
+        description: "last second"
+        default: "30"
+      step:
+        description: "seconds between frames"
+        default: "0.5"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  frames:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Contact sheet
+        run: |
+          gh run download "${{ github.event.inputs.run }}" -R "${{ github.repository }}" -n "${{ github.event.inputs.artifact }}" -D in
+          V="in/${{ github.event.inputs.video }}"
+          mkdir -p out
+          S=${{ github.event.inputs.start }}; E=${{ github.event.inputs.end }}; P=${{ github.event.inputs.step }}
+          ffmpeg -loglevel error -ss "$S" -to "$E" -i "$V" -vf "fps=1/$P,scale=270:-1,drawtext=text='%{pts\:hms}':x=6:y=6:fontsize=18:fontcolor=yellow:box=1:boxcolor=black@0.6,tile=6x4" -frames:v 1 out/sheet.jpg
+          ls -la out
+      - uses: actions/upload-artifact@v7
+        with:
+          name: frames
+          path: out/sheet.jpg
+          retention-days: 3
