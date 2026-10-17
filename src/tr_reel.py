@@ -47,6 +47,10 @@ WORDS = (32, 38)  # same as the "Biz denedik" Reel: under 26 s
 AI_OR_TECH = re.compile(r"yapay zek|\bai\b|\bYZ\b|chatgpt|gemini|robot|otonom|algoritma|dil modeli|veri merkez|"
                         r"yazılım|siber|dijital|uydu|5g|yerli (?:çip|işlemci|model)|teknoloji", re.I)
 
+TURKEY = re.compile(r"türk|türkiye|turkcell|telekom|trendyol|hepsiburada|getir|baykar|aselsan|havelsan|tusaş|"
+                    r"roketsan|togg|tübitak|teknofest|bakanl|cumhurbaşkan|belediye|üniversite|istanbul|ankara|izmir|"
+                    r"türk hava|yerli|milli", re.I)
+
 TR_RULES = """
 
 THIS REEL IS DIFFERENT: it is KAVAR's 07:30 morning Reel about AI and technology developments in \
@@ -65,7 +69,7 @@ def tr_feeds() -> list[dict]:
     return json.loads(SOURCES_PATH.read_text(encoding="utf-8")).get("tr_feeds", [])
 
 
-def fetch_tr(limit: int = 20) -> list[dict]:
+def fetch_tr(limit: int = 40) -> list[dict]:
     """Fresh, unused AI / tech stories from the Turkish feeds, newest first."""
     since = datetime.now(timezone.utc) - timedelta(hours=MAX_AGE_HOURS)
     used = set(load_history())
@@ -77,7 +81,8 @@ def fetch_tr(limit: int = 20) -> list[dict]:
             print(f"[tr] {feed['name']} skipped: {type(exc).__name__}")
     fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used
              and AI_OR_TECH.search(f"{i['title']} {i.get('summary', '')}")]
-    fresh.sort(key=lambda i: i["date"], reverse=True)
+    # Turkey first: "teknoloji" is broad, and generic tech news pushed the Turkey stories past the limit (10-17)
+    fresh.sort(key=lambda i: (bool(TURKEY.search(f"{i['title']} {i.get('summary', '')}")), i["date"]), reverse=True)
     for i in fresh:
         i["date"] = i["date"].isoformat()
     return fresh[:limit]
@@ -106,8 +111,12 @@ def official_page(item: dict, press_text: str) -> tuple[str, str, str]:
                                "--tools", "WebSearch,WebFetch", "--allowedTools", "WebSearch,WebFetch",
                                "--no-session-persistence"],
                               input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=300, env=env)
-        out = json.loads(proc.stdout).get("structured_output") or {}
-    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
+        result = json.loads(proc.stdout)
+        out = result.get("structured_output") or {}
+        if not out:
+            print(f"[tr_reel] institution search gave nothing ({result.get('subtype')}): {str(result.get('result'))[:200]}")
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError) as exc:
+        print(f"[tr_reel] institution search failed ({type(exc).__name__}): {(proc.stderr if 'proc' in dir() else '')[:200]}")
         return "", "", ""
 
     def own(url: str) -> str:
