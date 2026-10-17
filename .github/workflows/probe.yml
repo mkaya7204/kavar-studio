@@ -19,7 +19,7 @@ jobs:
             echo "redirect $r -> $(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -A "$UA" --max-time 20 "$r")"
             echo "followed -> $(curl -s -o /dev/null -L -w '%{http_code} %{url_effective}' -A "$UA" --max-time 20 "$r")"
           done
-      - name: ElevenLabs accounts (credits left, George reachable; spends nothing)
+      - name: ElevenLabs accounts (George says one word per key, ~8 credits; credits left)
         env:
           K1: ${{ secrets.ELEVENLABS_API_KEY }}
           K2: ${{ secrets.ELEVENLABS_API_KEY_2 }}
