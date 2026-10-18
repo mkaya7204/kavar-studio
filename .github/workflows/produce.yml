@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
     inputs:
       only:
-        description: "all | next (first stage not done today) | morning (07:30 Turkey Reel) | rest | reel | news"
+        description: "all | next (first stage not done today) | morning (07:30 guide Reel) | rest | reel | news"
         default: all
       dry:
         description: "yes = full test run: nothing is committed, and the archive is not today's (fetch ignores it)"
