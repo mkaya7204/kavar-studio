@@ -1,26 +1,5 @@
 [
   {
-    "tool": "The Drive AI",
-    "hook": "Dosyaların tek cümleyle düzene giriyor",
-    "pattern": "result",
-    "spoken_hook": "Dosyaların tek bir cümleyle düzene giriyor.",
-    "cta": "Bunu dosya içinde boğulan arkadaşına gönder."
-  },
-  {
-    "tool": "OpenWhispr for iOS",
-    "hook": "Konuştuğun her şey anında yazıya dönüşüyor",
-    "pattern": "result",
-    "spoken_hook": "Konuştuğun her şey anında yazıya dönüşüyor.",
-    "cta": "Bunu toplantı notu tutan arkadaşına gönder."
-  },
-  {
-    "tool": "Pancake",
-    "hook": "Ajanın satış ve pazarlamayı yürütüyor",
-    "pattern": "result",
-    "spoken_hook": "Ajanın satış ve pazarlama işlerini senin yerine yürütüyor.",
-    "cta": "Bunu satış ekibi kuran arkadaşına gönder."
-  },
-  {
     "tool": "Retriever AI",
     "hook": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
     "pattern": "question",
@@ -68,5 +47,26 @@
     "pattern": "result",
     "spoken_hook": "Ajanın yazdığı kod artık tutarlı kalıyor.",
     "cta": "Bunu ajanla kod yazan arkadaşına gönder."
+  },
+  {
+    "tool": "Salience",
+    "hook": "Siteni gezen botlar görünüyor",
+    "pattern": "result",
+    "spoken_hook": "Siteni gezen botların hepsi artık görünüyor.",
+    "cta": "Bunu SEO yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Korinotch",
+    "hook": "Çentik kontrol merkezi oluyor",
+    "pattern": "result",
+    "spoken_hook": "MacBook'undaki çentik artık bir kontrol merkezi oluyor.",
+    "cta": "Bunu MacBook kullanan arkadaşına gönder."
+  },
+  {
+    "tool": "Step 5 Preview",
+    "hook": "600 milyarlık açık model geldi",
+    "pattern": "news",
+    "spoken_hook": "Uzun süre çalışan ajanlar için 600 milyarlık model geldi.",
+    "cta": "Ajan kuran arkadaşına yolla."
   }
 ]
