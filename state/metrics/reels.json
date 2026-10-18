@@ -233,5 +233,44 @@
     "duration_sec": 24.1,
     "words": 41,
     "status": "rejected: 12.1. saniyede kart tamamen boş: içeriksiz, yarım yüklenmiş bir kutu görünüyor. Bu ölü hava gibi duruyor ve bozuk görünüyor.; Kanıt görseli (kapak ve 0-5. saniye) Ultracite sitesinin arayüzü ya da çıktısı değil. Rastgele bir değişiklik notu parçası: 'Fixing all 11: typing the users, adding teamId...'. Tutarlı kod vaadini göstermiyor.; Kanıt görselindeki metin İngilizce, bağlamsız ve yarım bir madde işareti. Kenarlarda kırmızı şeritler var, yani kırpılmış bir yakalama. Okuyan ne olduğunu anlamaz."
+  },
+  {
+    "id": "2026-10-18_salience",
+    "date": "2026-10-18",
+    "kind": "tool",
+    "tool": "Salience",
+    "hook_pattern": "result",
+    "headline": "Siteni gezen botlar görünüyor",
+    "spoken_hook": "Siteni gezen botların hepsi artık görünüyor.",
+    "cta": "Bunu SEO yapan arkadaşına gönder.",
+    "duration_sec": 20.7,
+    "words": 39,
+    "status": "rejected: Kanıt görseli ürünün arayüzü ya da çıktısı değil. Sitedeki 'Complete visibility / Find issues early' pazarlama kartı bir özellik listesi ve İngilizce. Kural ve geçmiş dersler bunu kanıt saymıyor.; Aynı kart 0-12 sn boyunca hiç değişmeden kalıyor. 'Googlebot, GPTBot kim neyi istedi' vaadini hiçbir görsel göstermiyor.; 10.3 ve 11.3 sn karelerinde 'NEYİ İSTEDİ' ve 'GÖRÜRSÜN' altyazıları kartın metninin üstüne biniyor ('manually digging through logs' kesiliyor). Metin çakışması var."
+  },
+  {
+    "id": "2026-10-18_korinotch",
+    "date": "2026-10-18",
+    "kind": "tool",
+    "tool": "Korinotch",
+    "hook_pattern": "result",
+    "headline": "Çentik kontrol merkezi oluyor",
+    "spoken_hook": "MacBook'undaki çentik artık bir kontrol merkezi oluyor.",
+    "cta": "Bunu MacBook kullanan arkadaşına gönder.",
+    "duration_sec": 21.3,
+    "words": 37,
+    "status": "rejected: Kanıt görseli vaadi göstermiyor: kapakta ve 0-2.5 sn karelerinde yalnızca MacBook ekranının altındaki Dock simgeleri var. Çentik, kontrol paneli, müzik kontrolü ya da widget görünmüyor. Başlık 'Çentik kontrol merkezi oluyor' diyor ama görsel bunu kanıtlamıyor.; Aynı Dock görseli 10.7 sn karesinde de tekrar ediyor. 'DURUYOR' altyazısı bu görselin üstünde duruyor ve görsel hatırlatıcıları göstermiyor. Kartlardaki müzik ve hatırlatıcı iddialarının hiçbirinin görsel karşılığı yok.; Görsel yanlış kırpılmış gibi duruyor: ekranın üst kısmı boş koyu mor, çentiğin olduğu bölge ve ürün arayüzü kadraj dışında."
+  },
+  {
+    "id": "2026-10-18_step-5-preview",
+    "date": "2026-10-18",
+    "kind": "tool",
+    "tool": "Step 5 Preview",
+    "hook_pattern": "news",
+    "headline": "600 milyarlık açık model geldi",
+    "spoken_hook": "Uzun süre çalışan ajanlar için 600 milyarlık model geldi.",
+    "cta": "Ajan kuran arkadaşına yolla.",
+    "duration_sec": 21.2,
+    "words": 40,
+    "status": "rejected: Kanıt kutusu vaadi göstermiyor: başlık '600 milyarlık açık model' diyor, kutuda sadece 'Step 5 Preview' başlığı ve 'A new-generation frontier model built for real-world tasks' sloganı var. 600B, açık ağırlık ve uzun çalışan ajan bilgisi görünmüyor. Slogan kartı kanıt sayılmaz.; Kanıt görselinde 'Step 5' yazısının üst kısmı kutu kenarında kesik. Kesik metin kabul edilmez.; Kutudaki İngilizce slogan ('frontier model') kaynaktaki '600B open weights, trained for long-running agents' ifadesinden farklı. Videoda kaynağın asıl iddiasını gösteren bir kare yok."
   }
 ]
