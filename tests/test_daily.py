@@ -246,9 +246,9 @@ def test_guide_candidates_are_unused_company_posts_of_two_weeks(monkeypatch, tmp
     import guide_reel
 
     now = datetime.now(timezone.utc)
-    posts = [{"title": "New in Gemini", "url": "https://g/1", "date": now - timedelta(days=9), "summary": ""},
-             {"title": "Old", "url": "https://g/2", "date": now - timedelta(days=20), "summary": ""},
-             {"title": "Used", "url": "https://g/3", "date": now - timedelta(days=1), "summary": ""}]
+    posts = [{"title": "New in Gemini", "url": "https://g/1", "date": now - timedelta(days=9), "summary": "", "source": "Gemini"},
+             {"title": "Old", "url": "https://g/2", "date": now - timedelta(days=20), "summary": "", "source": "Gemini"},
+             {"title": "Used", "url": "https://g/3", "date": now - timedelta(days=1), "summary": "", "source": "Gemini"}]
     sources = tmp_path / "news_sources.json"
     sources.write_text('{"feeds": [{"name": "Gemini", "url": "u"}]}', encoding="utf-8")
     monkeypatch.setattr(guide_reel, "SOURCES_PATH", sources)
