@@ -44,6 +44,40 @@ RETRIES = 3
 HTTP_TIMEOUT = 90
 
 
+PRONUNCIATION_PATH = ROOT / "rules" / "pronunciation.json"
+
+
+def _lexicon() -> dict[str, str]:
+    try:
+        return json.loads(PRONUNCIATION_PATH.read_text(encoding="utf-8"))["words"]
+    except (OSError, json.JSONDecodeError, KeyError):
+        return {}
+
+
+def spoken_text(text: str) -> str:
+    """D-34 (the user, 2026-10-18: "gemini yazıldığı gibi okuyor"): the text George is sent, with each product
+    name written as a Turkish reader says it (rules/pronunciation.json). One word for one word, suffixes kept
+    ("Gemini'de" -> "Cemini'de"), so the word timings map back to the real spelling for the captions."""
+    lex = _lexicon()
+    if not lex:
+        return text
+    names = "|".join(re.escape(k) for k in sorted(lex, key=len, reverse=True))
+    return re.sub(rf"(?<!\w)({names})(?!\w)", lambda m: lex[m.group(1)], text)
+
+
+def _clean_word(token: str) -> str:
+    return re.sub(r"^[^\w]+|[^\w]+$", "", token)
+
+
+def written_words(words: list[dict], text: str) -> list[dict]:
+    """The spoken words' timings with the script's own spelling (captions show "Gemini", not "Cemini")."""
+    shown = [w for w in (_clean_word(t) for t in text.split()) if w]
+    if len(shown) != len(words):
+        print(f"[tts] {len(words)} timed words for {len(shown)} written ones: captions keep the spoken spelling")
+        return words
+    return [{**w, "word": s} for w, s in zip(words, shown)]
+
+
 def voice_for(language: str) -> str:
     return VOICES.get(language, DEFAULT_VOICE)
 
@@ -320,9 +354,10 @@ async def synthesize_async(
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     errors = []
+    said = spoken_text(text)  # D-34: names as a Turkish reader says them; the captions keep `text`
     for provider in providers or available_providers():
         try:
-            words, duration, used_rate = await _synthesize_provider(provider, text, out_path, voice,
+            words, duration, used_rate = await _synthesize_provider(provider, said, out_path, voice,
                                                                     rate_pct, max_seconds)
         except TTSError as exc:
             errors.append(f"{provider}: {exc}")
@@ -333,6 +368,9 @@ async def synthesize_async(
             out_path.unlink(missing_ok=True)
             out_path.with_suffix(".srt").unlink(missing_ok=True)
             raise TTSError(f"voiceover is {duration:.1f}s, over the {max_seconds:.0f}s limit; shorten the script")
+        if said != text:
+            words = written_words(words, text)
+            out_path.with_suffix(".srt").write_text(_words_to_srt(words), encoding="utf-8")
         words_path = out_path.with_name(out_path.stem + "_words.json")
         words_path.write_text(json.dumps(words, indent=2), encoding="utf-8")
         return {

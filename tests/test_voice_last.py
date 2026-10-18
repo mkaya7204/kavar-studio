@@ -98,6 +98,24 @@ def test_the_fixer_keeps_the_script_rules():
     assert reel_fixer.candidates({"pictures_locked": True}) == []  # "Biz denedik": our outputs stay
 
 
+def test_george_hears_names_the_turkish_way_and_captions_keep_the_spelling():
+    """D-34 (the user, 2026-10-18): "gemini yazıldığı gibi okuyor ... AI isimlerini de yazıyla nasıl yazıldıysa
+    öyle okuyor" - the 11:45 Reel was deleted for it."""
+    import tts_engine
+
+    text = "Gemini'de görevler var. ChatGPT, Claude ve Copilot da öyle; iPhone'da Google Gemini."
+    said = tts_engine.spoken_text(text)
+    assert said == "Cemini'de görevler var. Çetcipiti, Klod ve Kopaylıt da öyle; Ayfon'da Gugıl Cemini."
+    assert len(said.split()) == len(text.split())  # one word for one word: the timings map back
+    assert tts_engine.spoken_text("Gemicilik ve Googleplex") == "Gemicilik ve Googleplex"  # whole words only
+    lex = tts_engine._lexicon()
+    assert all(len(v.split()) == 1 for v in lex.values())  # never two words for one
+    timed = [{"word": w.strip(".,;"), "start": i, "end": i + 0.5} for i, w in enumerate(said.split())]
+    shown = tts_engine.written_words(timed, text)
+    assert [w["word"] for w in shown][:3] == ["Gemini'de", "görevler", "var"] and shown[3]["word"] == "ChatGPT"
+    assert shown[5]["start"] == 5  # timings unchanged
+
+
 def test_tools_with_no_ai_never_reach_a_render(monkeypatch):
     """10-18: MeetPaw (meeting launcher) and Tower (git client) were rendered and rejected as "not AI"."""
     import content_ranker
