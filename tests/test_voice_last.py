@@ -94,7 +94,7 @@ def test_the_fixer_keeps_the_script_rules():
                                            "key_points": [{"title": "a", "detail": "b"}] * 3, "caption": "c",
                                            "hashtags": ["#t"]})
     assert fixed["voiceover"].startswith("Toplantı notun hazır. T kaydı") and fixed["voiceover_segments"] == seg
-    long = {**fixed, "voiceover": "kelime " * 45}
+    long = reel_fixer.apply_text(script, {**fixed, "segments": {**seg, "point2": "kelime " * 40}})
     assert any("max 38" in p for p in reel_fixer.text_problems(long))
     assert reel_fixer.candidates({"pictures_locked": True}) == []  # "Biz denedik": our outputs stay
 
