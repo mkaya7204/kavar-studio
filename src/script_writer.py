@@ -44,20 +44,23 @@ HISTORY_PATH = ROOT / "state" / "script_history.json"  # recent hooks / CTAs, so
 HISTORY_SIZE = 10
 
 
-# Page policy: no prices. Prices, payment models (one-time, subscription) and free / paid
-# claims stay out of every post. Only a paid collaboration with that brand, decided by the
-# user per post, may change this.
+# Page policy: no prices. Amounts, currencies, free / paid claims, trials and discounts stay out of
+# every post. Only a paid collaboration with that brand, decided by the user per post, may change this.
+# D-32 (2026-10-18): naming the plan a feature comes in (Pro, Plus, Premium, a subscription), a beta or
+# limited access, and "it uses credits" are allowed: they tell the viewer whether they can use it.
 PRICE_PATTERN = re.compile(
     r"[$€£₺¥₹]|\d+(?:[.,]\d+)?\s*(?:bin|milyon|milyar)?\s*(?:TL|TRY|USD|EUR|GBP|Kr|krş)\b|\b(?:TRY|TL)\s*\d|"
-    r"\b(?:dolar\w*|euro\w*|lira\w*|kuruş\w*|fiyat\w*|ücret\w*|ödeme\w*|abonelik\w*|bedava|indirim\w*|"
-    r"paralı|satın al\w*|deneme sürüm\w*|tek seferlik|price\w*|pricing|subscription\w*|free|freemium|"
+    r"\b(?:dolar\w*|euro\w*|lira\w*|kuruş\w*|fiyat\w*|ücret\w*|ödeme\w*|bedava|indirim\w*|"
+    r"paralı|satın al\w*|deneme sürüm\w*|tek seferlik|price\w*|pricing|free|freemium|"
     # 10-17 audit: English payment words and credit amounts the list missed
-    r"trial\w*|paid|discount\w*|premium)\b|\b\d[\d.,]*\s*(?:kredi\w*|credits?)\b",
+    r"trial\w*|paid|discount\w*)\b|\b\d[\d.,]*\s*(?:kredi\w*|credits?)\b",
     re.I,
 )
-NO_PRICE_RULE = ("Page policy: never mention prices, costs, currencies, payment models (one-time "
-                 "payment, subscription), free vs paid, trials or discounts - not on screen, not in "
-                 "the voiceover, not in the caption. Talk about what the tool does instead.")
+NO_PRICE_RULE = ("Page policy: never mention prices, costs, amounts, currencies, free vs paid, trials or "
+                 "discounts - not on screen, not in the voiceover, not in the caption. Allowed when the source "
+                 "says so, because it tells the viewer who can use it: the plan or package the feature comes in "
+                 "(e.g. 'Pro planında', 'Plus abonelerinde'), beta or limited access, and that it uses credits "
+                 "or usage limits (without amounts), and why. Talk about what the tool does.")
 
 
 def price_mentions(*texts: str) -> list[str]:

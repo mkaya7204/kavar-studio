@@ -29,6 +29,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from carousel import produce_news  # noqa: E402
 from carousel_renderer import RenderError  # noqa: E402
+from content_ranker import rank  # noqa: E402
 from editor_review import review_carousel, review_reel  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
 from news_fetcher import fetch_news, mark_used  # noqa: E402
@@ -36,6 +37,8 @@ from model_trial import testable_first  # noqa: E402
 from news_writer import NewsScript  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
+from reel_qa import first_frame_report, make_cover, pacing_report  # noqa: E402
+from tts_engine import DRAFT_ENV  # noqa: E402
 
 SCHEDULE_PATH = ROOT / "schedule.json"
 QUEUE_DIR = ROOT / "output" / "queue"
@@ -125,13 +128,28 @@ FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (on
 
 
 def produce_news_items(count: int) -> list[dict]:
-    items, chosen_titles, blocked, tries = [], [], set(), 0
-    # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first
-    candidates = testable_first(fetch_news(12))
+    items, chosen_titles, chosen_companies, blocked, tries = [], [], set(), set(), 0
+    # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first; then the stories
+    # that reach more people (D-29, src/content_ranker.py)
+    candidates = rank(testable_first(fetch_news(20)), "news_carousel")  # 20: more sources since D-29
     log(f"news: {len(candidates)} fresh candidates")
+    for c in candidates:
+        if r := c.get("rank"):
+            log(f"   rank {r['score']:>2} {r['category']:<20} {'' if r['fits'] else 'off-concept '}"
+                f"{'repeat ' if r['repeat'] else ''}{c['title'][:70]} ({r['reason'][:90]})")
     for item in candidates:
         if len(items) >= count or tries >= MAX_NEWS_TRIES:
             break
+        r = item.get("rank") or {}
+        if r and not item.get("testable") and (not r["fits"] or r["repeat"]):
+            # 10-17 dry run: a gaming promotion (DLSS on GeForce NOW) reached 18:00 because off-concept
+            # stories were only moved down; now they are never used
+            log(f"   skip ({'repeat' if r['repeat'] else 'off-concept'}): {item['title']}")
+            continue
+        company = (r.get("company") or "").strip().lower()
+        if company and company in chosen_companies:  # one story per company a day (3 of 4 were NVIDIA, 10-16)
+            log(f"   skip (already a {company} story today): {item['title']}")
+            continue
         host = urlsplit(item["url"]).hostname or ""
         if host in blocked:  # 10-17: openai.com answered 403 to the cloud three times, using half the tries
             log(f"   skip ({host} refuses this machine): {item['title']}")
@@ -153,8 +171,10 @@ def produce_news_items(count: int) -> list[dict]:
             continue
         if ok:
             tested = "trial_note" in json.loads((folder / "article" / "article.json").read_text(encoding="utf-8"))
-            items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": tested})
+            items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": tested,
+                          "category": (item.get("rank") or {}).get("category", "")})
             chosen_titles.append(item["title"])
+            chosen_companies.add(company)
         else:
             log(f"   rejected, not queued: {folder.name}")
     # a carousel with our own test takes the day's first carousel slot
@@ -163,6 +183,9 @@ def produce_news_items(count: int) -> list[dict]:
 
 REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
+GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no voice, D-30); the rest waits for it
+REEL_FIX_ROUNDS = 2  # D-33: fixes of a rejected silent draft (src/reel_fixer.py) before the next tool is tried
+REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
 
 JOB_BUDGET = 105 * 60  # produce.yml gives the job 120 min; stop starting Reel renders after this
@@ -200,37 +223,110 @@ def produce_trial_reel(news: list[dict]) -> dict | None:
     return item
 
 
-def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
-    """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
-    A rejected tool is in the script history, so the next run moves on to another tool."""
+def _voice_approved_reel(out: Path) -> bool:
+    """D-30 (the user, 2026-10-18): the editor approved the silent draft, so George speaks now, once.
+    The voiced Reel replaces the draft in `out` and must pass the measured first-frame and length checks."""
     try:
-        proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True,
-                              text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT)
+        proc = subprocess.run([sys.executable, "src/voice_final.py"], cwd=ROOT, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT)
     except subprocess.TimeoutExpired:
-        log(f"   video pipeline timed out after {REEL_TIMEOUT}s")
-        return None, False
-    lines = proc.stdout.splitlines()
-    for line in [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l][:8] + lines[-8:]:
+        log(f"   voiced render timed out after {REEL_TIMEOUT}s")
+        return False
+    for line in proc.stdout.splitlines()[-4:]:
         log("   " + line)
     if proc.returncode != 0:
-        log("   video pipeline failed")
-        return None, False
-    temp, final = ROOT / "output" / "temp", ROOT / "output" / "final"
-    script = json.loads((temp / "script.json").read_text(encoding="utf-8"))
-    tool = json.loads((temp / "tool.json").read_text(encoding="utf-8"))
-    out = REELS_DIR / f"{date.today().isoformat()}_{re.sub(r'[^a-z0-9]+', '-', script['tool_name'].lower()).strip('-')}"
+        log("   no voice for the approved Reel (both ElevenLabs accounts refused?): Reel not made")
+        return False
+    final = ROOT / "output" / "final"
+    for name in ("final_video.mp4", "post.json", "reel_qa.json"):
+        if (final / name).exists():
+            shutil.copy(final / name, out / name)
+    make_cover(out / "final_video.mp4", out)
+    first, dur = first_frame_report(out / "final_video.mp4", out), pacing_report(out / "final_video.mp4")["duration_sec"]
+    if not first["ok"] or not REEL_SECONDS[0] <= dur <= REEL_SECONDS[1]:
+        log(f"   voiced Reel failed the measured checks: first frame ok={first['ok']}, {dur:.1f}s")
+        return False
+    log(f"   voiced with George: {dur:.1f}s")
+    return True
+
+
+def _copy_draft(out: Path, script: dict) -> None:
+    """The rendered draft (output/final) and its script into the Reel's folder."""
+    final = ROOT / "output" / "final"
     out.mkdir(parents=True, exist_ok=True)
     for name in ("final_video.mp4", "post.json", "cover.jpg", "cover_grid.jpg", "reel_qa.json"):
         if (final / name).exists():
             shutil.copy(final / name, out / name)
     (out / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _fix_draft(out: Path, verdict: dict, fix_round: int) -> dict | None:
+    """D-33 (the user, 2026-10-18: "editör red derse sen devreye giriyorsun, düzeltilecek bir yanı varsa
+    düzelt"): src/reel_fixer.py fixes the rejected silent draft (text and pictures) and renders it again on
+    the draft voice. Returns the fixed script, or None when the topic itself can't be fixed."""
+    (out / "_verdict.json").write_text(json.dumps(verdict, indent=1, ensure_ascii=False), encoding="utf-8")
+    log(f"   fixing the rejected draft (round {fix_round}/{REEL_FIX_ROUNDS})")
+    try:
+        proc = subprocess.run([sys.executable, "src/reel_fixer.py", str(out)], cwd=ROOT, capture_output=True,
+                              text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
+                              env={**os.environ, DRAFT_ENV: "1"})
+    except subprocess.TimeoutExpired:
+        log(f"   fix timed out after {REEL_TIMEOUT}s")
+        return None
+    for line in [l for l in proc.stdout.splitlines() if l.strip()][-5:]:
+        log("   " + line)
+    if proc.returncode != 0:
+        if proc.returncode != 3:
+            log("   fix failed: " + proc.stderr.strip()[-300:])
+        return None
+    script = json.loads((ROOT / "output" / "temp" / "script.json").read_text(encoding="utf-8"))
+    _copy_draft(out, script)
+    return script
+
+
+def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
+    """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
+    A rejected tool is in the script history, so the next run moves on to another tool.
+    The run uses the silent draft voice (D-30); only an approved Reel is voiced."""
+    try:
+        proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True,
+                              text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
+                              env={**os.environ, DRAFT_ENV: "1"})
+    except subprocess.TimeoutExpired:
+        log(f"   video pipeline timed out after {REEL_TIMEOUT}s")
+        return None, False
+    lines = proc.stdout.splitlines()
+    picked = [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l or "▶" in l or "   rank " in l]
+    for line in picked[:16] + lines[-8:]:
+        log("   " + line)
+    if proc.returncode != 0:
+        log("   video pipeline failed")
+        return None, False
+    temp = ROOT / "output" / "temp"
+    script = json.loads((temp / "script.json").read_text(encoding="utf-8"))
+    tool = json.loads((temp / "tool.json").read_text(encoding="utf-8"))
+    out = REELS_DIR / f"{date.today().isoformat()}_{re.sub(r'[^a-z0-9]+', '-', script['tool_name'].lower()).strip('-')}"
+    _copy_draft(out, script)
     log(f"   hook [{script.get('hook_pattern', '?')}]: \"{script['hook']}\""
         + (f" (judge: {script['hook_judge']['reason']})" if script.get("hook_judge") else ""))
     verdict = review_reel(out / "final_video.mp4", script, tool)
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
+    for fix_round in range(1, REEL_FIX_ROUNDS + 1):  # D-33: a rejected draft is fixed before another is tried
+        if verdict["verdict"] == "publish" or not _time_for_a_reel():
+            break
+        fixed = _fix_draft(out, verdict, fix_round)
+        if fixed is None:
+            break
+        script = fixed
+        verdict = review_reel(out / "final_video.mp4", script, tool)
+        log(f"   editor (after fix {fix_round}): {verdict['verdict']} {verdict['problems'][:4]}")
+    if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
+        update_metrics(out.name, status="approved draft, but the voiced Reel failed")
+        return None, False  # no voice left (or a broken render): another attempt would fail the same way
     duration = json.loads((out / "reel_qa.json").read_text(encoding="utf-8"))["pacing"]["duration_sec"] \
         if (out / "reel_qa.json").exists() else 0.0
-    log_reel(out.name, script, duration, kind="trial" if cmd and any("trial_reel" in c for c in cmd) else "tool")
+    log_reel(out.name, script, duration, kind="trial" if cmd and any("trial_reel" in c for c in cmd)
+             else "guide" if cmd and any("guide_reel" in c for c in cmd) else "tool")
     if verdict["verdict"] != "publish":
         update_metrics(out.name, status=f"rejected: {'; '.join(verdict['problems'][:3])}")
         log("   reel not queued")
@@ -238,32 +334,92 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"]}, True
 
 
-def produce(only: str = "") -> None:
-    """only: "" (everything), "reel" or "news" - for test runs; the queue keeps the other slots empty."""
-    log(f"=== produce {only} ===".replace("  ", " "))
-    marker = ROOT / "state" / "last_produce.json"
-    if not only and not os.getenv("KAVAR_FORCE"):
+STAGES = ("morning", "rest")  # D-29/D-31: the 07:30 guide Reel first, the rest after it is scheduled
+
+
+def _marker() -> Path:
+    return ROOT / "state" / "last_produce.json"
+
+
+def stages_done(day: date | None = None) -> list[str]:
+    """Stages already produced today (an old marker without "stages" means the whole day)."""
+    try:
+        m = json.loads(_marker().read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    if m.get("date") != (day or date.today()).isoformat():
+        return []
+    return m.get("stages", list(STAGES))
+
+
+def _mark_done(stage: str) -> None:
+    _marker().parent.mkdir(parents=True, exist_ok=True)
+    _marker().write_text(json.dumps({"date": date.today().isoformat(),
+                                  "stages": sorted(set(stages_done()) | {stage}, key=STAGES.index)}), encoding="utf-8")
+
+
+def produce_guide_reel() -> dict | None:
+    """The 07:30 guide Reel (D-31); None if no company post fit the concept, or the editor said no."""
+    for attempt in range(1, GUIDE_ATTEMPTS + 1):  # a rejected post is marked used, so the next try takes another
+        log(f"reel: 07:30 Rehber Reel (attempt {attempt}/{GUIDE_ATTEMPTS})")
         try:
-            if json.loads(marker.read_text(encoding="utf-8")).get("date") == date.today().isoformat():
-                log("today's production already ran (state/last_produce.json); skipping")
-                return
-        except (OSError, json.JSONDecodeError):
-            pass
+            item, rendered = _reel_attempt([sys.executable, "src/guide_reel.py"])
+        except Exception as exc:  # noqa: BLE001  the rest of the day still runs
+            log(f"   Rehber Reel failed: {type(exc).__name__}: {str(exc)[:300]}")
+            return None
+        if item or not rendered:
+            return {**item, "concept": "guide"} if item else None
+    return None
+
+
+def produce(only: str = "") -> None:
+    """only: "" (both stages), "next" (the first stage not done today: cron-job.org 06:17 and 08:00),
+    "morning" / "rest" (one stage), or "reel" / "news" for test runs (part of "rest")."""
+    log(f"=== produce {only} ===".replace("  ", " "))
+    forced = bool(os.getenv("KAVAR_FORCE"))
+    if only == "next":
+        todo = [s for s in STAGES if s not in stages_done()]
+        if not todo:
+            log("today's production already ran (state/last_produce.json); skipping")
+            return
+        only = todo[0]
+        log(f"next stage: {only}")
+    elif not only and not forced:  # scheduled backups: only the stages not done yet
+        done = stages_done()
+        if len(done) == len(STAGES):
+            log("today's production already ran (state/last_produce.json); skipping")
+            return
+        if "morning" in done:
+            only = "rest"
+    slots = schedule()["slots"]
+    if only in ("", "morning"):
+        morning = produce_guide_reel() if any(s.get("concept") == "guide" for s in slots) else None
+        save_queue(_build_queue(slots, [], [], morning))
+        log(f"queued 07:30: reel {morning['title'] if morning else '-'} [{'ready' if morning else 'empty'}]")
+        _mark_done("morning")  # tried: the rest of the day starts even without a morning Reel
+        if only == "morning":
+            return
+    _produce_rest(slots, only)
+
+
+def _produce_rest(slots: list[dict], only: str) -> None:
+    """11:45, 12:30, 18:00 and 20:30 (only: "" / "rest" = all, "reel" / "news" = part of it)."""
     try:
         from ig_publisher import refresh_token
         log(f"token refresh: {'ok' if refresh_token() else 'not needed / failed'}")
     except Exception as exc:
         log(f"token refresh skipped: {exc}")
-    slots = schedule()["slots"]
     news = []
     if only != "reel":
         try:
             news = produce_news_items(sum(s["kind"] == "carousel" for s in slots))
         except Exception as exc:
             log(f"news production failed: {type(exc).__name__}: {str(exc)[:300]}")
-    save_queue(_build_queue(slots, list(news), []))  # approved carousels survive a Reel crash or job timeout
+    # the morning stage's guide Reel stays in its slot when the rest is made in the same run
+    morning = next((q for q in load_queue() if q.get("concept") == "guide" and q["status"] == "ready"), None)
+    save_queue(_build_queue(slots, list(news), [], morning))  # approved carousels survive a Reel crash or timeout
     reels: list[dict] = []  # best first: the "Biz denedik" Reel, then tool Reels
-    wanted = sum(s["kind"] == "reel" for s in slots)
+    wanted = sum(s["kind"] == "reel" and s.get("concept") != "guide" for s in slots)
     if wanted and only != "news":
         if trial := produce_trial_reel(news):
             reels.append(trial)
@@ -276,23 +432,24 @@ def produce(only: str = "") -> None:
             if tool_reel is None:
                 break
             reels.append(tool_reel)
-            save_queue(_build_queue(slots, list(news), reels))
-    queue = _build_queue(slots, list(news), reels)
+            save_queue(_build_queue(slots, list(news), reels, morning))
+    queue = _build_queue(slots, list(news), reels, morning)
     save_queue(queue)
     for q in queue:
         log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
-    # the day counts as done only when something is ready: a crashed or empty run leaves room for
-    # the later scheduled runs (produce.yml) to try again
-    if not only and any(q["status"] == "ready" for q in queue):
-        marker.parent.mkdir(parents=True, exist_ok=True)
-        marker.write_text(json.dumps({"date": date.today().isoformat()}), encoding="utf-8")
+    # the rest counts as done only when something is ready: a crashed or empty run leaves room for
+    # the later runs (08:00 cron-job.org, produce.yml backups) to try again
+    if only in ("", "rest") and any(q["status"] == "ready" for q in queue):
+        _mark_done("rest")
 
 
-def _build_queue(slots: list[dict], news: list[dict], reels: list[dict]) -> list[dict]:
+def _build_queue(slots: list[dict], news: list[dict], reels: list[dict], morning: dict | None = None) -> list[dict]:
     """Carousels fill their slots in order. Reels (best first) fill the reel slots from the LAST one
-    back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16)."""
-    reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel"]
+    back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16).
+    The 07:30 slot (concept "guide", D-31) takes only the guide Reel, and the guide Reel only that slot."""
+    reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel" and s.get("concept") != "guide"]
     by_slot = dict(zip(reversed(reel_slots), reels))
+    by_slot.update({i: morning for i, s in enumerate(slots) if s.get("concept") == "guide" and morning})
     queue = []
     for i, s in enumerate(slots):
         item = news.pop(0) if s["kind"] == "carousel" and news else by_slot.get(i)

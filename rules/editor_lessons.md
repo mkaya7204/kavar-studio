@@ -72,3 +72,8 @@ Add new lessons at the bottom. Never delete a lesson without the user's approval
 - **What happened:** OpenAI / Itaú carousel, three test renders. Each time the writer ended a slide with "Türkiye'ye dair bir bilgi yok" (or similar), and each time the editor flagged it as something the source doesn't say, costing a fix round.
 - **Fix:** the line was removed in the fix round; this lesson stops the writer from adding it.
 - **Rule:** Mention Turkey only when the source does. If the news is limited to some countries or customers, say who can use it in the source's own words ("Brezilya'daki Itaú müşterileri") and stop there; never add "no information about Turkey".
+
+## 2026-10-18 - A guide Reel about a feature with no AI in it
+- **What happened:** first dry run of the 07:30 guide Reel (D-31). It picked Meta's "invite anyone to a WhatsApp call" (guest links): useful, but no AI. The writer still used #yapayzeka #aitools, and the 10 s shot was the whole article page shrunk to an unreadable strip with the caption over it. The editor rejected it, and it was right on all three points. A dry run, not published; no voice was spent (silent draft, D-30).
+- **Fix:** the guide concept now accepts only AI features of known products (content_ranker "guide_reel"); a missing picture is replaced by the top of the page, never the full page shrunk; the guide writer puts the product and feature first in the hashtags.
+- **Rule:** A KAVAR post is about AI: the feature itself must be AI (a model, an assistant, generation, AI search or editing). Hashtags describe what the post shows; #yapayzeka only when the post is about AI. A page screenshot is shown only where its text can be read on a phone.

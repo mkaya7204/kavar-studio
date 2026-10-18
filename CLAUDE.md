@@ -30,8 +30,14 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    discounts in any post, image, caption or voiceover. The only exception is a paid collaboration
    the user announces per post. Enforced by `PRICE_PATTERN` / `price_mentions` (src/script_writer.py),
    writers, the proof-crop prompt, the "Biz denedik" judge, and the editor.
+   **D-32 (2026-10-18), allowed:** the plan / package a feature comes in ("Pro planında"), beta or limited
+   access, "kredi harcıyor / kullanım hakkından düşüyor" without amounts, and why. Still banned: amounts,
+   currencies, discounts, campaigns, trials, "bedava / ücretsiz" as a selling line.
 2. **Editor gate** (2026-10-13): only content the editor review (src/editor_review.py) marks
    "publish" is queued. FIX_ROUNDS = 2 for carousels, REEL_ATTEMPTS = 3.
+   **D-33 (2026-10-18):** a rejected silent Reel draft is FIXED first (src/reel_fixer.py: text, picture
+   choice; REEL_FIX_ROUNDS = 2, silent, back to the editor); only an unfixable topic (no AI, off concept,
+   no usable picture) moves on to the next tool. Never answer a rejection with "editör haklı" and stop.
 3. **Rejected content → Claude fixes it by hand, then teaches the editor** (2026-10-14, made
    permanent 2026-10-16). During the morning "yükle", for each rejection:
    - read the verdict and decide whether it was right;
@@ -55,10 +61,19 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    Only provider in config.json; no fallback voice, no env override (tests/test_decisions.py). Two
    accounts (D-26): `ELEVENLABS_API_KEY`, then `ELEVENLABS_API_KEY_2` when the first is refused; both speak
    George. If both fail, no Reel is made; tell the user. `probe.yml` shows both accounts' state.
-   Don't propose another voice.
-7. **Schedule** (schedule.json): 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30 Reel (two Reels a
-   day since 2026-10-16: "günde tek reels yeterince takipçi getirmiyor"). The best Reel ("Biz denedik")
-   takes 20:30, a tool Reel 11:45 (`_build_queue`).
+   Don't propose another voice. Voice is spent only on the Reel the editor approved (D-30, 2026-10-18):
+   attempts use a silent draft voice, then `src/voice_final.py` voices the approved one once.
+   **D-34 (2026-10-18):** George says every product / company name the way Turkish tech people say it, also
+   new names: `tts_engine.spoken_text` (hand-checked `rules/pronunciation.json` first, then names Claude
+   learns before voicing, kept in `state/pronunciations.json`). Captions and screens keep the real spelling.
+7. **Schedule** (schedule.json): 07:30 Reel, 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30
+   Reel. Two Reels a day since 2026-10-16 ("günde tek reels yeterince takipçi getirmiyor"). The best
+   Reel ("Biz denedik") takes 20:30, a tool Reel 11:45 (`_build_queue`), news carousel 12:30.
+   **D-31 (2026-10-18):** 07:30 Reel and 18:00 carousel = the GUIDE concept: features and right use of
+   known AI models / companies' products, in which mode or way they work best (official docs as the
+   source, tried by us where possible; never paid/free). The Turkey Reel (D-29) is cancelled. Until the
+   guide pipeline makes a clean Reel, `main` keeps the old 4 slots. In every slot, content_ranker picks
+   what reaches more people inside the slot's concept; the concepts don't change.
 8. **Reel outro** shows the handle @thekavar.ai with a small "+ TAKİP ET" pill (11dcfdc). It
    was once removed without asking; never again.
 9. **Brand:** handle @thekavar.ai (brand.json). Never use other creators' content. No press-site photos

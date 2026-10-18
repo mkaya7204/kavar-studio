@@ -21,6 +21,7 @@ def sandbox(monkeypatch, tmp_path):
     monkeypatch.setattr(daily, "schedule", lambda: SLOTS)
     monkeypatch.setitem(sys.modules, "ig_publisher", types.SimpleNamespace(refresh_token=lambda: False))
     monkeypatch.delenv("KAVAR_FORCE", raising=False)
+    monkeypatch.setattr(daily, "rank", lambda c, *a, **k: c)  # no Claude call in tests
     return tmp_path
 
 
@@ -93,7 +94,7 @@ def test_an_empty_day_is_not_marked_done(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
     monkeypatch.setattr(daily, "produce_reel", lambda: None)
     daily.produce()
-    assert not (sandbox / "state" / "last_produce.json").exists()
+    assert "rest" not in daily.stages_done()  # the 08:00 run and the backups may try the rest again
 
 
 def test_a_done_day_is_skipped(monkeypatch, sandbox):
@@ -184,3 +185,95 @@ def test_a_site_that_refuses_the_cloud_does_not_eat_the_news_tries(monkeypatch, 
     daily.produce_news_items(2)
     assert sum("openai.com" in u for u in tried) == 1
     assert sum("huggingface.co" in u for u in tried) == 3
+
+
+def test_off_concept_and_repeat_stories_are_never_used(monkeypatch, sandbox):
+    """10-17 dry run: a gaming promotion reached the 18:00 slot because it was only moved down."""
+    news = [{"title": "DLSS on GeForce NOW", "url": "https://blogs.nvidia.com/a", "source": "NVIDIA",
+             "rank": {"score": 17, "category": "gaming_hardware", "company": "NVIDIA", "reason": "", "fits": False,
+                      "repeat": False}},
+            {"title": "Same as yesterday", "url": "https://x.com/b", "source": "X",
+             "rank": {"score": 25, "category": "model_release", "company": "X", "reason": "", "fits": True,
+                      "repeat": True}},
+            {"title": "Tested model", "url": "https://hf.co/c", "source": "HF", "testable": True,
+             "rank": {"score": 10, "category": "model_release", "company": "Y", "reason": "", "fits": False,
+                      "repeat": False}}]
+    monkeypatch.setattr(daily, "fetch_news", lambda n: news)
+    monkeypatch.setattr(daily, "testable_first", lambda c: c)
+    monkeypatch.setattr(daily, "mark_used", lambda url: None)
+    tried = []
+    monkeypatch.setattr(daily, "produce_news", lambda item: tried.append(item["title"]) or (_ for _ in ()).throw(RuntimeError("x")))
+    daily.produce_news_items(2)
+    assert tried == ["Tested model"]
+
+
+GUIDE_SLOTS = [{"time": "07:30", "kind": "reel", "concept": "guide"}] + SLOTS["slots"]
+
+
+def test_morning_stage_makes_only_the_guide_reel_and_next_runs_the_rest(monkeypatch, sandbox):
+    """D-29/D-31: the 07:30 guide Reel first, on its own; the rest after it (cron-job.org 06:17 and 08:00 "next")."""
+    monkeypatch.setattr(daily, "schedule", lambda: {"slots": GUIDE_SLOTS})
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: {"kind": "reel", "folder": "g", "title": "Guide", "concept": "guide"})
+    calls = []
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: calls.append("news") or [])
+    monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda: {"kind": "reel", "folder": "t", "title": "Tool"})
+    daily.produce("next")
+    assert calls == [] and daily.stages_done() == ["morning"]
+    q = daily.load_queue()
+    assert q[0]["time"] == "07:30" and q[0]["status"] == "ready" and q[0]["title"] == "Guide"
+    daily.produce("next")
+    assert calls == ["news"] and daily.stages_done() == ["morning", "rest"]
+    q = daily.load_queue()
+    assert q[0]["title"] == "Guide"  # the morning Reel stays when the rest is made
+    assert all(x.get("concept") != "guide" for x in q[1:])  # the guide Reel never lands in another slot
+    daily.produce("next")  # both done: nothing runs
+    assert calls == ["news"]
+
+
+def test_no_guide_reel_still_lets_the_rest_start(monkeypatch, sandbox):
+    monkeypatch.setattr(daily, "schedule", lambda: {"slots": GUIDE_SLOTS})
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: None)
+    daily.produce("morning")
+    assert daily.stages_done() == ["morning"] and daily.load_queue()[0]["status"] == "empty"
+
+
+def test_guide_candidates_are_unused_company_posts_of_two_weeks(monkeypatch, tmp_path):
+    """D-31: guide Reels come from the companies' own blogs; a feature stays worth explaining for 14 days."""
+    import sys
+    from datetime import datetime, timedelta, timezone
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import guide_reel
+
+    now = datetime.now(timezone.utc)
+    posts = [{"title": "New in Gemini", "url": "https://g/1", "date": now - timedelta(days=9), "summary": "", "source": "Gemini"},
+             {"title": "Old", "url": "https://g/2", "date": now - timedelta(days=20), "summary": "", "source": "Gemini"},
+             {"title": "Used", "url": "https://g/3", "date": now - timedelta(days=1), "summary": "", "source": "Gemini"}]
+    sources = tmp_path / "news_sources.json"
+    sources.write_text('{"feeds": [{"name": "Gemini", "url": "u"}]}', encoding="utf-8")
+    monkeypatch.setattr(guide_reel, "SOURCES_PATH", sources)
+    monkeypatch.setattr(guide_reel, "_items", lambda feed: [dict(i) for i in posts])
+    monkeypatch.setattr(guide_reel, "load_history", lambda: ["https://g/3"])
+    assert [i["url"] for i in guide_reel.fetch_guide()] == ["https://g/1"]
+
+
+def test_guide_pictures_are_the_features_own_never_the_page(tmp_path):
+    """10-18 dry runs: the shrunk page top was unreadable twice and an abstract cover proved nothing. The
+    article's figures come first, the cover last, and the page screenshot is never a shot."""
+    import sys
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import guide_reel
+    from PIL import Image
+
+    def pic(name, color, size=(1600, 900)):
+        Image.new("RGB", size, color).save(tmp_path / name)
+        return str(tmp_path / name)
+
+    page = {"url": "https://blog.google/x", "page_path": pic("page.png", "white", (1350, 6000)),
+            "cover_path": pic("cover.jpg", "blue"), "figures": [{"path": pic("fig_1.png", "red")}], "videos": []}
+    cap = guide_reel._frames(page, tmp_path / "f")
+    with Image.open(cap["proof_path"]) as proof:
+        assert proof.getpixel((10, 10)) == (255, 0, 0)  # the feature's figure, not the cover
+    for shot in (cap["screenshot_path"], cap["fullpage_path"]):
+        with Image.open(shot) as img:
+            assert img.getpixel((540, 840)) != (255, 255, 255)  # never the page

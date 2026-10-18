@@ -1,10 +1,27 @@
 {
-  "_help": "Daily autopilot (daily.py). produce_at: when content is made and reviewed; slots: publish times in order (queue item 1, 2, 3). kind: carousel (news) or reel. Change times here, then run setup_tasks.ps1 again.",
+  "_help": "Daily autopilot (daily.py). produce_at: when content is made and reviewed; slots: publish times in order (queue item 1, 2, 3). kind: carousel (news) or reel. Change times here, then run setup_tasks.ps1 again. concept guide = the 07:30 guide Reel (D-31), made first in its own stage.",
   "produce_at": "06:30",
   "slots": [
-    {"time": "11:45", "kind": "reel"},
-    {"time": "12:30", "kind": "carousel"},
-    {"time": "18:00", "kind": "carousel"},
-    {"time": "20:30", "kind": "reel"}
+    {
+      "time": "07:30",
+      "kind": "reel",
+      "concept": "guide"
+    },
+    {
+      "time": "11:45",
+      "kind": "reel"
+    },
+    {
+      "time": "12:30",
+      "kind": "carousel"
+    },
+    {
+      "time": "18:00",
+      "kind": "carousel"
+    },
+    {
+      "time": "20:30",
+      "kind": "reel"
+    }
   ]
 }

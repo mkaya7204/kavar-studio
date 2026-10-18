@@ -15,6 +15,7 @@ jobs:
     timeout-minutes: 10
     env:
       PYTHONIOENCODING: utf-8
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}  # learns new names (D-34)
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
       ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}
       SAY_TEXT: ${{ github.event.inputs.text }}
@@ -24,10 +25,10 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg && pip install -q -r requirements.txt
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg && pip install -q -r requirements.txt && npm install -g @anthropic-ai/claude-code@2.1.301
       - name: Speak
         run: |
-          python -c "import os,sys,json; sys.path.insert(0,'src'); import tts_engine as t; s=os.environ['SAY_TEXT']; print('sent:', t.spoken_text(s)); r=t.synthesize(s, out_path='output/say/say.mp3', voice=t.voice_for('tr')); print(json.dumps(r, ensure_ascii=False)); print(open('output/say/say_words.json',encoding='utf-8').read()[:800])"
+          python -c "import os,sys,json; sys.path.insert(0,'src'); import tts_engine as t; s=os.environ['SAY_TEXT']; r=t.synthesize(s, out_path='output/say/say.mp3', voice=t.voice_for('tr')); print(json.dumps(r, ensure_ascii=False)); print('known:', json.dumps(t._lexicon(), ensure_ascii=False)); print(open('output/say/say_words.json',encoding='utf-8').read()[:800])"
       - uses: actions/upload-artifact@v7
         with:
           name: say

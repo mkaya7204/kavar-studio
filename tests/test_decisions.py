@@ -16,10 +16,12 @@ def test_voice_is_george(monkeypatch):
 
 
 def test_schedule_slots():
-    """User 2026-10-16: two Reels a day, 11:45 and 20:30 ("bunu artık standart hale getirelim")."""
+    """User 2026-10-16: two Reels a day, 11:45 and 20:30 ("bunu artık standart hale getirelim").
+    User 2026-10-18 (D-31): the 07:30 Reel is the guide concept (the Turkey Reel of D-29 is cancelled)."""
     slots = json.loads((ROOT / "schedule.json").read_text(encoding="utf-8"))["slots"]
-    assert [(s["time"], s["kind"]) for s in slots] == [("11:45", "reel"), ("12:30", "carousel"), ("18:00", "carousel"),
-                                                          ("20:30", "reel")]
+    assert [(s["time"], s["kind"]) for s in slots] == [("07:30", "reel"), ("11:45", "reel"), ("12:30", "carousel"),
+                                                          ("18:00", "carousel"), ("20:30", "reel")]
+    assert slots[0].get("concept") == "guide" and all(s.get("concept") != "guide" for s in slots[1:])
 
 
 def test_brand_handle():
@@ -165,7 +167,7 @@ def test_cards_must_match_the_voice_under_them():
 def test_price_words_found_in_the_10_17_audit_are_caught():
     from script_writer import price_mentions
 
-    for text in ("7 day free trial", "paid plans", "a discount for teams", "Premium sürüm", "500 kredi veriyor",
+    for text in ("7 day free trial", "paid plans", "a discount for teams", "500 kredi veriyor",
                  "10,000 credits"):
         assert price_mentions(text), text
     for text in ("Kredi kartı dolandırıcılığını yakalayan model", "bir yıllık işlem verisi", "Görsel kredisi"):

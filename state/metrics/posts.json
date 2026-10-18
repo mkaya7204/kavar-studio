@@ -9,7 +9,8 @@
     "likes": 5,
     "comments": 1,
     "shares": 0,
-    "saves": 0
+    "saves": 0,
+    "category": "policy_business"
   },
   {
     "published": "2026-10-12 04:00",
@@ -21,7 +22,8 @@
     "likes": 4,
     "comments": 0,
     "shares": 0,
-    "saves": 0
+    "saves": 0,
+    "category": "everyday_ai_product"
   },
   {
     "published": "2026-10-12 11:00",
@@ -75,7 +77,8 @@
     "likes": 4,
     "comments": 0,
     "shares": 0,
-    "saves": 0
+    "saves": 0,
+    "category": "chips_infrastructure"
   },
   {
     "published": "2026-10-13 15:00",
@@ -101,7 +104,8 @@
     "likes": 4,
     "comments": 0,
     "shares": 0,
-    "saves": 0
+    "saves": 0,
+    "category": "model_release"
   },
   {
     "published": "2026-10-13 20:31",
@@ -141,7 +145,8 @@
     "likes": 6,
     "comments": 0,
     "shares": 0,
-    "saves": 1
+    "saves": 1,
+    "category": "model_release"
   },
   {
     "published": "2026-10-14 12:37",
@@ -167,7 +172,8 @@
     "likes": 5,
     "comments": 0,
     "shares": 0,
-    "saves": 1
+    "saves": 1,
+    "category": "gaming_hardware"
   },
   {
     "published": "2026-10-14 20:34",
@@ -193,7 +199,8 @@
     "likes": 3,
     "comments": 1,
     "shares": 0,
-    "saves": 0
+    "saves": 0,
+    "category": "chips_infrastructure"
   },
   {
     "published": "2026-10-15 13:12",
@@ -219,7 +226,8 @@
     "likes": 1,
     "comments": 0,
     "shares": 0,
-    "saves": 0
+    "saves": 0,
+    "category": "chips_infrastructure"
   },
   {
     "published": "2026-10-15 21:22",
@@ -259,7 +267,8 @@
     "likes": 3,
     "comments": 0,
     "shares": 0,
-    "saves": 0
+    "saves": 0,
+    "category": "model_release"
   },
   {
     "published": "2026-10-16 18:00",
@@ -271,7 +280,8 @@
     "likes": 2,
     "comments": 0,
     "shares": 0,
-    "saves": 0
+    "saves": 0,
+    "category": "model_release"
   },
   {
     "published": "2026-10-16 20:31",

@@ -5,11 +5,14 @@ import pytest
 from script_writer import NO_PRICE_RULE, price_mentions
 
 PRICES = ["₺100", "$5", "20 €", "£3", "5 dolar", "Türk lirası", "ÜCRETSİZ", "Ücretli", "bedava", "FİYAT",
-          "Fiyatlandırma", "ABONELİK", "Ödeme", "İndirim", "free", "pricing", "100 TL", "20 USD", "50 EUR",
+          "Fiyatlandırma", "Ödeme", "İndirim", "free", "pricing", "100 TL", "20 USD", "50 EUR",
           "Sıcak Simit 50 Kr", "50 kuruş", "20 GBP", "TRY 50", "50 TRY", "₹20", "¥300", "freemium", "paralı",
           "satın alın", "deneme sürümü", "tek seferlik", "5 milyon TL", "100 bin TL", "1.5 TL", "#ücretsiz"]
 SAFE = ["freedom", "token", "GPT-4 Turbo", "Kral", "TLS bağlantısı", "Krita", "Kraken", "kuru", "15 Ekim'de",
-        "1024 × 1024", "2 saniyede", "Galata Köprüsü"]
+        "1024 × 1024", "2 saniyede", "Galata Köprüsü",
+        # D-32 (2026-10-18): plans, beta / limited access and credit use without amounts are allowed
+        "Pro planında", "Plus abonelerine açıldı", "Premium sürüm", "abonelik gerekiyor", "subscribers",
+        "beta olarak sınırlı kullanıcıda", "her üretim kredi harcıyor", "kullanım hakkından düşüyor"]
 
 
 @pytest.mark.parametrize("text", PRICES)
