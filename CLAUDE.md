@@ -71,8 +71,9 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    Reel ("Biz denedik") takes 20:30, a tool Reel 11:45 (`_build_queue`), news carousel 12:30.
    **D-31 (2026-10-18):** 07:30 Reel and 18:00 carousel = the GUIDE concept: features and right use of
    known AI models / companies' products, in which mode or way they work best (official docs as the
-   source, tried by us where possible; never paid/free). The Turkey Reel (D-29) is cancelled. Until the
-   guide pipeline makes a clean Reel, `main` keeps the old 4 slots. In every slot, content_ranker picks
+   source, tried by us where possible; never paid/free). The Turkey Reel (D-29) is cancelled. The
+   guide Reel went live on `main` on 2026-10-18 after two clean guide Reels (the user: "tamam"); 18:00 stays
+   a news carousel until the guide carousel is built. In every slot, content_ranker picks
    what reaches more people inside the slot's concept; the concepts don't change.
 8. **Reel outro** shows the handle @thekavar.ai with a small "+ TAKİP ET" pill (11dcfdc). It
    was once removed without asking; never again.
