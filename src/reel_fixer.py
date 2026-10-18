@@ -29,6 +29,7 @@ sys.path.insert(0, str(ROOT / "src"))
 TEMP_DIR = ROOT / "output" / "temp"
 WORK = TEMP_DIR / "fix"
 UNFIXABLE = 3
+MAX_CANDIDATES = 12
 TILE = (300, 300)
 
 SCHEMA = {
@@ -113,14 +114,19 @@ def candidates(capture: dict) -> list[Path]:
                 img.convert("RGB").save(dst)
             out.append(dst)
         return out
+    # Half-overlapping windows over the whole captured page, not only the few non-overlapping ones the first
+    # proof pick used: the 10-18 test fixer saw one picture of Inbox Zero and had to give up.
     page = Path(capture.get("fullpage_path") or capture.get("screenshot_path") or "")
     if not page.exists():
         return out
     with Image.open(page) as img:
         img = img.convert("RGB")
         win_h = round(img.width * PROOF_SIZE[1] / PROOF_SIZE[0])
-        for i, top in enumerate(_proof_windows(img, screens=6)):
-            dst = WORK / f"cand_{i}.png"
+        picked = _proof_windows(img, screens=6)
+        tops = sorted(set(picked) | set(range(0, max(1, img.height - win_h + 1), max(1, win_h // 2))))
+        step = max(1, len(tops) // MAX_CANDIDATES + (len(tops) % MAX_CANDIDATES > 0))
+        for top in tops[::step][:MAX_CANDIDATES]:
+            dst = WORK / f"cand_{len(out)}.png"
             img.crop((0, top, img.width, min(img.height, top + win_h))).save(dst)
             out.append(dst)
     return out
@@ -208,6 +214,7 @@ def main(folder: Path) -> int:
     tool = json.loads((TEMP_DIR / "tool.json").read_text(encoding="utf-8"))
     capture = json.loads(CAPTURE_PATH.read_text(encoding="utf-8"))
     pictures = candidates(capture)
+    print(f"   {len(pictures)} pictures of the product to choose from")
     WORK.mkdir(parents=True, exist_ok=True)
     board = sheet(pictures) if pictures else None
     rejected = folder / "_review_sheet.jpg"

@@ -98,6 +98,21 @@ def test_the_fixer_keeps_the_script_rules():
     assert reel_fixer.candidates({"pictures_locked": True}) == []  # "Biz denedik": our outputs stay
 
 
+def test_the_fixer_sees_the_whole_page_of_a_tool(tmp_path, monkeypatch):
+    """10-18: the fixer saw one picture of Inbox Zero's site and gave up; a tall page gives many windows."""
+    import reel_fixer
+    from PIL import Image, ImageDraw
+
+    page = Image.new("RGB", (540, 4000), "white")
+    draw = ImageDraw.Draw(page)
+    for y in range(0, 4000, 40):
+        draw.line((0, y, 540, y + 20), fill="black", width=3)
+    page.save(tmp_path / "fullpage.png")
+    monkeypatch.setattr(reel_fixer, "WORK", tmp_path / "fix")
+    found = reel_fixer.candidates({"fullpage_path": str(tmp_path / "fullpage.png")})
+    assert 6 <= len(found) <= reel_fixer.MAX_CANDIDATES and all(p.exists() for p in found)
+
+
 def test_no_voice_means_no_reel_and_no_more_attempts(monkeypatch, reel_sandbox):
     """CLAUDE.md §1.6: if both ElevenLabs accounts fail, no Reel is made."""
     daily, calls = reel_sandbox
