@@ -30,6 +30,9 @@ on:
       auto:
         description: "yes = the daily start from cron-job.org (D-25): behaves like a scheduled run and skips a day already produced"
         default: "no"
+      guide_url:
+        description: "remake the guide Reel from this company post (use with only=morning dry=yes)"
+        default: ""
 
 permissions:
   contents: write
@@ -52,6 +55,7 @@ jobs:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       # a late scheduled run must not redo a day already produced by hand (state/last_produce.json)
       KAVAR_FORCE: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.auto != 'yes' && '1' || '' }}
+      KAVAR_GUIDE_URL: ${{ github.event.inputs.guide_url }}  # empty on scheduled runs
     steps:
       - uses: actions/checkout@v7
         with:

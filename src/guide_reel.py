@@ -15,6 +15,7 @@ WhatsApp...) and how to use it right: where it is, what to ask, which mode fits 
 """
 
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
@@ -176,6 +177,9 @@ def write_script(product: str, page: dict) -> dict | None:
 
 
 def make_guide_reel() -> int:
+    if url := os.getenv("KAVAR_GUIDE_URL"):  # remake one post's Reel by hand (produce.yml guide_url, dry runs)
+        print(f"▶ Rehber Reel from {url} (guide_url)", flush=True)
+        return _make_from([{"url": url, "title": url, "source": urlsplit(url).hostname or "?"}])
     fresh = fetch_guide()
     # A product we posted news about is still a guide topic ("haberi verdik, şimdi nasıl kullanılır"): the same
     # post is never reused (history), but a "repeat" product is kept, after the fresh ones (10-18: Gemini 4
@@ -186,7 +190,11 @@ def make_guide_reel() -> int:
     for c in candidates[:10]:
         r = c.get("rank") or {}
         print(f"   rank {r.get('score', '-'):>2} [{c['source']}] {c['title'][:70]} ({str(r.get('reason', ''))[:80]})")
-    for c in candidates[:TRIES]:
+    return _make_from(candidates[:TRIES])
+
+
+def _make_from(candidates: list[dict]) -> int:
+    for c in candidates:
         print(f"\n--- {c['source']}: {c['title']}", flush=True)
         try:
             page = capture_article(c["url"], WORK / "page")
