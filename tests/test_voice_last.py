@@ -86,16 +86,15 @@ def test_an_unfixable_topic_moves_on_without_more_fixes(monkeypatch, reel_sandbo
 def test_the_fixer_keeps_the_script_rules():
     import reel_fixer
 
-    script = {"tool_name": "T", "website_url": "https://t.ai", "source": "claude", "hook": "h", "voiceover": "x",
-              "shots": [], "key_points": [], "why_it_matters": "", "caption": "", "hashtags": []}
-    seg = {"hook": "Toplantı notun hazır.", "point1": "T kaydı yazıya döker.", "point2": "Özet çıkarır.",
-           "point3": "Görev listesi yapar.", "why": "Not tutmazsın.", "cta": "Arkadaşına gönder."}
-    fixed = reel_fixer.apply_text(script, {"hook": "Toplantı notun hazır", "segments": seg, "why_it_matters": "w",
-                                           "key_points": [{"title": "a", "detail": "b"}] * 3, "caption": "c",
-                                           "hashtags": ["#t"]})
-    assert fixed["voiceover"].startswith("Toplantı notun hazır. T kaydı") and fixed["voiceover_segments"] == seg
-    long = reel_fixer.apply_text(script, {**fixed, "segments": {**seg, "point2": "kelime " * 40}})
-    assert any("max 38" in p for p in reel_fixer.text_problems(long))
+    script = json.loads((ROOT / "rerender" / "2026-10-17_craft-agents.json").read_text(encoding="utf-8"))
+    seg = script["voiceover_segments"]
+    answer = {"hook": script["hook"], "segments": seg, "why_it_matters": script["why_it_matters"],
+              "key_points": script["key_points"], "caption": script["caption"], "hashtags": script["hashtags"]}
+    fixed = reel_fixer.apply_text(script, answer)
+    assert fixed["voiceover"].startswith(seg["hook"].strip()) and fixed["voiceover_segments"] == seg
+    assert reel_fixer.text_problems(fixed) == []  # an unchanged, valid script passes (40 words: the writers' limit)
+    long = reel_fixer.apply_text(script, {**answer, "segments": {**seg, "point2": "kelime " * 40}})
+    assert any("max 42" in p for p in reel_fixer.text_problems(long))
     assert reel_fixer.candidates({"pictures_locked": True}) == []  # "Biz denedik": our outputs stay
 
 

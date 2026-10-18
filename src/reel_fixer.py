@@ -29,7 +29,6 @@ sys.path.insert(0, str(ROOT / "src"))
 TEMP_DIR = ROOT / "output" / "temp"
 WORK = TEMP_DIR / "fix"
 UNFIXABLE = 3
-MAX_WORDS = 38  # the Reels' voiceover limit (under 26 s)
 TILE = (300, 300)
 
 SCHEMA = {
@@ -164,9 +163,7 @@ def text_problems(script: dict) -> list[str]:
         checked = VideoScript.model_validate(script)
     except ValueError as exc:
         return [str(exc)[:500]]
-    problems = []
-    if checked.voiceover_words > MAX_WORDS:
-        problems.append(f"voiceover has {checked.voiceover_words} words; max {MAX_WORDS}")
+    problems = []  # the word limit is reel_rule_problems' own (the writers' limit), not a stricter one here
     if bad := _script_price_mentions(checked):
         problems.append(f"price words: {', '.join(bad)}")
     return problems + reel_rule_problems(checked)
