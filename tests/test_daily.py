@@ -255,3 +255,25 @@ def test_guide_candidates_are_unused_company_posts_of_two_weeks(monkeypatch, tmp
     monkeypatch.setattr(guide_reel, "_items", lambda feed: [dict(i) for i in posts])
     monkeypatch.setattr(guide_reel, "load_history", lambda: ["https://g/3"])
     assert [i["url"] for i in guide_reel.fetch_guide()] == ["https://g/1"]
+
+
+def test_guide_pictures_are_the_features_own_never_the_page(tmp_path):
+    """10-18 dry runs: the shrunk page top was unreadable twice and an abstract cover proved nothing. The
+    article's figures come first, the cover last, and the page screenshot is never a shot."""
+    import sys
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import guide_reel
+    from PIL import Image
+
+    def pic(name, color, size=(1600, 900)):
+        Image.new("RGB", size, color).save(tmp_path / name)
+        return str(tmp_path / name)
+
+    page = {"url": "https://blog.google/x", "page_path": pic("page.png", "white", (1350, 6000)),
+            "cover_path": pic("cover.jpg", "blue"), "figures": [{"path": pic("fig_1.png", "red")}], "videos": []}
+    cap = guide_reel._frames(page, tmp_path / "f")
+    with Image.open(cap["proof_path"]) as proof:
+        assert proof.getpixel((10, 10)) == (255, 0, 0)  # the feature's figure, not the cover
+    for shot in (cap["screenshot_path"], cap["fullpage_path"]):
+        with Image.open(shot) as img:
+            assert img.getpixel((540, 840)) != (255, 255, 255)  # never the page

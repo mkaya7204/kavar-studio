@@ -15,6 +15,7 @@ WhatsApp...) and how to use it right: where it is, what to ask, which mode fits 
 """
 
 import json
+import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -58,6 +59,8 @@ not the company's announcement. No "duyurdu", "tanıttı" in the hook.
 - why: what the viewer gains. key_points follow point1-3 in the same order.
 - Facts only from the COMPANY PAGE below: never add features, menus, steps or limits it doesn't state. \
 If the page says the feature is rolling out, limited to some countries, in beta, or comes with a plan (e.g. Pro, Plus, a subscription) or uses credits, say so briefly (D-32): the viewer must know whether they can use it. Never amounts or free / paid.
+- Only what an everyday user does in the app. If the page also covers developers (API, SDK, ADK, \
+benchmarks), leave that out: "Kodun gece boyu hızlanıyor" overstated a developer kit (10-18 dry run).
 - hashtags: the product and the feature first, one guide tag (#ipucu or #nasılyapılır), #yapayzeka only \
 when the feature is AI."""
 
@@ -86,23 +89,53 @@ def fetch_guide(limit: int = POOL) -> list[dict]:
     return fresh[:limit]
 
 
+def _video_frames(videos: list[str], folder: Path) -> list[str]:
+    """One still from each of the page's own videos (feature demos), taken 40% in, past the title card."""
+    out = []
+    for n, src in enumerate(videos, 1):
+        still = folder / f"video_{n}.png"
+        try:
+            probe = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
+                                    src], capture_output=True, text=True, timeout=60)
+            at = float(probe.stdout.strip() or 0) * 0.4
+            subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", f"{at:.2f}", "-i", src, "-frames:v", "1",
+                            str(still)], capture_output=True, timeout=120)
+        except (OSError, ValueError, subprocess.TimeoutExpired):
+            continue
+        if still.exists():
+            out.append(str(still))
+    return out
+
+
+def _detail(img: Image.Image) -> Image.Image:
+    """The middle of a picture, bigger: a second, readable look at the same feature screen."""
+    w, h = img.size
+    return img.crop((round(w * 0.18), round(h * 0.12), round(w * 0.82), round(h * 0.88)))
+
+
 def _frames(page: dict, folder: Path) -> dict | None:
-    """proof.png and the two shots, all from the company's own page."""
-    pictures = [p for p in [page.get("cover_path"), *(f["path"] for f in page.get("figures", []))] if p]
+    """proof.png and the two shots, all from the company's own page: the feature's own pictures first
+    (the article's figures and stills from its videos, usually the product's screen), the cover last.
+    The page itself is never used: shrunk or cropped, its text was unreadable (editor, 10-18 dry runs,
+    twice), and an abstract cover (a big "4") proved nothing, so it only fills in when nothing else exists."""
+    folder.mkdir(parents=True, exist_ok=True)
+    pictures = [f["path"] for f in page.get("figures", [])] + _video_frames(page.get("videos", []), folder)
+    if page.get("cover_path"):
+        pictures.append(page["cover_path"])
     if not pictures:
         return None
-    folder.mkdir(parents=True, exist_ok=True)
     with Image.open(pictures[0]) as img:
         ImageOps.fit(img.convert("RGB"), PROOF_SIZE, Image.LANCZOS, centering=(0.5, 0.35)).save(folder / "proof.png")
-    # Too few pictures: the page's top (title and first lines), never the whole page shrunk to an unreadable
-    # strip (editor, 10-18 dry run: "küçük, okunmaz ekran görüntüsü"). A reader-fetched page has no screenshot.
-    spare = page["page_path"] if Path(page["page_path"]).exists() else pictures[0]
-    shots = [pictures[1] if len(pictures) > 1 else spare, pictures[2] if len(pictures) > 2 else spare]
-    for name, src in zip(SHOT_NAMES, shots):
+    # with too few pictures a shot is a closer look at one of them, never the same frame twice
+    shots = [(pictures[1], False) if len(pictures) > 1 else (pictures[0], True),
+             (pictures[2], False) if len(pictures) > 2 else (pictures[-1], True)]
+    for name, (src, closer) in zip(SHOT_NAMES, shots):
         with Image.open(src) as img:
             img = img.convert("RGB")
-            if src == page["page_path"] and img.height > img.width * 1.4:
-                img = img.crop((0, 0, img.width, round(img.width * 1.25)))
+            if closer:
+                img = _detail(img)
+            if img.width < 960:
+                img = img.resize((960, round(img.height * 960 / img.width)), Image.LANCZOS)
             img.thumbnail((960, 1300), Image.LANCZOS)
             _shot_frame(img, folder / name)
     domain = (urlsplit(page["url"]).hostname or "").removeprefix("www.")
