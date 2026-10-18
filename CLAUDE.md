@@ -35,6 +35,9 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    currencies, discounts, campaigns, trials, "bedava / ücretsiz" as a selling line.
 2. **Editor gate** (2026-10-13): only content the editor review (src/editor_review.py) marks
    "publish" is queued. FIX_ROUNDS = 2 for carousels, REEL_ATTEMPTS = 3.
+   **D-33 (2026-10-18):** a rejected silent Reel draft is FIXED first (src/reel_fixer.py: text, picture
+   choice; REEL_FIX_ROUNDS = 2, silent, back to the editor); only an unfixable topic (no AI, off concept,
+   no usable picture) moves on to the next tool. Never answer a rejection with "editör haklı" and stop.
 3. **Rejected content → Claude fixes it by hand, then teaches the editor** (2026-10-14, made
    permanent 2026-10-16). During the morning "yükle", for each rejection:
    - read the verdict and decide whether it was right;

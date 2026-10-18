@@ -145,7 +145,8 @@ def _frames(outputs: list[Path], folder: Path) -> dict:
             img.thumbnail((960, 1300), Image.LANCZOS)
             _shot_frame(img, folder / name)
     return {"screenshot_path": str(folder / SHOT_NAMES[0]), "fullpage_path": str(folder / SHOT_NAMES[1]),
-            "proof_path": str(proof), "logo_path": None, "domain_label": "KAVAR denemesi"}
+            "proof_path": str(proof), "logo_path": None, "domain_label": "KAVAR denemesi",
+            "pictures_locked": True}  # our test outputs, framed whole: src/reel_fixer.py fixes only the text
 
 
 def write_script(article: dict) -> dict | None:

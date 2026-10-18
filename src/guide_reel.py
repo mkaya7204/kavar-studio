@@ -140,7 +140,8 @@ def _frames(page: dict, folder: Path) -> dict | None:
             _shot_frame(img, folder / name)
     domain = (urlsplit(page["url"]).hostname or "").removeprefix("www.")
     return {"screenshot_path": str(folder / SHOT_NAMES[0]), "fullpage_path": str(folder / SHOT_NAMES[1]),
-            "proof_path": str(folder / "proof.png"), "logo_path": None, "domain_label": domain}
+            "proof_path": str(folder / "proof.png"), "logo_path": None, "domain_label": domain,
+            "pictures": pictures}  # src/reel_fixer.py may choose others when the editor rejects the draft
 
 
 def write_script(product: str, page: dict) -> dict | None:

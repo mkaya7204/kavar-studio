@@ -54,7 +54,49 @@ def test_a_rejected_draft_spends_no_voice(monkeypatch, reel_sandbox):
     monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["x"]})
     item, rendered = daily._reel_attempt()
     assert item is None and rendered
-    assert len(calls) == 1 and calls[0][1] == "1"
+    assert all(draft == "1" for _, draft in calls)  # the attempt and its fixes: draft voice only
+    assert not any("src/voice_final.py" in cmd for cmd, _ in calls)
+
+
+def test_a_rejected_draft_is_fixed_and_reviewed_again(monkeypatch, reel_sandbox):
+    """D-33 (the user, 2026-10-18): "editör red derse sen devreye giriyorsun, düzeltilecek bir yanı varsa
+    düzelt" - the rejected draft goes to src/reel_fixer.py, silently, and back to the editor."""
+    daily, calls = reel_sandbox
+    verdicts = iter([{"verdict": "reject", "problems": ["kanıt görseli vaadi göstermiyor"]},
+                     {"verdict": "publish", "problems": []}])
+    monkeypatch.setattr(daily, "review_reel", lambda *a: next(verdicts))
+    item, rendered = daily._reel_attempt()
+    assert item and rendered
+    cmds = [cmd for cmd, _ in calls]
+    assert "src/reel_fixer.py" in cmds[1] and calls[1][1] == "1"  # the fix: still silent
+    assert "src/voice_final.py" in cmds[2]  # George only after the fixed draft is approved
+    assert json.loads((daily.REELS_DIR / next(daily.REELS_DIR.iterdir()).name / "_verdict.json")
+                      .read_text(encoding="utf-8"))["problems"] == ["kanıt görseli vaadi göstermiyor"]
+
+
+def test_an_unfixable_topic_moves_on_without_more_fixes(monkeypatch, reel_sandbox):
+    daily, calls = reel_sandbox
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["yapay zekâ değil"]})
+    real_run = daily.subprocess.run
+    monkeypatch.setattr(daily.subprocess, "run", lambda cmd, **kw: SimpleNamespace(
+        returncode=3, stdout="✖ not fixable: no AI", stderr="") if "src/reel_fixer.py" in cmd else real_run(cmd, **kw))
+    assert daily._reel_attempt() == (None, True)
+
+
+def test_the_fixer_keeps_the_script_rules():
+    import reel_fixer
+
+    script = {"tool_name": "T", "website_url": "https://t.ai", "source": "claude", "hook": "h", "voiceover": "x",
+              "shots": [], "key_points": [], "why_it_matters": "", "caption": "", "hashtags": []}
+    seg = {"hook": "Toplantı notun hazır.", "point1": "T kaydı yazıya döker.", "point2": "Özet çıkarır.",
+           "point3": "Görev listesi yapar.", "why": "Not tutmazsın.", "cta": "Arkadaşına gönder."}
+    fixed = reel_fixer.apply_text(script, {"hook": "Toplantı notun hazır", "segments": seg, "why_it_matters": "w",
+                                           "key_points": [{"title": "a", "detail": "b"}] * 3, "caption": "c",
+                                           "hashtags": ["#t"]})
+    assert fixed["voiceover"].startswith("Toplantı notun hazır. T kaydı") and fixed["voiceover_segments"] == seg
+    long = {**fixed, "voiceover": "kelime " * 45}
+    assert any("max 38" in p for p in reel_fixer.text_problems(long))
+    assert reel_fixer.candidates({"pictures_locked": True}) == []  # "Biz denedik": our outputs stay
 
 
 def test_no_voice_means_no_reel_and_no_more_attempts(monkeypatch, reel_sandbox):

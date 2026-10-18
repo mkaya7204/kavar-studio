@@ -184,6 +184,7 @@ def produce_news_items(count: int) -> list[dict]:
 REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
 GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no voice, D-30); the rest waits for it
+REEL_FIX_ROUNDS = 2  # D-33: fixes of a rejected silent draft (src/reel_fixer.py) before the next tool is tried
 REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
 
@@ -249,6 +250,40 @@ def _voice_approved_reel(out: Path) -> bool:
     return True
 
 
+def _copy_draft(out: Path, script: dict) -> None:
+    """The rendered draft (output/final) and its script into the Reel's folder."""
+    final = ROOT / "output" / "final"
+    out.mkdir(parents=True, exist_ok=True)
+    for name in ("final_video.mp4", "post.json", "cover.jpg", "cover_grid.jpg", "reel_qa.json"):
+        if (final / name).exists():
+            shutil.copy(final / name, out / name)
+    (out / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _fix_draft(out: Path, verdict: dict, fix_round: int) -> dict | None:
+    """D-33 (the user, 2026-10-18: "editör red derse sen devreye giriyorsun, düzeltilecek bir yanı varsa
+    düzelt"): src/reel_fixer.py fixes the rejected silent draft (text and pictures) and renders it again on
+    the draft voice. Returns the fixed script, or None when the topic itself can't be fixed."""
+    (out / "_verdict.json").write_text(json.dumps(verdict, indent=1, ensure_ascii=False), encoding="utf-8")
+    log(f"   fixing the rejected draft (round {fix_round}/{REEL_FIX_ROUNDS})")
+    try:
+        proc = subprocess.run([sys.executable, "src/reel_fixer.py", str(out)], cwd=ROOT, capture_output=True,
+                              text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
+                              env={**os.environ, DRAFT_ENV: "1"})
+    except subprocess.TimeoutExpired:
+        log(f"   fix timed out after {REEL_TIMEOUT}s")
+        return None
+    for line in [l for l in proc.stdout.splitlines() if l.strip()][-5:]:
+        log("   " + line)
+    if proc.returncode != 0:
+        if proc.returncode != 3:
+            log("   fix failed: " + proc.stderr.strip()[-300:])
+        return None
+    script = json.loads((ROOT / "output" / "temp" / "script.json").read_text(encoding="utf-8"))
+    _copy_draft(out, script)
+    return script
+
+
 def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
     A rejected tool is in the script history, so the next run moves on to another tool.
@@ -267,19 +302,24 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     if proc.returncode != 0:
         log("   video pipeline failed")
         return None, False
-    temp, final = ROOT / "output" / "temp", ROOT / "output" / "final"
+    temp = ROOT / "output" / "temp"
     script = json.loads((temp / "script.json").read_text(encoding="utf-8"))
     tool = json.loads((temp / "tool.json").read_text(encoding="utf-8"))
     out = REELS_DIR / f"{date.today().isoformat()}_{re.sub(r'[^a-z0-9]+', '-', script['tool_name'].lower()).strip('-')}"
-    out.mkdir(parents=True, exist_ok=True)
-    for name in ("final_video.mp4", "post.json", "cover.jpg", "cover_grid.jpg", "reel_qa.json"):
-        if (final / name).exists():
-            shutil.copy(final / name, out / name)
-    (out / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
+    _copy_draft(out, script)
     log(f"   hook [{script.get('hook_pattern', '?')}]: \"{script['hook']}\""
         + (f" (judge: {script['hook_judge']['reason']})" if script.get("hook_judge") else ""))
     verdict = review_reel(out / "final_video.mp4", script, tool)
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
+    for fix_round in range(1, REEL_FIX_ROUNDS + 1):  # D-33: a rejected draft is fixed before another is tried
+        if verdict["verdict"] == "publish" or not _time_for_a_reel():
+            break
+        fixed = _fix_draft(out, verdict, fix_round)
+        if fixed is None:
+            break
+        script = fixed
+        verdict = review_reel(out / "final_video.mp4", script, tool)
+        log(f"   editor (after fix {fix_round}): {verdict['verdict']} {verdict['problems'][:4]}")
     if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
         update_metrics(out.name, status="approved draft, but the voiced Reel failed")
         return None, False  # no voice left (or a broken render): another attempt would fail the same way
