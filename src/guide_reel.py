@@ -16,6 +16,7 @@ WhatsApp...) and how to use it right: where it is, what to ask, which mode fits 
 
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
@@ -206,7 +207,9 @@ def _make_from(candidates: list[dict]) -> int:
             print("   no picture on the company's page: skipped")
             continue
         # a guide_url remake has no ranking: the page's own site name ("Meta"), never the host (about.fb.com)
-        product = (c.get("rank") or {}).get("company") or page.get("publisher") or c["source"]
+        # ...and without "Newsroom" / "Blog": "Meta Newsroom" made the writer explain the site in the voiceover
+        site = re.sub(r"\s+(Newsroom|News|Blog|Press|Stories)$", "", page.get("publisher") or "", flags=re.I)
+        product = (c.get("rank") or {}).get("company") or site or c["source"]
         script = write_script(product, page)
         if script is None:
             print("   no valid script")
