@@ -136,8 +136,11 @@ def write_script(product: str, page: dict) -> dict | None:
 
 def make_guide_reel() -> int:
     fresh = fetch_guide()
-    candidates = [c for c in rank(fresh, "guide_reel", kind_prefix="guide_reel")
-                  if (c.get("rank") or {}).get("fits", True) and not (c.get("rank") or {}).get("repeat")]
+    # A product we posted news about is still a guide topic ("haberi verdik, şimdi nasıl kullanılır"): the same
+    # post is never reused (history), but a "repeat" product is kept, after the fresh ones (10-18: Gemini 4
+    # Argon in the Gemini app was dropped as a repeat of the news carousel).
+    ranked = [c for c in rank(fresh, "guide_reel", kind_prefix="guide_reel") if (c.get("rank") or {}).get("fits", True)]
+    candidates = sorted(ranked, key=lambda c: bool((c.get("rank") or {}).get("repeat")))
     print(f"▶ Rehber Reel: {len(fresh)} company posts, {len(candidates)} fit the guide concept", flush=True)
     for c in candidates[:10]:
         r = c.get("rank") or {}

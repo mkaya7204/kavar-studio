@@ -40,7 +40,8 @@ CONCEPTS = {
                   "itself must be AI (a model, an assistant, generation, AI search, AI editing). Off concept: "
                   "features with no AI in them (calls, links, settings), research papers, company or business news, "
                   "partnerships, events, chips and data centres, enterprise-only or developer-only APIs, anything "
-                  "the viewer cannot try themselves.",
+                  "the viewer cannot try themselves. A model or feature arriving in an app people use (e.g. a "
+                  "new model in the Gemini or ChatGPT app) fits: the Reel shows how to use it.",
 }
 
 SYSTEM = """You choose content for KAVAR (@thekavar.ai), a Turkish Instagram page about AI. The page \
