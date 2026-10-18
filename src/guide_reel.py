@@ -40,7 +40,8 @@ ROOT = Path(__file__).resolve().parent.parent
 TEMP_DIR = ROOT / "output" / "temp"
 WORK = ROOT / "output" / "guide"
 GUIDE_DAYS = 14  # a feature stays worth explaining for weeks, unlike a news story
-POOL = 30  # candidates sent to the ranker
+POOL = 60  # candidates sent to the ranker
+PER_FEED = 5
 TRIES = 6  # pages tried per morning: OpenAI refuses the cloud reader at times, Samsung times out (10-18 dry run)
 WORDS = (32, 38)  # same as the other Reels: under 26 s
 
@@ -74,6 +75,12 @@ def fetch_guide(limit: int = POOL) -> list[dict]:
             print(f"[guide] {feed['name']} skipped: {type(exc).__name__}")
     fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used]
     fresh.sort(key=lambda i: i["date"], reverse=True)
+    # at most PER_FEED posts per blog: OpenAI's customer stories and NVIDIA filled the whole pool, and the
+    # Gemini app post never reached the ranker (10-18 dry run)
+    per_feed: dict[str, list[dict]] = {}
+    for i in fresh:
+        per_feed.setdefault(i["source"], []).append(i)
+    fresh = sorted((i for posts in per_feed.values() for i in posts[:PER_FEED]), key=lambda i: i["date"], reverse=True)
     for i in fresh:
         i["date"] = i["date"].isoformat()
     return fresh[:limit]
