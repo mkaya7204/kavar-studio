@@ -205,7 +205,8 @@ def _make_from(candidates: list[dict]) -> int:
         if capture is None:
             print("   no picture on the company's page: skipped")
             continue
-        product = (c.get("rank") or {}).get("company") or c["source"]
+        # a guide_url remake has no ranking: the page's own site name ("Meta"), never the host (about.fb.com)
+        product = (c.get("rank") or {}).get("company") or page.get("publisher") or c["source"]
         script = write_script(product, page)
         if script is None:
             print("   no valid script")
