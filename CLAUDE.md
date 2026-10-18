@@ -30,6 +30,9 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    discounts in any post, image, caption or voiceover. The only exception is a paid collaboration
    the user announces per post. Enforced by `PRICE_PATTERN` / `price_mentions` (src/script_writer.py),
    writers, the proof-crop prompt, the "Biz denedik" judge, and the editor.
+   **D-32 (2026-10-18), allowed:** the plan / package a feature comes in ("Pro planında"), beta or limited
+   access, "kredi harcıyor / kullanım hakkından düşüyor" without amounts, and why. Still banned: amounts,
+   currencies, discounts, campaigns, trials, "bedava / ücretsiz" as a selling line.
 2. **Editor gate** (2026-10-13): only content the editor review (src/editor_review.py) marks
    "publish" is queued. FIX_ROUNDS = 2 for carousels, REEL_ATTEMPTS = 3.
 3. **Rejected content → Claude fixes it by hand, then teaches the editor** (2026-10-14, made

@@ -167,7 +167,7 @@ def test_cards_must_match_the_voice_under_them():
 def test_price_words_found_in_the_10_17_audit_are_caught():
     from script_writer import price_mentions
 
-    for text in ("7 day free trial", "paid plans", "a discount for teams", "Premium sürüm", "500 kredi veriyor",
+    for text in ("7 day free trial", "paid plans", "a discount for teams", "500 kredi veriyor",
                  "10,000 credits"):
         assert price_mentions(text), text
     for text in ("Kredi kartı dolandırıcılığını yakalayan model", "bir yıllık işlem verisi", "Görsel kredisi"):

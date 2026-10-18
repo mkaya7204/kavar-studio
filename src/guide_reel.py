@@ -57,7 +57,7 @@ not the company's announcement. No "duyurdu", "tanıttı" in the hook.
 - point3: when it is the right choice, or which mode fits which job, or one tip from the page.
 - why: what the viewer gains. key_points follow point1-3 in the same order.
 - Facts only from the COMPANY PAGE below: never add features, menus, steps or limits it doesn't state. \
-If the page says the feature is rolling out or limited to some countries, say so briefly.
+If the page says the feature is rolling out, limited to some countries, in beta, or comes with a plan (e.g. Pro, Plus, a subscription) or uses credits, say so briefly (D-32): the viewer must know whether they can use it. Never amounts or free / paid.
 - hashtags: the product and the feature first, one guide tag (#ipucu or #nasılyapılır), #yapayzeka only \
 when the feature is AI."""
 
