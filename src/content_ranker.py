@@ -33,7 +33,10 @@ CONCEPTS = {
                      "happened, why it matters to them). The sources are companies' own blogs; a company's post "
                      "on the Hugging Face blog counts as its own. Off concept: gaming or hardware promotions, "
                      "launch events, sales, and stories with no AI in them.",
-    "tool_reel": "11:45 tool Reel: one AI tool a Turkish viewer could use today, shown working.",
+    "tool_reel": "11:45 tool Reel: one AI tool a Turkish viewer could use today, shown working. The tool itself must "
+                 "use AI (a model, an assistant, generation, AI transcription or search). Off concept: tools with no "
+                 "AI in them (git clients, meeting launchers, menu-bar utilities, plain note or mail apps), "
+                 "developer-only infrastructure, and anything a viewer cannot try.",
     "guide_reel": "07:30 guide Reel (D-31): an AI feature of a known product (ChatGPT, Gemini, Claude, Copilot, "
                   "the AI in YouTube, Android, WhatsApp, Google Search, Workspace...) that a Turkish viewer can use "
                   "today, and how to use it right: where it is, what to ask, which mode fits which job. The feature "

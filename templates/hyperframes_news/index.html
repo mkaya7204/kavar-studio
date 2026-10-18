@@ -880,6 +880,11 @@
         tl.fromTo("#shot" + n + "-frame", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }, t + 0.05);
         tl.fromTo("#shot" + n + "-tag", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, t + 0.25);
         tl.to(cam, { opacity: 0, duration: 0.2, ease: "none" }, t + d - 0.2);
+        // the site picture fills the caption band (and the zoom pushes it further): captions sat on the
+        // site's own text in most rejected Reels of 10-18 ("altyazı ekran görüntüsünün metninin üstüne
+        // biniyor"). During a shot the picture speaks; the voice goes on, the captions come back after it.
+        tl.to("#captions", { autoAlpha: 0, duration: 0.12, ease: "none" }, t);
+        tl.to("#captions", { autoAlpha: 1, duration: 0.12, ease: "none" }, t + d - 0.1);
       });
 
       // why: label stamps, big ? drifts, words reveal one by one

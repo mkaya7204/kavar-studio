@@ -35,7 +35,7 @@ from video_builder import FINAL_PATH, build_video  # noqa: E402
 from voice_final import save_capture  # noqa: E402
 
 TEMP_DIR = ROOT / "output" / "temp"
-CANDIDATES = 5  # tools tried in order; one without a clean proof image is skipped
+CANDIDATES = 8  # tools fetched; non-AI ones are dropped (ai_tools_first), one without a clean proof is skipped
 LANGUAGE = json.loads((ROOT / "config.json").read_text(encoding="utf-8")).get("language", "en")
 
 
@@ -57,6 +57,21 @@ class Step:
         else:
             print(f"✖ [{self.number}/5] {self.title} failed after {elapsed:.1f}s: {exc}", flush=True)
         return False  # never swallow the exception
+
+
+def ai_tools_first(tools: list[dict]) -> list[dict]:
+    """The tool Reel's candidates ranked by content_ranker inside its concept; tools with no AI in them are
+    dropped before any capture (10-18: MeetPaw and Tower, a meeting launcher and a git client, were rendered
+    and rejected). The input order is kept if the ranker fails."""
+    from content_ranker import rank
+
+    listing = [{"title": f"{t['tool_name']}: {t.get('tag_line', '')}", "summary": t.get("description", ""),
+                "source": "Product Hunt", "tool": t} for t in tools]
+    ranked = rank(listing, "tool_reel", kind_prefix="reel")
+    for c in ranked:
+        r = c.get("rank") or {}
+        print(f"   rank {r.get('score', '-'):>2} {'' if r.get('fits', True) else 'OFF '}{c['title'][:70]}")
+    return [c["tool"] for c in ranked if (c.get("rank") or {}).get("fits", True)]
 
 
 def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyperframes") -> dict:
@@ -155,6 +170,11 @@ def main() -> int:
             candidates = [t for t in candidates if t["tool_name"] not in sample]
             if not candidates:
                 print("✖ No live tool from the feed (sample tools are not used in --live-only mode).")
+                return 1
+        if args.live_only and len(candidates) > 1:
+            candidates = ai_tools_first(candidates)
+            if not candidates:
+                print("✖ No candidate is an AI tool.")
                 return 1
         if not candidates:
             print("   no candidate has its own website; falling back to sample tools")

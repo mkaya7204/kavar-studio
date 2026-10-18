@@ -98,6 +98,27 @@ def test_the_fixer_keeps_the_script_rules():
     assert reel_fixer.candidates({"pictures_locked": True}) == []  # "Biz denedik": our outputs stay
 
 
+def test_tools_with_no_ai_never_reach_a_render(monkeypatch):
+    """10-18: MeetPaw (meeting launcher) and Tower (git client) were rendered and rejected as "not AI"."""
+    import content_ranker
+    import main
+
+    tools = [{"tool_name": "MeetPaw", "tag_line": "Join meetings from the menu bar", "description": ""},
+             {"tool_name": "Openbroca", "tag_line": "AI dictation", "description": ""}]
+    monkeypatch.setattr(content_ranker, "rank", lambda items, concept, kind_prefix="": [
+        {**items[1], "rank": {"score": 30, "fits": True}}, {**items[0], "rank": {"score": 20, "fits": False}}])
+    assert [t["tool_name"] for t in main.ai_tools_first(tools)] == ["Openbroca"]
+    assert "no AI in them" in content_ranker.CONCEPTS["tool_reel"]
+
+
+def test_captions_step_aside_while_a_site_picture_is_shown():
+    """10-18: in most rejected Reels the captions sat on the site picture's own text; no picture choice fixes
+    that, so the template hides the captions during the two shots."""
+    html = (ROOT / "templates" / "hyperframes_news" / "index.html").read_text(encoding="utf-8")
+    shots = html[html.index("// site shots:"):html.index("// why:")]
+    assert 'tl.to("#captions", { autoAlpha: 0' in shots and 'tl.to("#captions", { autoAlpha: 1' in shots
+
+
 def test_the_fixer_sees_the_whole_page_of_a_tool(tmp_path, monkeypatch):
     """10-18: the fixer saw one picture of Inbox Zero's site and gave up; a tall page gives many windows."""
     import reel_fixer
