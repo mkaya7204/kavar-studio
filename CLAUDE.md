@@ -63,6 +63,9 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    George. If both fail, no Reel is made; tell the user. `probe.yml` shows both accounts' state.
    Don't propose another voice. Voice is spent only on the Reel the editor approved (D-30, 2026-10-18):
    attempts use a silent draft voice, then `src/voice_final.py` voices the approved one once.
+   **D-34 (2026-10-18):** George says every product / company name the way Turkish tech people say it, also
+   new names: `tts_engine.spoken_text` (hand-checked `rules/pronunciation.json` first, then names Claude
+   learns before voicing, kept in `state/pronunciations.json`). Captions and screens keep the real spelling.
 7. **Schedule** (schedule.json): 07:30 Reel, 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30
    Reel. Two Reels a day since 2026-10-16 ("günde tek reels yeterince takipçi getirmiyor"). The best
    Reel ("Biz denedik") takes 20:30, a tool Reel 11:45 (`_build_queue`), news carousel 12:30.

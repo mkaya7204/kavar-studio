@@ -18,6 +18,7 @@ import base64
 import json
 import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -44,20 +45,85 @@ RETRIES = 3
 HTTP_TIMEOUT = 90
 
 
-PRONUNCIATION_PATH = ROOT / "rules" / "pronunciation.json"
+PRONUNCIATION_PATH = ROOT / "rules" / "pronunciation.json"  # checked by hand; always wins
+LEARNED_PATH = ROOT / "state" / "pronunciations.json"  # names learned before voicing; the cloud run commits state/
+SPOKEN_WORD = re.compile(r"^[A-Za-zÇĞİÖŞÜçğıöşüâîû]+$")  # one word, Turkish letters, nothing else
 
 
 def _lexicon() -> dict[str, str]:
-    try:
-        return json.loads(PRONUNCIATION_PATH.read_text(encoding="utf-8"))["words"]
-    except (OSError, json.JSONDecodeError, KeyError):
+    """The names George is told how to say: learned ones, overridden by the hand-checked list."""
+    words = {}
+    for path in (LEARNED_PATH, PRONUNCIATION_PATH):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        words.update(data.get("words", data) if isinstance(data, dict) else {})
+    return {k: v for k, v in words.items() if not k.startswith("_") and SPOKEN_WORD.match(str(v))}
+
+
+LEARN_PROMPT = """A Turkish text-to-speech voice reads every word by Turkish spelling rules, so "Gemini" comes out \
+as "ge-mi-ni" instead of "cemini". In the Turkish voiceover below, list EVERY word it would say wrong: foreign \
+product, app, model, company and feature names (also new, unknown ones), English words, and abbreviations that \
+Turkish tech people say as a word. Leave out Turkish words and names already said right by Turkish spelling.
+For each: "written" = the word exactly as it is in the text, without a Turkish suffix after an apostrophe \
+("Openbroca'yı" -> "Openbroca"); "spoken" = how Turkish tech people say it, written with Turkish letters as \
+ONE word with no spaces, hyphens or digits (join the parts: "SpeechFast" -> "Spiçfest", "OpenAI" -> \
+"Openeyay", "Korinotch" -> "Korinoç"). Already known, leave out: {known}
+
+Voiceover:
+{text}"""
+
+LEARN_SCHEMA = {"type": "object", "additionalProperties": False, "required": ["words"],
+                "properties": {"words": {"type": "array", "items": {
+                    "type": "object", "additionalProperties": False, "required": ["written", "spoken"],
+                    "properties": {"written": {"type": "string"}, "spoken": {"type": "string"}}}}}}
+
+
+def learn_names(text: str) -> dict[str, str]:
+    """D-34 (the user, 2026-10-18: "tanıtılan hangi isimde bir ürün olursa onun söylenişi doğru olacak ...
+    sistemde kalıcı hale getir"): before George speaks, Claude gives the Turkish way to say every foreign
+    name in the text that isn't known yet; valid answers are kept in state/pronunciations.json, so a name is
+    said the same way every time. No Claude CLI or no answer = the known names only."""
+    known = _lexicon()
+    exe = shutil.which("claude") if not os.getenv("SCRIPT_WRITER_NO_CLI") else None
+    if not exe:
         return {}
+    env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
+    try:
+        proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(LEARN_SCHEMA),
+                               "--tools", "", "--no-session-persistence"],
+                              input=LEARN_PROMPT.format(known=", ".join(sorted(known)) or "-", text=text),
+                              capture_output=True, text=True, encoding="utf-8", timeout=180, cwd=ROOT, env=env)
+        answer = (json.loads(proc.stdout).get("structured_output") or {}).get("words", [])
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
+        return {}
+    new = {}
+    for w in answer:
+        written = str(w.get("written", "")).strip()
+        spoken = re.sub(r"[\s\-]+", "", str(w.get("spoken", "")))  # "Spiç Fest" -> "SpiçFest": one word for one
+        if (written and written not in known and written != spoken and SPOKEN_WORD.match(spoken)
+                and re.search(rf"(?<!\w){re.escape(written)}(?!\w)", text)):
+            new[written] = spoken
+    if new:
+        try:
+            learned = json.loads(LEARNED_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            learned = {}
+        LEARNED_PATH.parent.mkdir(parents=True, exist_ok=True)
+        LEARNED_PATH.write_text(json.dumps({**learned, **new}, indent=1, ensure_ascii=False, sort_keys=True),
+                                encoding="utf-8")
+        print(f"[tts] learned how to say: {', '.join(f'{k} -> {v}' for k, v in new.items())}")
+    return new
 
 
-def spoken_text(text: str) -> str:
+def spoken_text(text: str, learn: bool = False) -> str:
     """D-34 (the user, 2026-10-18: "gemini yazıldığı gibi okuyor"): the text George is sent, with each product
-    name written as a Turkish reader says it (rules/pronunciation.json). One word for one word, suffixes kept
-    ("Gemini'de" -> "Cemini'de"), so the word timings map back to the real spelling for the captions."""
+    name written as a Turkish reader says it (rules/pronunciation.json, then names learned by learn_names).
+    One word for one word, suffixes kept ("Gemini'de" -> "Cemini'de"), so the word timings map back to the
+    real spelling for the captions."""
+    if learn:
+        learn_names(text)
     lex = _lexicon()
     if not lex:
         return text
@@ -354,7 +420,7 @@ async def synthesize_async(
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     errors = []
-    said = spoken_text(text)  # D-34: names as a Turkish reader says them; the captions keep `text`
+    said = spoken_text(text, learn=True)  # D-34: names as a Turkish reader says them; the captions keep `text`
     for provider in providers or available_providers():
         try:
             words, duration, used_rate = await _synthesize_provider(provider, said, out_path, voice,

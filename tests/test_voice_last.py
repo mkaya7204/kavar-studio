@@ -116,6 +116,31 @@ def test_george_hears_names_the_turkish_way_and_captions_keep_the_spelling():
     assert shown[5]["start"] == 5  # timings unchanged
 
 
+def test_any_new_name_is_learned_before_george_speaks(monkeypatch, tmp_path):
+    """D-34, made permanent (the user, 2026-10-18): "tanıtılan hangi isimde bir ürün olursa onun söylenişi
+    doğru olacak, ekranda nasıl yazılıyorsa öyle yazılsın ... sistemde kalıcı hale getir"."""
+    import tts_engine
+
+    learned = tmp_path / "pronunciations.json"
+    monkeypatch.setattr(tts_engine, "LEARNED_PATH", learned)
+    monkeypatch.delenv("SCRIPT_WRITER_NO_CLI", raising=False)
+    monkeypatch.setattr(tts_engine.shutil, "which", lambda name: "claude")
+    answer = {"structured_output": {"words": [
+        {"written": "Openbroca", "spoken": "Openbroka"},
+        {"written": "SpeechFast", "spoken": "Spiç Fest"},  # two parts: joined, one word for one
+        {"written": "Gemini", "spoken": "Gemini"},  # already known (hand-checked list wins)
+        {"written": "Nowhere", "spoken": "Novher"},  # not in the text: refused
+        {"written": "Krea", "spoken": "Kri-ya 3"},  # a digit: refused
+    ]}}
+    monkeypatch.setattr(tts_engine.subprocess, "run", lambda *a, **k: SimpleNamespace(stdout=json.dumps(answer)))
+    text = "Openbroca'yı SpeechFast ile Gemini'de dene."
+    said = tts_engine.spoken_text(text, learn=True)
+    assert said == "Openbroka'yı SpiçFest ile Cemini'de dene."
+    assert json.loads(learned.read_text(encoding="utf-8")) == {"Openbroca": "Openbroka", "SpeechFast": "SpiçFest"}
+    monkeypatch.setattr(tts_engine.subprocess, "run", lambda *a, **k: SimpleNamespace(stdout="not json"))
+    assert tts_engine.spoken_text("Openbroca hazır.", learn=True) == "Openbroka hazır."  # remembered
+
+
 def test_tools_with_no_ai_never_reach_a_render(monkeypatch):
     """10-18: MeetPaw (meeting launcher) and Tower (git client) were rendered and rejected as "not AI"."""
     import content_ranker
