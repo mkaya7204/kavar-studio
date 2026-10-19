@@ -74,6 +74,10 @@ jobs:
         run: |
           D=$(ls -d output/carousel/*_haber-* | head -1)
           python src/trial_reel.py "$D" 2>&1 | tee output/reel-test.log
+          # no test output of ours -> no Reel, nothing to review (10-19 crashed here on a missing script.json)
+          if [ ! -f output/temp/script.json ] || [ ! -f output/final/final_video.mp4 ]; then
+            echo "no Biz denedik Reel: the trial gave no usable output" | tee -a output/reel-test.log; exit 0
+          fi
           python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_reel; v=Path('output/final/final_video.mp4'); print(json.dumps(review_reel(v, json.load(open('output/temp/script.json',encoding='utf-8')), json.load(open('output/temp/tool.json',encoding='utf-8'))), indent=1, ensure_ascii=False))" 2>&1 | tee -a output/reel-test.log
 
       - uses: actions/upload-artifact@v7

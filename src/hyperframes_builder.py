@@ -297,14 +297,17 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
               "properties": {"allowed": {"type": "array", "maxItems": count,
                                          "items": {"type": "integer", "minimum": 0, "maximum": count - 1}}}}
     prompt = (f"Open {sheet.name} with the Read tool. It shows {count} numbered crops (0-{count - 1}) of a "
-              f"product's website. A Reel opens with this promise on screen: \"{hint}\". Pick the crop that "
+              f"product's website and images from its own pages (screenshots of the app, its outputs). "
+              f"A Reel opens with this promise on screen: \"{hint}\". Pick the crop that "
               f"best PROVES it at a glance: the product's real interface, output or a clear workflow diagram. "
               f"A crop is NOT allowed if it shows a big number or statistic (e.g. '500K+', '90%+ of invoices'; "
               f"the Reel can't back it up), text cut off at the crop's edge, "
               f"any price or currency (even small prices on demo products, "
               f"$, €, ₺, 'free', 'pricing', plans), the product's own logo or name bar, a badge (e.g. "
               f"'Featured on Product Hunt'), a cookie or announcement bar, a big call-to-action button "
-              f"('Sign up', 'Create', 'Try', 'Get started'), or another product. Prefer the product's "
+              f"('Sign up', 'Create', 'Try', 'Get started'), a slogan or marketing headline on its own, a "
+              f"menu of feature cards or a template/prompt card (10-19: the editor rejected all of these as "
+              f"proof), a wall of customer logos, or another product. Prefer the product's "
               f"output or interface in use over empty forms; avoid plain paragraphs of text. Answer with "
               f"every allowed crop's number, best proof first (the next ones are shown later in the Reel), "
               f"or an empty list if none is allowed.")
@@ -338,11 +341,20 @@ def _shot_frame(crop: Image.Image, out: Path) -> None:
     bg.save(out)
 
 
-def best_proof_crop(page: Path, out: Path, hint: str = "") -> Path | None:
+def _fit_whole(path: str | Path) -> Image.Image:
+    """A product screen in the proof box, whole (never cut): letterboxed on the template's dark blue."""
+    from PIL import ImageOps
+
+    with Image.open(path) as img:
+        return ImageOps.pad(img.convert("RGB"), PROOF_SIZE, Image.LANCZOS, color=(10, 16, 32))
+
+
+def best_proof_crop(page: Path, out: Path, hint: str = "", extra: list[str] | tuple = ()) -> Path | None:
     """The hook's proof image (the box under the headline on frame 0 / the cover): Claude picks,
-    from up to 8 crops of the page, the one that best proves the hook without prices, logos or
-    badges. Returns None when no crop is allowed (the hook then shows the headline alone); without
-    Claude the first detailed crop is used. The next allowed crops become the two site shots
+    from up to 8 crops of the page plus the product's own screens (`extra`, D-36: images further down
+    the page, feature pages, GitHub README), the one that best proves the hook without prices, logos
+    or badges. Returns None when nothing is allowed (the hook then shows the headline alone); without
+    Claude the first detailed crop is used. The next allowed pictures become the two site shots
     (SHOT_NAMES next to `out`)."""
     from PIL import ImageDraw
 
@@ -352,6 +364,11 @@ def best_proof_crop(page: Path, out: Path, hint: str = "") -> Path | None:
         win_h = round(w * PROOF_SIZE[1] / PROOF_SIZE[0])
         tops = _proof_windows(img)
         crops = [img.crop((0, t, w, min(img.height, t + win_h))).resize(PROOF_SIZE, Image.LANCZOS) for t in tops]
+    for path in extra:
+        try:
+            crops.append(_fit_whole(path))
+        except OSError:
+            continue
     ranked = [0]
     if len(crops) > 1:
         tile = (460, 235)
