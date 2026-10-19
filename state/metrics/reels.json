@@ -272,5 +272,57 @@
     "duration_sec": 21.2,
     "words": 40,
     "status": "rejected: Kanıt kutusu vaadi göstermiyor: başlık '600 milyarlık açık model' diyor, kutuda sadece 'Step 5 Preview' başlığı ve 'A new-generation frontier model built for real-world tasks' sloganı var. 600B, açık ağırlık ve uzun çalışan ajan bilgisi görünmüyor. Slogan kartı kanıt sayılmaz.; Kanıt görselinde 'Step 5' yazısının üst kısmı kutu kenarında kesik. Kesik metin kabul edilmez.; Kutudaki İngilizce slogan ('frontier model') kaynaktaki '600B open weights, trained for long-running agents' ifadesinden farklı. Videoda kaynağın asıl iddiasını gösteren bir kare yok."
+  },
+  {
+    "id": "2026-10-19_google",
+    "date": "2026-10-19",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "news",
+    "headline": "Google yeni model getirdi",
+    "spoken_hook": "Google, Gemini uygulamasına yeni bir model getirdi.",
+    "cta": "Bunu ekibine gönder.",
+    "duration_sec": 20.1,
+    "words": 37,
+    "status": "rejected: Altyazı (caption) bozuk Türkçe ve yanlış anlamlı: 'Kaynak, finans, hukuk ve kodlama gibi alanlarda derinlik gereken işleri öne çıkarıyor.' Kaynak bir özne değil. Kaynakta modelin bu alanlarda öne çıktığı yazıyor, cümle bunu söylemiyor. Reel'de düzeltme turu yok.; Kanıt görseli yalnızca bulanık bir '4' görseli. Arayüzü, çıktıyı ya da iş akışını göstermiyor, 'zor işi ona ver' vaadini kanıtlamıyor. Zayıf kanıt.; İlk 2,5 saniye hareketsiz, en uzun statik an 3,17 sn. Dikkat çekmesi zayıf."
+  },
+  {
+    "id": "2026-10-19_krea-3",
+    "date": "2026-10-19",
+    "kind": "tool",
+    "tool": "Krea 3",
+    "hook_pattern": "result",
+    "headline": "Düzenleme 8 saniyenin altında",
+    "spoken_hook": "Düzenleme sekiz saniyenin altında, şirkete göre.",
+    "cta": "Tasarım yapan birine yolla.",
+    "duration_sec": 19.5,
+    "words": 39,
+    "status": "rejected: Kanıt görseli sözü kanıtlamıyor: 'Create with Krea Agent' slayt kartı ve deniz feneri resmi var. Düzenleme arayüzü, 8 saniyelik düzenleme ya da 2K çıktı görünmüyor. Bu bir tanıtım kartı, kanıt sayılmaz.; 2,5 sn karesi (şablon hatası): küçülen başlığın ikinci satırı ('SANİYENİN ALTINDA') kanıt kutusunun üst kenarına değiyor. Kutudaki 'Create with Krea' yazısı da kesilmiş görünüyor.; Ekrandaki başlık 'Düzenleme 8 saniyenin altında' atıf içermiyor. Kaynak bunu şirketin iddiası olarak veriyor; seslide 'şirkete göre' var ama ekranda ve kapakta yok. Kapak, haberin kendi ifadesinden daha kesin duruyor."
+  },
+  {
+    "id": "2026-10-19_inbox-zero",
+    "date": "2026-10-19",
+    "kind": "tool",
+    "tool": "Inbox Zero",
+    "hook_pattern": "question",
+    "headline": "Mail işlerini otomatikleştiriyor",
+    "spoken_hook": "Mail işlerini otomatikleştiriyor.",
+    "cta": "Bunu mail kutusu taşan arkadaşına at.",
+    "duration_sec": 19.3,
+    "words": 40,
+    "status": "rejected: Kapak/0. kare kanıtı hook'u kanıtlamıyor: üstü kesik, soluk, İngilizce bir taslak e-posta ('Finding slots via calendar integration…', 'Send'). 'Mail işlerini otomatikleştiriyor' vaadini göstermiyor; ağırlıklı olarak takvim saati önerisi görünüyor.; 5 s ve 9.7 s karelerinde kanıt olarak sitenin İngilizce sloganı ('Your inbox, wherever you work') kullanılmış. Bu bir slogan kartı; ders gereği kanıt sayılmaz. Aynı kart 5 s'den 9.7 s'ye kadar ekranda duruyor, yani yaklaşık 5 s boyunca değişmiyor.; Ses 'Toplu abonelikten çıkma özelliği var' derken ekranda bunu gösteren bir kart ya da görüntü yok; 9.7 s'deki sloganlı kart sesle ve noktayla uyuşmuyor. Kartlar ile ses uyumsuz (kart 02 görünmüyor, kart 03 doğrudan geliyor)."
+  },
+  {
+    "id": "2026-10-19_popcraft",
+    "date": "2026-10-19",
+    "kind": "tool",
+    "tool": "Popcraft",
+    "hook_pattern": "result",
+    "headline": "Video üretimi tek stüdyoda",
+    "spoken_hook": "Video üretimi tek stüdyoda.",
+    "cta": "Bunu içerik üreten arkadaşına at.",
+    "duration_sec": 17.7,
+    "words": 43,
+    "status": "rejected: 8.8 s karesi: site yakalaması kötü kırpılmış. 'SEEDANCE 2.5 / NEW' satırı ile 'Thirty seconds, one unbroken take' başlığı üst üste biniyor, alttaki 'and extend.' satırı yarıda kesiliyor.; 8.8 ve 9.8 s: ekranda tek bir modelin (Seedance 2.5) İngilizce tanıtımı var. Ürünün arayüzü ya da çıktısı değil, 'Önde gelen modeller içinde' vaadini göstermiyor, telefonda okunmuyor.; 9.8 s karesinde turuncu 'Try Now' düğmesi ve 'NEW' rozeti var. CTA düğmesi / reklam görünümü veriyor, sitenin kendi pazarlama kartı."
   }
 ]

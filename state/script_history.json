@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Retriever AI",
-    "hook": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
-    "pattern": "question",
-    "spoken_hook": "Müşteri adaylarını hâlâ elle mi buluyorsun?",
-    "cta": "Bunu satışla uğraşan arkadaşına at."
-  },
-  {
-    "tool": "Nemotron 3.5",
-    "hook": "Yapay zekâ atasözünü çocuğa anlatıyor",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ atasözünü on yaşındaki çocuğa anlattı.",
-    "cta": "Meraklı arkadaşına gönder."
-  },
-  {
-    "tool": "GLM-Legal",
-    "hook": "Sözleşmeleri hâlâ kendin mi okuyorsun?",
-    "pattern": "question",
-    "spoken_hook": "Sözleşmeleri hâlâ baştan sona kendin mi okuyorsun?",
-    "cta": "Bunu sözleşme imzalayan arkadaşına gönder."
-  },
-  {
-    "tool": "Earnote",
-    "hook": "Not tutarken dinleyemiyorsun",
-    "pattern": "pain",
-    "spoken_hook": "Not tutarken dersi ya da toplantıyı dinleyemiyorsun.",
-    "cta": "Bunu derse yetişemeyen arkadaşına gönder."
-  },
-  {
     "tool": "Train with Pasta",
     "hook": "Antrenmanda eller serbest mi?",
     "pattern": "question",
@@ -68,5 +40,33 @@
     "pattern": "news",
     "spoken_hook": "Uzun süre çalışan ajanlar için 600 milyarlık model geldi.",
     "cta": "Ajan kuran arkadaşına yolla."
+  },
+  {
+    "tool": "Google",
+    "hook": "Google yeni model getirdi",
+    "pattern": "news",
+    "spoken_hook": "Google, Gemini uygulamasına yeni bir model getirdi.",
+    "cta": "Bunu ekibine gönder."
+  },
+  {
+    "tool": "Krea 3",
+    "hook": "2K düzenleme 8 saniyeden az",
+    "pattern": "result",
+    "spoken_hook": "İki K görsel düzenleme sekiz saniyeden kısa sürüyor.",
+    "cta": "Tasarım yapan birine yolla."
+  },
+  {
+    "tool": "Inbox Zero",
+    "hook": "Mailleri tek tek mi siliyorsun?",
+    "pattern": "question",
+    "spoken_hook": "Gereksiz mailleri hâlâ tek tek mi siliyorsun?",
+    "cta": "Bunu mail kutusu taşan arkadaşına at."
+  },
+  {
+    "tool": "Popcraft",
+    "hook": "Video, görsel, ses tek yerde",
+    "pattern": "result",
+    "spoken_hook": "Video, görsel ve ses artık tek yerde üretiliyor.",
+    "cta": "Bunu içerik üreten arkadaşına at."
   }
 ]
