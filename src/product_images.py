@@ -34,7 +34,7 @@ SKIP_PATHS = re.compile(r"pric|plan|login|sign|regist|account|blog|news|about|ca
                         r"contact|affiliate|partner|docs?\b|changelog|status|press|case-stud|customer|enterprise|"
                         r"cookie|security|download|support|help|faq|alternative|vs-|compare|team|invest", re.I)
 SKIP_IMAGES = re.compile(r"\.(svg|gif|ico)(\?|$)|shields\.io|badge|logo|avatar|favicon|sponsor|star-history|"
-                         r"contrib\.rocks|producthunt", re.I)
+                         r"contrib\.rocks|producthunt|trendshift|/svg\?", re.I)
 
 # media_capturer runs this on the home page once it is fully scrolled
 PAGE_MEDIA_JS = r"""() => {
@@ -90,6 +90,20 @@ def readme_images(repo_url: str) -> list[str]:
     return [urljoin(base, u) for u in found]
 
 
+def repo_behind(pages: list[str]) -> str | None:
+    """The GitHub repo a site links through its own redirect (Inbox Zero: getinboxzero.com/github)."""
+    for page in pages:
+        if "github" not in urlsplit(page).path.lower():
+            continue
+        try:
+            r = requests.head(page, headers=HEADERS, timeout=TIMEOUT, allow_redirects=True)
+        except requests.RequestException:
+            continue
+        if re.match(r"https://github\.com/[^/]+/[^/#?]+/?$", r.url):
+            return r.url
+    return None
+
+
 def usable(img: Image.Image) -> bool:
     """Big enough, not a banner strip or a tall phone scroll, not one flat colour."""
     w, h = img.size
@@ -124,9 +138,11 @@ def collect(page_media: dict | None, out_dir: Path | str, limit: int = MAX_IMAGE
     for old in out_dir.glob("product_*.png"):
         old.unlink()  # never reuse the previous tool's screens
     urls = [i["src"] for i in sorted(page_media.get("imgs") or [], key=lambda i: -i["w"] * i["h"])]
-    urls += [u for u in (og_image(p) for p in feature_pages(page_media.get("pages") or [])) if u]
-    if page_media.get("github"):
-        urls += readme_images(page_media["github"])
+    pages = page_media.get("pages") or []
+    # README screenshots before the feature pages' og:images (those are often marketing cards)
+    if repo := page_media.get("github") or repo_behind(pages):
+        urls += readme_images(repo)
+    urls += [u for u in (og_image(p) for p in feature_pages([p for p in pages if "github" not in p.lower()])) if u]
     files, seen = [], set()
     for url in urls:
         if len(files) >= limit:

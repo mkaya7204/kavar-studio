@@ -56,10 +56,18 @@ def test_the_products_own_screens_are_collected(monkeypatch, tmp_path):
     for f in files:
         with Image.open(f) as img:
             colors.append(img.convert("RGB").getpixel((5, 5)))
-    # the app screen on the page, the feature page's picture, the README screenshot; no tiny / flat image,
+    # the app screen on the page, the README screenshot, the feature page's picture; no tiny / flat image,
     # no pricing page, no badge
     assert len(files) == 3
-    assert colors[1] == (255, 0, 0) and colors[2] == (0, 0, 255)
+    assert colors[1] == (0, 0, 255) and colors[2] == (255, 0, 0)
+
+
+def test_a_repo_behind_the_sites_own_redirect_is_found(monkeypatch):
+    # 10-19: Inbox Zero links its repo as getinboxzero.com/github
+    monkeypatch.setattr(product_images.requests, "head",
+                        lambda url, **kw: SimpleNamespace(url="https://github.com/elie222/inbox-zero"))
+    pages = ["https://tool.ai/pricing", "https://tool.ai/github"]
+    assert product_images.repo_behind(pages) == "https://github.com/elie222/inbox-zero"
 
 
 def test_no_page_media_means_no_screens(tmp_path):
