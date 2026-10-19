@@ -70,9 +70,13 @@ def mark_used(url: str) -> None:
 
 
 def fetch_news(limit: int = 5) -> list[dict]:
-    """Fresh, unused news items, best first: [{title, url, date, source, summary}]."""
+    """Fresh, unused news items, best first: [{title, url, date, source, summary}].
+
+    D-35 (2026-10-19): when nothing unused is left inside max_age_hours (the companies post little
+    over a weekend; 10-19 had 0 carousels), the unused items of the last fallback_age_hours are used.
+    """
     config = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
-    since = datetime.now(timezone.utc) - timedelta(hours=config.get("max_age_hours", 72))
+    now = datetime.now(timezone.utc)
     used = set(load_history())
     items = []
     for feed in config["feeds"]:
@@ -80,7 +84,13 @@ def fetch_news(limit: int = 5) -> list[dict]:
             items += _items(feed)
         except (requests.RequestException, ET.ParseError) as exc:
             print(f"[news] {feed['name']} skipped: {type(exc).__name__}")
-    fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used]
+    unused = [i for i in items if i["date"] and i["url"] not in used]
+    fresh = [i for i in unused if i["date"] >= now - timedelta(hours=config.get("max_age_hours", 72))]
+    if not fresh:
+        hours = config.get("fallback_age_hours", 168)
+        fresh = [i for i in unused if i["date"] >= now - timedelta(hours=hours)]
+        print(f"[news] nothing unused in {config.get('max_age_hours', 72)} h; "
+              f"{len(fresh)} unused from the last {hours} h")
     fresh.sort(key=lambda i: (i["date"].date(), i["priority"], i["date"]), reverse=True)
     for i in fresh:
         i["date"] = i["date"].isoformat()

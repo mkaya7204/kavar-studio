@@ -15,7 +15,7 @@ but not covered by a test, 🔴 open.
 | One story raises an unexpected error and stops the whole run | Each story is wrapped; it is logged, marked used, and the next story is tried | ✅ test_daily |
 | A Claude Code CLI install is broken (npm left a non-executable binary, 10-15) | Verified after install, 3 retries, fails early | ✅ test_guards |
 | The Claude login (CLAUDE_CODE_OAUTH_TOKEN) expires | Writers return None, the editor rejects, and the run logs it. The user must renew the token with `claude setup-token` | 🔴 not detectable ahead of time; check the log at "yükle" |
-| Feeds are down or there is no fresh news | `fetch_news` skips dead feeds and the queue stays empty. The tool Reel is still made | 🟡 |
+| Feeds are down or there is no fresh news | `fetch_news` skips dead feeds. With nothing unused in 72 h (weekends, 10-19: 0 carousels) it uses the unused news of the last 7 days (D-35). The tool Reel is still made | ✅ test_daily |
 | HF Space or OpenRouter is slow or down | Image test budget is 10 min. One failing endpoint ends that Space. Any trial error means "no test" and a normal carousel | ✅ test_biz_denedik |
 | The test's extra writer rules (jargon, ≤2 details) fail every draft | The story is written again as a normal news carousel without the test | 🟡 |
 

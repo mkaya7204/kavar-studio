@@ -277,3 +277,31 @@ def test_guide_pictures_are_the_features_own_never_the_page(tmp_path):
     for shot in (cap["screenshot_path"], cap["fullpage_path"]):
         with Image.open(shot) as img:
             assert img.getpixel((540, 840)) != (255, 255, 255)  # never the page
+
+
+def _feeds(monkeypatch, tmp_path, ages_hours, used=()):
+    """news_fetcher over one fake feed whose items are ages_hours old; `used` urls already posted."""
+    from datetime import datetime, timedelta, timezone
+
+    import news_fetcher
+    cfg = tmp_path / "sources.json"
+    cfg.write_text(json.dumps({"max_age_hours": 72, "fallback_age_hours": 168,
+                               "feeds": [{"name": "F", "url": "x"}]}), encoding="utf-8")
+    now = datetime.now(timezone.utc)
+    items = [{"title": f"T{h}", "url": f"https://e/{h}", "date": now - timedelta(hours=h), "summary": "",
+              "source": "F", "priority": 1} for h in ages_hours]
+    monkeypatch.setattr(news_fetcher, "SOURCES_PATH", cfg)
+    monkeypatch.setattr(news_fetcher, "_items", lambda feed: [dict(i) for i in items])
+    monkeypatch.setattr(news_fetcher, "load_history", lambda: list(used))
+    return news_fetcher
+
+
+def test_fresh_news_keeps_the_72_hour_window(monkeypatch, tmp_path):
+    nf = _feeds(monkeypatch, tmp_path, [10, 100])
+    assert [i["title"] for i in nf.fetch_news(20)] == ["T10"]
+
+
+def test_weekend_without_fresh_news_falls_back_to_7_days(monkeypatch, tmp_path):
+    # D-35: 10-19 (Monday) had nothing unused in 72 h and the day got 0 carousels
+    nf = _feeds(monkeypatch, tmp_path, [10, 100, 200], used=["https://e/10"])
+    assert [i["title"] for i in nf.fetch_news(20)] == ["T100"]  # used and >168 h old stay out
