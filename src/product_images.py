@@ -151,5 +151,11 @@ def collect(page_media: dict | None, out_dir: Path | str, limit: int = MAX_IMAGE
             continue
         seen.add(_key(url))
         if path := download(url, out_dir / f"product_{len(files)}.png"):
+            with Image.open(path) as img:  # the same picture under two URLs (README + og:image, 10-19)
+                print_ = img.convert("L").resize((16, 16)).tobytes()
+            if print_ in seen:
+                path.unlink()
+                continue
+            seen.add(print_)
             files.append(str(path))
     return files
