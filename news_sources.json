@@ -1,6 +1,8 @@
 {
   "_help": "RSS feeds for news mode (python carousel.py --news). priority: higher is picked first among fresh items (official company sources over press). Only the companies' own blogs, whose images are their own press assets: no press sites (The Verge, TechCrunch... removed 2026-10-16, user: own visuals only) and never other creators' social posts.",
   "max_age_hours": 72,
+  "fallback_age_hours": 168,
+  "min_fresh": 6,
   "feeds": [
     {
       "name": "OpenAI",
