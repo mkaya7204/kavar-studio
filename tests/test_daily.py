@@ -285,7 +285,7 @@ def _feeds(monkeypatch, tmp_path, ages_hours, used=()):
 
     import news_fetcher
     cfg = tmp_path / "sources.json"
-    cfg.write_text(json.dumps({"max_age_hours": 72, "fallback_age_hours": 168,
+    cfg.write_text(json.dumps({"max_age_hours": 72, "fallback_age_hours": 168, "min_fresh": 2,
                                "feeds": [{"name": "F", "url": "x"}]}), encoding="utf-8")
     now = datetime.now(timezone.utc)
     items = [{"title": f"T{h}", "url": f"https://e/{h}", "date": now - timedelta(hours=h), "summary": "",
@@ -296,12 +296,12 @@ def _feeds(monkeypatch, tmp_path, ages_hours, used=()):
     return news_fetcher
 
 
-def test_fresh_news_keeps_the_72_hour_window(monkeypatch, tmp_path):
-    nf = _feeds(monkeypatch, tmp_path, [10, 100])
-    assert [i["title"] for i in nf.fetch_news(20)] == ["T10"]
+def test_enough_fresh_news_keeps_the_72_hour_window(monkeypatch, tmp_path):
+    nf = _feeds(monkeypatch, tmp_path, [10, 20, 100])
+    assert [i["title"] for i in nf.fetch_news(20)] == ["T10", "T20"]
 
 
-def test_weekend_without_fresh_news_falls_back_to_7_days(monkeypatch, tmp_path):
-    # D-35: 10-19 (Monday) had nothing unused in 72 h and the day got 0 carousels
-    nf = _feeds(monkeypatch, tmp_path, [10, 100, 200], used=["https://e/10"])
-    assert [i["title"] for i in nf.fetch_news(20)] == ["T100"]  # used and >168 h old stay out
+def test_thin_weekend_news_is_topped_up_from_7_days(monkeypatch, tmp_path):
+    # D-35: 10-19 (Monday) had one unused item in 72 h (an SSD ad) and the day got 0 carousels
+    nf = _feeds(monkeypatch, tmp_path, [10, 100, 150, 200], used=["https://e/150"])
+    assert [i["title"] for i in nf.fetch_news(20)] == ["T10", "T100"]  # fresh first; used, >168 h out

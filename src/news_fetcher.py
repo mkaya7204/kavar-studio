@@ -72,8 +72,9 @@ def mark_used(url: str) -> None:
 def fetch_news(limit: int = 5) -> list[dict]:
     """Fresh, unused news items, best first: [{title, url, date, source, summary}].
 
-    D-35 (2026-10-19): when nothing unused is left inside max_age_hours (the companies post little
-    over a weekend; 10-19 had 0 carousels), the unused items of the last fallback_age_hours are used.
+    D-35 (2026-10-19): when fewer than min_fresh unused items are left inside max_age_hours (the
+    companies post little over a weekend; 10-19 had 0 carousels, its one fresh item was an SSD ad),
+    the unused items of the last fallback_age_hours fill the list after the fresh ones.
     """
     config = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
     now = datetime.now(timezone.utc)
@@ -86,12 +87,14 @@ def fetch_news(limit: int = 5) -> list[dict]:
             print(f"[news] {feed['name']} skipped: {type(exc).__name__}")
     unused = [i for i in items if i["date"] and i["url"] not in used]
     fresh = [i for i in unused if i["date"] >= now - timedelta(hours=config.get("max_age_hours", 72))]
-    if not fresh:
-        hours = config.get("fallback_age_hours", 168)
-        fresh = [i for i in unused if i["date"] >= now - timedelta(hours=hours)]
-        print(f"[news] nothing unused in {config.get('max_age_hours', 72)} h; "
-              f"{len(fresh)} unused from the last {hours} h")
     fresh.sort(key=lambda i: (i["date"].date(), i["priority"], i["date"]), reverse=True)
+    if len(fresh) < config.get("min_fresh", 6):
+        hours = config.get("fallback_age_hours", 168)
+        older = [i for i in unused if i not in fresh and i["date"] >= now - timedelta(hours=hours)]
+        older.sort(key=lambda i: (i["date"].date(), i["priority"], i["date"]), reverse=True)
+        print(f"[news] {len(fresh)} unused in {config.get('max_age_hours', 72)} h; "
+              f"adding {len(older)} unused from the last {hours} h")
+        fresh += older
     for i in fresh:
         i["date"] = i["date"].isoformat()
     return fresh[:limit]

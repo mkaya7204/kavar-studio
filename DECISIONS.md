@@ -254,6 +254,6 @@ the decisions that are currently locked; this file explains why they exist and h
 ## D-35 · 2026-10-19 · No fresh news: use the unused news of the last 7 days
 - **User:** asked during the morning "yükle" after the day produced 0 of 5 posts, whether to add the fallback: "Olur test et ekle".
 - **Why:** on Monday 10-19 no company blog had posted anything unused in 72 h (weekend), so `fetch_news` returned 0 candidates and both carousel slots stayed empty. The same stories (15 Oct FLUX.3 Klein, 14 Oct Meta AI glasses) were then made by hand and passed the editor.
-- **Built:** `src/news_fetcher.fetch_news` keeps the 72 h window (`max_age_hours`); only when it holds nothing unused, it takes the unused items of the last `fallback_age_hours` (168, news_sources.json) and logs "[news] nothing unused in 72 h; N unused from the last 168 h". Ranking (content_ranker, repeats flagged) and the editor gate are unchanged.
-- **Guarded by:** tests/test_daily.py (72 h window kept when fresh news exists; fallback to 7 days, used and older items stay out).
+- **Built:** `src/news_fetcher.fetch_news` keeps the 72 h window (`max_age_hours`); when it holds fewer than `min_fresh` (6) unused items, the unused items of the last `fallback_age_hours` (168) are added after the fresh ones (news_sources.json), logged as "[news] N unused in 72 h; adding M unused from the last 168 h". A first version that fell back only on an empty pool would not have helped on 10-19: a live check found one fresh item, a Samsung SSD ad. Ranking (content_ranker, repeats flagged) and the editor gate are unchanged.
+- **Guarded by:** tests/test_daily.py (72 h window kept when enough fresh news exists; a thin pool is topped up from 7 days, fresh first, used and older items stay out).
 
