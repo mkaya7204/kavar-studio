@@ -30,6 +30,7 @@ but not covered by a test, 🔴 open.
 | Overstated cover or claims | Writers keep to the article's facts and numbers (number check). Editor gate. Lesson in rules/editor_lessons.md | 🟡 |
 | Our test output credited to the publisher, or vice versa | Our figures and cover are credited "KAVAR denemesi". In the Reel the source label is "KAVAR denemesi" | ✅ |
 | Unedited, unchecked content posted | Nothing is queued without the editor's "publish". Without an editor the verdict is "reject" | ✅ test_decisions |
+| A tool site shows only slogans and cards in its first screens (10-19: 3 of 3 tool Reels rejected) | D-36: the product's own screens (page images, README, feature pages) are proof candidates; the picker refuses slogans, card menus and logo walls; no allowed picture = the tool is skipped before a script is written | ✅ test_product_images |
 
 ## C. Agreed decisions get lost
 

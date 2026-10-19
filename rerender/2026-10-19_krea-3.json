@@ -1,0 +1,124 @@
+{
+  "hook_candidates": [
+    {
+      "pattern": "result",
+      "headline": "Düzenleme saniyeler sürüyor",
+      "spoken": "Görsel düzenleme artık sadece saniyeler sürüyor."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Görsel düzenleme çok vakit alıyor",
+      "spoken": "Tek görseli düzenlemek bile çok vakit alıyor."
+    },
+    {
+      "pattern": "question",
+      "headline": "Görseli hâlâ elle mi düzeltiyorsun?",
+      "spoken": "Görselleri hâlâ elle mi düzenliyorsun?"
+    },
+    {
+      "pattern": "curiosity",
+      "headline": "Düzenleme süresi 8 saniyenin altı",
+      "spoken": "Görsel düzenlemede bekleme süresi neredeyse kalmadı."
+    },
+    {
+      "pattern": "result",
+      "headline": "2K düzenleme 8 saniyeden az",
+      "spoken": "İki K görsel düzenleme sekiz saniyeden kısa sürüyor."
+    }
+  ],
+  "hook_pattern": "result",
+  "hook": "Düzenleme 8 saniyenin altında",
+  "voiceover": "Düzenleme sekiz saniyenin altında, şirkete göre. Krea 3, Krea'nın yapay zekâlı görsel modeli. Görselleri 2K çözünürlükte düzenliyor. Şirkete göre her düzenleme sekiz saniyeden kısa. Fikri beklemeden denemek vakit kazandırır. Tasarım yapan birine yolla.",
+  "voiceover_segments": {
+    "hook": "Düzenleme sekiz saniyenin altında, şirkete göre.",
+    "point1": "Krea 3, Krea'nın yapay zekâlı görsel modeli.",
+    "point2": "Görselleri 2K çözünürlükte düzenliyor.",
+    "point3": "Şirkete göre her düzenleme sekiz saniyeden kısa.",
+    "why": "Fikri beklemeden denemek vakit kazandırır.",
+    "cta": "Tasarım yapan birine yolla."
+  },
+  "shots": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 3.0,
+      "type": "screen_recording",
+      "direction": "Krea 3 arayüzünde bir görselin düzenlenip sonucun çıktığı an; kanıt kutusunda sonuç görsel.",
+      "on_screen_text": "Düzenleme saniyeler sürüyor"
+    },
+    {
+      "start_sec": 3.0,
+      "end_sec": 7.0,
+      "type": "screenshot",
+      "direction": "Krea sitesinin ana ekranı, Krea 3 görsel modeli okunur biçimde.",
+      "on_screen_text": "Krea 3"
+    },
+    {
+      "start_sec": 7.0,
+      "end_sec": 11.0,
+      "type": "screen_recording",
+      "direction": "Düzenlenen görselin yüksek çözünürlüklü çıktısı yakın planda.",
+      "on_screen_text": "2K çözünürlük"
+    },
+    {
+      "start_sec": 11.0,
+      "end_sec": 15.0,
+      "type": "text_overlay",
+      "direction": "Süre vurgusu: sekiz saniyenin altı, sade arka plan üstünde.",
+      "on_screen_text": "8 saniyenin altında"
+    },
+    {
+      "start_sec": 15.0,
+      "end_sec": 18.0,
+      "type": "b_roll",
+      "direction": "Tasarım masası, hızlı deneme akışı hissi veren sonuç görselleri.",
+      "on_screen_text": "Hızlı deneme"
+    },
+    {
+      "start_sec": 18.0,
+      "end_sec": 21.0,
+      "type": "text_overlay",
+      "direction": "Kapanış: gönder önerisi ve @thekavar.ai.",
+      "on_screen_text": "Tasarımcıya gönder"
+    }
+  ],
+  "key_points": [
+    {
+      "title": "Yapay zekâlı görsel modeli",
+      "detail": "Krea 3, Krea'nın yapay zekâlı görsel modeli."
+    },
+    {
+      "title": "2K çözünürlükte düzenleme",
+      "detail": "Görselleri yüksek çözünürlükte düzenleyebiliyorsun."
+    },
+    {
+      "title": "Sekiz saniyeden kısa",
+      "detail": "Şirkete göre her düzenleme sekiz saniyeden kısa."
+    }
+  ],
+  "why_it_matters": "Fikri beklemeden denemek vakit kazandırır.",
+  "caption": "Krea 3, Krea'nın yapay zekâlı görsel modeli. Şirkete göre 2K düzenlemeler sekiz saniyeden kısa sürüyor. 🎨 Bunu hangi tasarımcı arkadaşına göndereceksin?",
+  "hashtags": [
+    "#krea",
+    "#krea3",
+    "#gorselduzenleme",
+    "#aitools",
+    "#yapayzeka"
+  ],
+  "tool_name": "Krea 3",
+  "website_url": "https://www.krea.ai/",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "voiceover_words": 39,
+  "est_duration_sec": 15.6,
+  "hook_judge": {
+    "scores": [
+      6,
+      3,
+      3,
+      3,
+      7
+    ],
+    "best": 4,
+    "reason": "Candidate 4 states the concrete, data-backed promise (2K edits in under 8 seconds), fits the 32-character headline limit (27) and matches the spoken line; candidate 0 is clean but vague, and candidates 1, 2 and 3 exceed 32 characters (33, 34, 33), which caps them at 3."
+  }
+}

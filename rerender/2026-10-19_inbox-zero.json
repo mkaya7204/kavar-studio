@@ -1,0 +1,124 @@
+{
+  "hook_candidates": [
+    {
+      "pattern": "result",
+      "headline": "Gelen kutun hızla boşalıyor",
+      "spoken": "Gelen kutunu hızla sıfırlamak artık mümkün."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Gelen kutun hiç boşalmıyor",
+      "spoken": "Gelen kutun bir türlü boşalmıyor, değil mi?"
+    },
+    {
+      "pattern": "question",
+      "headline": "Mailleri tek tek mi siliyorsun?",
+      "spoken": "Gereksiz mailleri hâlâ tek tek mi siliyorsun?"
+    },
+    {
+      "pattern": "curiosity",
+      "headline": "Mail kutusu sıfıra iniyor",
+      "spoken": "Gelen kutusunu sıfırlayan bir yapay zekâ buldum."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Soğuk mailler kutunu dolduruyor",
+      "spoken": "Soğuk mailler gelen kutunu sürekli dolduruyor."
+    }
+  ],
+  "hook_pattern": "question",
+  "hook": "Mail işlerini otomatikleştiriyor",
+  "voiceover": "Mail işlerini otomatikleştiriyor. Adı Inbox Zero, yapay zekâlı e-posta asistanı. Toplu abonelikten çıkma özelliği var. Soğuk mailleri engelleyebiliyor. Mailleri Slack, Telegram ya da webden yönetebiliyorsun. Bunu mail kutusu taşan arkadaşına at.",
+  "voiceover_segments": {
+    "hook": "Mail işlerini otomatikleştiriyor.",
+    "point1": "Adı Inbox Zero, yapay zekâlı e-posta asistanı.",
+    "point2": "Toplu abonelikten çıkma özelliği var.",
+    "point3": "Soğuk mailleri engelleyebiliyor.",
+    "why": "Mailleri Slack, Telegram ya da webden yönetebiliyorsun.",
+    "cta": "Bunu mail kutusu taşan arkadaşına at."
+  },
+  "shots": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 2.5,
+      "type": "screenshot",
+      "direction": "Hook: Inbox Zero arayüzü, e-posta kutusu ve asistan ekranı proof olarak altta.",
+      "on_screen_text": "Gelen kutun hiç boşalmıyor"
+    },
+    {
+      "start_sec": 2.5,
+      "end_sec": 7.0,
+      "type": "screen_recording",
+      "direction": "Sitedeki ana ekran: yapay zekâ asistanının e-postaları düzenlemesi.",
+      "on_screen_text": "Inbox Zero"
+    },
+    {
+      "start_sec": 7.0,
+      "end_sec": 11.0,
+      "type": "screen_recording",
+      "direction": "Toplu abonelikten çıkma özelliğinin ekranı.",
+      "on_screen_text": "Toplu abonelikten çıkış"
+    },
+    {
+      "start_sec": 11.0,
+      "end_sec": 14.0,
+      "type": "screenshot",
+      "direction": "Soğuk mail engelleme özelliğinin ekranı.",
+      "on_screen_text": "Soğuk mailler engelleniyor"
+    },
+    {
+      "start_sec": 14.0,
+      "end_sec": 17.0,
+      "type": "text_overlay",
+      "direction": "Analiz paneli ve açık kaynak vurgusu.",
+      "on_screen_text": "Açık kaynak + analiz"
+    },
+    {
+      "start_sec": 17.0,
+      "end_sec": 20.0,
+      "type": "text_overlay",
+      "direction": "Gönder çağrısı, el emojisi olmadan sade metin.",
+      "on_screen_text": "Arkadaşına gönder"
+    }
+  ],
+  "key_points": [
+    {
+      "title": "Yapay zekâlı e-posta asistanı",
+      "detail": "Inbox Zero e-posta işlerini otomatikleştiriyor."
+    },
+    {
+      "title": "Toplu abonelikten çıkma",
+      "detail": "Gereksiz listelerden toplu çıkma özelliği sunuyor."
+    },
+    {
+      "title": "Soğuk mail engelleme",
+      "detail": "Soğuk e-postaları engelleme özelliği sunuyor."
+    }
+  ],
+  "why_it_matters": "Mail kutusuna harcadığın vakit azalabilir. Üstelik mailleri Slack, Telegram veya webden yönetebiliyorsun.",
+  "caption": "Inbox Zero, yapay zekâlı bir e-posta asistanı: mail işlerini otomatikleştiriyor, toplu abonelikten çıkma ve soğuk mail engelleme özellikleri sunuyor. Slack, Telegram ya da webden kullanılabiliyor. 📬 Mail kutusu hep dolu olan birine gönderir misin?",
+  "hashtags": [
+    "#inboxzero",
+    "#eposta",
+    "#yapayzeka",
+    "#aitools",
+    "#opensource"
+  ],
+  "tool_name": "Inbox Zero",
+  "website_url": "https://www.getinboxzero.com/",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "voiceover_words": 40,
+  "est_duration_sec": 16.0,
+  "hook_judge": {
+    "scores": [
+      6,
+      7,
+      7,
+      6,
+      6
+    ],
+    "best": 2,
+    "reason": "Candidate 2 puts a concrete daily habit (deleting mails one by one) to the viewer as a question, with the same words on screen and in the voice. It fits in 31 characters, doesn't name the tool, and leads into the \"toplu abonelikten çık\" proof, so it's easy to send to a specific person."
+  }
+}

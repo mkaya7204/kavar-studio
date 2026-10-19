@@ -114,6 +114,12 @@ def candidates(capture: dict) -> list[Path]:
                 img.convert("RGB").save(dst)
             out.append(dst)
         return out
+    # D-36: the product's own screens first (images further down the page, feature pages, GitHub README)
+    for p in [Path(p) for p in capture.get("product_images", []) if Path(p).exists()][:MAX_CANDIDATES // 2]:
+        dst = WORK / f"cand_{len(out)}.png"
+        with Image.open(p) as img:
+            img.convert("RGB").save(dst)
+        out.append(dst)
     # Half-overlapping windows over the whole captured page, not only the few non-overlapping ones the first
     # proof pick used: the 10-18 test fixer saw one picture of Inbox Zero and had to give up.
     page = Path(capture.get("fullpage_path") or capture.get("screenshot_path") or "")
@@ -124,8 +130,9 @@ def candidates(capture: dict) -> list[Path]:
         win_h = round(img.width * PROOF_SIZE[1] / PROOF_SIZE[0])
         picked = _proof_windows(img, screens=6)
         tops = sorted(set(picked) | set(range(0, max(1, img.height - win_h + 1), max(1, win_h // 2))))
-        step = max(1, len(tops) // MAX_CANDIDATES + (len(tops) % MAX_CANDIDATES > 0))
-        for top in tops[::step][:MAX_CANDIDATES]:
+        room = MAX_CANDIDATES - len(out)
+        step = max(1, len(tops) // room + (len(tops) % room > 0))
+        for top in tops[::step][:room]:
             dst = WORK / f"cand_{len(out)}.png"
             img.crop((0, top, img.width, min(img.height, top + win_h))).save(dst)
             out.append(dst)

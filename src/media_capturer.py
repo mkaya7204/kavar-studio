@@ -20,6 +20,8 @@ from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page, sync_playwright
 from playwright.sync_api import TimeoutError as PlaywrightTimeout
 
+from product_images import PAGE_MEDIA_JS
+
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = ROOT / "output" / "temp"
 
@@ -307,6 +309,14 @@ def capture_site(
                 timeout=SCREENSHOT_TIMEOUT_MS,
                 clip={"x": 0, "y": 0, "width": css_w, "height": min(page_height, max_css_height)},
             )
+            # D-36: the product's own screens are usually below the first screens; collect them after the
+            # captures (the deeper scroll must not change what was shot)
+            page_media = None
+            try:
+                _trigger_lazy_load(page, css_h * 15)
+                page_media = page.evaluate(PAGE_MEDIA_JS)
+            except PlaywrightError as exc:
+                print(f"[capture] page images not read: {exc.message.splitlines()[0]}")
             title, final_url = page.title(), page.url
         except PlaywrightError as exc:  # any other browser failure: skip this tool, don't crash the run
             raise CaptureError(f"capture of {url} failed: {exc.message.splitlines()[0]}") from exc
@@ -321,6 +331,7 @@ def capture_site(
         "fullpage_path": str(fullpage),
         "logo_path": str(logo_path) if logo_path else None,
         "scroll_video_path": None,
+        "page_media": page_media,
         **cleanup,
     }
     if scroll_seconds and min(page_height, max_css_height) > css_h:

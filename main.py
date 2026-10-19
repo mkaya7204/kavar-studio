@@ -28,6 +28,7 @@ from fetcher import fetch_latest_tools  # noqa: E402
 from hyperframes_builder import BuildError as HFBuildError  # noqa: E402
 from hyperframes_builder import best_proof_crop, build_video_hyperframes  # noqa: E402
 from media_capturer import CaptureError, capture_site  # noqa: E402
+from product_images import collect as collect_product_images  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
 from script_writer import VideoScript, generate_script, used_tools  # noqa: E402
 from tts_engine import TTSError, reel_voice, voice_for  # noqa: E402
@@ -86,10 +87,15 @@ def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyper
         print(f"   \"{capture['title']}\", cookie banner clicked={capture['cookie_accept_clicked']}, "
               f"overlays hidden={capture['overlays_hidden']}, logo={'yes' if capture['logo_path'] else 'no'}")
 
+        # D-36: the product's own screens (images further down the page, feature pages, GitHub README)
+        capture["product_images"] = collect_product_images(capture.get("page_media"), TEMP_DIR / "product")
+        print(f"   product screens: {len(capture['product_images'])}")
+
         # The hook's proof image must come from this site, without prices / logos / badges (the
         # editor rejects those). No clean crop = skip the tool before spending a script or a voice.
         proof = best_proof_crop(Path(capture.get("fullpage_path") or capture["screenshot_path"]),
-                                TEMP_DIR / "proof.png", f"{tool['tool_name']}: {tool.get('tag_line', '')}")
+                                TEMP_DIR / "proof.png", f"{tool['tool_name']}: {tool.get('tag_line', '')}",
+                                extra=capture["product_images"])
         if proof is None:
             raise CaptureError("no clean proof image on the site (prices, logos or badges everywhere)")
         capture["proof_path"] = str(proof)

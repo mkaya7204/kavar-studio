@@ -8,6 +8,9 @@ on:
       script:
         description: "script file under rerender/ (e.g. 2026-10-15_retriever-ai.json)"
         required: true
+      draft:
+        description: "yes = silent draft voice, George not spent (to test pictures / template, D-30)"
+        default: "no"
 
 jobs:
   rerender:
@@ -46,6 +49,8 @@ jobs:
           cp "$(find /tmp/inter -name 'Inter-Black.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguibl.ttf
           cp "$(find /tmp/inter -name 'Inter-SemiBold.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguisb.ttf
       - name: Render
+        env:
+          KAVAR_DRAFT_VOICE: ${{ github.event.inputs.draft == 'yes' && '1' || '' }}
         run: python main.py --script "rerender/${{ github.event.inputs.script }}"
       - name: Cover and last frame
         if: always()
@@ -69,4 +74,7 @@ jobs:
             output/final/post.json
             output/final/editor.json
             output/final/_review_sheet.jpg
+            output/temp/proof.png
+            output/temp/_proof_candidates.jpg
+            output/temp/product/
           retention-days: 7
