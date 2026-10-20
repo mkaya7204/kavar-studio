@@ -324,5 +324,31 @@
     "duration_sec": 17.7,
     "words": 43,
     "status": "rejected: 8.8 s karesi: site yakalaması kötü kırpılmış. 'SEEDANCE 2.5 / NEW' satırı ile 'Thirty seconds, one unbroken take' başlığı üst üste biniyor, alttaki 'and extend.' satırı yarıda kesiliyor.; 8.8 ve 9.8 s: ekranda tek bir modelin (Seedance 2.5) İngilizce tanıtımı var. Ürünün arayüzü ya da çıktısı değil, 'Önde gelen modeller içinde' vaadini göstermiyor, telefonda okunmuyor.; 9.8 s karesinde turuncu 'Try Now' düğmesi ve 'NEW' rozeti var. CTA düğmesi / reklam görünümü veriyor, sitenin kendi pazarlama kartı."
+  },
+  {
+    "id": "2026-10-20_gemini",
+    "date": "2026-10-20",
+    "kind": "guide",
+    "tool": "Gemini",
+    "hook_pattern": "result",
+    "headline": "Kıyafeti almadan üstünde gör",
+    "spoken_hook": "Kıyafeti almadan önce üstünde görebilirsin.",
+    "cta": "Kombin kuran arkadaşına gönder.",
+    "duration_sec": 21.0,
+    "words": 36,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-20_readywhen",
+    "date": "2026-10-20",
+    "kind": "tool",
+    "tool": "readywhen",
+    "hook_pattern": "result",
+    "headline": "Verdiğin sözü asistan yakalıyor",
+    "spoken_hook": "Müşteriye verdiğin sözü artık bir asistan yakalıyor.",
+    "cta": "Bunu kendi işini yürüten arkadaşına gönder.",
+    "duration_sec": 22.2,
+    "words": 39,
+    "status": "produced"
   }
 ]

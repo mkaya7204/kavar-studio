@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Train with Pasta",
-    "hook": "Antrenmanda eller serbest mi?",
-    "pattern": "question",
-    "spoken_hook": "Antrenman sırasında telefona hâlâ dokunuyor musun?",
-    "cta": "Bunu spora yeni başlayan arkadaşına gönder."
-  },
-  {
-    "tool": "Craft Agents",
-    "hook": "Ajanlarını nerede yönetiyorsun?",
-    "pattern": "question",
-    "spoken_hook": "Yapay zekâ ajanlarını tam olarak nerede yönetiyorsun?",
-    "cta": "Bunu geliştirici arkadaşına gönder."
-  },
-  {
     "tool": "Ultracite v8",
     "hook": "Ajanın kodu tutarlı kalıyor",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "result",
     "spoken_hook": "Video, görsel ve ses artık tek yerde üretiliyor.",
     "cta": "Bunu içerik üreten arkadaşına at."
+  },
+  {
+    "tool": "Gemini",
+    "hook": "Kıyafeti almadan üstünde gör",
+    "pattern": "result",
+    "spoken_hook": "Kıyafeti almadan önce üstünde görebilirsin.",
+    "cta": "Kombin kuran arkadaşına gönder."
+  },
+  {
+    "tool": "readywhen",
+    "hook": "Verdiğin sözü asistan yakalıyor",
+    "pattern": "result",
+    "spoken_hook": "Müşteriye verdiğin sözü artık bir asistan yakalıyor.",
+    "cta": "Bunu kendi işini yürüten arkadaşına gönder."
   }
 ]
