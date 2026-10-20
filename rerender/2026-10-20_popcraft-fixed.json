@@ -1,0 +1,124 @@
+{
+  "hook_candidates": [
+    {
+      "pattern": "result",
+      "headline": "Video, görsel, ses tek stüdyoda",
+      "spoken": "Video, görsel ve ses tek stüdyoda."
+    },
+    {
+      "pattern": "pain",
+      "headline": "Her model için ayrı sekme",
+      "spoken": "Her model için ayrı sekme açıyorsun."
+    },
+    {
+      "pattern": "question",
+      "headline": "Ajanın video üretebilir mi?",
+      "spoken": "Yapay zekâ ajanın video da üretebilir mi?"
+    },
+    {
+      "pattern": "curiosity",
+      "headline": "Tüm modeller tek stüdyoda",
+      "spoken": "Önde gelen modellerin hepsi tek stüdyoda toplanmış."
+    },
+    {
+      "pattern": "result",
+      "headline": "Ajanından video ve ses çıkıyor",
+      "spoken": "Yapay zekâ ajanından video ve ses çıkıyor."
+    }
+  ],
+  "hook_pattern": "result",
+  "hook": "Video, görsel, ses tek stüdyoda",
+  "voiceover": "Video, görsel ve ses tek stüdyoda. Adı Popcraft, video, görsel, ses ve avatar üretiyor. Sitesine göre en yeni yapay zekâ modelleriyle çalışıyor. Asistanı senaryodan son videoya kadar işi yürütüyor. Araç değiştirmeden tek yerden üretiyorsun. Bunu içerik üreten arkadaşına at.",
+  "voiceover_segments": {
+    "hook": "Video, görsel ve ses tek stüdyoda.",
+    "point1": "Adı Popcraft, video, görsel, ses ve avatar üretiyor.",
+    "point2": "Sitesine göre en yeni yapay zekâ modelleriyle çalışıyor.",
+    "point3": "Asistanı senaryodan son videoya kadar işi yürütüyor.",
+    "why": "Araç değiştirmeden tek yerden üretiyorsun.",
+    "cta": "Bunu içerik üreten arkadaşına at."
+  },
+  "shots": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 3.0,
+      "type": "screenshot",
+      "direction": "Hook headline over the Popcraft studio interface as proof: video, image and audio generation in one screen.",
+      "on_screen_text": "Video, görsel, ses tek stüdyoda"
+    },
+    {
+      "start_sec": 3.0,
+      "end_sec": 8.0,
+      "type": "screen_recording",
+      "direction": "Site capture of the studio showing generated videos, images and avatars; name Popcraft appears.",
+      "on_screen_text": "Popcraft"
+    },
+    {
+      "start_sec": 8.0,
+      "end_sec": 12.0,
+      "type": "screen_recording",
+      "direction": "Show the model selection area, all leading models in one studio.",
+      "on_screen_text": "En yeni modeller"
+    },
+    {
+      "start_sec": 12.0,
+      "end_sec": 16.0,
+      "type": "screenshot",
+      "direction": "Show the agent tagline section: generate from any AI agent.",
+      "on_screen_text": "Senaryodan videoya"
+    },
+    {
+      "start_sec": 16.0,
+      "end_sec": 19.0,
+      "type": "text_overlay",
+      "direction": "Why-it-matters card over a soft blurred site background.",
+      "on_screen_text": "Tek yerden üretim"
+    },
+    {
+      "start_sec": 19.0,
+      "end_sec": 22.0,
+      "type": "text_overlay",
+      "direction": "Outro with handle @thekavar.ai and + TAKİP ET pill.",
+      "on_screen_text": "@thekavar.ai"
+    }
+  ],
+  "key_points": [
+    {
+      "title": "Video, görsel, ses, avatar",
+      "detail": "Dört içerik türünü tek stüdyoda üretiyor."
+    },
+    {
+      "title": "En yeni modellerle",
+      "detail": "Sitesine göre en yeni yapay zekâ modelleriyle çalışıyor."
+    },
+    {
+      "title": "Senaryodan videoya",
+      "detail": "Yapay zekâ asistanı senaryodan son videoya kadar işi yürütüyor."
+    }
+  ],
+  "why_it_matters": "Araç değiştirmeden, tek stüdyodan içerik üretiyorsun.",
+  "caption": "Popcraft video, görsel, ses ve avatar üretimini tek stüdyoda topluyor; yapay zekâ asistanı senaryodan son videoya kadar işi yürütüyor 🎬 Sen içerik için kaç farklı araç kullanıyorsun?",
+  "hashtags": [
+    "#popcraft",
+    "#aivideo",
+    "#aitools",
+    "#yapayzeka",
+    "#icerikuretimi"
+  ],
+  "tool_name": "Popcraft",
+  "website_url": "https://popcraft.ai/",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "voiceover_words": 39,
+  "est_duration_sec": 15.6,
+  "hook_judge": {
+    "scores": [
+      8,
+      6,
+      5,
+      4,
+      4
+    ],
+    "best": 0,
+    "reason": "Candidate 0 gives a clear outcome (video, image and audio in one place) that the tool data supports. Its headline and spoken line match, it is natural Turkish, and it works with the sound off. The others are vaguer, lean on the jargon word \"ajan\", assume things about the viewer, or repeat the line that follows the hook."
+  }
+}
