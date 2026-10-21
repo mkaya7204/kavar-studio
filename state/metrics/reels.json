@@ -350,5 +350,70 @@
     "duration_sec": 22.2,
     "words": 39,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-21_google",
+    "date": "2026-10-21",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Arabada mailine sesle sor",
+    "spoken_hook": "Araba kullanırken mailine, takvimine sesle sorabilirsin.",
+    "cta": "Arabası olan arkadaşına gönder.",
+    "duration_sec": 22.6,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-21_stella",
+    "date": "2026-10-21",
+    "kind": "tool",
+    "tool": "Stella",
+    "hook_pattern": "result",
+    "headline": "Kafandakini sesle anlatıyorsun",
+    "spoken_hook": "Kafandakini artık bir yapay zekâya sesle anlatabilirsin.",
+    "cta": "Kafası meşgul arkadaşına gönder.",
+    "duration_sec": 20.4,
+    "words": 36,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-21_composio-instant",
+    "date": "2026-10-21",
+    "kind": "tool",
+    "tool": "Composio Instant",
+    "hook_pattern": "result",
+    "headline": "Yapay zekân 1.500+ uygulamada",
+    "spoken_hook": "Kullandığın yapay zekâ 1.500'den fazla uygulamada çalışabiliyor.",
+    "cta": "Bunu ekip işlerini yürüten birine at.",
+    "duration_sec": 21.3,
+    "words": 40,
+    "status": "rejected: ~11.7 sn karesi: tam ekran site görüntüsünün üst satırı yarım kesik (\"then save a briefing in Notion.\"), geri kalanı telefonda okunmayan küçük arayüz etiketleri (TOOLS, ACCOUNTS, PERMISSIONS...). Okunamayan ve kesilmiş sayfa görüntüsü kuralına aykırı.; Bu çekim, \"Bilgi bulur, uygulama günceller\" vaadini göstermiyor. Boş gri alanlar ve bulanık kenarlar var, kanıt değeri zayıf.; En uzun durağan an 3,8 sn. Hedef 0,6 sn'den uzun ölü an olmaması, bu yüzden pacing zayıf."
+  },
+  {
+    "id": "2026-10-21_todo-is",
+    "date": "2026-10-21",
+    "kind": "tool",
+    "tool": "ToDo.is",
+    "hook_pattern": "result",
+    "headline": "Yazdığın işi ajan yapıyor",
+    "spoken_hook": "Yazdığın görevi artık yapay zekâ ajanı yapıyor.",
+    "cta": "Listesi hiç bitmeyen arkadaşına gönder.",
+    "duration_sec": 20.2,
+    "words": 40,
+    "status": "rejected: Kapak ve 0-2.5 sn kare: kanıt kutusundaki görsel soldan kırpık. 'todo.is' 'odo.is', 'to do is' ise 'do is' olarak görünüyor. 'book dinner for 4' sağda kesiliyor. Kesik metin kabul edilmez.; Alttaki 'our to-dos. An AI agent does them. 24/7.' satırı da soldan kesik. Kanıt yarım okunuyor.; 10.1 sn: kanıt kutusu neredeyse boş. İçinde koyu bir telefon çerçevesi ve WhatsApp/Telegram/Slack çipleri var, alt yarı boş. Bir sonraki kareyle kontrol edildi (11.1 sn'de kart 03 geliyor), kutu yine de ürünün yaptığı işi göstermiyor."
+  },
+  {
+    "id": "2026-10-21_bonds",
+    "date": "2026-10-21",
+    "kind": "tool",
+    "tool": "bonds",
+    "hook_pattern": "curiosity",
+    "headline": "Grubun yeni üyesi insan değil",
+    "spoken_hook": "Arkadaş grubunun yeni üyesi bu sefer insan değil.",
+    "cta": "Bunu grubuna at.",
+    "duration_sec": 19.7,
+    "words": 40,
+    "status": "rejected: 9.8 sn karesi: sitedeki \"EVERY CHAT GETS ITS OWN BONDI\" başlığı üstten kesik; üst kısmı kaynak etiketinin arkasında kalıyor. Kesik metin kabul edilmez.; Kapak ve 0-2.5 sn kanıt kutusunda sohbet balonları kenarlardan kesik (\"na semana sin tiktok?\", \"¿les armo\", \"no duras ni 2\"). Yarım metin görünüyor.; Kanıt görseli İspanyolca (\"TUS CHATS DE AMIGOS, CON SUPERPODERES\"); Türk izleyici okuyamaz. Vaadi (grup sohbetine yapay zekâ arkadaşı) göstermiyor, sadece bir slogan ve maskot."
   }
 ]
