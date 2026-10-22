@@ -132,6 +132,8 @@ def rank(candidates: list[dict], concept: str, kind_prefix: str = "carousel") ->
     except Exception as exc:  # noqa: BLE001  ranking is an improvement, never a reason to stop
         print(f"[ranker] failed: {type(exc).__name__}: {str(exc)[:200]}")
         return candidates
+    if not items:  # D-38: said out loud (10-22 showed empty reasons and no word why)
+        print("[ranker] no ranking from Claude; candidates keep their order")
     bonus = category_bonus(kind_prefix)
     by_index = {it.index: it.model_dump() for it in items if 0 <= it.index < len(candidates)}
     out = []

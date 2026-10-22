@@ -23,7 +23,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from PIL import Image, ImageOps
+from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -31,7 +31,7 @@ from article_capture import capture_article  # noqa: E402
 from carousel_writer import _ask, _revision_prompt  # noqa: E402
 from content_ranker import rank  # noqa: E402
 from distribution import build_post  # noqa: E402
-from hyperframes_builder import FINAL_PATH, PROOF_SIZE, SHOT_NAMES, _shot_frame, build_video_hyperframes  # noqa: E402
+from hyperframes_builder import FINAL_PATH, SHOT_NAMES, _fit_whole, _shot_frame, build_video_hyperframes  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
 from news_fetcher import SOURCES_PATH, _items, load_history, mark_used  # noqa: E402
 from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
@@ -126,8 +126,7 @@ def _frames(page: dict, folder: Path) -> dict | None:
         pictures.append(page["cover_path"])
     if not pictures:
         return None
-    with Image.open(pictures[0]) as img:
-        ImageOps.fit(img.convert("RGB"), PROOF_SIZE, Image.LANCZOS, centering=(0.5, 0.35)).save(folder / "proof.png")
+    _fit_whole(pictures[0]).save(folder / "proof.png")  # D-38: whole, never cropped (10-21: cut on the left)
     # with too few pictures a shot is a closer look at one of them, never the same frame twice
     shots = [(pictures[1], False) if len(pictures) > 1 else (pictures[0], True),
              (pictures[2], False) if len(pictures) > 2 else (pictures[-1], True)]

@@ -187,7 +187,9 @@ def produce_news_items(count: int) -> list[dict]:
 REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
 GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no voice, D-30); the rest waits for it
-REEL_FIX_ROUNDS = 2  # D-33: fixes of a rejected silent draft (src/reel_fixer.py) before the next tool is tried
+# D-33 fixed a rejected silent draft twice (src/reel_fixer.py); D-38 (user 2026-10-22) switched it off: its fixes
+# cropped the proof picture (cut text in 12 of 14 fix rounds, 10-19..10-21) and a rejected draft is now simply rejected
+REEL_FIX_ROUNDS = 0
 REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
 
@@ -394,11 +396,13 @@ def produce(only: str = "") -> None:
             return
         if "morning" in done:
             only = "rest"
-    slots = schedule()["slots"]
+    cfg = schedule()
+    slots = cfg["slots"]
     if only in ("", "morning"):
-        morning = produce_guide_reel() if any(s.get("concept") == "guide" for s in slots) else None
+        wants_guide = cfg.get("guide_reel") or any(s.get("concept") == "guide" for s in slots)
+        morning = produce_guide_reel() if wants_guide else None
         save_queue(_build_queue(slots, [], [], morning))
-        log(f"queued 07:30: reel {morning['title'] if morning else '-'} [{'ready' if morning else 'empty'}]")
+        log(f"guide Reel: {morning['title'] if morning else '-'} [{'ready' if morning else 'none'}]")
         _mark_done("morning")  # tried: the rest of the day starts even without a morning Reel
         if only == "morning":
             return
@@ -426,7 +430,7 @@ def _produce_rest(slots: list[dict], only: str) -> None:
     if wanted and only != "news":
         if trial := produce_trial_reel(news):
             reels.append(trial)
-        while len(reels) < wanted:
+        while len(reels) < wanted and schedule().get("tool_reels", True):  # D-38: tool Reels paused
             try:
                 tool_reel = produce_reel()
             except Exception as exc:
@@ -438,13 +442,19 @@ def _produce_rest(slots: list[dict], only: str) -> None:
             save_queue(_build_queue(slots, list(news), reels, morning))
     queue = _build_queue(slots, list(news), reels, morning)
     save_queue(queue)
-    _save_surplus(news[sum(s["kind"] == "carousel" for s in slots):] + reels[wanted:])
+    queued = {q.get("folder") for q in queue}
+    _save_surplus([i for i in news + reels + ([morning] if morning else []) if i.get("folder") not in queued])
     for q in queue:
         log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
     # the rest counts as done only when something is ready: a crashed or empty run leaves room for
     # the later runs (08:00 cron-job.org, produce.yml backups) to try again
     if only in ("", "rest") and any(q["status"] == "ready" for q in queue):
         _mark_done("rest")
+
+
+def empty_day() -> bool:
+    """Nothing in today's queue is ready (D-38: 10-22 made 0/5 and the run still showed success)."""
+    return not any(q["status"] in ("ready", "published") for q in load_queue())
 
 
 def _save_surplus(items: list[dict]) -> None:
@@ -461,9 +471,11 @@ def _save_surplus(items: list[dict]) -> None:
 def _build_queue(slots: list[dict], news: list[dict], reels: list[dict], morning: dict | None = None) -> list[dict]:
     """Carousels fill their slots in order. Reels (best first) fill the reel slots from the LAST one
     back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16).
-    The 07:30 slot (concept "guide", D-31) takes only the guide Reel, and the guide Reel only that slot."""
+    A slot with concept "guide" (D-31) takes only the guide Reel, and the guide Reel only that slot. Without
+    such a slot (D-38) the guide Reel is the last choice for the Reel slots, after "Biz denedik" and tool Reels."""
     reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel" and s.get("concept") != "guide"]
-    by_slot = dict(zip(reversed(reel_slots), reels))
+    has_guide_slot = any(s.get("concept") == "guide" for s in slots)
+    by_slot = dict(zip(reversed(reel_slots), reels + ([morning] if morning and not has_guide_slot else [])))
     by_slot.update({i: morning for i, s in enumerate(slots) if s.get("concept") == "guide" and morning})
     queue = []
     for i, s in enumerate(slots):
@@ -661,6 +673,9 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
     if cmd == "produce":
         produce(sys.argv[2] if len(sys.argv) > 2 else "")
+        if empty_day():  # D-38: an empty day shows red in GitHub, never "success"
+            log("nothing is ready today: exit 1")
+            sys.exit(1)
     elif cmd == "publish":
         publish(int(sys.argv[2]))
     elif cmd == "fetch":

@@ -321,7 +321,9 @@ def _ask_cli(exe: str, prompt: str, system: str, fmt: type[BaseModel]) -> tuple[
               f"{(proc.stderr or proc.stdout).strip()[:300]}")
         return None, None
     if out.get("is_error") or out.get("structured_output") is None:
-        print(f"[carousel_writer] claude -p returned no carousel ({out.get('subtype')}).")
+        # D-38: the reason (usage limit, login, refusal) goes to the log; 10-22 could not be explained without it
+        print(f"[carousel_writer] claude -p returned no carousel ({out.get('subtype')}, is_error="
+              f"{out.get('is_error')}, exit {proc.returncode}: {str(out.get('result'))[:200]}).")
         return None, None
     return out["structured_output"], next(iter(out.get("modelUsage") or {}), None)
 

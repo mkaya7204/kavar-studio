@@ -90,6 +90,9 @@ def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyper
         # D-36: the product's own screens (images further down the page, feature pages, GitHub README)
         capture["product_images"] = collect_product_images(capture.get("page_media"), TEMP_DIR / "product")
         print(f"   product screens: {len(capture['product_images'])}")
+        # D-38: a live tool with no real product screen is skipped (a hand-written --script is a person's call)
+        if not capture["product_images"] and script is None:
+            raise CaptureError("no product screens on the site (only marketing pages)")
 
         # The hook's proof image must come from this site, without prices / logos / badges (the
         # editor rejects those). No clean crop = skip the tool before spending a script or a voice.

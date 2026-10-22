@@ -184,7 +184,7 @@ def text_problems(script: dict) -> list[str]:
 
 def apply_pictures(capture: dict, pictures: list[Path], proof: int, shots: list[int]) -> dict:
     """proof.png and the two shot frames from the chosen candidates, where the builder reads them."""
-    from hyperframes_builder import PROOF_SIZE, SHOT_NAMES, _shot_frame
+    from hyperframes_builder import SHOT_NAMES, _fit_whole, _shot_frame
 
     if not pictures:
         return capture
@@ -192,8 +192,7 @@ def apply_pictures(capture: dict, pictures: list[Path], proof: int, shots: list[
     folder = Path(capture.get("proof_path") or TEMP_DIR / "proof.png").parent
     folder.mkdir(parents=True, exist_ok=True)
     if src := pick(proof):
-        with Image.open(src) as img:
-            ImageOps.fit(img.convert("RGB"), PROOF_SIZE, Image.LANCZOS, centering=(0.5, 0.4)).save(folder / "proof.png")
+        _fit_whole(src).save(folder / "proof.png")  # D-36/D-38: whole, never cropped (ImageOps.fit cut the text)
     for name, i in zip(SHOT_NAMES, shots):
         if src := pick(i):
             with Image.open(src) as img:

@@ -100,10 +100,13 @@ def _ask(folder: Path, message: str) -> dict:
         )
         out = json.loads(proc.stdout)
         verdict = out.get("structured_output")
-    except (subprocess.TimeoutExpired, json.JSONDecodeError):
-        verdict = None
-    if not verdict:
-        return {"verdict": "reject", "problems": ["editor gave no verdict"], "fixes": []}
+        why = f"{out.get('subtype')}, is_error={out.get('is_error')}: {str(out.get('result'))[:200]}"
+    except subprocess.TimeoutExpired:
+        verdict, why = None, f"timed out after {CLI_TIMEOUT * 2}s"
+    except json.JSONDecodeError:
+        verdict, why = None, f"exit {proc.returncode}: {(proc.stderr or proc.stdout).strip()[:200]}"
+    if not verdict:  # D-38: the reason is logged, so a usage limit never looks like a real rejection
+        return {"verdict": "reject", "problems": [f"editor gave no verdict ({why})"], "fixes": []}
     return verdict
 
 
