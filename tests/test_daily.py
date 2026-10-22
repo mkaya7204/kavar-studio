@@ -257,6 +257,36 @@ def test_guide_candidates_are_unused_company_posts_of_two_weeks(monkeypatch, tmp
     assert [i["url"] for i in guide_reel.fetch_guide()] == ["https://g/1"]
 
 
+def test_guide_only_sources_feed_the_guide_reel_and_not_the_news(monkeypatch, tmp_path):
+    """D-41 (user 2026-10-22, "a"): 10-22 had 0 guide topics in 40 company posts three times; Google Workspace
+    Updates (22 feature posts in 14 days) is read for the guide Reel only, more of its posts, no weekly recaps."""
+    import sys
+    from datetime import datetime, timedelta, timezone
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import guide_reel
+    import news_fetcher
+
+    now = datetime.now(timezone.utc)
+    blog = [{"title": f"Blog {n}", "url": f"https://b/{n}", "date": now - timedelta(hours=n), "summary": "",
+             "source": "Gemini", "priority": 3} for n in range(8)]
+    ws = [{"title": f"Feature {n}", "url": f"https://w/{n}", "date": now - timedelta(hours=n), "summary": "",
+           "source": "Google Workspace Updates", "priority": 2} for n in range(12)]
+    ws.append({"title": "Google Workspace Weekly Recap - October 16, 2026", "url": "https://w/recap",
+               "date": now, "summary": "", "source": "Google Workspace Updates", "priority": 2})
+    sources = tmp_path / "news_sources.json"
+    sources.write_text('{"max_age_hours": 72, "feeds": [{"name": "Gemini", "url": "g"}], '
+                       '"guide_feeds": [{"name": "Google Workspace Updates", "url": "w"}]}', encoding="utf-8")
+    by_feed = {"g": blog, "w": ws}
+    for mod in (guide_reel, news_fetcher):
+        monkeypatch.setattr(mod, "SOURCES_PATH", sources)
+        monkeypatch.setattr(mod, "_items", lambda feed: [dict(i) for i in by_feed[feed["url"]]])
+        monkeypatch.setattr(mod, "load_history", lambda: [])
+    urls = [i["url"] for i in guide_reel.fetch_guide()]
+    assert sum(u.startswith("https://w/") for u in urls) == 12 and "https://w/recap" not in urls
+    assert sum(u.startswith("https://b/") for u in urls) == guide_reel.PER_FEED
+    assert not any(i["url"].startswith("https://w/") for i in news_fetcher.fetch_news(50))  # never a news carousel
+
+
 def test_guide_pictures_are_the_features_own_never_the_page(tmp_path):
     """10-18 dry runs: the shrunk page top was unreadable twice and an abstract cover proved nothing. The
     article's figures come first, the cover last, and the page screenshot is never a shot."""

@@ -78,6 +78,7 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    the user the same day). Tool Reels are on again; a tool with no real product screen is skipped before
    any script (main.py, D-38). The morning guide Reel is made and uploaded as its own artifact
    (`kavar-morning`) before the rest of the day, so `daily.py fetch` can take it while the run goes on.
+   D-41: the guide Reel also reads news_sources.json `guide_feeds` (Google Workspace Updates), never the news.
    07:30 Reel, 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30
    Reel. Two Reels a day since 2026-10-16 ("günde tek reels yeterince takipçi getirmiyor"). The best
    Reel ("Biz denedik") takes 20:30, a tool Reel 11:45 (`_build_queue`), news carousel 12:30.
