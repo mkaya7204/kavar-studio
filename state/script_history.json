@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Krea 3",
-    "hook": "2K düzenleme 8 saniyeden az",
-    "pattern": "result",
-    "spoken_hook": "İki K görsel düzenleme sekiz saniyeden kısa sürüyor.",
-    "cta": "Tasarım yapan birine yolla."
-  },
-  {
-    "tool": "Inbox Zero",
-    "hook": "Mailleri tek tek mi siliyorsun?",
-    "pattern": "question",
-    "spoken_hook": "Gereksiz mailleri hâlâ tek tek mi siliyorsun?",
-    "cta": "Bunu mail kutusu taşan arkadaşına at."
-  },
-  {
     "tool": "Popcraft",
     "hook": "Video, görsel, ses tek yerde",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "curiosity",
     "spoken_hook": "Arkadaş grubunun yeni üyesi bu sefer insan değil.",
     "cta": "Bunu grubun sessiz üyesine at."
+  },
+  {
+    "tool": "Dadan",
+    "hook": "Ekran kaydın paylaşıma hazır",
+    "pattern": "result",
+    "spoken_hook": "Ekran kaydın düzenlenip paylaşıma hazır hâle geliyor.",
+    "cta": "Bunu eğitim videosu çeken arkadaşına gönder."
+  },
+  {
+    "tool": "Archivist",
+    "hook": "Görsel ve videon düzene giriyor",
+    "pattern": "result",
+    "spoken_hook": "Görsel ve videolarının adı kendiliğinden düzene giriyor.",
+    "cta": "Dosya yığını olan arkadaşına gönder."
   }
 ]

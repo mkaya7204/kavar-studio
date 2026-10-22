@@ -415,5 +415,31 @@
     "duration_sec": 19.7,
     "words": 40,
     "status": "rejected: 9.8 sn karesi: sitedeki \"EVERY CHAT GETS ITS OWN BONDI\" başlığı üstten kesik; üst kısmı kaynak etiketinin arkasında kalıyor. Kesik metin kabul edilmez.; Kapak ve 0-2.5 sn kanıt kutusunda sohbet balonları kenarlardan kesik (\"na semana sin tiktok?\", \"¿les armo\", \"no duras ni 2\"). Yarım metin görünüyor.; Kanıt görseli İspanyolca (\"TUS CHATS DE AMIGOS, CON SUPERPODERES\"); Türk izleyici okuyamaz. Vaadi (grup sohbetine yapay zekâ arkadaşı) göstermiyor, sadece bir slogan ve maskot."
+  },
+  {
+    "id": "2026-10-22_dadan",
+    "date": "2026-10-22",
+    "kind": "tool",
+    "tool": "Dadan",
+    "hook_pattern": "result",
+    "headline": "Ekran kaydın paylaşıma hazır",
+    "spoken_hook": "Ekran kaydın düzenlenip paylaşıma hazır hâle geliyor.",
+    "cta": "Bunu eğitim videosu çeken arkadaşına gönder.",
+    "duration_sec": 21.0,
+    "words": 39,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-22_archivist",
+    "date": "2026-10-22",
+    "kind": "tool",
+    "tool": "Archivist",
+    "hook_pattern": "result",
+    "headline": "Karışık dosya adlarına son",
+    "spoken_hook": "Karışık dosya adlarına yapay zekâ düzen getiriyor.",
+    "cta": "Dosya yığını olan arkadaşına gönder.",
+    "duration_sec": 22.4,
+    "words": 39,
+    "status": "produced"
   }
 ]
