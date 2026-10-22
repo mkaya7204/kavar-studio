@@ -45,6 +45,7 @@ WORK = ROOT / "output" / "guide"
 GUIDE_DAYS = 14  # a feature stays worth explaining for weeks, unlike a news story
 POOL = 60  # candidates sent to the ranker
 PER_FEED = 5
+GUIDE_FEED_POSTS = 15  # D-41: posts per guide-only source
 TRIES = 6  # pages tried per morning: OpenAI refuses the cloud reader at times, Samsung times out (10-18 dry run)
 WORDS = (32, 38)  # same as the other Reels: under 26 s
 
@@ -68,8 +69,11 @@ when the feature is AI."""
 
 
 def fetch_guide(limit: int = POOL) -> list[dict]:
-    """Unused posts of the companies' own blogs from the last GUIDE_DAYS, newest first."""
-    feeds = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))["feeds"]
+    """Unused posts of the companies' own blogs from the last GUIDE_DAYS, newest first, plus the guide-only
+    sources (D-41: news_sources.json "guide_feeds", official feature announcements such as Workspace Updates)."""
+    config = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
+    feeds = config["feeds"] + config.get("guide_feeds", [])
+    guide_only = {f["name"] for f in config.get("guide_feeds", [])}
     since = datetime.now(timezone.utc) - timedelta(days=GUIDE_DAYS)
     used = set(load_history())
     items = []
@@ -78,14 +82,19 @@ def fetch_guide(limit: int = POOL) -> list[dict]:
             items += _items(feed)
         except Exception as exc:  # noqa: BLE001  one dead feed never stops the morning
             print(f"[guide] {feed['name']} skipped: {type(exc).__name__}")
-    fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used]
+    fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used
+             and not re.search(r"weekly recap", i["title"], re.I)]  # Workspace's weekly lists are no single feature
     fresh.sort(key=lambda i: i["date"], reverse=True)
     # at most PER_FEED posts per blog: OpenAI's customer stories and NVIDIA filled the whole pool, and the
     # Gemini app post never reached the ranker (10-18 dry run)
     per_feed: dict[str, list[dict]] = {}
     for i in fresh:
         per_feed.setdefault(i["source"], []).append(i)
-    fresh = sorted((i for posts in per_feed.values() for i in posts[:PER_FEED]), key=lambda i: i["date"], reverse=True)
+    # a guide-only source posts many small features a week (Workspace: 22 in 14 days), most for admins: more of
+    # them reach the ranker, which keeps the ones a viewer can use
+    fresh = sorted((i for src, posts in per_feed.items()
+                    for i in posts[:GUIDE_FEED_POSTS if src in guide_only else PER_FEED]),
+                   key=lambda i: i["date"], reverse=True)
     for i in fresh:
         i["date"] = i["date"].isoformat()
     return fresh[:limit]
