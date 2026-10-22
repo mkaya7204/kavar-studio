@@ -16,7 +16,7 @@ from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
 import requests
-from PIL import Image
+from PIL import Image, ImageFilter
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import TimeoutError as PlaywrightTimeout
 from playwright.sync_api import sync_playwright
@@ -62,6 +62,28 @@ EXTRACT_JS = r"""
   };
 }
 """
+
+
+# D-40: pictures that carry nothing. Measured on 70 captured figures / page shots (10-14..10-22): every one the
+# editor objected to as empty or abstract scored below these, every usable chart / UI / photo above:
+#   OpenAI green gradient page 0.009, blank fig 0.008, "Rosalind" card 0.009, "page couldn't load" 0.015,
+#   Gemini logo strip 0.015, robot-arm art 0.019, the abstract "4" 0.024, VocabX empty animation frame
+#   (flat 0.98); usable: FairStress illustration 0.027, a mostly white Windows UI 0.040 (flat 0.96).
+MIN_EDGES = 0.025  # share of strong edges at 512 px width
+MAX_FLAT = 0.97  # share of pixels in the background colour; an empty frame of an animation
+
+
+def informative(path: str | Path) -> bool:
+    """False for a picture that shows nothing: blank, a gradient, a logo strip, an animation's empty frame."""
+    with Image.open(path) as im:
+        g = im.convert("L")
+    g = g.resize((512, max(1, round(512 * g.height / g.width))))
+    edges = list(g.filter(ImageFilter.FIND_EDGES).getdata())
+    strong = sum(v > 40 for v in edges) / len(edges)
+    hist = g.histogram()
+    bg = max(range(256), key=hist.__getitem__)
+    flat = sum(hist[max(0, bg - 8):bg + 9]) / (g.width * g.height)
+    return strong >= MIN_EDGES and not (flat >= MAX_FLAT and strong < 0.035)
 
 
 READER = "https://r.jina.ai/"  # a public reader service; it fetches the page from its own machines
@@ -158,13 +180,19 @@ def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000) -> 
                     el.scroll_into_view_if_needed(timeout=5000)
                     page.wait_for_timeout(400)
                     el.screenshot(path=path, animations="disabled", timeout=20_000)
+                    if not informative(path):  # D-40: often an animation still drawing (VocabX 10-22)
+                        page.wait_for_timeout(2500)
+                        el.screenshot(path=path, animations="disabled", timeout=20_000)
                 except PlaywrightError:
                     continue
                 with Image.open(path) as im:
-                    if im.width < 500 or im.height < 250:
-                        path.unlink()
-                        continue
+                    small = im.width < 500 or im.height < 250
                     size = im.size
+                if small or not informative(path):
+                    if not small:
+                        print(f"[article] figure skipped, it shows nothing: {f['alt'][:60] or '(no alt)'}")
+                    path.unlink()
+                    continue
                 figures.append({"n": len(figures) + 1, "path": str(path), "size": size,
                                 "alt": f["alt"], "caption": f["caption"]})
         except PlaywrightError as exc:
@@ -208,6 +236,8 @@ def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000) -> 
         "text": info["text"][:MAX_TEXT],
         "cover_path": str(cover) if cover else None,
         "page_path": str(out_dir / "page.png"),
+        # D-40: OpenAI's page through the reader was a green gradient (10-20, slide 2 rejected)
+        "page_blank": not informative(out_dir / "page.png"),
         "figures": figures,
         "videos": videos,
     }

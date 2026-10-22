@@ -22,10 +22,11 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
   to `main` after 02:30 UTC. Test every change first with `news-test.yml` (and `-f reel=yes` for
   the Reel) and with the invariant tests (§3).
 
-- **Stabilization freeze (D-38, user 2026-10-22: "Evet").** In 11 days: 158 commits, 36 decisions, 15 of
-  39 slots filled, 1 follow from 36 posts. Until both daily slots are filled 7 days in a row: no new
-  feature, slot, concept or decision. Only fixes of what exists, each with a test. Report the 7-day
-  count to the user before proposing anything new.
+- **Fix causes, don't add layers (D-38/D-40, user 2026-10-22).** In 11 days: 158 commits, 36 decisions, 15 of
+  39 slots filled, 1 follow from 36 posts. The user rejected waiting a week with fewer slots ("saçma sapan
+  zaman çalmak"): every recorded failure cause is fixed in the code now, each with a test on the real
+  example that failed. No new feature, slot or concept that doesn't remove a recorded failure cause. Work from
+  the records (logs, state/failures.json, the rejected files), never from a guess.
 
 - **Log every decision in `DECISIONS.md`** (user, 2026-10-16): date, the user's words, what was
   built, where it lives, what test guards it. Same commit as the change. Never delete an entry.
@@ -73,12 +74,11 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    **D-34 (2026-10-18):** George says every product / company name the way Turkish tech people say it, also
    new names: `tts_engine.spoken_text` (hand-checked `rules/pronunciation.json` first, then names Claude
    learns before voicing, kept in `state/pronunciations.json`). Captions and screens keep the real spelling.
-7. **Schedule** (schedule.json). **D-38 (2026-10-22), in force now:** 12:30 carousel and 20:30 Reel only,
-   until both are filled 7 days in a row. The guide Reel is made first every morning and takes 20:30 when
-   there is no "Biz denedik" Reel (then it goes to the reserve). Product Hunt tool Reels are paused
-   (`tool_reels: false`); when they come back, a tool with no real product screen is skipped before any
-   script (main.py). The text below is the schedule before D-38, kept for when slots are added back.
-   Before: 07:30 Reel, 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30
+7. **Schedule** (schedule.json). **D-40 (2026-10-22): all five slots** (D-38's two-slot day was reversed by
+   the user the same day). Tool Reels are on again; a tool with no real product screen is skipped before
+   any script (main.py, D-38). The morning guide Reel is made and uploaded as its own artifact
+   (`kavar-morning`) before the rest of the day, so `daily.py fetch` can take it while the run goes on.
+   07:30 Reel, 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30
    Reel. Two Reels a day since 2026-10-16 ("günde tek reels yeterince takipçi getirmiyor"). The best
    Reel ("Biz denedik") takes 20:30, a tool Reel 11:45 (`_build_queue`), news carousel 12:30.
    **D-31 (2026-10-18):** 07:30 Reel and 18:00 carousel = the GUIDE concept: features and right use of

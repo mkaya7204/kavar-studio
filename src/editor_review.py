@@ -24,10 +24,13 @@ REEL_RULES = skill_rules("reel-retention-editor")
 VERDICT_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["verdict", "problems", "fixes"],
+    "required": ["verdict", "problems", "fixes", "bad_visual_slides"],
     "properties": {
         "verdict": {"type": "string", "enum": ["publish", "fix", "reject"]},
         "problems": {"type": "array", "items": {"type": "string"}},
+        # D-40: slides whose picture is wrong (empty, unrelated, not what the text says, a still with a play
+        # button); the writer then rewrites the post with those slides text-only
+        "bad_visual_slides": {"type": "array", "items": {"type": "integer"}},
         "fixes": {
             "type": "array",
             "items": {
@@ -55,10 +58,13 @@ region or age limits). Quotes attributed correctly.
 - Design (contact sheet): text cut off, overlapping, unreadable, broken images, a still with a \
 play button that doesn't play, wrong brand. The handle must be @thekavar.ai.
 - Agreed design (DECISIONS.md D-17/D-20), never a problem: the cover headline is 3-6 big words, and the feed cover has a "KAYDIR →" pill at the bottom right (a swipe cue, not an ad button).
-Verdict: "publish" if it is ready; "fix" only for text problems you can fix by rewriting a slide's \
-title/body (give each fix with the 1-based slide number and the complete new title and body, \
-keeping **highlight** marks and similar length); "reject" for anything else that is wrong. \
-List every problem you found in Turkish, short."""
+Verdict: "publish" if it is ready; "fix" when rewriting text (slides, story, caption) and/or dropping \
+wrong pictures would make it publishable: list the problems precisely (the writer rewrites the whole post \
+from them, within its own rules), optionally give fixes (1-based slide number, complete new title and body), \
+and put in bad_visual_slides the 1-based numbers of news slides whose picture is wrong (empty, unrelated, \
+not what the slide says, a video still with a play button); those slides become text-only. "reject" only \
+when no rewrite can save it (not about AI, too thin, the story itself misleading, the cover picture \
+unusable). List every problem you found in Turkish, short. bad_visual_slides [] when none."""
 if _lessons := editor_lessons():  # rules/editor_lessons.md: hand-fixed rejections
     SYSTEM += "\n\n" + _lessons
 
@@ -88,7 +94,8 @@ def video_frames(video: Path, out_dir: Path, times: list[float]) -> list[Path]:
 def _ask(folder: Path, message: str) -> dict:
     exe = _claude_cli()
     if not exe:
-        return {"verdict": "reject", "problems": ["editor unavailable (claude CLI missing)"], "fixes": []}
+        return {"verdict": "reject", "problems": ["editor unavailable (claude CLI missing)"], "fixes": [],
+                "bad_visual_slides": []}
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
     try:
         proc = subprocess.run(
@@ -106,7 +113,9 @@ def _ask(folder: Path, message: str) -> dict:
     except json.JSONDecodeError:
         verdict, why = None, f"exit {proc.returncode}: {(proc.stderr or proc.stdout).strip()[:200]}"
     if not verdict:  # D-38: the reason is logged, so a usage limit never looks like a real rejection
-        return {"verdict": "reject", "problems": [f"editor gave no verdict ({why})"], "fixes": []}
+        return {"verdict": "reject", "problems": [f"editor gave no verdict ({why})"], "fixes": [],
+                "bad_visual_slides": []}
+    verdict.setdefault("bad_visual_slides", [])
     return verdict
 
 

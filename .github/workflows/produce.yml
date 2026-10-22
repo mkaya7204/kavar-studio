@@ -117,24 +117,39 @@ jobs:
         continue-on-error: true
         run: pip install -q pytest pyyaml && python -m pytest -q tests
 
-      - name: Produce (news carousels + Reel, each reviewed by the editor)
-        if: steps.guard.outputs.skip != 'true'
-        run: python daily.py produce ${{ github.event.inputs.only != 'all' && github.event.inputs.only || '' }}
+      # D-40: a whole day runs as two steps. The morning guide Reel is packed and uploaded on its own
+      # (artifact kavar-morning), so the 07:30 slot no longer waits for the whole job (10-21: ready at
+      # 06:28, downloadable only at 07:34). A test run of one part (inputs.only) keeps the single step.
+      - name: Produce the morning guide Reel (07:30)
+        if: steps.guard.outputs.skip != 'true' && (github.event_name == 'schedule' || github.event.inputs.only == '' || github.event.inputs.only == 'all')
+        run: python daily.py produce morning
+
+      - name: Upload the morning Reel on its own
+        if: "!cancelled() && steps.guard.outputs.skip != 'true' && (github.event_name == 'schedule' || github.event.inputs.only == '' || github.event.inputs.only == 'all')"
+        run: |
+          bash .github/upload_size.sh
+          D=$(date +%F)
+          tar -czf morning-$D.tgz --ignore-failed-read output/queue output/logs $(ls -d output/reels/${D}_* 2>/dev/null)
+          ls -la morning-$D.tgz
+
+      - uses: actions/upload-artifact@v7
+        if: "!cancelled() && steps.guard.outputs.skip != 'true' && (github.event_name == 'schedule' || github.event.inputs.only == '' || github.event.inputs.only == 'all')"
+        with:
+          name: ${{ github.event.inputs.dry == 'yes' && 'kavar-dryrun-morning' || 'kavar-morning' }}
+          path: morning-*.tgz
+          retention-days: 7
+
+      - name: Produce the rest of the day (news carousels + Reels, each reviewed by the editor)
+        if: "!cancelled() && steps.guard.outputs.skip != 'true' && (github.event_name == 'schedule' || github.event.inputs.only == '' || github.event.inputs.only == 'all')"
+        run: python daily.py produce rest
+
+      - name: Produce one part (test runs)
+        if: steps.guard.outputs.skip != 'true' && github.event_name != 'schedule' && github.event.inputs.only != '' && github.event.inputs.only != 'all'
+        run: python daily.py produce ${{ github.event.inputs.only }}
 
       - name: Upload-size copies (Business Suite in the browser takes at most 10 MB)
         if: always() && steps.guard.outputs.skip != 'true'
-        run: |
-          for IN in output/reels/$(date +%F)_*/final_video.mp4; do
-            [ -f "$IN" ] || continue
-            OUT="$(dirname "$IN")/upload.mp4"
-            if [ "$(stat -c %s "$IN")" -le 9500000 ]; then cp "$IN" "$OUT"; continue; fi
-            D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$IN")
-            V=$(python3 -c "print(int(9.0*8*1024/$D - 128))")
-            ffmpeg -y -loglevel error -i "$IN" -c:v libx264 -preset slow -b:v ${V}k -pass 1 -an -f mp4 /dev/null
-            ffmpeg -y -loglevel error -i "$IN" -c:v libx264 -preset slow -b:v ${V}k -pass 2 -pix_fmt yuv420p \
-              -c:a aac -b:a 128k -movflags +faststart "$OUT"
-            ls -la "$IN" "$OUT"
-          done
+        run: bash .github/upload_size.sh
 
       - name: Pack today's output
         if: always() && steps.guard.outputs.skip != 'true'

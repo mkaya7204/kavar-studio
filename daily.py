@@ -13,6 +13,7 @@ re-rendered and reviewed once more. Story frames that need a poll / link sticker
 published (the API can't add stickers). Everything is logged to output/logs/<date>.log.
 """
 
+import io
 import json
 import os
 import re
@@ -35,7 +36,7 @@ from editor_review import review_carousel, review_reel  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
 from news_fetcher import fetch_news, mark_used  # noqa: E402
 from model_trial import testable_first  # noqa: E402
-from news_writer import NewsScript  # noqa: E402
+from news_writer import NewsScript, revise_for_editor  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
 from reel_qa import first_frame_report, make_cover, pacing_report  # noqa: E402
@@ -96,19 +97,31 @@ def _same_story(a: str, b: str) -> bool:
     return bool(wa and wb) and len(wa & wb) / min(len(wa), len(wb)) >= 0.4
 
 
-def _apply_fixes(folder: Path, fixes: list[dict]) -> bool:
+def _apply_fixes(folder: Path, verdict: dict) -> bool:
+    """D-40: the writer carries out the editor's "fix" inside every rule (slides, story, caption; wrong
+    pictures dropped). Only if the writer can't, the editor's own slide text is pasted in, as before."""
     path = folder / "carousel.json"
     script = json.loads(path.read_text(encoding="utf-8"))
-    for f in fixes:
-        i = f["slide"] - 1
-        if 0 <= i < len(script["slides"]):
-            script["slides"][i]["title"] = f["title"]
-            script["slides"][i]["body"] = f["body"]
     try:
-        NewsScript.model_validate(script)
-    except Exception as exc:  # the fix itself broke a rule: don't publish
-        log(f"   editor fixes break the rules: {str(exc)[:200]}")
-        return False
+        article = json.loads((folder / "article" / "article.json").read_text(encoding="utf-8"))
+        revised = revise_for_editor(script, verdict, article)
+    except Exception as exc:  # noqa: BLE001  the old way below still runs
+        log(f"   writer could not apply the editor's fixes: {type(exc).__name__}: {str(exc)[:200]}")
+        revised = None
+    if revised is not None:
+        log(f"   the writer rewrote it for the editor (pictures dropped on slides {verdict.get('bad_visual_slides', [])})")
+        script = revised
+    else:
+        for f in verdict.get("fixes", []):
+            i = f["slide"] - 1
+            if 0 <= i < len(script["slides"]):
+                script["slides"][i]["title"] = f["title"]
+                script["slides"][i]["body"] = f["body"]
+        try:
+            NewsScript.model_validate(script)
+        except Exception as exc:  # the fix itself broke a rule: don't publish
+            log(f"   editor fixes break the rules: {str(exc)[:200]}")
+            return False
     path.write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
     proc = subprocess.run([sys.executable, "carousel.py", "--rerender", str(folder)], cwd=ROOT,
                           capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -119,9 +132,9 @@ def _reviewed_news(folder: Path) -> tuple[bool, list[str]]:
     verdict = review_carousel(folder)
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
     for round_ in range(1, FIX_ROUNDS + 1):
-        if verdict["verdict"] != "fix" or not verdict["fixes"]:
+        if verdict["verdict"] != "fix":
             break
-        if not _apply_fixes(folder, verdict["fixes"]):
+        if not _apply_fixes(folder, verdict):
             return False, verdict["problems"]
         verdict = review_carousel(folder)
         log(f"   editor (after fixes {round_}): {verdict['verdict']} {verdict['problems'][:4]}")
@@ -396,25 +409,31 @@ def produce_guide_reel() -> dict | None:
     return None
 
 
-def produce(only: str = "") -> None:
+def produce(only: str = "") -> bool:
     """only: "" (both stages), "next" (the first stage not done today: cron-job.org 06:17 and 08:00),
-    "morning" / "rest" (one stage), or "reel" / "news" for test runs (part of "rest")."""
+    "morning" / "rest" (one stage), or "reel" / "news" for test runs (part of "rest").
+    Returns whether the rest of the day (the non-morning slots) was made in this run."""
     log(f"=== produce {only} ===".replace("  ", " "))
     forced = bool(os.getenv("KAVAR_FORCE"))
     if only == "next":
         todo = [s for s in STAGES if s not in stages_done()]
         if not todo:
             log("today's production already ran (state/last_produce.json); skipping")
-            return
+            return False
         only = todo[0]
         log(f"next stage: {only}")
     elif not only and not forced:  # scheduled backups: only the stages not done yet
         done = stages_done()
         if len(done) == len(STAGES):
             log("today's production already ran (state/last_produce.json); skipping")
-            return
+            return False
         if "morning" in done:
             only = "rest"
+    elif only in STAGES and not forced and only in stages_done():
+        # D-40: produce.yml runs the stages as two steps (the morning Reel is uploaded on its own); a backup
+        # run must not make a stage again that an earlier run already made
+        log(f"the {only} stage already ran today; skipping")
+        return False
     cfg = schedule()
     slots = cfg["slots"]
     for line in failures.react():  # D-39: the last 7 days' failures change today's run by fixed rules
@@ -426,8 +445,9 @@ def produce(only: str = "") -> None:
         log(f"guide Reel: {morning['title'] if morning else '-'} [{'ready' if morning else 'none'}]")
         _mark_done("morning")  # tried: the rest of the day starts even without a morning Reel
         if only == "morning":
-            return
+            return False
     _produce_rest(slots, only)
+    return True
 
 
 def _produce_rest(slots: list[dict], only: str) -> None:
@@ -647,27 +667,55 @@ def fetch() -> None:
             log(f"cloud run {r['databaseId']} is still {r['status']}")
     want = f"output/queue/{date.today().isoformat()}.json"
     tmp = ROOT / "output" / "_download"
-    for run in [r for r in today if r["status"] == "completed"]:
-        shutil.rmtree(tmp, ignore_errors=True)
-        proc = subprocess.run([_gh(), "run", "download", str(run["databaseId"]), "-n", "kavar-output",
-                               "--dir", str(tmp)], cwd=ROOT,
-                              capture_output=True, text=True, encoding="utf-8")
-        archives = list(tmp.rglob("*.tgz"))
-        listing = subprocess.run(["tar", "-tzf", str(archives[0])], capture_output=True, text=True,
-                                 encoding="utf-8", errors="replace").stdout if archives else ""
+    # a finished run's whole day first; else (D-40) the morning guide Reel, uploaded on its own while the
+    # rest of the day is still being made
+    tries = [(r, "kavar-output") for r in today if r["status"] == "completed"] + [(r, "kavar-morning") for r in today]
+    for run, name in tries:
+        archive, error = _download_archive(run["databaseId"], name, tmp)
+        listing = subprocess.run(["tar", "-tzf", str(archive)], capture_output=True, text=True,
+                                 encoding="utf-8", errors="replace").stdout if archive else ""
         if want not in listing.split():
-            log(f"cloud run {run['databaseId']} ({run['conclusion']}) has no queue for today; skipping it"
-                + ("" if archives else f": {proc.stderr.strip()[:200]}"))
+            log(f"cloud run {run['databaseId']} ({run['conclusion'] or run['status']}) has no {name} for today; "
+                f"skipping it" + ("" if archive else f": {error[:200]}"))
             continue
-        log(f"cloud run {run['databaseId']}: {run['conclusion']}")
-        _unpack_keeping_today(archives[0])
+        log(f"cloud run {run['databaseId']}: {run['conclusion'] or run['status']} ({name})")
+        _unpack_keeping_today(archive)
         _import_surplus()
         shutil.rmtree(tmp, ignore_errors=True)
+        if name == "kavar-morning" and run["status"] != "completed":
+            log("only the morning guide Reel so far; the rest of the day is still being made: fetch again later")
         log("downloaded; queue:")
         status()
         return
     shutil.rmtree(tmp, ignore_errors=True)
-    log("no finished cloud run with today's queue yet")
+    log("no cloud run with today's queue yet")
+
+
+def _download_archive(run_id: int, name: str, tmp: Path) -> tuple[Path | None, str]:
+    """The .tgz of one artifact of a run. `gh run download` first; for a run still going (D-40: the
+    morning artifact) the artifacts API, which lists an artifact as soon as its upload step is done."""
+    import zipfile
+
+    shutil.rmtree(tmp, ignore_errors=True)
+    proc = subprocess.run([_gh(), "run", "download", str(run_id), "-n", name, "--dir", str(tmp)], cwd=ROOT,
+                          capture_output=True, text=True, encoding="utf-8")
+    if archives := list(tmp.rglob("*.tgz")):
+        return archives[0], ""
+    ids = subprocess.run([_gh(), "api", f"repos/{{owner}}/{{repo}}/actions/runs/{run_id}/artifacts", "--jq",
+                          f'.artifacts[] | select(.name == "{name}" and (.expired | not)) | .id'], cwd=ROOT,
+                         capture_output=True, text=True, encoding="utf-8").stdout.split()
+    if not ids:
+        return None, proc.stderr.strip()
+    data = subprocess.run([_gh(), "api", f"repos/{{owner}}/{{repo}}/actions/artifacts/{ids[0]}/zip"], cwd=ROOT,
+                          capture_output=True).stdout
+    tmp.mkdir(parents=True, exist_ok=True)
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as z:
+            z.extractall(tmp)
+    except zipfile.BadZipFile:
+        return None, "the artifact download was not a zip"
+    archives = list(tmp.rglob("*.tgz"))
+    return (archives[0], "") if archives else (None, "no .tgz in the artifact")
 
 
 def status() -> None:
@@ -693,8 +741,8 @@ def check() -> None:
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
     if cmd == "produce":
-        produce(sys.argv[2] if len(sys.argv) > 2 else "")
-        if empty_day():  # D-38: an empty day shows red in GitHub, never "success"
+        rest_ran = produce(sys.argv[2] if len(sys.argv) > 2 else "")
+        if rest_ran and empty_day():  # D-38: an empty day shows red in GitHub, never "success"
             log("nothing is ready today: exit 1")
             sys.exit(1)
     elif cmd == "publish":

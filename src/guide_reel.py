@@ -27,7 +27,7 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from article_capture import capture_article  # noqa: E402
+from article_capture import capture_article, informative  # noqa: E402
 from carousel_writer import _ask, _revision_prompt  # noqa: E402
 from content_ranker import rank  # noqa: E402
 from distribution import build_post  # noqa: E402
@@ -122,7 +122,7 @@ def _frames(page: dict, folder: Path) -> dict | None:
     twice), and an abstract cover (a big "4") proved nothing, so it only fills in when nothing else exists."""
     folder.mkdir(parents=True, exist_ok=True)
     pictures = [f["path"] for f in page.get("figures", [])] + _video_frames(page.get("videos", []), folder)
-    if page.get("cover_path"):
+    if page.get("cover_path") and informative(page["cover_path"]):  # D-40: never an abstract cover (the "4")
         pictures.append(page["cover_path"])
     if not pictures:
         return None
