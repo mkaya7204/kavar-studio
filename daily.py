@@ -5,6 +5,7 @@
     python daily.py status         # what is queued / published today
     python daily.py fetch          # download today's cloud production (GitHub Actions) to this PC
     python daily.py check          # Instagram login, quota and tunnel smoke test (publishes nothing)
+    python daily.py reserve [keep HH:MM | used N]   # approved posts kept for empty slots (D-37)
 
 Windows Task Scheduler runs these (setup_tasks.ps1). Only content the editor review
 (src/editor_review.py) passes is queued; a carousel the editor wants fixed is rewritten,
@@ -38,12 +39,14 @@ from news_writer import NewsScript  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
 from reel_qa import first_frame_report, make_cover, pacing_report  # noqa: E402
+import reserve  # noqa: E402
 from tts_engine import DRAFT_ENV  # noqa: E402
 
 SCHEDULE_PATH = ROOT / "schedule.json"
 QUEUE_DIR = ROOT / "output" / "queue"
 LOG_DIR = ROOT / "output" / "logs"
 REELS_DIR = ROOT / "output" / "reels"
+SURPLUS_DIR = ROOT / "output" / "reserve"
 MAX_NEWS_TRIES = 6
 
 
@@ -435,12 +438,24 @@ def _produce_rest(slots: list[dict], only: str) -> None:
             save_queue(_build_queue(slots, list(news), reels, morning))
     queue = _build_queue(slots, list(news), reels, morning)
     save_queue(queue)
+    _save_surplus(news[sum(s["kind"] == "carousel" for s in slots):] + reels[wanted:])
     for q in queue:
         log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
     # the rest counts as done only when something is ready: a crashed or empty run leaves room for
     # the later runs (08:00 cron-job.org, produce.yml backups) to try again
     if only in ("", "rest") and any(q["status"] == "ready" for q in queue):
         _mark_done("rest")
+
+
+def _save_surplus(items: list[dict]) -> None:
+    """D-37: approved posts that found no slot today are named for the reserve; `fetch` keeps their files."""
+    if not items:
+        return
+    SURPLUS_DIR.mkdir(parents=True, exist_ok=True)
+    (SURPLUS_DIR / f"{date.today().isoformat()}.json").write_text(
+        json.dumps(items, indent=2, ensure_ascii=False), encoding="utf-8")
+    for i in items:
+        log(f"reserve: {i['kind']} {i.get('title', '-')} (approved, no slot today)")
 
 
 def _build_queue(slots: list[dict], news: list[dict], reels: list[dict], morning: dict | None = None) -> list[dict]:
@@ -551,6 +566,33 @@ def _unpack_keeping_today(archive: Path) -> None:
         log_path.write_text(old_log + new_log, encoding="utf-8")
 
 
+def _import_surplus() -> None:
+    """Copy today's surplus (output/reserve/<date>.json) into the reserve, files and all (D-37)."""
+    path = SURPLUS_DIR / f"{date.today().isoformat()}.json"
+    if not path.exists():
+        return
+    for item in json.loads(path.read_text(encoding="utf-8")):
+        if entry := reserve.add(item, date.today().isoformat()):
+            log(f"reserve: kept {entry['kind']} {entry['title']}")
+
+
+def reserve_cli(args: list[str]) -> None:
+    if args[:1] == ["keep"]:  # a ready item of today's queue that was not posted
+        item = next((q for q in load_queue() if q["time"] == args[1] and q["status"] == "ready"), None)
+        if not item:
+            raise SystemExit(f"no ready item at {args[1]} today")
+        entry = reserve.add(item, date.today().isoformat())
+        print(f"kept: {entry['title']}" if entry else "already kept, or its files are gone")
+    elif args[:1] == ["used"]:
+        print(f"dropped: {reserve.used(int(args[1]))['title']}")
+    items = reserve.load()
+    if not items:
+        print("The reserve is empty.")
+    for i, r in enumerate(items, 1):
+        print(f"{i}. {r['made']} {r['kind']:8} {r['concept']:6} {'current' if reserve.current(r) else 'OLD    '} "
+              f"{r['title']} -> {r['folder']}")
+
+
 def fetch() -> None:
     """Bring today's cloud production (GitHub Actions, .github/workflows/produce.yml) to this PC:
     pull the state commits, download the run's archive and unpack it into output/."""
@@ -586,6 +628,7 @@ def fetch() -> None:
             continue
         log(f"cloud run {run['databaseId']}: {run['conclusion']}")
         _unpack_keeping_today(archives[0])
+        _import_surplus()
         shutil.rmtree(tmp, ignore_errors=True)
         log("downloaded; queue:")
         status()
@@ -624,5 +667,7 @@ if __name__ == "__main__":
         fetch()
     elif cmd == "check":
         check()
+    elif cmd == "reserve":
+        reserve_cli(sys.argv[2:])
     else:
         status()

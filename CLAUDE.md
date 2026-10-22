@@ -92,8 +92,9 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
 2. Read `output/logs/<date>.log`. Handle each rejected item with the §1.3 workflow.
    **D-37 (2026-10-22):** an empty slot is filled FIRST from `state/reserve.json` (editor-approved posts
    that were never published), if one fits the slot's concept and is still current (fix 'bugün/dün' in the
-   caption); only then spend tokens on a fix or a new run. Ready items left unposted go into the reserve;
-   a reserve item is removed once posted.
+   caption); only then spend tokens on a fix or a new run. `python daily.py reserve` lists it (files ready
+   in reserve/<name>/); `reserve keep HH:MM` keeps today's unposted ready item, `reserve used N` drops a
+   posted one. The cloud run's surplus (approved, no slot) is kept automatically by `fetch`.
 3. Record yesterday's numbers (the page's only feedback loop, audit 2026-10-16): in Business Suite
    Content -> Published, copy Reach / Views / Follows / Likes / Comments / Shares / Saves / average
    watch for every post at least a day old into `python src/post_metrics.py add rows.json`

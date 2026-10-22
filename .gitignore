@@ -1,6 +1,8 @@
 .env
 __pycache__/
 output/
+# D-37: the reserve's files stay on this PC; state/reserve.json lists them
+/reserve/
 tools/
 node_modules/
 # Segoe UI is licensed with Windows: never in the repo (the cloud run uses Inter instead)
