@@ -264,3 +264,9 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Also:** `rerender.yml -f draft=yes` renders on the silent draft voice (D-30) to test pictures / templates; `news-test.yml reel=yes` logs "no Biz denedik Reel" instead of crashing when the trial gave no output.
 - **Guarded by:** tests/test_product_images.py (collected and filtered, README behind a redirect, offered to the picker whole, slogans / card menus / logo walls refused, the fixer sees them first).
 
+
+## D-37 · 2026-10-22 · Unposted approved posts are a reserve for empty slots
+- **User:** after 10-22 was filled with the unposted posts of 10-21: "Yarın veya başka gün red birşey çıkarsa bunkikanilmayanlari boş olan saatlere yerine kullanırız hem boşa gitmez hemde token harcanmaz busuna".
+- **Why:** on 10-21 four editor-approved posts were made but the weekly Claude limit stopped the scheduling; on 10-22 the cloud made 0/5 and three of them filled the day. Approved posts thrown away cost tokens and voice that were already spent.
+- **Built:** `state/reserve.json` lists editor-approved, never-published posts (kind, concept, title, local folder, date made). During the morning "yükle" (CLAUDE.md §2 step 2) an empty or rejected slot is filled first from the reserve when an item fits the slot's concept and is still current (company news ages in days, guide and tool Reels last longer; captions with "bugün/dün" are corrected); only then is a fix or a new cloud run started. A reserve item is removed once posted. Started with the 10-21 OpenAI-Orchestra Bio carousel.
+- **Guarded by:** behavioural (CLAUDE.md §2); the reserve file is in the repo so every session sees it.

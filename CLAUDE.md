@@ -90,6 +90,10 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    missing or late, start `gh workflow run produce.yml` and track it with a session cron. Don't
    ask the user "bitti mi".
 2. Read `output/logs/<date>.log`. Handle each rejected item with the §1.3 workflow.
+   **D-37 (2026-10-22):** an empty slot is filled FIRST from `state/reserve.json` (editor-approved posts
+   that were never published), if one fits the slot's concept and is still current (fix 'bugün/dün' in the
+   caption); only then spend tokens on a fix or a new run. Ready items left unposted go into the reserve;
+   a reserve item is removed once posted.
 3. Record yesterday's numbers (the page's only feedback loop, audit 2026-10-16): in Business Suite
    Content -> Published, copy Reach / Views / Follows / Likes / Comments / Shares / Saves / average
    watch for every post at least a day old into `python src/post_metrics.py add rows.json`
