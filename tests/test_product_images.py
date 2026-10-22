@@ -118,3 +118,18 @@ def test_the_fixer_sees_the_product_screens_first(monkeypatch, tmp_path):
     assert len(found) <= reel_fixer.MAX_CANDIDATES
     with Image.open(found[0]) as img:
         assert img.getpixel((5, 5)) == (0, 200, 0)
+
+
+def test_a_live_tool_without_product_screens_is_skipped_before_any_script(monkeypatch, tmp_path):
+    """D-38: 18 of 23 rejected Reels had no proof of the promise; tool sites showed slogans, mascots and
+    sign-up buttons. No product screen = no Reel, before a script, a proof pick or a voice is spent."""
+    import pytest
+
+    import main
+
+    monkeypatch.setattr(main, "capture_site", lambda url, scroll_seconds=None: {
+        "title": "t", "cookie_accept_clicked": False, "overlays_hidden": 0, "logo_path": None, "page_media": {}})
+    monkeypatch.setattr(main, "collect_product_images", lambda media, out: [])
+    monkeypatch.setattr(main, "best_proof_crop", lambda *a, **k: pytest.fail("no proof pick without screens"))
+    with pytest.raises(main.CaptureError, match="no product screens"):
+        main.produce_video({"tool_name": "T", "website_url": "https://t.example"})

@@ -273,7 +273,8 @@ def test_guide_pictures_are_the_features_own_never_the_page(tmp_path):
             "cover_path": pic("cover.jpg", "blue"), "figures": [{"path": pic("fig_1.png", "red")}], "videos": []}
     cap = guide_reel._frames(page, tmp_path / "f")
     with Image.open(cap["proof_path"]) as proof:
-        assert proof.getpixel((10, 10)) == (255, 0, 0)  # the feature's figure, not the cover
+        assert proof.getpixel((460, 330)) == (255, 0, 0)  # the feature's figure, not the cover
+        assert proof.getpixel((460, 3)) == (10, 16, 32)  # D-38: whole (letterboxed), never cropped
     for shot in (cap["screenshot_path"], cap["fullpage_path"]):
         with Image.open(shot) as img:
             assert img.getpixel((540, 840)) != (255, 255, 255)  # never the page
@@ -305,3 +306,48 @@ def test_thin_weekend_news_is_topped_up_from_7_days(monkeypatch, tmp_path):
     # D-35: 10-19 (Monday) had one unused item in 72 h (an SSD ad) and the day got 0 carousels
     nf = _feeds(monkeypatch, tmp_path, [10, 100, 150, 200], used=["https://e/150"])
     assert [i["title"] for i in nf.fetch_news(20)] == ["T10", "T100"]  # fresh first; used, >168 h out
+
+
+D38 = {"guide_reel": True, "tool_reels": False,
+       "slots": [{"time": "12:30", "kind": "carousel"}, {"time": "20:30", "kind": "reel"}]}
+GUIDE = {"kind": "reel", "folder": "output/reels/g", "title": "Guide", "concept": "guide"}
+
+
+def test_d38_guide_reel_fills_the_evening_and_no_tool_reel_is_made(monkeypatch, sandbox):
+    """D-38 (user 2026-10-22): one carousel + one Reel; the guide Reel fills 20:30 when there is no
+    "Biz denedik" Reel, and Product Hunt tool Reels are paused."""
+    monkeypatch.setattr(daily, "schedule", lambda: D38)
+    monkeypatch.setattr(daily, "SURPLUS_DIR", sandbox / "output" / "reserve")
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: dict(GUIDE))
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: [dict(CAROUSELS[1])])
+    monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda: pytest.fail("tool Reels are paused"))
+    daily.produce()
+    assert [(q["time"], q.get("title"), q["status"]) for q in _queue(sandbox)] == [
+        ("12:30", "B", "ready"), ("20:30", "Guide", "ready")]
+    assert not (sandbox / "output" / "reserve").exists()  # nothing spare
+    assert not daily.empty_day()
+
+
+def test_d38_biz_denedik_keeps_the_evening_and_the_guide_reel_is_kept(monkeypatch, sandbox):
+    """§1.4 stays: the "Biz denedik" Reel takes 20:30; the approved guide Reel goes to the reserve (D-37)."""
+    monkeypatch.setattr(daily, "schedule", lambda: D38)
+    monkeypatch.setattr(daily, "SURPLUS_DIR", sandbox / "output" / "reserve")
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: dict(GUIDE))
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: [dict(CAROUSELS[0])])
+    monkeypatch.setattr(daily, "produce_trial_reel", lambda news: dict(REEL))
+    daily.produce()
+    q = _queue(sandbox)
+    assert (q[1]["time"], q[1]["title"]) == ("20:30", "R")
+    spare = json.loads(next((sandbox / "output" / "reserve").glob("*.json")).read_text(encoding="utf-8"))
+    assert [s["title"] for s in spare] == ["Guide"]
+
+
+def test_d38_an_empty_day_is_reported(monkeypatch, sandbox):
+    """D-38: 10-22 made 0/5 and GitHub showed success; an empty queue now ends the run with exit 1."""
+    monkeypatch.setattr(daily, "schedule", lambda: D38)
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: None)
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: [])
+    monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
+    daily.produce()
+    assert daily.empty_day()

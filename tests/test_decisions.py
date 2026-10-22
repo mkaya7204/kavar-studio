@@ -16,12 +16,12 @@ def test_voice_is_george(monkeypatch):
 
 
 def test_schedule_slots():
-    """User 2026-10-16: two Reels a day, 11:45 and 20:30 ("bunu artık standart hale getirelim").
-    User 2026-10-18 (D-31): the 07:30 Reel is the guide concept (the Turkey Reel of D-29 is cancelled)."""
-    slots = json.loads((ROOT / "schedule.json").read_text(encoding="utf-8"))["slots"]
-    assert [(s["time"], s["kind"]) for s in slots] == [("07:30", "reel"), ("11:45", "reel"), ("12:30", "carousel"),
-                                                          ("18:00", "carousel"), ("20:30", "reel")]
-    assert slots[0].get("concept") == "guide" and all(s.get("concept") != "guide" for s in slots[1:])
+    """D-38 (user 2026-10-22, "Evet" to the stabilization plan): one carousel and one Reel a day until 7 days in a
+    row fill both (before: 07:30 guide, 11:45, 12:30, 18:00, 20:30). The guide Reel (D-31) is made every morning
+    and fills 20:30 when there is no "Biz denedik" Reel; Product Hunt tool Reels are paused."""
+    cfg = json.loads((ROOT / "schedule.json").read_text(encoding="utf-8"))
+    assert [(s["time"], s["kind"]) for s in cfg["slots"]] == [("12:30", "carousel"), ("20:30", "reel")]
+    assert cfg["guide_reel"] is True and cfg["tool_reels"] is False
 
 
 def test_brand_handle():

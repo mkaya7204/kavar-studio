@@ -58,29 +58,35 @@ def test_a_rejected_draft_spends_no_voice(monkeypatch, reel_sandbox):
     assert not any("src/voice_final.py" in cmd for cmd, _ in calls)
 
 
-def test_a_rejected_draft_is_fixed_and_reviewed_again(monkeypatch, reel_sandbox):
-    """D-33 (the user, 2026-10-18): "editör red derse sen devreye giriyorsun, düzeltilecek bir yanı varsa
-    düzelt" - the rejected draft goes to src/reel_fixer.py, silently, and back to the editor."""
+def test_a_rejected_draft_is_not_sent_to_the_fixer(monkeypatch, reel_sandbox):
+    """D-38 (user 2026-10-22) switched D-33 off: the fixer cropped the proof picture (cut text in 12 of 14 fix
+    rounds, 10-19..10-21). A rejected draft is rejected; no fixer run, no voice."""
     daily, calls = reel_sandbox
-    verdicts = iter([{"verdict": "reject", "problems": ["kanıt görseli vaadi göstermiyor"]},
-                     {"verdict": "publish", "problems": []}])
-    monkeypatch.setattr(daily, "review_reel", lambda *a: next(verdicts))
-    item, rendered = daily._reel_attempt()
-    assert item and rendered
-    cmds = [cmd for cmd, _ in calls]
-    assert "src/reel_fixer.py" in cmds[1] and calls[1][1] == "1"  # the fix: still silent
-    assert "src/voice_final.py" in cmds[2]  # George only after the fixed draft is approved
-    assert json.loads((daily.REELS_DIR / next(daily.REELS_DIR.iterdir()).name / "_verdict.json")
-                      .read_text(encoding="utf-8"))["problems"] == ["kanıt görseli vaadi göstermiyor"]
-
-
-def test_an_unfixable_topic_moves_on_without_more_fixes(monkeypatch, reel_sandbox):
-    daily, calls = reel_sandbox
-    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["yapay zekâ değil"]})
-    real_run = daily.subprocess.run
-    monkeypatch.setattr(daily.subprocess, "run", lambda cmd, **kw: SimpleNamespace(
-        returncode=3, stdout="✖ not fixable: no AI", stderr="") if "src/reel_fixer.py" in cmd else real_run(cmd, **kw))
+    assert daily.REEL_FIX_ROUNDS == 0
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["kanıt yok"]})
     assert daily._reel_attempt() == (None, True)
+    assert not any("src/reel_fixer.py" in cmd or "src/voice_final.py" in cmd for cmd, _ in calls)
+
+
+def test_the_fixer_never_crops_a_picture(tmp_path, monkeypatch):
+    """D-36/D-38: ImageOps.fit cut 'todo.is' to 'odo.is' (10-21). A wide picture keeps its edges, whole."""
+    import reel_fixer
+    from PIL import Image, ImageDraw
+
+    from hyperframes_builder import PROOF_SIZE
+
+    wide = Image.new("RGB", (1600, 900), "white")
+    draw = ImageDraw.Draw(wide)
+    draw.rectangle((0, 0, 19, 899), fill=(255, 0, 0))  # left edge
+    draw.rectangle((1580, 0, 1599, 899), fill=(0, 0, 255))  # right edge
+    wide.save(tmp_path / "wide.png")
+    monkeypatch.setattr(reel_fixer, "TEMP_DIR", tmp_path)
+    cap = reel_fixer.apply_pictures({"proof_path": str(tmp_path / "proof.png")}, [tmp_path / "wide.png"], 0, [])
+    with Image.open(cap["proof_path"]) as proof:
+        assert proof.size == PROOF_SIZE
+        mid = PROOF_SIZE[1] // 2
+        assert proof.getpixel((2, mid))[0] > 200 and proof.getpixel((PROOF_SIZE[0] - 3, mid))[2] > 200  # both edges
+        assert proof.getpixel((PROOF_SIZE[0] // 2, 3)) == (10, 16, 32)  # letterboxed, not cropped
 
 
 def test_the_fixer_keeps_the_script_rules():

@@ -317,10 +317,14 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
                                "--tools", "Read", "--allowedTools", "Read", "--no-session-persistence"],
                               input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=300,
                               cwd=sheet.parent, env=env)
-        allowed = (json.loads(proc.stdout).get("structured_output") or {}).get("allowed")
-    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
+        out = json.loads(proc.stdout)
+        allowed = (out.get("structured_output") or {}).get("allowed")
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError) as exc:
+        print(f"   [proof] no choice from Claude ({type(exc).__name__}); the first window is used")
         return None
-    if not isinstance(allowed, list):
+    if not isinstance(allowed, list):  # D-38: the fallback is logged, never silent
+        print(f"   [proof] no choice from Claude ({out.get('subtype')}: {str(out.get('result'))[:150]}); "
+              f"the first window is used")
         return None
     return list(dict.fromkeys(i for i in allowed if isinstance(i, int) and 0 <= i < count))
 
