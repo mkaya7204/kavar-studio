@@ -39,6 +39,7 @@ from news_writer import NewsScript  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
 from reel_qa import first_frame_report, make_cover, pacing_report  # noqa: E402
+import failures  # noqa: E402
 import reserve  # noqa: E402
 from tts_engine import DRAFT_ENV  # noqa: E402
 
@@ -131,7 +132,8 @@ FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (on
 
 
 def produce_news_items(count: int) -> list[dict]:
-    items, chosen_titles, chosen_companies, blocked, tries = [], [], set(), set(), 0
+    items, chosen_titles, chosen_companies, tries = [], [], set(), 0
+    blocked = set(failures.blocked_hosts())  # D-39: hosts that kept failing are skipped for 7 days
     # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first; then the stories
     # that reach more people (D-29, src/content_ranker.py)
     candidates = rank(testable_first(fetch_news(20)), "news_carousel")  # 20: more sources since D-29
@@ -171,8 +173,11 @@ def produce_news_items(count: int) -> list[dict]:
                 blocked.add(host)
                 tries -= 1  # a refusal costs seconds, not a real try
             mark_used(item["url"])
+            failures.record("news", "news", item["title"], f"{type(exc).__name__}: {exc}", item["url"],
+                            rendered=False)
             continue
         if ok:
+            failures.ok("news", "news", item["title"], item["url"])
             tested = "trial_note" in json.loads((folder / "article" / "article.json").read_text(encoding="utf-8"))
             items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": tested,
                           "category": (item.get("rank") or {}).get("category", "")})
@@ -180,6 +185,7 @@ def produce_news_items(count: int) -> list[dict]:
             chosen_companies.add(company)
         else:
             log(f"   rejected, not queued: {folder.name}")
+            failures.record("news", "news", item["title"], "; ".join(problems), item["url"])
     # a carousel with our own test takes the day's first carousel slot
     return sorted(items, key=lambda i: not i["tested"])
 
@@ -218,6 +224,9 @@ def produce_trial_reel(news: list[dict]) -> dict | None:
     or the editor rejects it (the tool Reel is made instead)."""
     tested = next((n for n in news if n.get("tested")), None)
     if not tested:
+        return None
+    if failures.paused("trial"):  # D-39
+        log("reel: Biz denedik Reels are paused by the failure ledger (state/self_correct.json)")
         return None
     log(f"reel: Biz denedik Reel from {tested['folder']}")
     try:
@@ -292,7 +301,10 @@ def _fix_draft(out: Path, verdict: dict, fix_round: int) -> dict | None:
 def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
     A rejected tool is in the script history, so the next run moves on to another tool.
-    The run uses the silent draft voice (D-30); only an approved Reel is voiced."""
+    The run uses the silent draft voice (D-30); only an approved Reel is voiced. Every outcome goes to the
+    failure ledger (D-39)."""
+    kind = "trial" if cmd and any("trial_reel" in c for c in cmd) \
+        else "guide" if cmd and any("guide_reel" in c for c in cmd) else "tool"
     try:
         proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True,
                               text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
@@ -306,6 +318,7 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         log("   " + line)
     if proc.returncode != 0:
         log("   video pipeline failed")
+        failures.record("reel", kind, "-", " ".join(l for l in lines if "✖" in l or "[" in l)[-600:], rendered=False)
         return None, False
     temp = ROOT / "output" / "temp"
     script = json.loads((temp / "script.json").read_text(encoding="utf-8"))
@@ -327,15 +340,18 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         log(f"   editor (after fix {fix_round}): {verdict['verdict']} {verdict['problems'][:4]}")
     if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
         update_metrics(out.name, status="approved draft, but the voiced Reel failed")
+        failures.record("reel", kind, script["tool_name"], "no voice / voiced Reel failed", rendered=False)
         return None, False  # no voice left (or a broken render): another attempt would fail the same way
     duration = json.loads((out / "reel_qa.json").read_text(encoding="utf-8"))["pacing"]["duration_sec"] \
         if (out / "reel_qa.json").exists() else 0.0
-    log_reel(out.name, script, duration, kind="trial" if cmd and any("trial_reel" in c for c in cmd)
-             else "guide" if cmd and any("guide_reel" in c for c in cmd) else "tool")
+    log_reel(out.name, script, duration, kind=kind)
     if verdict["verdict"] != "publish":
         update_metrics(out.name, status=f"rejected: {'; '.join(verdict['problems'][:3])}")
         log("   reel not queued")
+        failures.record("reel", kind, script["tool_name"], "; ".join(verdict["problems"]),
+                        script.get("website_url", ""), rendered="no verdict" not in " ".join(verdict["problems"]))
         return None, True
+    failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
     return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"]}, True
 
 
@@ -364,7 +380,10 @@ def _mark_done(stage: str) -> None:
 
 
 def produce_guide_reel() -> dict | None:
-    """The 07:30 guide Reel (D-31); None if no company post fit the concept, or the editor said no."""
+    """The guide Reel (D-31); None if no company post fit the concept, or the editor said no."""
+    if failures.paused("guide"):  # D-39
+        log("reel: guide Reels are paused by the failure ledger (state/self_correct.json)")
+        return None
     for attempt in range(1, GUIDE_ATTEMPTS + 1):  # a rejected post is marked used, so the next try takes another
         log(f"reel: 07:30 Rehber Reel (attempt {attempt}/{GUIDE_ATTEMPTS})")
         try:
@@ -398,6 +417,8 @@ def produce(only: str = "") -> None:
             only = "rest"
     cfg = schedule()
     slots = cfg["slots"]
+    for line in failures.react():  # D-39: the last 7 days' failures change today's run by fixed rules
+        log("self-correct: " + line)
     if only in ("", "morning"):
         wants_guide = cfg.get("guide_reel") or any(s.get("concept") == "guide" for s in slots)
         morning = produce_guide_reel() if wants_guide else None
@@ -430,7 +451,7 @@ def _produce_rest(slots: list[dict], only: str) -> None:
     if wanted and only != "news":
         if trial := produce_trial_reel(news):
             reels.append(trial)
-        while len(reels) < wanted and schedule().get("tool_reels", True):  # D-38: tool Reels paused
+        while len(reels) < wanted and schedule().get("tool_reels", True) and not failures.paused("tool"):
             try:
                 tool_reel = produce_reel()
             except Exception as exc:
@@ -684,5 +705,9 @@ if __name__ == "__main__":
         check()
     elif cmd == "reserve":
         reserve_cli(sys.argv[2:])
+    elif cmd == "failures":  # D-39: the last 7 days per kind (approved / failed / categories) and active rules
+        print(json.dumps({"last_7_days": failures.summary(), "paused": [k for k in ("guide", "trial", "tool")
+                          if failures.paused(k)], "blocked_hosts": sorted(failures.blocked_hosts())},
+                         indent=1, ensure_ascii=False))
     else:
         status()

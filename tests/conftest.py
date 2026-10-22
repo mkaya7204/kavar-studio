@@ -21,6 +21,15 @@ import pytest  # noqa: E402
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
 
+@pytest.fixture(autouse=True)
+def _ledger_in_tmp(monkeypatch, tmp_path):
+    """D-39: tests never write the real failure ledger (state/failures.json, state/self_correct.json)."""
+    import failures
+
+    monkeypatch.setattr(failures, "LEDGER", tmp_path / "_ledger" / "failures.json")
+    monkeypatch.setattr(failures, "ACTIONS", tmp_path / "_ledger" / "self_correct.json")
+
+
 @pytest.fixture
 def news_script() -> dict:
     """A real news carousel that passed the editor (FLUX.3 "Biz denedik", 2026-10-16)."""

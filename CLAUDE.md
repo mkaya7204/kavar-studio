@@ -116,6 +116,8 @@ session hit its usage limit while still analysing. Steps 1 and 4 come before any
    (kinds: reel, trial_reel, carousel, trial_carousel). Never quote numbers that aren't there.
 4. Schedule the queue at its times. For a Reel, upload `upload.mp4` (under the 10 MB browser upload
    limit; made by produce.yml) and cover.jpg as the thumbnail. For a hand-fixed Reel, `shrink.yml`.
+   **D-39:** read the "self-correct:" lines of the log and `python daily.py failures` (last 7 days per kind,
+   paused kinds, skipped hosts); tell the user what the system changed by itself and why.
 5. **Mondays (D-38):** one page for the user from `state/metrics/posts.json`: per post reach, views,
    average watch, follows; days with both slots filled. Next week changes only what these numbers show.
    Keep cloud test runs few late in the week: the cloud and this session share one Claude usage limit.

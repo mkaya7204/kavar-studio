@@ -1,0 +1,434 @@
+[
+ {
+  "date": "2026-10-13",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Google EmbeddingGemma 2",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "facts"
+  ],
+  "detail": "rejected: Kanıt görseli yanlış: frame 0 ve kapakta 'Gemma 4 released with text, audio and image input...' yazısı var; bu EmbeddingGemma 2 ile ilgisiz, kaynakta yok ve başlığın vaadini (anlamla arama) kanıtlamıyor.; Başlık ile kanıt çelişiyor: kapakta 'hafif model' diyor ama görsel başka bir modelin "
+ },
+ {
+  "date": "2026-10-13",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Knocket",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "price"
+  ],
+  "detail": "rejected: Kare 0 ve kapakta Knocket logosu ve adı görünüyor (araç adı çubuğu): ilk 3 saniyede reklam görünümü, kural ihlali.; Kapaktaki ürün ekran görüntüsünde fiyatlar görünüyor ($79, $109, $99 gibi): fiyat politikası ihlali.; İlk cümlede araç adı yok, bu iyi; ancak 2.5 sn'de ürün adı 'Knocket' ekr"
+ },
+ {
+  "date": "2026-10-13",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Manifold MCP",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "rejected: Kare 0 ve kapak: sadece başlık var, kanıt görseli (ürün/ekran görüntüsü) yok; boş arka plan. Zorunlu kural ihlali.; Hook'un vaadi ilk ~6 sn içinde gösterilmiyor: 0-2.5 sn arası aynı metin kartı, 5. sn'de de sadece metin kartı; hiçbir gerçek veri/ürün ekranı yok.; Plandaki ekran görüntüsü/e"
+ },
+ {
+  "date": "2026-10-13",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "ngram 2.0",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "rejected: Hook vaadi ilk ~6 sn içinde kanıtlanmıyor: kare 0 ve kapakta sadece boş bir komut ekranı var (Add a file, Create video, Try an example). Ekran kaydından eğitim videosuna dönüşüm gösterilmiyor. 5. sn karesi de sadece metin kartı (01).; Kare 0 ve kapaktaki turuncu 'Create video' butonu CTA b"
+ },
+ {
+  "date": "2026-10-13",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Scrape Anything by Context.dev",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-14",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Vincentt",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: Süre 29,9 sn; kural 14-26 sn arası. Bu bir MUST ihlali.; Kanıt görselinde oynatma düğmesi ve 'See it in action' yazısı var. Bu, oynamayan bir video karesi gibi görünüyor ve kapak/kare 0 için yanıltıcı.; Kanıt görseli kötü kırpılmış: üstteki düğme yarım kesilmiş, sol panel okunmuyor, görsel"
+ },
+ {
+  "date": "2026-10-14",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Kai",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "rejected: 11.5. saniyedeki site görüntüsünde \"No credit card required\" yazıyor. Ödeme ve deneme çağrışımı yapıyor, sayfa politikasına aykırı ve ekranda okunuyor.; 11.5. saniyede \"YERİNE YÜRÜTÜYOR\" altyazısı sitedeki yeşil butonun üstüne biniyor ve butonun yazısını kapatıyor. Üst üste binen metin ve "
+ },
+ {
+  "date": "2026-10-14",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "MentionBird",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "rejected: Video 27,2 sn; limit 14-26 sn (zorunlu kural ihlali). Kapanış kartı da uzun görünüyor.; En uzun durağan an 7,83 sn; ekranda 2-3 sn'de bir değişim yok (SHOULD).; 13,6. sn karesinde kart içindeki metin bulanık/üst üste biniyor ('ÇIKARIYOR' altyazısı ile arka plan yazıları çakışıyor), okunaks"
+ },
+ {
+  "date": "2026-10-14",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "The Drive AI",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: Kanıt görseli zayıf: kapak ve 0-2.5 sn karesinde sitenin sadece kırpılmış 'The AI assistant' başlığı var. Arayüz, çıktı ya da iş akışı görünmüyor, vaat (tek cümleyle düzen) gösterilmiyor.; Kanıt kartındaki 'The AI assistant' yazısı kartın altından kesiliyor (kapakta ve 0, 1, 2.5. sn karele"
+ },
+ {
+  "date": "2026-10-14",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "OpenWhispr for iOS",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-15",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Pancake",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "facts"
+  ],
+  "detail": "rejected: 10.5. saniye karesinde \"TEK YERDEN\" yazı hapı ekran görüntüsünün metninin (\"From your website, Pancake learns who…\") üstüne biniyor ve metni kesiyor. Bu, üst üste binme/kesilme MUST ihlali.; 5. saniyede \"AJANINA PAZARA\" altyazısı kartın hemen altında duruyor ve alt %35 sınırına çok yakın. "
+ },
+ {
+  "date": "2026-10-15",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Retriever AI",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-16",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Nemotron 3.5",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: Kanıt kartındaki cevap metni kartın altında kesiliyor (3. karede \"büyük bir başarıya\" satırı yarım kesik), cevap cümlenin ortasında bitiyor.; Kart ve cevap metni ekranın alt ~%35 bandına taşıyor (ilk üç karede kartın alt kısmı yaklaşık %67-69 yüksekliğinde). Kural ihlali.; İzleyici cevabın"
+ },
+ {
+  "date": "2026-10-16",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "GLM-Legal",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-17",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Earnote",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-17",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Train with Pasta",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "rejected: 2,5 sn karesinde küçülen başlık etiketi (“ANTRENMANDA ELLER SERBEST Mİ?”) iki satır kalıyor ve ikinci satırı sonuç kutusunun üst kenarı kesiyor. Yazı üst üste biniyor ve okunmuyor. Bu, etiketin üstteki yasak ~270 px bandına da giriyor.; Hashtag yazım hatası: #applentelligence (doğrusu #app"
+ },
+ {
+  "date": "2026-10-17",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Craft Agents",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: 2,5 sn karesinde küçülen başlık etiketi ('YÖNETİYORSUN?') kutunun üstüne biniyor ve ikinci satırı kesik/üst üste görünüyor.; 2,5 sn karesinde kaynak damgası (agents.craft.do) kutudaki 'OpenRouter... and more.' metninin üstüne biniyor; son satır kesik. Metin üst üste biniyor ve kesiliyor (M"
+ },
+ {
+  "date": "2026-10-17",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Ultracite v8",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: 12.1. saniyede kart tamamen boş: içeriksiz, yarım yüklenmiş bir kutu görünüyor. Bu ölü hava gibi duruyor ve bozuk görünüyor.; Kanıt görseli (kapak ve 0-5. saniye) Ultracite sitesinin arayüzü ya da çıktısı değil. Rastgele bir değişiklik notu parçası: 'Fixing all 11: typing the users, adding"
+ },
+ {
+  "date": "2026-10-18",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Salience",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "rejected: Kanıt görseli ürünün arayüzü ya da çıktısı değil. Sitedeki 'Complete visibility / Find issues early' pazarlama kartı bir özellik listesi ve İngilizce. Kural ve geçmiş dersler bunu kanıt saymıyor.; Aynı kart 0-12 sn boyunca hiç değişmeden kalıyor. 'Googlebot, GPTBot kim neyi istedi' vaadini"
+ },
+ {
+  "date": "2026-10-18",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Korinotch",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: Kanıt görseli vaadi göstermiyor: kapakta ve 0-2.5 sn karelerinde yalnızca MacBook ekranının altındaki Dock simgeleri var. Çentik, kontrol paneli, müzik kontrolü ya da widget görünmüyor. Başlık 'Çentik kontrol merkezi oluyor' diyor ama görsel bunu kanıtlamıyor.; Aynı Dock görseli 10.7 sn ka"
+ },
+ {
+  "date": "2026-10-18",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Step 5 Preview",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: Kanıt kutusu vaadi göstermiyor: başlık '600 milyarlık açık model' diyor, kutuda sadece 'Step 5 Preview' başlığı ve 'A new-generation frontier model built for real-world tasks' sloganı var. 600B, açık ağırlık ve uzun çalışan ajan bilgisi görünmüyor. Slogan kartı kanıt sayılmaz.; Kanıt görse"
+ },
+ {
+  "date": "2026-10-19",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "rejected: Altyazı (caption) bozuk Türkçe ve yanlış anlamlı: 'Kaynak, finans, hukuk ve kodlama gibi alanlarda derinlik gereken işleri öne çıkarıyor.' Kaynak bir özne değil. Kaynakta modelin bu alanlarda öne çıktığı yazıyor, cümle bunu söylemiyor. Reel'de düzeltme turu yok.; Kanıt görseli yalnızca bul"
+ },
+ {
+  "date": "2026-10-19",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Krea 3",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "rejected: Kanıt görseli sözü kanıtlamıyor: 'Create with Krea Agent' slayt kartı ve deniz feneri resmi var. Düzenleme arayüzü, 8 saniyelik düzenleme ya da 2K çıktı görünmüyor. Bu bir tanıtım kartı, kanıt sayılmaz.; 2,5 sn karesi (şablon hatası): küçülen başlığın ikinci satırı ('SANİYENİN ALTINDA') ka"
+ },
+ {
+  "date": "2026-10-19",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Inbox Zero",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: Kapak/0. kare kanıtı hook'u kanıtlamıyor: üstü kesik, soluk, İngilizce bir taslak e-posta ('Finding slots via calendar integration…', 'Send'). 'Mail işlerini otomatikleştiriyor' vaadini göstermiyor; ağırlıklı olarak takvim saati önerisi görünüyor.; 5 s ve 9.7 s karelerinde kanıt olarak sit"
+ },
+ {
+  "date": "2026-10-19",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Popcraft",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "cut_text"
+  ],
+  "detail": "rejected: 8.8 s karesi: site yakalaması kötü kırpılmış. 'SEEDANCE 2.5 / NEW' satırı ile 'Thirty seconds, one unbroken take' başlığı üst üste biniyor, alttaki 'and extend.' satırı yarıda kesiliyor.; 8.8 ve 9.8 s: ekranda tek bir modelin (Seedance 2.5) İngilizce tanıtımı var. Ürünün arayüzü ya da çıkt"
+ },
+ {
+  "date": "2026-10-20",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Gemini",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-20",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "readywhen",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-21",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-21",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Stella",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-21",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Composio Instant",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: ~11.7 sn karesi: tam ekran site görüntüsünün üst satırı yarım kesik (\"then save a briefing in Notion.\"), geri kalanı telefonda okunmayan küçük arayüz etiketleri (TOOLS, ACCOUNTS, PERMISSIONS...). Okunamayan ve kesilmiş sayfa görüntüsü kuralına aykırı.; Bu çekim, \"Bilgi bulur, uygulama günc"
+ },
+ {
+  "date": "2026-10-21",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "ToDo.is",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: Kapak ve 0-2.5 sn kare: kanıt kutusundaki görsel soldan kırpık. 'todo.is' 'odo.is', 'to do is' ise 'do is' olarak görünüyor. 'book dinner for 4' sağda kesiliyor. Kesik metin kabul edilmez.; Alttaki 'our to-dos. An AI agent does them. 24/7.' satırı da soldan kesik. Kanıt yarım okunuyor.; 10"
+ },
+ {
+  "date": "2026-10-21",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "bonds",
+  "rendered": true,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "rejected: 9.8 sn karesi: sitedeki \"EVERY CHAT GETS ITS OWN BONDI\" başlığı üstten kesik; üst kısmı kaynak etiketinin arkasında kalıyor. Kesik metin kabul edilmez.; Kapak ve 0-2.5 sn kanıt kutusunda sohbet balonları kenarlardan kesik (\"na semana sin tiktok?\", \"¿les armo\", \"no duras ni 2\"). Yarım metin"
+ },
+ {
+  "date": "2026-10-22",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Dadan",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-22",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Archivist",
+  "rendered": true,
+  "host": "",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ }
+]
