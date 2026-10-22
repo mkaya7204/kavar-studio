@@ -30,6 +30,8 @@ class NewsSlide(BaseModel):
     visual: Literal["none", "cover", "page", "figure", "video"]
     visual_index: int  # figure / video number (1-based) when visual is figure / video, else 0
     alt_text: str
+    # D-40: for a figure, a few words copied from that figure's alt / caption, so a wrong number is caught
+    visual_quote: str = ""
 
 
 class NewsDraft(BaseModel):
@@ -141,9 +143,12 @@ part of the story: what happened, the details, how it works, the reactions or cr
 still unknown. Mark the 1-3 phrases a skimming reader must not miss with **double asterisks** \
 (drawn bold in neon). Each news slide shows one visual: "figure" with visual_index (the \
 article's images, listed in the user message with their captions; use each one where it fits \
-the text, at most once), "page" (the article's headline area, good on slide 2), "video" with \
+the text, at most once; visual_quote = 3-8 words copied exactly from THAT figure's alt or caption, \
+so the figure matches what the slide says), "page" (the article's headline area, good on slide 2, \
+only when the user message doesn't say it is not available), "video" with \
 visual_index if the article has a video (at most two, each video once, where the motion matters), or "none" for a \
-text-only slide.
+text-only slide. A figure listed with no alt and no caption: use it only if the text around it in the \
+article makes clear what it shows; visual_quote "" then.
 - why (one slide, near the end): title "Neden önemli?"-style line, body 12-45 words on what this \
 means for the reader.
 - cta (last slide): title = a follow ask that fits a news page, e.g. "Yapay zekada olanları ilk \
@@ -188,9 +193,11 @@ if _lessons := editor_lessons():  # rules/editor_lessons.md: hand-fixed rejectio
 def _user_message(article: dict) -> str:
     figs = "\n".join(f"  figure {f['n']}: {f['size'][0]}x{f['size'][1]}, alt: {f['alt'] or '-'}, "
                      f"caption: {f['caption'] or '-'}" for f in article["figures"]) or "  none"
+    page = ("The article's headline area (\"page\") is NOT available: its screenshot shows nothing. Use no "
+            "\"page\" visual on slides or story frames.\n" if article.get("page_blank") else "")
     return (f"Source: {article['publisher']} ({article['domain']}), published {article['published'] or 'unknown'}\n"
             f"Original title: {article['title']}\n"
-            f"Images you can show:\n{figs}\nVideos you can show: {len(article['videos'])}\n\n"
+            f"Images you can show:\n{figs}\nVideos you can show: {len(article['videos'])}\n{page}\n"
             f"Article text:\n{article['text']}"
             + (f"\n\n{article['trial_note']}" if article.get("trial_note") else ""))
 
@@ -209,9 +216,50 @@ def _finish(draft: dict, article: dict, source: str, model: str | None) -> NewsS
                              + [f"{f.kicker} {f.title} {f.body} {' '.join(f.poll_options)}" for f in script.story]))
     if bad := used - known:
         raise ValueError(f"these figures are not in the article, remove or fix them: {', '.join(sorted(bad))}")
+    if problems := _visual_problems(script, article):
+        raise ValueError("; ".join(problems))
     if article.get("trial_note") and (problems := _trial_problems(script, article)):
         raise ValueError("; ".join(problems))
     return script
+
+
+def _tokens(text: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9]+(?:[.,][0-9]+)?", (text or "").lower()))
+
+
+def _visual_problems(script: NewsScript, article: dict) -> list[str]:
+    """D-40: the picture must be the one the slide talks about. 10-22 FairStress: slides 5 and 6 got the figure
+    before the right one (2 for 3, 3 for 4) and figure 1 twice; the editor rejected it. 10-20 OpenAI: the page
+    screenshot was an empty green gradient."""
+    figs = article["figures"]
+    labels = [f"{f.get('alt') or ''} {f.get('caption') or ''}".strip() for f in figs]
+    out, seen = [], {}
+    for i, s in enumerate(script.slides, 1):
+        if s.visual == "page" and article.get("page_blank"):
+            out.append(f"slide {i}: the page screenshot shows nothing; use another visual or none")
+        if s.visual != "figure" or not 1 <= s.visual_index <= len(figs):
+            continue
+        n = s.visual_index
+        if n in seen:
+            out.append(f"slide {i}: figure {n} is already on slide {seen[n]}; each figure at most once")
+        seen.setdefault(n, i)
+        label = labels[n - 1]
+        quote = _tokens(s.visual_quote)
+        if not label or figs[n - 1].get("credit"):  # unlabelled, or our own test output (checked elsewhere)
+            continue
+
+        def match(text: str) -> float:
+            return len(quote & _tokens(text)) / len(quote) if quote else 0.0
+
+        if match(label) < 0.6:
+            best = max(range(len(figs)), key=lambda k: match(labels[k]))
+            hint = (f"; your quote fits figure {best + 1} (\"{labels[best][:70]}\")"
+                    if quote and match(labels[best]) >= 0.6 else "")
+            out.append(f"slide {i}: figure {n} shows \"{label[:70]}\"; visual_quote must be words from it{hint}")
+    for i, f in enumerate(script.story, 1):
+        if f.visual == "page" and article.get("page_blank"):
+            out.append(f"story frame {i}: the page screenshot shows nothing; use \"screenshot\" or \"none\"")
+    return out
 
 
 # "Biz denedik" posts are for a general reader: the test leads, details stay short and plain
@@ -261,6 +309,33 @@ def generate_news(article: dict, attempts: int = 3) -> dict | None:
             print(f"[news_writer] draft {attempt} rejected: {str(exc)[:400]}")
             prompt = _revision_prompt(prompt, draft, str(exc))
     return None
+
+
+def revise_for_editor(script: dict, verdict: dict, article: dict) -> dict | None:
+    """D-40: the editor's "fix" is carried out by the writer, inside every rule, instead of pasting the editor's
+    slide text in (10-22 YouTube: the pasted cover had 7 words and the post was thrown away; the story and the
+    caption it also criticised could not be changed). Slides with a wrong picture become text-only."""
+    draft = NewsDraft.model_validate(script).model_dump()
+    bad = {n for n in verdict.get("bad_visual_slides", []) if 1 < n <= len(draft["slides"])}
+    for n in bad:
+        draft["slides"][n - 1].update(visual="none", visual_index=0, visual_quote="")
+    asked = "; ".join(f"slide {f['slide']}: title \"{f['title']}\", body \"{f['body']}\""
+                      for f in verdict.get("fixes", []))
+    problems = ("the editor-in-chief asked for these changes: " + "; ".join(verdict.get("problems", []))
+                + (f". Suggested text (keep within every rule, e.g. the headline length): {asked}" if asked else "")
+                + (f". Slides {sorted(bad)} now have no picture; keep them text-only" if bad else "")
+                + ". Fix every point (slides, story and caption alike), keep the same slides in the same order.")
+    draft2, model, source = _ask(_revision_prompt(_user_message(article), draft, problems), SYSTEM_PROMPT, NewsDraft)
+    if draft2 is None:
+        return None
+    if len(draft2["slides"]) == len(draft["slides"]):
+        for n in bad:  # the writer may not bring a rejected picture back
+            draft2["slides"][n - 1].update(visual="none", visual_index=0, visual_quote="")
+    try:
+        return _finish(draft2, article, source, model).model_dump(mode="json")
+    except ValueError as exc:
+        print(f"[news_writer] editor revision rejected: {str(exc)[:300]}")
+        return None
 
 
 def revise_news(script: dict, problems: list[str], article: dict) -> dict | None:

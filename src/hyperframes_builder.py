@@ -345,12 +345,47 @@ def _shot_frame(crop: Image.Image, out: Path) -> None:
     bg.save(out)
 
 
-def _fit_whole(path: str | Path) -> Image.Image:
-    """A product screen in the proof box, whole (never cut): letterboxed on the template's dark blue."""
+HOOK_ZOOM = 1.12  # templates/hyperframes_news/index.html: the proof grows 1.0 -> 1.12 during the hook
+
+
+def _fit_whole(src: str | Path | Image.Image) -> Image.Image:
+    """A picture in the proof box, whole (never cut): letterboxed on the template's dark blue, with a margin
+    so the hook's zoom (HOOK_ZOOM) never pushes its edges out of the box (D-40: 'odo.is' at 0-2.5 s)."""
     from PIL import ImageOps
 
-    with Image.open(path) as img:
-        return ImageOps.pad(img.convert("RGB"), PROOF_SIZE, Image.LANCZOS, color=(10, 16, 32))
+    inner = (round(PROOF_SIZE[0] / HOOK_ZOOM), round(PROOF_SIZE[1] / HOOK_ZOOM))
+    if isinstance(src, Image.Image):
+        img = src.convert("RGB")
+    else:
+        with Image.open(src) as opened:
+            img = opened.convert("RGB")
+    content = ImageOps.contain(img, inner, Image.LANCZOS)
+    box = Image.new("RGB", PROOF_SIZE, (10, 16, 32))
+    box.paste(content, ((PROOF_SIZE[0] - content.width) // 2, (PROOF_SIZE[1] - content.height) // 2))
+    return box
+
+
+def _row_activity(img: Image.Image) -> list[int]:
+    """Edge activity per row at quarter scale: a low value is a gap between lines or cards."""
+    from PIL import ImageFilter
+
+    small = img.resize((max(1, img.width // 4), max(1, img.height // 4))).convert("L").filter(ImageFilter.FIND_EDGES)
+    data = small.load()
+    return [sum(data[x, y] for x in range(0, small.width, 2)) for y in range(small.height)]
+
+
+def _snap_window(rows: list[int], height: int, top: int, win_h: int) -> tuple[int, int]:
+    """Top and bottom of a proof window moved to the quietest rows nearby (a quarter of the window up or
+    down), so a line of text or a card is never cut through (D-40: Composio's 'Copy prompt' buttons were
+    cut by the fixed-step window, 10-21)."""
+    h = len(rows)
+    q = max(1, win_h // 16)
+    t0 = top // 4
+    t = min(range(max(0, t0 - q), min(h - 1, t0 + q) + 1), key=lambda y: (rows[y], abs(y - t0)))
+    want = t + win_h // 4
+    lo, hi = t + (win_h * 4 // 5) // 4, min(h - 1, t + (win_h * 5 // 4) // 4)
+    b = h if lo > hi else min(range(lo, hi + 1), key=lambda y: (rows[y], abs(y - want)))
+    return t * 4, min(height, b * 4)
 
 
 def best_proof_crop(page: Path, out: Path, hint: str = "", extra: list[str] | tuple = ()) -> Path | None:
@@ -367,7 +402,11 @@ def best_proof_crop(page: Path, out: Path, hint: str = "", extra: list[str] | tu
         w = img.width
         win_h = round(w * PROOF_SIZE[1] / PROOF_SIZE[0])
         tops = _proof_windows(img)
-        crops = [img.crop((0, t, w, min(img.height, t + win_h))).resize(PROOF_SIZE, Image.LANCZOS) for t in tops]
+        rows = _row_activity(img)
+        crops = []
+        for t in tops:  # D-40: windows end in a gap, and are shown whole with the zoom margin
+            top, bottom = _snap_window(rows, img.height, t, win_h)
+            crops.append(_fit_whole(img.crop((0, top, w, bottom))))
     for path in extra:
         try:
             crops.append(_fit_whole(path))

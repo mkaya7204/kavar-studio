@@ -1,0 +1,141 @@
+{
+ "slides": [
+  {
+   "role": "cover",
+   "title": "Yapay zekâ adaleti 13 milyon testte",
+   "body": "",
+   "visual": "cover",
+   "visual_index": 0,
+   "alt_text": "FairStress görseli: terazinin etrafında işe alım, kredi, sağlık, eğitim ve konut simgeleri."
+  },
+  {
+   "role": "news",
+   "title": "FairStress tanıtıldı",
+   "body": "20 Ekim'de yayımlanan yazıda **FairStress** adlı yeni bir ölçüm seti tanıtıldı. Amaç, dil modellerinin insanları etkileyen kararlarda yalnızca **ne seçtiğine değil, kararından ne kadar kolay döndüğüne** bakmak. Set indirilebiliyor ve Olmo-eval'e ekleniyor.",
+   "visual": "page",
+   "visual_index": 0,
+   "alt_text": "FairStress yazısının başlık alanı."
+  },
+  {
+   "role": "news",
+   "title": "Neyi ölçüyor?",
+   "body": "Set, işe alım, kredi, sağlık, eğitim ve konut gibi **29 alanda 300 gerçekçi iki adaylı senaryo** içeriyor. Kimlik bilgisinin verilme biçimi ve ikna edici ön cümleler eklenince senaryolar **13 milyondan fazla test durumuna** çıkıyor.",
+   "visual": "figure",
+   "visual_index": 1,
+   "alt_text": "Terazi ve işe alım, kredi, sağlık, eğitim, konut simgeleri."
+  },
+  {
+   "role": "news",
+   "title": "Modele baskı yapıldı",
+   "body": "Ekip modellere \"üst düzey bir yönetici B adayını önerdi\" gibi ikna edici cümleler verdi. Soru şu: **aynı cümle, hangi grubu desteklediğine göre modelin kararını farklı mı değiştiriyor?** Her cümlenin diğer adayı savunan eşi de var.",
+   "visual": "none",
+   "visual_index": 0,
+   "alt_text": ""
+  },
+  {
+   "role": "news",
+   "title": "Kimlik açıklandıkça fark büyüdü",
+   "body": "Kimlik bilgisi olmadığında modeller arasında az fark çıktı. Kimlik belirginleşince asimetri arttı. 15 modelde doğru cevaptan dönme farkı, **kimlik ima edilince ortalama 6,9 puan, açıkça yazılınca 9,3 puan** oldu.",
+   "visual": "figure",
+   "visual_index": 2,
+   "alt_text": "15 modelde azınlık ve çoğunluk kodlu adaylar arasındaki ortalama farklar."
+  },
+  {
+   "role": "news",
+   "title": "Öne çıkan modellerde de var",
+   "body": "FairStress-Core'da Claude Opus 5 ve GPT-5.5, iki aday da eşit güçlüyken **azınlık kodlu adayı yaklaşık yüzde 60-65 oranında** seçti. Eşleşen ikna cümlelerinde azınlık yönüne geçiş, çoğunluk yönüne göre **8,8 ile 42,4 puan** daha sıktı.",
+   "visual": "figure",
+   "visual_index": 3,
+   "alt_text": "Eşit nitelikli adaylarda azınlık kodlu aday seçim oranlarını gösteren çubuk grafik."
+  },
+  {
+   "role": "news",
+   "title": "Açıklamalar da farklı",
+   "body": "11 açık ağırlıklı modelde, azınlık kodlu adayı seçen açıklamalarda \"resilience\", \"diversity\", \"barriers\" gibi sözcükler daha sık geçti. Çoğunluk kodlu seçimlerde \"evidence\", \"criteria\" gibi **süreçle ilgili terimler** öne çıktı.",
+   "visual": "figure",
+   "visual_index": 1,
+   "alt_text": "Tülu 3.1 8B'nin iki işe alım senaryosunda seçimini farklı açıklaması."
+  },
+  {
+   "role": "news",
+   "title": "Neden böyle? Belli değil",
+   "body": "Ekip, Olmo 3'ün eğitim verisinde **nitelik odaklı karar örneği bulamadı**: 28.000 konu kümesinden yalnızca dokuzu bu konudaydı ve dokuzu da ret örneğiydi. Bunun davranış farklarına yol açıp açmadığı **açık bir soru**.",
+   "visual": "none",
+   "visual_index": 0,
+   "alt_text": ""
+  },
+  {
+   "role": "why",
+   "title": "Neden önemli?",
+   "body": "Yapay zekâ işe alım, kredi ve sağlık gibi kararlarda kullanılmaya başlıyor. Bu çalışma, \"doğru kişiyi seçti\" demenin yetmeyebileceğini, kararın ne kadar sağlam olduğuna da bakılması gerektiğini gösteriyor.",
+   "visual": "none",
+   "visual_index": 0,
+   "alt_text": ""
+  },
+  {
+   "role": "cta",
+   "title": "Yapay zekada olanları ilk sen öğren",
+   "body": "Takip et, yeni haberler akışında olsun.",
+   "visual": "none",
+   "visual_index": 0,
+   "alt_text": ""
+  }
+ ],
+ "story": [
+  {
+   "role": "hook",
+   "kicker": "Yeni ölçüm",
+   "title": "Yapay zekâ adaleti 13 milyon testle ölçüldü",
+   "body": "FairStress, modellerin kararlarından ne kadar kolay döndüğüne bakıyor.",
+   "visual": "screenshot",
+   "page_section": 0,
+   "poll_options": []
+  },
+  {
+   "role": "fact",
+   "kicker": "Bulgu",
+   "title": "Kimlik açıkça yazılınca fark büyüdü",
+   "body": "15 modelde doğru cevaptan dönme farkı: ima edilince 6,9 puan, açık yazılınca 9,3 puan.",
+   "visual": "none",
+   "page_section": 0,
+   "poll_options": []
+  },
+  {
+   "role": "poll",
+   "kicker": "Sen ne düşünüyorsun?",
+   "title": "Yapay zekâ kararlarına güvenir misin?",
+   "body": "",
+   "visual": "none",
+   "page_section": 0,
+   "poll_options": [
+    "Evet",
+    "Hayır"
+   ]
+  },
+  {
+   "role": "link",
+   "kicker": "",
+   "title": "Detaylar için linke dokun",
+   "body": "Tüm hikâye gönderide.",
+   "visual": "none",
+   "page_section": 0,
+   "poll_options": []
+  }
+ ],
+ "caption": "FairStress: yapay zekâ modellerinin adil karar verme testi, kararın ötesine bakıyor.\n20 Ekim'de tanıtılan set, 300 senaryoyu 13 milyondan fazla teste çıkarıyor. Ekip, kimlik bilgisi belirginleştikçe modellerin davranışının daha az simetrik olduğunu bildiriyor.\nKaynak: Hugging Face",
+ "hashtags": [
+  "#yapayzeka",
+  "#fairstress",
+  "#olmo",
+  "#llm"
+ ],
+ "kind": "news",
+ "tool_name": "huggingface.co",
+ "website_url": "https://huggingface.co/blog/allenai/fairstress",
+ "title": "FairStress: A deeper evaluation of fairness in LLM decision-making",
+ "published": "2026-10-20T16:09:19+00:00",
+ "source": "claude_code",
+ "model": "claude-sonnet-5-5",
+ "figures": 6,
+ "videos": 0
+}

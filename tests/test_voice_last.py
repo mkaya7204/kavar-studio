@@ -84,8 +84,8 @@ def test_the_fixer_never_crops_a_picture(tmp_path, monkeypatch):
     cap = reel_fixer.apply_pictures({"proof_path": str(tmp_path / "proof.png")}, [tmp_path / "wide.png"], 0, [])
     with Image.open(cap["proof_path"]) as proof:
         assert proof.size == PROOF_SIZE
-        mid = PROOF_SIZE[1] // 2
-        assert proof.getpixel((2, mid))[0] > 200 and proof.getpixel((PROOF_SIZE[0] - 3, mid))[2] > 200  # both edges
+        row = [proof.getpixel((x, PROOF_SIZE[1] // 2)) for x in range(PROOF_SIZE[0])]
+        assert any(p[0] > 200 and p[1] < 80 for p in row) and any(p[2] > 200 and p[0] < 80 for p in row)  # both edges
         assert proof.getpixel((PROOF_SIZE[0] // 2, 3)) == (10, 16, 32)  # letterboxed, not cropped
 
 

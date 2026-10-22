@@ -875,7 +875,9 @@
         tl.to("#brand-chip", { autoAlpha: 0, duration: 0.2, ease: "none" }, t - 0.1);
         tl.to("#brand-chip", { autoAlpha: 1, duration: 0.3, ease: "none" }, t + d);
         tl.fromTo(cam, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "none" }, t);
-        if (n === 1) tl.fromTo(cam, { scale: 1.02, y: 0 }, { scale: 1.3, y: 180, duration: d, ease: "sine.inOut" }, t);
+        // D-40: at 1.3 only 831 of 1080 px stayed in frame and a 960 px shot lost ~65 px a side (cut text);
+        // 1.12 keeps a 960 px shot whole and still moves
+        if (n === 1) tl.fromTo(cam, { scale: 1.02, y: 0 }, { scale: 1.12, y: 120, duration: d, ease: "sine.inOut" }, t);
         else tl.fromTo(cam, { y: 0, scale: 1.12 }, { y: panY * 0.55, scale: 1.02, duration: d, ease: "power1.inOut" }, t);
         tl.fromTo("#shot" + n + "-frame", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }, t + 0.05);
         tl.fromTo("#shot" + n + "-tag", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, t + 0.25);
