@@ -117,8 +117,11 @@ def test_cut_pictures_are_measured_on_the_real_rejected_frames():
         with Image.open(fx / name) as img:
             assert (max(edge_detail(img)) >= CUT_DETAIL) is cut, name
     clean, cut, card = fx / "reel_clean_frame_1022.jpg", fx / "reel_cut_frame_1022.jpg", fx / "reel_card_sliding_1023.jpg"
-    assert cut_in([clean, cut, cut, clean]) == [1.0]  # two in a row
-    assert cut_in([clean, cut, clean, card, clean]) == []  # a single frame is a passing card
+    entering = fx / "reel_card_entering_voxelo_1023.jpg"  # an approved Reel's card sliding in: 3.58 at the edge
+    with Image.open(entering) as img:
+        assert max(edge_detail(img)) >= CUT_DETAIL  # it does touch the edge...
+    assert cut_in([clean, cut, cut, cut, clean]) == [0.75]  # a cut stays (3 frames = 0.75 s at 4 a second)
+    assert cut_in([clean, entering, entering, clean, card, clean]) == []  # ...but a card passes in under 0.75 s
 
 
 def test_shots_never_reach_the_frame_edge_at_full_zoom(tmp_path):

@@ -91,7 +91,10 @@ def pacing_report(video: Path | str) -> dict:
 # 10-23 10.2-11.2 s).
 EDGE_STRIP = 24
 CUT_DETAIL = 1.4
-CUT_FPS = 2  # frames measured per second; a cut must show in 2 in a row (a card slides past in ~0.5 s)
+# A card sliding in also touches the edge (Voxelo 10-23 11.2 s: 3.58) for ~0.3-0.5 s; a cut picture stays for
+# most of a 2.5 s shot. 4 frames a second, 3 in a row (0.75 s) = a cut.
+CUT_FPS = 4
+CUT_RUN = 3
 
 
 def edge_detail(img: Image.Image) -> tuple[float, float]:
@@ -106,12 +109,12 @@ def edge_detail(img: Image.Image) -> tuple[float, float]:
 
 
 def cut_in(frames: list[Path], fps: float = CUT_FPS) -> list[float]:
-    """Seconds where a picture runs off the frame's edge in two measured frames in a row ([] = clean)."""
+    """Seconds where a picture runs off the frame's edge in CUT_RUN measured frames in a row ([] = clean)."""
     hot = []
     for f in frames:
         with Image.open(f) as img:
             hot.append(max(edge_detail(img)) >= CUT_DETAIL)
-    return [round(i / fps, 1) for i in range(1, len(hot)) if hot[i] and hot[i - 1]]
+    return [round(i / fps, 2) for i in range(CUT_RUN - 1, len(hot)) if all(hot[i - CUT_RUN + 1:i + 1])]
 
 
 def cut_frames(video: Path | str, scratch: Path | None = None) -> list[float]:
