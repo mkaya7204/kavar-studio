@@ -210,9 +210,13 @@ GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no
 # cropped the proof picture (cut text in 12 of 14 fix rounds, 10-19..10-21). D-42 (user 10-23: "düzeltilerek uygun
 # hale getirilecek varsa yapmayıp boş denilmesinden bıktım") turns it on again: the crops are gone (whole pictures,
 # windows end in a gap, shots never reach the frame's edge) and every fixed draft is measured for cuts first.
-# D-45: the fixer is now our agent (src/reel_agent.py), which renders and looks up to 4 times inside one round;
+# D-45: the fixer is now our agent (src/reel_agent.py), which renders and looks up to 3 times inside one round;
 # one round per draft keeps the morning inside the job's time.
 REEL_FIX_ROUNDS = 1
+# D-47 (user 10-23: "haftalık token yetersiz kalır ... yayın saatinde yayınlamak olan yetişmez"): the agent runs at
+# most this many times per production run (each session is up to 12 min of Claude), on the first rejections
+AGENT_SESSIONS_PER_RUN = 2
+_agent_sessions = 0
 GUIDE_EXTRA = 2  # D-42: guide Reel drafts the rest stage may make for a Reel slot that is still empty
 REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
@@ -421,9 +425,14 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         + (f" (judge: {script['hook_judge']['reason']})" if script.get("hook_judge") else ""))
     verdict = _review(out, script, tool)
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
+    global _agent_sessions
     for fix_round in range(1, REEL_FIX_ROUNDS + 1):  # D-33: a rejected draft is fixed before another is tried
         if verdict["verdict"] == "publish" or not _time_for_a_reel():
             break
+        if _agent_sessions >= AGENT_SESSIONS_PER_RUN:
+            log(f"   no agent session left in this run ({AGENT_SESSIONS_PER_RUN}, D-47): the next candidate is tried")
+            break
+        _agent_sessions += 1
         fixed = _fix_draft(out, verdict, fix_round)
         if fixed is None:
             break

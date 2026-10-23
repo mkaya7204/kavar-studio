@@ -38,7 +38,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: produce
+  # D-47: test runs (dry=yes) have their own queue; a long test never holds up production or a Reel going out
+  group: ${{ github.event.inputs.dry == 'yes' && 'produce-test' || 'produce' }}
   cancel-in-progress: false
 
 jobs:

@@ -31,8 +31,9 @@ TEMP_DIR = ROOT / "output" / "temp"
 WORK = TEMP_DIR / "agent"
 AGENT_LOG = ROOT / "state" / "agent_log.jsonl"  # what the agent did, read by Claude every morning (learning loop)
 UNFIXED = 3
-SESSION_TIMEOUT = 25 * 60
-MAX_TURNS = 60
+# D-47 (user 10-23: "haftalık token yetersiz kalır ... yayın saatinde yayınlamak olan yetişmez"): one short session
+SESSION_TIMEOUT = 12 * 60
+MAX_TURNS = 30
 WORK_REL = "output/temp/agent"
 # what the brain may do: read anything, write only its workspace, run only our render tool
 ALLOWED_TOOLS = ["Read", "Glob", "Grep", f"Edit({WORK_REL}/**)", f"Write({WORK_REL}/**)",
@@ -67,7 +68,7 @@ layout with css. A smaller true promise that a picture shows beats a big unprove
 open frames.jpg and look at every frame as a strict editor: cut or overlapping text, a proof that doesn't \
 prove the hook, empty boxes, unreadable pictures, claims stronger than tool.json. report.json has the \
 measurements (cut_at_seconds must be empty, duration 14-26 s).
-5. Repeat 3-4 until clean (at most 4 renders).
+5. Repeat 3-4 until clean (at most 3 renders: get it right on the first one if you can).
 6. Write result.json: {{"fixed": true|false, "reason": "what was wrong and what you changed", "lesson": \
 "one rule for the playbook that would have prevented this, or empty"}}. fixed=true only when your LAST render \
 is clean and script.json / plan.json are unchanged since it. fixed=false when the topic itself can't be made \

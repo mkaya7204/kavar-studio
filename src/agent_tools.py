@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 WORK = ROOT / "output" / "temp" / "agent"
-MAX_RENDERS = 4
+MAX_RENDERS = 3  # D-47: Claude usage and the morning's time are limited
 REEL_SECONDS = (14.0, 26.0)
 
 

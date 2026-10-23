@@ -115,6 +115,18 @@ def test_the_agents_css_is_styles_only():
     assert "<script" not in page and page.count("</style>") == 1
 
 
+def test_the_agent_is_capped_for_usage_and_time(monkeypatch, tmp_path):
+    """D-47 (user 10-23: "haftalık token yetersiz kalır ... yayın saatinde yayınlamak olan yetişmez")."""
+    import agent_tools
+    import daily
+    import reel_agent
+
+    assert reel_agent.SESSION_TIMEOUT <= 12 * 60 and reel_agent.MAX_TURNS <= 30 and agent_tools.MAX_RENDERS <= 3
+    assert daily.AGENT_SESSIONS_PER_RUN == 2
+    wf = (ROOT / ".github" / "workflows" / "produce.yml").read_text(encoding="utf-8")
+    assert "'produce-test' || 'produce'" in wf  # tests never queue in front of production
+
+
 def test_daily_sends_a_rejected_draft_to_the_agent():
     import inspect
 

@@ -37,7 +37,17 @@ def reel_sandbox(monkeypatch, tmp_path):
     monkeypatch.setattr(daily, "first_frame_report", lambda v, o: {"ok": True})
     monkeypatch.setattr(daily, "pacing_report", lambda v: {"duration_sec": 22.0})
     monkeypatch.setattr(daily, "cut_frames", lambda v, o=None: [])
+    monkeypatch.setattr(daily, "_agent_sessions", 0)  # a fresh production run
     return daily, calls
+
+
+def test_no_agent_session_after_the_runs_cap(monkeypatch, reel_sandbox):
+    """D-47: at most AGENT_SESSIONS_PER_RUN agent sessions per run; then the next candidate is tried."""
+    daily, calls = reel_sandbox
+    monkeypatch.setattr(daily, "_agent_sessions", daily.AGENT_SESSIONS_PER_RUN)
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["kanıt yok"]})
+    assert daily._reel_attempt() == (None, True)
+    assert not any("src/reel_agent.py" in cmd for cmd, _ in calls)
 
 
 def test_attempt_is_silent_and_only_the_approved_reel_is_voiced(monkeypatch, reel_sandbox):

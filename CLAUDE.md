@@ -46,7 +46,8 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    bıktım ... gerçekten otomatik akıllı hale getir"): on again**, with the crops gone. **D-45: the fixer is
    our own agent** (`src/reel_agent.py`, REEL_FIX_ROUNDS = 1): it reads `knowledge/playbook.md`, finds the
    cause, changes words / pictures / layout, renders on the silent voice (`src/agent_tools.py render`, at most
-   4) and looks at the frames until clean; its log is `state/agent_log.jsonl` (read it every "yükle" and add
+   3) and looks at the frames until clean; **D-47: at most 2 agent sessions per production run, 12 min each**
+   (Claude usage and slot times); test runs have their own queue and never hold up production; its log is `state/agent_log.jsonl` (read it every "yükle" and add
    what it couldn't fix to the playbook).
    Every draft is MEASURED before the editor (`reel_qa.cut_frames`): a picture running off the frame rebuilds
    the Reel without the shot zoom (capture "still"); a cut it can't remove goes to the fixer, never out. Shots
