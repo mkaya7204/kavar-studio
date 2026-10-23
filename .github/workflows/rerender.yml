@@ -79,4 +79,4 @@ jobs:
             output/temp/proof.png
             output/temp/_proof_candidates.jpg
             output/temp/product/
-          retention-days: 7
+          retention-days: 3

@@ -144,7 +144,7 @@ jobs:
         with:
           name: ${{ github.event.inputs.dry == 'yes' && 'kavar-dryrun-morning' || 'kavar-morning' }}
           path: morning-*.tgz
-          retention-days: 7
+          retention-days: ${{ github.event.inputs.dry == 'yes' && 2 || 3 }}  # 10-23: 2 GB storage quota hit
 
       - name: Produce the rest of the day (news carousels + Reels, each reviewed by the editor)
         if: "!cancelled() && steps.guard.outputs.skip != 'true' && (github.event_name == 'schedule' || github.event.inputs.only == '' || github.event.inputs.only == 'all')"
@@ -171,7 +171,7 @@ jobs:
         with:
           name: ${{ github.event.inputs.dry == 'yes' && 'kavar-dryrun' || 'kavar-output' }}
           path: kavar-*.tgz
-          retention-days: 7
+          retention-days: ${{ github.event.inputs.dry == 'yes' && 2 || 3 }}  # 10-23: 2 GB storage quota hit
 
       - name: Save state (used news, recent hooks, Reel metrics)
         if: always() && steps.guard.outputs.skip != 'true' && github.event.inputs.dry != 'yes'

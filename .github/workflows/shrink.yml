@@ -54,4 +54,4 @@ jobs:
         with:
           name: shrink
           path: small.mp4
-          retention-days: 7
+          retention-days: 3

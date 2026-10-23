@@ -92,4 +92,4 @@ jobs:
           path: |
             output/final/
             output/temp/script.json
-          retention-days: 7
+          retention-days: 3

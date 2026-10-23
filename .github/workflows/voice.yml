@@ -73,4 +73,4 @@ jobs:
             output/reels/${{ github.event.inputs.reel }}/final_video.mp4
             output/reels/${{ github.event.inputs.reel }}/cover.jpg
             output/reels/${{ github.event.inputs.reel }}/post.json
-          retention-days: 7
+          retention-days: 3
