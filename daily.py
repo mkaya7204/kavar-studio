@@ -379,7 +379,7 @@ def _fix_draft(out: Path, verdict: dict, fix_round: int) -> dict | None:
     except subprocess.TimeoutExpired:
         log(f"   fix timed out after {REEL_TIMEOUT}s")
         return None
-    for line in [l for l in proc.stdout.splitlines() if l.strip()][-5:]:
+    for line in [l for l in proc.stdout.splitlines() if l.strip()][-12:]:  # the agent's refusals and words too
         log("   " + line)
     if proc.returncode != 0:
         if proc.returncode != 3:

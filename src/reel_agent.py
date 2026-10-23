@@ -35,7 +35,8 @@ SESSION_TIMEOUT = 25 * 60
 MAX_TURNS = 60
 WORK_REL = "output/temp/agent"
 # what the brain may do: read anything, write only its workspace, run only our render tool
-ALLOWED_TOOLS = ["Read", f"Edit({WORK_REL}/**)", f"Write({WORK_REL}/**)", "Bash(python src/agent_tools.py render)"]
+ALLOWED_TOOLS = ["Read", "Glob", "Grep", f"Edit({WORK_REL}/**)", f"Write({WORK_REL}/**)",
+                 "Bash(python src/agent_tools.py render)", "Bash(python3 src/agent_tools.py render)"]
 
 SYSTEM = f"""You are KAVAR's Reel fixing agent. KAVAR (@thekavar.ai) is a Turkish Instagram page about AI. \
 The editor rejected a silent draft Reel. Your job is to make it right, the way a skilled human editor would: \
@@ -130,9 +131,17 @@ def _run_brain(message: str) -> bool:
         return True  # it may still have left a clean render and a result
     try:
         out = json.loads(proc.stdout)
-        print(f"   agent session: {out.get('subtype', '?')}, {out.get('num_turns', '?')} turns")
     except json.JSONDecodeError:
-        print("   agent session: " + (proc.stdout or proc.stderr or "").strip()[-300:])
+        out = {"raw": (proc.stdout or "")[-3000:], "stderr": (proc.stderr or "")[-2000:]}
+    # what the agent said and what it was refused: kept with the Reel (10-23: 14 turns, no render, no word why)
+    (WORK / "session.json").write_text(json.dumps(out, indent=1, ensure_ascii=False, default=str), encoding="utf-8")
+    denied = out.get("permission_denials") or []
+    print(f"   agent session: {out.get('subtype', '?')}, {out.get('num_turns', '?')} turns, "
+          f"{len(denied)} refused tool calls")
+    for d in denied[:5]:
+        print(f"   agent refused: {json.dumps(d, ensure_ascii=False)[:200]}")
+    if out.get("result"):
+        print(f"   agent said: {str(out['result'])[-400:]}")
     return True
 
 
@@ -156,6 +165,18 @@ def accepted(work: Path = WORK) -> tuple[bool, str]:
     return True, str(result.get("reason") or "")[:400]
 
 
+EVIDENCE = ("session.json", "result.json", "report.json", "plan.json", "frames.jpg", "candidates.jpg", "renders.txt")
+
+
+def _keep_evidence(folder: Path) -> None:
+    """The agent's work goes into the Reel's folder (and so into the day's archive) for the morning review."""
+    keep = folder / "_agent"
+    keep.mkdir(parents=True, exist_ok=True)
+    for name in EVIDENCE:
+        if (WORK / name).exists():
+            shutil.copy(WORK / name, keep / name)
+
+
 def main(folder: Path) -> int:
     from distribution import build_post
     from hyperframes_builder import FINAL_PATH
@@ -169,6 +190,7 @@ def main(folder: Path) -> int:
                f"Start by reading {WORK_REL}/playbook.md and {WORK_REL}/verdict.json.")
     ran = _run_brain(message)
     ok, why = accepted() if ran else (False, "no session")
+    _keep_evidence(folder)
     result = {}
     try:
         result = json.loads((WORK / "result.json").read_text(encoding="utf-8"))

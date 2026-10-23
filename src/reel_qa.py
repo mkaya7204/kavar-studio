@@ -125,6 +125,14 @@ def cut_frames(video: Path | str, scratch: Path | None = None) -> list[float]:
     work.mkdir(parents=True)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(video), "-vf", f"fps={CUT_FPS}", "-q:v", "3",
                     str(work / "f_%04d.jpg")], check=True, timeout=600)
-    found = cut_in(sorted(work.glob("f_*.jpg")))
+    frames = sorted(work.glob("f_*.jpg"))
+    found = cut_in(frames)
+    # the evidence stays with the Reel: one frame per cut stretch (10-23: a cut nobody could see from the log)
+    out = scratch or video.parent
+    for old in out.glob("_cut_*.jpg"):
+        old.unlink()
+    for t in found:
+        if not any(abs(t - k) < 1.0 for k in found if k < t):
+            shutil.copy(frames[round(t * CUT_FPS)], out / f"_cut_{t:g}s.jpg")
     shutil.rmtree(work, ignore_errors=True)
     return found

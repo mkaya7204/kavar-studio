@@ -87,9 +87,23 @@ def test_a_fix_counts_only_when_the_files_prove_it(work):
 def test_the_brain_writes_only_its_workspace_and_runs_only_the_render():
     import reel_agent
 
-    assert reel_agent.ALLOWED_TOOLS == ["Read", "Edit(output/temp/agent/**)", "Write(output/temp/agent/**)",
-                                        "Bash(python src/agent_tools.py render)"]
+    writes = [t for t in reel_agent.ALLOWED_TOOLS if t.startswith(("Edit", "Write"))]
+    assert writes == ["Edit(output/temp/agent/**)", "Write(output/temp/agent/**)"]
+    runs = [t for t in reel_agent.ALLOWED_TOOLS if t.startswith("Bash")]
+    assert runs == ["Bash(python src/agent_tools.py render)", "Bash(python3 src/agent_tools.py render)"]
+    assert set(reel_agent.ALLOWED_TOOLS) - set(writes) - set(runs) == {"Read", "Glob", "Grep"}  # looking only
     assert "playbook.md" in reel_agent.SYSTEM and "prices" in reel_agent.SYSTEM
+
+
+def test_the_agents_work_is_kept_with_the_reel(work, tmp_path):
+    """10-23 first cloud run: 14 turns, no render, and nothing showed why. Its session and files now stay."""
+    import reel_agent
+
+    (work / "session.json").write_text('{"permission_denials": [{"tool_name": "Bash"}]}', encoding="utf-8")
+    (work / "report.json").write_text("{}", encoding="utf-8")
+    reel = tmp_path / "reel"
+    reel_agent._keep_evidence(reel)
+    assert (reel / "_agent" / "session.json").exists() and (reel / "_agent" / "plan.json").exists()
 
 
 def test_the_agents_css_is_styles_only():
