@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def reel_sandbox(monkeypatch, tmp_path):
     import daily
 
+    monkeypatch.delenv("KAVAR_DRY", raising=False)  # 10-23: a dry cloud run's env made these tests see a test run
     temp = tmp_path / "output" / "temp"
     final = tmp_path / "output" / "final"
     temp.mkdir(parents=True)
