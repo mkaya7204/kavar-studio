@@ -13,6 +13,7 @@ Outputs are never edited: an answer card shows the model's text as returned (cut
 """
 
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import re
 import shutil
@@ -418,6 +419,7 @@ def _judge(pick: TrialPick, notes: list[str], figures: list[dict], out_dir: Path
              "--no-session-persistence"],
             input=msg, capture_output=True, text=True, encoding="utf-8",
             timeout=CLI_TIMEOUT, cwd=out_dir, env=env)
+        record_usage("trial_judge", proc.stdout)
         out = json.loads(proc.stdout).get("structured_output")
         judged = Judgement(**out).model_dump() if out else None
     except Exception as exc:  # noqa: BLE001  the caller drops unjudged outputs

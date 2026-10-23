@@ -7,6 +7,7 @@ returned so the rest of the pipeline can still run.
 
 import html
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import re
 import shutil
@@ -152,6 +153,7 @@ def _find_site_with_claude(name: str, tag_line: str) -> tuple[str, str | None] |
         proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
                                "--tools", "WebSearch", "--allowedTools", "WebSearch", "--no-session-persistence"],
                               input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=180, env=env)
+        record_usage("tool_site_search", proc.stdout)
         url = (json.loads(proc.stdout).get("structured_output") or {}).get("url", "").strip()
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
         return None

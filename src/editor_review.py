@@ -9,6 +9,7 @@ source, then returns a verdict:
 """
 
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import subprocess
 from pathlib import Path
@@ -105,6 +106,7 @@ def _ask(folder: Path, message: str) -> dict:
             input=message, capture_output=True, text=True, encoding="utf-8",
             timeout=CLI_TIMEOUT * 2, cwd=folder, env=env,
         )
+        record_usage("editor", proc.stdout)
         out = json.loads(proc.stdout)
         verdict = out.get("structured_output")
         why = f"{out.get('subtype')}, is_error={out.get('is_error')}: {str(out.get('result'))[:200]}"

@@ -18,6 +18,7 @@ them), never the real voice here, and the editor still decides (daily.py reviews
 """
 
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import shutil
 import subprocess
@@ -130,6 +131,7 @@ def _run_brain(message: str) -> bool:
     except subprocess.TimeoutExpired:
         print(f"✖ agent session timed out after {SESSION_TIMEOUT}s")
         return True  # it may still have left a clean render and a result
+    record_usage("agent", proc.stdout)
     try:
         out = json.loads(proc.stdout)
     except json.JSONDecodeError:

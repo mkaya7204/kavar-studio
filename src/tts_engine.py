@@ -16,6 +16,7 @@ the voice slightly, and refuses text that would need more.
 import asyncio
 import base64
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import re
 import shutil
@@ -95,6 +96,7 @@ def learn_names(text: str) -> dict[str, str]:
                                "--tools", "", "--no-session-persistence"],
                               input=LEARN_PROMPT.format(known=", ".join(sorted(known)) or "-", text=text),
                               capture_output=True, text=True, encoding="utf-8", timeout=180, cwd=ROOT, env=env)
+        record_usage("pronunciation", proc.stdout)
         answer = (json.loads(proc.stdout).get("structured_output") or {}).get("words", [])
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
         return {}

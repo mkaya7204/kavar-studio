@@ -28,6 +28,9 @@ def _ledger_in_tmp(monkeypatch, tmp_path):
 
     monkeypatch.setattr(failures, "LEDGER", tmp_path / "_ledger" / "failures.json")
     monkeypatch.setattr(failures, "ACTIONS", tmp_path / "_ledger" / "self_correct.json")
+    import claude_usage  # D-48: nor the real usage log
+
+    monkeypatch.setattr(claude_usage, "LOG", tmp_path / "_ledger" / "claude_usage.jsonl")
 
 
 @pytest.fixture

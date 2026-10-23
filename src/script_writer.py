@@ -11,6 +11,7 @@ Script sources, tried in order, all validated against the same Pydantic schema:
 """
 
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import re
 import shutil
@@ -550,6 +551,7 @@ def _ask_claude_cli(tool: Tool, language: str, exe: str) -> VideoScript | None:
         except subprocess.TimeoutExpired:
             print(f"[script_writer] claude -p timed out after {CLI_TIMEOUT}s.")
             return None
+        record_usage("reel_script", proc.stdout)
         try:
             out = json.loads(proc.stdout)
         except json.JSONDecodeError:
@@ -632,6 +634,7 @@ def judge_hooks(script: dict, tool_data: dict | None = None) -> dict:
             [exe, "-p", "--output-format", "json", "--json-schema", json.dumps(JUDGE_SCHEMA),
              "--system-prompt", JUDGE_SYSTEM, "--tools", "", "--no-session-persistence"],
             input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=CLI_TIMEOUT, cwd=ROOT, env=env)
+        record_usage("hook_judge", proc.stdout)
         verdict = json.loads(proc.stdout).get("structured_output")
     except (subprocess.TimeoutExpired, json.JSONDecodeError):
         verdict = None

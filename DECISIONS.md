@@ -344,3 +344,9 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Evidence:** the second agent test (39925350300) ran 70+ min (3 tool attempts, agent sessions up to 25 min) and held the only produce queue, so the NotebookLM Reel for 20:30 waited behind it. Claude cancelled the test.
 - **Built:** agent session 25 -> 12 min, turns 60 -> 30, renders 4 -> 3; at most AGENT_SESSIONS_PER_RUN = 2 agent sessions per production run (then the next candidate is tried); test runs (dry=yes) get their own concurrency group, so a test never holds up production or a Reel going out.
 - **Guarded by:** tests/test_agent.py::test_the_agent_is_capped_for_usage_and_time, tests/test_voice_last.py::test_no_agent_session_after_the_runs_cap.
+
+## D-48 · 2026-10-23 · Measure the Claude usage of every step before moving any to open models
+- **User:** asked to run an open-source model in the cloud with RAG to avoid the limit; Claude answered that a model able to judge frames needs a GPU the free runners don't have, free open models have limits too, the playbook is small enough without RAG, and proposed: measure first, then move the cheap repeated steps (ranking, hook judging, text checks) to free open models, keep the editor and the agent on Claude. User: "Tamam".
+- **Built:** src/claude_usage.py: every `claude -p --output-format json` call (10 call sites; the shared writer helper named by its caller) appends seconds, turns, tokens and the CLI's cost estimate to state/claude_usage.jsonl (test runs marked); produce logs "claude usage today: <step>: ..." at the end; `python daily.py usage` prints 7 days per step, costliest first. Tests never write the real log.
+- **Next:** after a few production days, a page with the numbers and which steps to move.
+- **Guarded by:** tests/test_usage.py (rows and sums; every call site records).

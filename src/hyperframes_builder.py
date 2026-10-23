@@ -19,6 +19,7 @@ Output: H.264 / AAC MP4 at config.json size and fps.
 
 import html
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import math
 import os
 import re
@@ -317,6 +318,7 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
                                "--tools", "Read", "--allowedTools", "Read", "--no-session-persistence"],
                               input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=300,
                               cwd=sheet.parent, env=env)
+        record_usage("proof_pick", proc.stdout)
         out = json.loads(proc.stdout)
         allowed = (out.get("structured_output") or {}).get("allowed")
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError) as exc:

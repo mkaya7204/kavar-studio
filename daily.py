@@ -40,6 +40,7 @@ from news_writer import NewsScript, revise_for_editor  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
 from reel_qa import cut_frames, first_frame_report, make_cover, pacing_report  # noqa: E402
+import claude_usage  # noqa: E402
 import failures  # noqa: E402
 import reserve  # noqa: E402
 from tts_engine import DRAFT_ENV  # noqa: E402
@@ -870,6 +871,9 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
     if cmd == "produce":
         rest_ran = produce(sys.argv[2] if len(sys.argv) > 2 else "")
+        for row in claude_usage.summary(days=1):  # D-48: what this morning cost of the Claude limit, per step
+            log(f"claude usage today: {row['stage']}: {row['calls']} calls, {row['minutes']} min, "
+                f"{row['tokens']} tokens, ~${row['cost_usd']}")
         if rest_ran and empty_day():  # D-38: an empty day shows red in GitHub, never "success"
             log("nothing is ready today: exit 1")
             sys.exit(1)
@@ -885,5 +889,9 @@ if __name__ == "__main__":
         print(json.dumps({"last_7_days": failures.summary(), "paused": [k for k in ("guide", "trial", "tool")
                           if failures.paused(k)], "blocked_hosts": sorted(failures.blocked_hosts())},
                          indent=1, ensure_ascii=False))
+    elif cmd == "usage":  # D-48: Claude usage per step, last 7 days (state/claude_usage.jsonl)
+        for row in claude_usage.summary():
+            print(f"{row['stage']:28} {row['calls']:4} calls {row['minutes']:7} min {row['tokens']:10} tokens "
+                  f"~${row['cost_usd']}")
     else:
         status()
