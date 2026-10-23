@@ -43,7 +43,12 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    "publish" is queued. FIX_ROUNDS = 2 for carousels, REEL_ATTEMPTS = 3.
    D-33 (2026-10-18) fixed a rejected silent Reel draft with src/reel_fixer.py; D-38 switched it off for its
    crops. **D-43 (2026-10-23, the user: "düzeltilerek uygun hale getirilecek varsa yapmayıp boş denilmesinden
-   bıktım ... gerçekten otomatik akıllı hale getir"): on again, REEL_FIX_ROUNDS = 2**, with the crops gone.
+   bıktım ... gerçekten otomatik akıllı hale getir"): on again**, with the crops gone. **D-45: the fixer is
+   our own agent** (`src/reel_agent.py`, REEL_FIX_ROUNDS = 1): it reads `knowledge/playbook.md`, finds the
+   cause, changes words / pictures / layout, renders on the silent voice (`src/agent_tools.py render`, at most
+   3) and looks at the frames until clean; **D-47: at most 2 agent sessions per production run, 12 min each**
+   (Claude usage and slot times); test runs have their own queue and never hold up production; its log is `state/agent_log.jsonl` (read it every "yükle" and add
+   what it couldn't fix to the playbook).
    Every draft is MEASURED before the editor (`reel_qa.cut_frames`): a picture running off the frame rebuilds
    the Reel without the shot zoom (capture "still"); a cut it can't remove goes to the fixer, never out. Shots
    never reach the frame's edge (`SHOT_MAX`). An empty Reel slot is retried with guide Reels
@@ -75,6 +80,11 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    George. If both fail, no Reel is made; tell the user. `probe.yml` shows both accounts' state.
    Don't propose another voice. Voice is spent only on the Reel the editor approved (D-30, 2026-10-18):
    attempts use a silent draft voice, then `src/voice_final.py` voices the approved one once.
+   **D-46 (2026-10-23, the user, repeated "hata olmaması için"): George ONLY for a Reel ready to go out.**
+   Tests, searches, fixes, agent renders, dry runs (`KAVAR_DRY`), news-test, rerender (default draft=yes)
+   never spend it. An approved Reel of a test run stays silent with its parts in `<reel>/_voice`;
+   `voice.yml` (run_id, reel) voices it once when it is chosen to be published. Keys: ELEVENLABS_API_KEY,
+   _2, _3 (all George).
    **D-34 (2026-10-18):** George says every product / company name the way Turkish tech people say it, also
    new names: `tts_engine.spoken_text` (hand-checked `rules/pronunciation.json` first, then names Claude
    learns before voicing, kept in `state/pronunciations.json`). Captions and screens keep the real spelling.

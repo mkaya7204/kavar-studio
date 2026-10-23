@@ -16,6 +16,7 @@ draft voice and goes back to the editor (daily.REEL_FIX_ROUNDS times at most).
 """
 
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import shutil
 import subprocess
@@ -92,6 +93,7 @@ def _ask(message: str, system: str) -> dict | None:
              "--tools", "Read", "--allowedTools", "Read", "--no-session-persistence"],
             input=message, capture_output=True, text=True, encoding="utf-8", timeout=CLI_TIMEOUT * 2,
             cwd=WORK, env=env)
+        record_usage("fixer", proc.stdout)
         return json.loads(proc.stdout).get("structured_output")
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
         return None

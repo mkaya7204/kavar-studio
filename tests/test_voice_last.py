@@ -37,7 +37,17 @@ def reel_sandbox(monkeypatch, tmp_path):
     monkeypatch.setattr(daily, "first_frame_report", lambda v, o: {"ok": True})
     monkeypatch.setattr(daily, "pacing_report", lambda v: {"duration_sec": 22.0})
     monkeypatch.setattr(daily, "cut_frames", lambda v, o=None: [])
+    monkeypatch.setattr(daily, "_agent_sessions", 0)  # a fresh production run
     return daily, calls
+
+
+def test_no_agent_session_after_the_runs_cap(monkeypatch, reel_sandbox):
+    """D-47: at most AGENT_SESSIONS_PER_RUN agent sessions per run; then the next candidate is tried."""
+    daily, calls = reel_sandbox
+    monkeypatch.setattr(daily, "_agent_sessions", daily.AGENT_SESSIONS_PER_RUN)
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["kanıt yok"]})
+    assert daily._reel_attempt() == (None, True)
+    assert not any("src/reel_agent.py" in cmd for cmd, _ in calls)
 
 
 def test_attempt_is_silent_and_only_the_approved_reel_is_voiced(monkeypatch, reel_sandbox):
@@ -63,12 +73,66 @@ def test_a_rejected_draft_goes_to_the_fixer_on_the_silent_voice(monkeypatch, ree
     """D-42 (user 10-23: "düzeltilerek uygun hale getirilecek varsa yapmayıp boş denilmesinden bıktım") turns the
     D-33 fixer on again (D-38 had switched it off for its crops, which are gone). Two rounds, no voice spent."""
     daily, calls = reel_sandbox
-    assert daily.REEL_FIX_ROUNDS == 2
+    assert daily.REEL_FIX_ROUNDS == 1  # D-45: the agent renders and looks up to 4 times inside its one round
     monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["kanıt yok"]})
     assert daily._reel_attempt() == (None, True)
-    fixes = [draft for cmd, draft in calls if "src/reel_fixer.py" in cmd]
-    assert fixes == ["1", "1"]
+    fixes = [draft for cmd, draft in calls if "src/reel_agent.py" in cmd]
+    assert fixes == ["1"]
     assert not any("src/voice_final.py" in cmd for cmd, _ in calls)
+
+
+def test_a_test_run_never_spends_the_voice_and_keeps_the_reel_for_later(monkeypatch, reel_sandbox, tmp_path):
+    """D-46 (user 10-23): "deneme veya işte reel ararken yada reel de düzenleme ekleme yapılırken seslendirme
+    kullanılmayacak". Dry runs voiced approved Reels on 10-22 and 10-23 (credits gone). Now an approved Reel of a
+    test run stays silent and keeps its words and exact pictures for voice.yml."""
+    daily, calls = reel_sandbox
+    temp = tmp_path / "output" / "temp"
+    (temp / "proof.png").write_bytes(b"png")
+    (temp / "capture.json").write_text(json.dumps({"proof_path": str(temp / "proof.png"), "still": True}),
+                                       encoding="utf-8")
+    monkeypatch.setenv("KAVAR_DRY", "1")
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "publish", "problems": []})
+    item, rendered = daily._reel_attempt()
+    assert item["needs_voice"] and rendered
+    assert not any("src/voice_final.py" in cmd and draft is None for cmd, draft in calls)  # George never ran
+    kit = tmp_path / item["folder"] / "_voice"
+    capture = json.loads((kit / "capture.json").read_text(encoding="utf-8"))
+    assert (kit / "script.json").exists() and capture["still"] is True
+    assert (tmp_path / capture["proof_path"]).read_bytes() == b"png"  # the exact picture, kept with the Reel
+
+
+def test_voicing_later_restores_the_kept_reel(monkeypatch, tmp_path):
+    import voice_kept
+
+    reel = tmp_path / "output" / "reels" / "r"
+    kit = reel / "_voice"
+    kit.mkdir(parents=True)
+    (kit / "script.json").write_text("{}", encoding="utf-8")
+    (kit / "tool.json").write_text("{}", encoding="utf-8")
+    (kit / "capture.json").write_text('{"proof_path": "output/reels/r/_voice/proof_path.png"}', encoding="utf-8")
+    monkeypatch.setattr(voice_kept, "ROOT", tmp_path)
+    monkeypatch.setattr(voice_kept, "TEMP_DIR", tmp_path / "output" / "temp")
+    voice_kept.restore(reel)
+    cap = json.loads((tmp_path / "output" / "temp" / "capture.json").read_text(encoding="utf-8"))
+    assert cap["proof_path"] == str(tmp_path / "output/reels/r/_voice/proof_path.png")
+
+
+def test_no_test_workflow_spends_george():
+    wf = ROOT / ".github" / "workflows"
+    news = (wf / "news-test.yml").read_text(encoding="utf-8")
+    reel_step = news[news.index("Biz denedik Reel + editor review"):]
+    assert 'KAVAR_DRAFT_VOICE: "1"' in reel_step.split("- uses:")[0]
+    assert 'default: "yes"' in (wf / "rerender.yml").read_text(encoding="utf-8").split("draft:")[1][:200]
+    assert "KAVAR_DRY: ${{ github.event.inputs.dry == 'yes'" in (wf / "produce.yml").read_text(encoding="utf-8")
+    assert "src/voice_kept.py" in (wf / "voice.yml").read_text(encoding="utf-8")
+
+
+def test_a_third_voice_account_speaks_george_too():
+    import tts_engine
+
+    assert tts_engine.ELEVENLABS_KEYS[-1] == "ELEVENLABS_API_KEY_3"
+    for name in ("produce.yml", "voice.yml", "rerender.yml", "news-test.yml"):
+        assert "secrets.ELEVENLABS_API_KEY_3" in (ROOT / ".github" / "workflows" / name).read_text(encoding="utf-8")
 
 
 def test_a_fixed_draft_the_editor_approves_is_voiced(monkeypatch, reel_sandbox):
@@ -77,7 +141,7 @@ def test_a_fixed_draft_the_editor_approves_is_voiced(monkeypatch, reel_sandbox):
     monkeypatch.setattr(daily, "review_reel", lambda *a: next(verdicts))
     item, rendered = daily._reel_attempt()
     assert item and rendered
-    assert [c for c, _ in calls if "src/reel_fixer.py" in c] and calls[-1][1] is None  # George once, at the end
+    assert [c for c, _ in calls if "src/reel_agent.py" in c] and calls[-1][1] is None  # George once, at the end
 
 
 def test_a_measured_cut_is_rebuilt_still_before_the_editor(monkeypatch, reel_sandbox, tmp_path):
@@ -102,7 +166,7 @@ def test_a_cut_the_rebuild_cannot_remove_never_reaches_the_editor(monkeypatch, r
     monkeypatch.setattr(daily, "cut_frames", lambda v, o=None: [10.5, 11.0])
     monkeypatch.setattr(daily, "review_reel", lambda *a: pytest.fail("the editor saw a cut Reel"))
     assert daily._reel_attempt() == (None, True)
-    assert [c for c, _ in calls if "src/reel_fixer.py" in c]  # the fixer chooses whole pictures instead
+    assert [c for c, _ in calls if "src/reel_agent.py" in c]  # the fixer chooses whole pictures instead
 
 
 def test_cut_pictures_are_measured_on_the_real_rejected_frames():

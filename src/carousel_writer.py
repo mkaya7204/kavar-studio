@@ -11,6 +11,8 @@ structure). The rules come from reports/Carousel ve story görsel sistemi.md.
 """
 
 import json
+import sys
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import re
 import subprocess
 from typing import Literal
@@ -312,6 +314,8 @@ def _ask_cli(exe: str, prompt: str, system: str, fmt: type[BaseModel]) -> tuple[
             input=prompt, capture_output=True, text=True, encoding="utf-8",
             timeout=CLI_TIMEOUT, cwd=ROOT, env=env,
         )
+        # D-48: one shared helper for many steps (ranker, news writer, guide writer...): named by its caller
+        record_usage("ask/" + sys._getframe(1).f_globals.get("__name__", "?"), proc.stdout)
         out = json.loads(proc.stdout)
     except subprocess.TimeoutExpired:
         print(f"[carousel_writer] claude -p timed out after {CLI_TIMEOUT}s.")

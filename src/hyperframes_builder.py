@@ -19,6 +19,7 @@ Output: H.264 / AAC MP4 at config.json size and fps.
 
 import html
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import math
 import os
 import re
@@ -317,6 +318,7 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
                                "--tools", "Read", "--allowedTools", "Read", "--no-session-persistence"],
                               input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=300,
                               cwd=sheet.parent, env=env)
+        record_usage("proof_pick", proc.stdout)
         out = json.loads(proc.stdout)
         allowed = (out.get("structured_output") or {}).get("allowed")
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError) as exc:
@@ -545,10 +547,19 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
     # ASCII-escaped JSON: Turkish letters survive whatever encoding the reader assumes.
     (build_dir / "variables.json").write_text(json.dumps(values, ensure_ascii=True, indent=2), encoding="utf-8")
     _bake_variable_defaults(build_dir / "index.html", values)
+    if capture.get("css"):  # D-45: the fixing agent's layout changes for this one Reel (src/reel_agent.py)
+        index = build_dir / "index.html"
+        index.write_text(with_agent_css(index.read_text(encoding="utf-8"), capture["css"]), encoding="utf-8")
     values["_synced"] = timing is not None
     values["_total"] = total
     values["_music"] = sound["music"]
     return values
+
+
+def with_agent_css(page: str, css: str) -> str:
+    """The composition with the agent's CSS for this Reel: styles only, never markup or code."""
+    css = re.sub(r"<\s*/?\s*(style|script)\b", "", str(css), flags=re.I)[:4000]
+    return page.replace("</head>", f"<style id=\"agent-css\">\n{css}\n</style>\n</head>", 1)
 
 
 def _run(args: list[str], cwd: Path, timeout: int) -> subprocess.CompletedProcess:

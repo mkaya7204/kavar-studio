@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # upload.mp4 next to every Reel of today: Business Suite in the browser takes at most 10 MB.
 # Used by produce.yml after the morning stage (the 07:30 guide Reel, D-40) and after the whole day.
-for IN in output/reels/$(date +%F)_*/final_video.mp4; do
+# An argument names one Reel folder instead (voice.yml, D-46).
+for IN in ${1:-output/reels/$(date +%F)_*}/final_video.mp4; do
   [ -f "$IN" ] || continue
   OUT="$(dirname "$IN")/upload.mp4"
   [ -f "$OUT" ] && [ "$OUT" -nt "$IN" ] && continue  # already made after the morning stage

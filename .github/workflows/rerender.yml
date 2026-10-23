@@ -9,8 +9,8 @@ on:
         description: "script file under rerender/ (e.g. 2026-10-15_retriever-ai.json)"
         required: true
       draft:
-        description: "yes = silent draft voice, George not spent (to test pictures / template, D-30)"
-        default: "no"
+        description: "yes (default) = silent draft voice; no = George, only for a Reel going out (D-30, D-46)"
+        default: "yes"
 
 jobs:
   rerender:
@@ -22,6 +22,7 @@ jobs:
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
       ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}  # second account, same George (D-23)
+      ELEVENLABS_API_KEY_3: ${{ secrets.ELEVENLABS_API_KEY_3 }}  # third account, same George (D-46)
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -32,7 +33,13 @@ jobs:
         with:
           node-version: "22"
       - name: System packages (ffmpeg)
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+        timeout-minutes: 15
+        run: |
+          for i in 1 2 3; do
+            timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq ffmpeg && break
+            echo "apt try $i failed or hung; again"; sleep 10
+          done
+          command -v ffmpeg
       - name: Python packages and Chromium
         run: |
           pip install -q -r requirements.txt

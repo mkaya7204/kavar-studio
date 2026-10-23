@@ -1,0 +1,81 @@
+# Voice ONE approved, silent Reel of a test run with George, once, when it is chosen to go out (D-46, the user
+# 2026-10-23: only a Reel ready to be published is made again with the voice; tests, searches and fixes never
+# spend it). The Reel's words and exact pictures come from <reel>/_voice in that run's archive.
+name: voice
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "the produce run whose archive holds the approved silent Reel (e.g. 39904752405)"
+        required: true
+      reel:
+        description: "the Reel's folder name under output/reels (e.g. 2026-10-23_google)"
+        required: true
+      artifact:
+        description: "that run's archive name"
+        default: "kavar-dryrun"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  voice:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      TZ: Europe/Istanbul
+      PYTHONIOENCODING: utf-8
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}  # second account, same George (D-23)
+      ELEVENLABS_API_KEY_3: ${{ secrets.ELEVENLABS_API_KEY_3 }}  # third account, same George (D-46)
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: System packages (ffmpeg)
+        timeout-minutes: 15
+        run: |
+          for i in 1 2 3; do
+            timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq ffmpeg && break
+            echo "apt try $i failed or hung; again"; sleep 10
+          done
+          command -v ffmpeg
+      - name: Python packages and Chromium
+        run: |
+          pip install -q -r requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: HyperFrames
+        run: npx --yes hyperframes@0.8.145 --version || true
+      - name: Fonts
+        run: |
+          curl -sSL -o /tmp/inter.zip https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip
+          unzip -q -o /tmp/inter.zip -d /tmp/inter
+          mkdir -p templates/hyperframes_news/assets/fonts
+          cp "$(find /tmp/inter -name 'Inter-Black.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguibl.ttf
+          cp "$(find /tmp/inter -name 'Inter-SemiBold.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguisb.ttf
+      - name: The approved silent Reel from its run
+        run: |
+          gh run download "${{ github.event.inputs.run_id }}" -n "${{ github.event.inputs.artifact }}" -D /tmp/arc
+          tar -xzf "$(find /tmp/arc -name '*.tgz' | head -1)" "output/reels/${{ github.event.inputs.reel }}"
+          test -f "output/reels/${{ github.event.inputs.reel }}/_voice/capture.json"
+      - name: Voice it with George (once) and check it
+        run: python src/voice_kept.py "output/reels/${{ github.event.inputs.reel }}"
+      - name: Upload-size copy (Business Suite in the browser takes at most 10 MB)
+        run: bash .github/upload_size.sh "output/reels/${{ github.event.inputs.reel }}"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: kavar-voiced
+          path: |
+            output/reels/${{ github.event.inputs.reel }}/upload.mp4
+            output/reels/${{ github.event.inputs.reel }}/final_video.mp4
+            output/reels/${{ github.event.inputs.reel }}/cover.jpg
+            output/reels/${{ github.event.inputs.reel }}/post.json
+          retention-days: 7

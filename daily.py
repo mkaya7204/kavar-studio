@@ -40,6 +40,7 @@ from news_writer import NewsScript, revise_for_editor  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
 from reel_qa import cut_frames, first_frame_report, make_cover, pacing_report  # noqa: E402
+import claude_usage  # noqa: E402
 import failures  # noqa: E402
 import reserve  # noqa: E402
 from tts_engine import DRAFT_ENV  # noqa: E402
@@ -210,7 +211,13 @@ GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no
 # cropped the proof picture (cut text in 12 of 14 fix rounds, 10-19..10-21). D-42 (user 10-23: "düzeltilerek uygun
 # hale getirilecek varsa yapmayıp boş denilmesinden bıktım") turns it on again: the crops are gone (whole pictures,
 # windows end in a gap, shots never reach the frame's edge) and every fixed draft is measured for cuts first.
-REEL_FIX_ROUNDS = 2
+# D-45: the fixer is now our agent (src/reel_agent.py), which renders and looks up to 3 times inside one round;
+# one round per draft keeps the morning inside the job's time.
+REEL_FIX_ROUNDS = 1
+# D-47 (user 10-23: "haftalık token yetersiz kalır ... yayın saatinde yayınlamak olan yetişmez"): the agent runs at
+# most this many times per production run (each session is up to 12 min of Claude), on the first rejections
+AGENT_SESSIONS_PER_RUN = 2
+_agent_sessions = 0
 GUIDE_EXTRA = 2  # D-42: guide Reel drafts the rest stage may make for a Reel slot that is still empty
 REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
@@ -283,6 +290,35 @@ def _voice_approved_reel(out: Path) -> bool:
     return True
 
 
+DRY_ENV = "KAVAR_DRY"  # produce.yml dry=yes (D-46)
+VOICE_KIT = "_voice"  # inside a Reel's folder: what voice.yml needs to voice it later
+
+
+def _keep_for_voice(out: Path) -> None:
+    """D-46 (the user, 10-23: "deneme veya işte reel ararken yada reel de düzenleme ekleme yapılırken seslendirme
+    kullanılmayacak"): an approved Reel of a test run stays silent. Its words, facts and the exact pictures are
+    kept in <reel>/_voice, so voice.yml can voice the same Reel once, if it is chosen to go out."""
+    temp = ROOT / "output" / "temp"
+    kit = out / VOICE_KIT
+    shutil.rmtree(kit, ignore_errors=True)
+    kit.mkdir(parents=True)
+    for name in ("script.json", "tool.json"):
+        if (temp / name).exists():
+            shutil.copy(temp / name, kit / name)
+    try:
+        capture = json.loads((temp / "capture.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        capture = {}
+    for key in ("proof_path", "screenshot_path", "fullpage_path", "logo_path"):
+        src = Path(capture[key]) if capture.get(key) else None
+        if src and src.exists():
+            dst = kit / f"{key}{src.suffix}"
+            shutil.copy(src, dst)
+            capture[key] = _rel(dst)
+    capture.pop("pictures", None)  # the fixer's choices are made; the voiced Reel shows exactly these
+    (kit / "capture.json").write_text(json.dumps(capture, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+
+
 def _still_if_cut(out: Path) -> list[float]:
     """D-42: the draft is measured before the editor sees it. A picture running off the frame (the cut text
     the editor rejected on 10-19, 10-21, 10-22 and 10-23) rebuilds the same Reel without the shot zoom, on
@@ -336,18 +372,19 @@ def _copy_draft(out: Path, script: dict) -> None:
 
 def _fix_draft(out: Path, verdict: dict, fix_round: int) -> dict | None:
     """D-33 (the user, 2026-10-18: "editör red derse sen devreye giriyorsun, düzeltilecek bir yanı varsa
-    düzelt"): src/reel_fixer.py fixes the rejected silent draft (text and pictures) and renders it again on
-    the draft voice. Returns the fixed script, or None when the topic itself can't be fixed."""
+    düzelt"). D-45: our fixing agent (src/reel_agent.py) works on the rejected silent draft: it finds the
+    cause, changes words, pictures or layout, renders on the draft voice and looks at the result until it is
+    clean. Returns the fixed script, or None when the topic itself can't be fixed."""
     (out / "_verdict.json").write_text(json.dumps(verdict, indent=1, ensure_ascii=False), encoding="utf-8")
-    log(f"   fixing the rejected draft (round {fix_round}/{REEL_FIX_ROUNDS})")
+    log(f"   fixing the rejected draft with the agent (round {fix_round}/{REEL_FIX_ROUNDS})")
     try:
-        proc = subprocess.run([sys.executable, "src/reel_fixer.py", str(out)], cwd=ROOT, capture_output=True,
+        proc = subprocess.run([sys.executable, "src/reel_agent.py", str(out)], cwd=ROOT, capture_output=True,
                               text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
                               env={**os.environ, DRAFT_ENV: "1"})
     except subprocess.TimeoutExpired:
         log(f"   fix timed out after {REEL_TIMEOUT}s")
         return None
-    for line in [l for l in proc.stdout.splitlines() if l.strip()][-5:]:
+    for line in [l for l in proc.stdout.splitlines() if l.strip()][-12:]:  # the agent's refusals and words too
         log("   " + line)
     if proc.returncode != 0:
         if proc.returncode != 3:
@@ -389,15 +426,25 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         + (f" (judge: {script['hook_judge']['reason']})" if script.get("hook_judge") else ""))
     verdict = _review(out, script, tool)
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
+    global _agent_sessions
     for fix_round in range(1, REEL_FIX_ROUNDS + 1):  # D-33: a rejected draft is fixed before another is tried
         if verdict["verdict"] == "publish" or not _time_for_a_reel():
             break
+        if _agent_sessions >= AGENT_SESSIONS_PER_RUN:
+            log(f"   no agent session left in this run ({AGENT_SESSIONS_PER_RUN}, D-47): the next candidate is tried")
+            break
+        _agent_sessions += 1
         fixed = _fix_draft(out, verdict, fix_round)
         if fixed is None:
             break
         script = fixed
         verdict = _review(out, script, tool)
         log(f"   editor (after fix {fix_round}): {verdict['verdict']} {verdict['problems'][:4]}")
+    if verdict["verdict"] == "publish" and os.getenv(DRY_ENV):
+        _keep_for_voice(out)
+        log("   approved in a test run: kept silent for voice.yml (George only for a Reel going out, D-46)")
+        failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
+        return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True}, True
     if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
         update_metrics(out.name, status="approved draft, but the voiced Reel failed")
         failures.record("reel", kind, script["tool_name"], "no voice / voiced Reel failed", rendered=False)
@@ -824,6 +871,9 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
     if cmd == "produce":
         rest_ran = produce(sys.argv[2] if len(sys.argv) > 2 else "")
+        for row in claude_usage.summary(days=1):  # D-48: what this morning cost of the Claude limit, per step
+            log(f"claude usage today: {row['stage']}: {row['calls']} calls, {row['minutes']} min, "
+                f"{row['tokens']} tokens, ~${row['cost_usd']}")
         if rest_ran and empty_day():  # D-38: an empty day shows red in GitHub, never "success"
             log("nothing is ready today: exit 1")
             sys.exit(1)
@@ -839,5 +889,9 @@ if __name__ == "__main__":
         print(json.dumps({"last_7_days": failures.summary(), "paused": [k for k in ("guide", "trial", "tool")
                           if failures.paused(k)], "blocked_hosts": sorted(failures.blocked_hosts())},
                          indent=1, ensure_ascii=False))
+    elif cmd == "usage":  # D-48: Claude usage per step, last 7 days (state/claude_usage.jsonl)
+        for row in claude_usage.summary():
+            print(f"{row['stage']:28} {row['calls']:4} calls {row['minutes']:7} min {row['tokens']:10} tokens "
+                  f"~${row['cost_usd']}")
     else:
         status()

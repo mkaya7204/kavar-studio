@@ -16,6 +16,7 @@ the voice slightly, and refuses text that would need more.
 import asyncio
 import base64
 import json
+from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import re
 import shutil
@@ -95,6 +96,7 @@ def learn_names(text: str) -> dict[str, str]:
                                "--tools", "", "--no-session-persistence"],
                               input=LEARN_PROMPT.format(known=", ".join(sorted(known)) or "-", text=text),
                               capture_output=True, text=True, encoding="utf-8", timeout=180, cwd=ROOT, env=env)
+        record_usage("pronunciation", proc.stdout)
         answer = (json.loads(proc.stdout).get("structured_output") or {}).get("words", [])
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
         return {}
@@ -216,7 +218,8 @@ async def _edge(text: str, voice: str, rate_pct: int, audio_path: Path) -> list[
     return words
 
 
-ELEVENLABS_KEYS = ("ELEVENLABS_API_KEY", "ELEVENLABS_API_KEY_2")  # two accounts, same George (D-23)
+# accounts tried in order, all speaking George (D-23 two accounts; D-46 a third, the user 10-23)
+ELEVENLABS_KEYS = ("ELEVENLABS_API_KEY", "ELEVENLABS_API_KEY_2", "ELEVENLABS_API_KEY_3")
 
 
 def _elevenlabs_keys() -> list[str]:
