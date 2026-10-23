@@ -65,6 +65,9 @@ Loop:
 voiceover is voiceover_segments hook, point1, point2, point3, why, cta joined in order, 34-42 words; key_points \
 follow point1-3; hook 3-6 words, at most 32 characters), pick other pictures, make shots still, adjust the \
 layout with css. A smaller true promise that a picture shows beats a big unproven one.
+Tools: read files and pictures with the Read tool (never cat / ls / cd in Bash); edit with Edit / Write. The \
+only shell command you may run is exactly `python src/agent_tools.py render` from the project folder, with no \
+cd, no pipes and no other options.
 4. Run exactly: python src/agent_tools.py render   (it refuses prices / broken scripts and says why). Then \
 open frames.jpg and look at every frame as a strict editor: cut or overlapping text, a proof that doesn't \
 prove the hook, empty boxes, unreadable pictures, claims stronger than tool.json. report.json has the \

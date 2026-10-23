@@ -2,8 +2,14 @@
 (GitHub Actions: produce.yml, rerender.yml). The user asked for this to be enforced, not promised
 (2026-10-15). Exit code 2 blocks the command and shows the reason to Claude."""
 import json
+import os
 import re
 import sys
+
+# The cloud is where this work belongs: the fixing agent's `claude -p` session in GitHub Actions loads the same
+# project hooks, and this guard refused its render (10-23, D-45: "agent refused ... agent_tools.py render").
+if os.getenv("GITHUB_ACTIONS") == "true":
+    sys.exit(0)
 
 BLOCKED = [
     (r"\bff(mpeg|probe)\b", "video processing (ffmpeg)"),

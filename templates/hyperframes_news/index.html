@@ -767,12 +767,19 @@
 
       // D-43: "workspaceupdates.googleblog.com" ran past the shot tag and read as cut text (editor 10-23, twice).
       // Every domain line shrinks until it fits its place, measured again once the fonts are in.
+      // 10-23 (2nd): in the centred outro the line was as wide as its text, so it never looked too wide and ran off
+      // both edges at 20-21 s. The text's own width is compared with the room inside the parent's padding (and
+      // after anything before it in the same row), never more than the frame minus 60 px a side.
       const fitDomains = () => document.querySelectorAll("[data-domain], #outro-domain").forEach((el) => {
         el.style.whiteSpace = "nowrap";
-        // room left in the parent; offsetLeft is only comparable when the parent is the offset parent
-        const room = () => (el.offsetParent === el.parentElement ? el.parentElement.clientWidth - el.offsetLeft : Infinity);
+        const room = () => {
+          const p = el.parentElement, cs = getComputedStyle(p);
+          const inner = p.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+          const before = el.offsetParent === p ? Math.max(0, el.offsetLeft - parseFloat(cs.paddingLeft)) : 0;
+          return Math.min(inner - before, 1080 - 120);
+        };
         let size = parseFloat(getComputedStyle(el).fontSize);
-        while (size > 18 && (el.scrollWidth > el.clientWidth + 1 || el.offsetWidth > room() + 1)) {
+        while (size > 18 && el.scrollWidth > room() + 1) {
           size -= 2;
           el.style.fontSize = size + "px";
         }

@@ -211,6 +211,8 @@ def test_a_long_domain_shrinks_to_fit_its_tag():
     fit = html[html.index("const fitDomains"):html.index("// Full-page pan distance")]
     assert '"[data-domain], #outro-domain"' in fit and "nowrap" in fit and "document.fonts.ready.then(fitDomains)" in fit
     assert html.index("const fitDomains") > html.index('$("outro-domain").textContent = v.tool_name')  # after the text
+    # 2nd 10-23 case: the centred outro line is as wide as its text; it is measured against the parent's padding
+    assert "paddingLeft" in fit and "el.scrollWidth > room()" in fit
 
 
 def test_the_fixer_never_crops_a_picture(tmp_path, monkeypatch):

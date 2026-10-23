@@ -12,9 +12,19 @@ ROOT = Path(__file__).resolve().parent.parent
 HOOK = ROOT / ".claude" / "hooks" / "block_heavy.py"
 
 
-def _hook(command: str) -> int:
+def _hook(command: str, cloud: bool = False) -> int:
+    import os
+
     payload = json.dumps({"tool_input": {"command": command}})
-    return subprocess.run([sys.executable, str(HOOK)], input=payload, text=True, capture_output=True).returncode
+    env = {**os.environ, "GITHUB_ACTIONS": "true" if cloud else ""}
+    return subprocess.run([sys.executable, str(HOOK)], input=payload, text=True, capture_output=True,
+                          env=env).returncode
+
+
+def test_the_cloud_may_run_what_the_pc_may_not():
+    """10-23 (D-45): the fixing agent's session in GitHub Actions loads the same hooks and its render was refused."""
+    assert _hook("python src/agent_tools.py render") == 2
+    assert _hook("python src/agent_tools.py render", cloud=True) == 0
 
 
 @pytest.mark.parametrize("cmd", ["ffmpeg -i a.mp4 b.mp4", "ffprobe x", "python main.py", "python daily.py produce",
