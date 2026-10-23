@@ -545,10 +545,19 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
     # ASCII-escaped JSON: Turkish letters survive whatever encoding the reader assumes.
     (build_dir / "variables.json").write_text(json.dumps(values, ensure_ascii=True, indent=2), encoding="utf-8")
     _bake_variable_defaults(build_dir / "index.html", values)
+    if capture.get("css"):  # D-45: the fixing agent's layout changes for this one Reel (src/reel_agent.py)
+        index = build_dir / "index.html"
+        index.write_text(with_agent_css(index.read_text(encoding="utf-8"), capture["css"]), encoding="utf-8")
     values["_synced"] = timing is not None
     values["_total"] = total
     values["_music"] = sound["music"]
     return values
+
+
+def with_agent_css(page: str, css: str) -> str:
+    """The composition with the agent's CSS for this Reel: styles only, never markup or code."""
+    css = re.sub(r"<\s*/?\s*(style|script)\b", "", str(css), flags=re.I)[:4000]
+    return page.replace("</head>", f"<style id=\"agent-css\">\n{css}\n</style>\n</head>", 1)
 
 
 def _run(args: list[str], cwd: Path, timeout: int) -> subprocess.CompletedProcess:

@@ -43,7 +43,11 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    "publish" is queued. FIX_ROUNDS = 2 for carousels, REEL_ATTEMPTS = 3.
    D-33 (2026-10-18) fixed a rejected silent Reel draft with src/reel_fixer.py; D-38 switched it off for its
    crops. **D-43 (2026-10-23, the user: "düzeltilerek uygun hale getirilecek varsa yapmayıp boş denilmesinden
-   bıktım ... gerçekten otomatik akıllı hale getir"): on again, REEL_FIX_ROUNDS = 2**, with the crops gone.
+   bıktım ... gerçekten otomatik akıllı hale getir"): on again**, with the crops gone. **D-45: the fixer is
+   our own agent** (`src/reel_agent.py`, REEL_FIX_ROUNDS = 1): it reads `knowledge/playbook.md`, finds the
+   cause, changes words / pictures / layout, renders on the silent voice (`src/agent_tools.py render`, at most
+   4) and looks at the frames until clean; its log is `state/agent_log.jsonl` (read it every "yükle" and add
+   what it couldn't fix to the playbook).
    Every draft is MEASURED before the editor (`reel_qa.cut_frames`): a picture running off the frame rebuilds
    the Reel without the shot zoom (capture "still"); a cut it can't remove goes to the fixer, never out. Shots
    never reach the frame's edge (`SHOT_MAX`). An empty Reel slot is retried with guide Reels

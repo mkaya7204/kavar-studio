@@ -63,11 +63,11 @@ def test_a_rejected_draft_goes_to_the_fixer_on_the_silent_voice(monkeypatch, ree
     """D-42 (user 10-23: "düzeltilerek uygun hale getirilecek varsa yapmayıp boş denilmesinden bıktım") turns the
     D-33 fixer on again (D-38 had switched it off for its crops, which are gone). Two rounds, no voice spent."""
     daily, calls = reel_sandbox
-    assert daily.REEL_FIX_ROUNDS == 2
+    assert daily.REEL_FIX_ROUNDS == 1  # D-45: the agent renders and looks up to 4 times inside its one round
     monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["kanıt yok"]})
     assert daily._reel_attempt() == (None, True)
-    fixes = [draft for cmd, draft in calls if "src/reel_fixer.py" in cmd]
-    assert fixes == ["1", "1"]
+    fixes = [draft for cmd, draft in calls if "src/reel_agent.py" in cmd]
+    assert fixes == ["1"]
     assert not any("src/voice_final.py" in cmd for cmd, _ in calls)
 
 
@@ -77,7 +77,7 @@ def test_a_fixed_draft_the_editor_approves_is_voiced(monkeypatch, reel_sandbox):
     monkeypatch.setattr(daily, "review_reel", lambda *a: next(verdicts))
     item, rendered = daily._reel_attempt()
     assert item and rendered
-    assert [c for c, _ in calls if "src/reel_fixer.py" in c] and calls[-1][1] is None  # George once, at the end
+    assert [c for c, _ in calls if "src/reel_agent.py" in c] and calls[-1][1] is None  # George once, at the end
 
 
 def test_a_measured_cut_is_rebuilt_still_before_the_editor(monkeypatch, reel_sandbox, tmp_path):
@@ -102,7 +102,7 @@ def test_a_cut_the_rebuild_cannot_remove_never_reaches_the_editor(monkeypatch, r
     monkeypatch.setattr(daily, "cut_frames", lambda v, o=None: [10.5, 11.0])
     monkeypatch.setattr(daily, "review_reel", lambda *a: pytest.fail("the editor saw a cut Reel"))
     assert daily._reel_attempt() == (None, True)
-    assert [c for c, _ in calls if "src/reel_fixer.py" in c]  # the fixer chooses whole pictures instead
+    assert [c for c, _ in calls if "src/reel_agent.py" in c]  # the fixer chooses whole pictures instead
 
 
 def test_cut_pictures_are_measured_on_the_real_rejected_frames():

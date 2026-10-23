@@ -13,6 +13,8 @@ BLOCKED = [
     (r"\bguide_reel\.py\b", "video rendering (guide_reel.py)"),
     (r"\bvoice_final\.py\b", "voiced Reel render (voice_final.py)"),
     (r"\breel_fixer\.py\b", "fixed Reel render (reel_fixer.py)"),
+    (r"\breel_agent\.py\b", "fixing agent with Reel renders (reel_agent.py)"),
+    (r"\bagent_tools\.py\W+render\b", "agent draft render (agent_tools.py render)"),
     (r"\bcarousel\.py\b", "carousel capture and render (carousel.py)"),
     (r"daily\.py\W+produce\b", "production (daily.py produce)"),
     (r"hyperframes\S*\s+render\b", "HyperFrames render"),

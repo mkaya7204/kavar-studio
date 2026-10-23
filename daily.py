@@ -210,7 +210,9 @@ GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no
 # cropped the proof picture (cut text in 12 of 14 fix rounds, 10-19..10-21). D-42 (user 10-23: "düzeltilerek uygun
 # hale getirilecek varsa yapmayıp boş denilmesinden bıktım") turns it on again: the crops are gone (whole pictures,
 # windows end in a gap, shots never reach the frame's edge) and every fixed draft is measured for cuts first.
-REEL_FIX_ROUNDS = 2
+# D-45: the fixer is now our agent (src/reel_agent.py), which renders and looks up to 4 times inside one round;
+# one round per draft keeps the morning inside the job's time.
+REEL_FIX_ROUNDS = 1
 GUIDE_EXTRA = 2  # D-42: guide Reel drafts the rest stage may make for a Reel slot that is still empty
 REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
@@ -336,12 +338,13 @@ def _copy_draft(out: Path, script: dict) -> None:
 
 def _fix_draft(out: Path, verdict: dict, fix_round: int) -> dict | None:
     """D-33 (the user, 2026-10-18: "editör red derse sen devreye giriyorsun, düzeltilecek bir yanı varsa
-    düzelt"): src/reel_fixer.py fixes the rejected silent draft (text and pictures) and renders it again on
-    the draft voice. Returns the fixed script, or None when the topic itself can't be fixed."""
+    düzelt"). D-45: our fixing agent (src/reel_agent.py) works on the rejected silent draft: it finds the
+    cause, changes words, pictures or layout, renders on the draft voice and looks at the result until it is
+    clean. Returns the fixed script, or None when the topic itself can't be fixed."""
     (out / "_verdict.json").write_text(json.dumps(verdict, indent=1, ensure_ascii=False), encoding="utf-8")
-    log(f"   fixing the rejected draft (round {fix_round}/{REEL_FIX_ROUNDS})")
+    log(f"   fixing the rejected draft with the agent (round {fix_round}/{REEL_FIX_ROUNDS})")
     try:
-        proc = subprocess.run([sys.executable, "src/reel_fixer.py", str(out)], cwd=ROOT, capture_output=True,
+        proc = subprocess.run([sys.executable, "src/reel_agent.py", str(out)], cwd=ROOT, capture_output=True,
                               text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
                               env={**os.environ, DRAFT_ENV: "1"})
     except subprocess.TimeoutExpired:
