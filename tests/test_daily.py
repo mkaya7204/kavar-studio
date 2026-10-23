@@ -310,6 +310,49 @@ def test_guide_pictures_are_the_features_own_never_the_page(tmp_path):
             assert img.getpixel((540, 840)) != (255, 255, 255)  # never the page
 
 
+def test_guide_shots_never_crop_a_picture(tmp_path):
+    """10-23: the Meet Reel's only picture was cut to its middle for the second shot ("in Google Mee", editor
+    reject). A shot shows a whole picture, also when the page has just one (D-42)."""
+    import sys
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import guide_reel
+    from PIL import Image
+
+    fig = Image.new("RGB", (1600, 900), "white")
+    for x in range(0, 40):  # text-like marks at the far left and right edges of the picture
+        for y in range(400, 500):
+            fig.putpixel((x, y), (255, 0, 0))
+            fig.putpixel((1599 - x, y), (0, 0, 255))
+    fig.save(tmp_path / "fig.png")
+    page = {"url": "https://workspaceupdates.googleblog.com/x", "cover_path": None,
+            "figures": [{"path": str(tmp_path / "fig.png")}], "videos": []}
+    cap = guide_reel._frames(page, tmp_path / "f")
+    for shot in (cap["screenshot_path"], cap["fullpage_path"]):
+        with Image.open(shot) as img:
+            colors = {img.getpixel((x, y)) for x in range(img.width) for y in range(600, 900, 3)}
+            assert any(r > 200 and g < 60 and b < 60 for r, g, b in colors)  # left edge still there
+            assert any(b > 200 and r < 60 and g < 60 for r, g, b in colors)  # right edge still there
+    assert not hasattr(guide_reel, "_detail")
+
+
+def test_trial_proof_shows_a_picture_whole(tmp_path):
+    """D-42: the Biz denedik proof box cropped a picture to fill it (ImageOps.fit); it is shown whole now."""
+    import sys
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import trial_reel
+    from PIL import Image
+
+    img = Image.new("RGB", (1600, 900), "white")
+    for x in range(0, 40):
+        for y in range(0, 900):
+            img.putpixel((x, y), (255, 0, 0))
+            img.putpixel((1599 - x, y), (0, 0, 255))
+    proof = trial_reel._proof(img)
+    colors = {proof.getpixel((x, 330)) for x in range(proof.width)}
+    assert any(r > 200 and g < 60 and b < 60 for r, g, b in colors)
+    assert any(b > 200 and r < 60 and g < 60 for r, g, b in colors)
+
+
 def _feeds(monkeypatch, tmp_path, ages_hours, used=()):
     """news_fetcher over one fake feed whose items are ages_hours old; `used` urls already posted."""
     from datetime import datetime, timedelta, timezone

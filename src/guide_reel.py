@@ -118,12 +118,6 @@ def _video_frames(videos: list[str], folder: Path) -> list[str]:
     return out
 
 
-def _detail(img: Image.Image) -> Image.Image:
-    """The middle of a picture, bigger: a second, readable look at the same feature screen."""
-    w, h = img.size
-    return img.crop((round(w * 0.18), round(h * 0.12), round(w * 0.82), round(h * 0.88)))
-
-
 def _frames(page: dict, folder: Path) -> dict | None:
     """proof.png and the two shots, all from the company's own page: the feature's own pictures first
     (the article's figures and stills from its videos, usually the product's screen), the cover last.
@@ -136,14 +130,11 @@ def _frames(page: dict, folder: Path) -> dict | None:
     if not pictures:
         return None
     _fit_whole(pictures[0]).save(folder / "proof.png")  # D-38: whole, never cropped (10-21: cut on the left)
-    # with too few pictures a shot is a closer look at one of them, never the same frame twice
-    shots = [(pictures[1], False) if len(pictures) > 1 else (pictures[0], True),
-             (pictures[2], False) if len(pictures) > 2 else (pictures[-1], True)]
-    for name, (src, closer) in zip(SHOT_NAMES, shots):
-        with Image.open(src) as img:
+    # every shot is a whole picture; with too few pictures one comes back whole. The "closer look" crop
+    # (the middle 64 %) cut the text at its edges: "in Google Mee" rejected on 10-23 (D-42)
+    for i, name in enumerate(SHOT_NAMES, 1):
+        with Image.open(pictures[i % len(pictures)]) as img:
             img = img.convert("RGB")
-            if closer:
-                img = _detail(img)
             if img.width < 960:
                 img = img.resize((960, round(img.height * 960 / img.width)), Image.LANCZOS)
             img.thumbnail((960, 1300), Image.LANCZOS)

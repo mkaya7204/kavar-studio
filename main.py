@@ -16,6 +16,7 @@ one is used. Outputs:
 
 import argparse
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -63,16 +64,28 @@ class Step:
 def ai_tools_first(tools: list[dict]) -> list[dict]:
     """The tool Reel's candidates ranked by content_ranker inside its concept; tools with no AI in them are
     dropped before any capture (10-18: MeetPaw and Tower, a meeting launcher and a git client, were rendered
-    and rejected). The input order is kept if the ranker fails."""
+    and rejected). The input order is kept if the ranker fails.
+    D-42 (10-23): the ranker put 5 of 6 AI tools OFF (Claude Duet, Bits, Playad...) and only Notif was tried,
+    so all three Reel slots stayed empty. An OFF tool whose own listing says AI is tried last, not dropped;
+    the editor gate still decides. The reason is logged."""
     from content_ranker import rank
 
     listing = [{"title": f"{t['tool_name']}: {t.get('tag_line', '')}", "summary": t.get("description", ""),
                 "source": "Product Hunt", "tool": t} for t in tools]
     ranked = rank(listing, "tool_reel", kind_prefix="reel")
+    fits, fallback = [], []
     for c in ranked:
         r = c.get("rank") or {}
-        print(f"   rank {r.get('score', '-'):>2} {'' if r.get('fits', True) else 'OFF '}{c['title'][:70]}")
-    return [c["tool"] for c in ranked if (c.get("rank") or {}).get("fits", True)]
+        print(f"   rank {r.get('score', '-'):>2} {'' if r.get('fits', True) else 'OFF '}{c['title'][:70]}"
+              f" ({str(r.get('reason', ''))[:100]})")
+        if r.get("fits", True):
+            fits.append(c["tool"])
+        elif AI_WORDS.search(f"{c['title']} {c['summary']}"):
+            fallback.append(c["tool"])
+    return fits + fallback
+
+
+AI_WORDS = re.compile(r"\bAI\b|\bagents?\b|\bGPT|ChatGPT|Claude|Gemini|\bLLM|yapay zeka", re.I)
 
 
 def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyperframes") -> dict:

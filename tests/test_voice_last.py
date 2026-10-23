@@ -160,6 +160,23 @@ def test_tools_with_no_ai_never_reach_a_render(monkeypatch):
     assert "no AI in them" in content_ranker.CONCEPTS["tool_reel"]
 
 
+def test_ai_tools_put_off_by_the_ranker_are_still_tried_last(monkeypatch):
+    """10-23 (D-42): the ranker put Claude Duet, Bits, Kalender Sync, Playad and Concierge OFF; only Notif was
+    tried and every Reel slot stayed empty. An OFF tool that says AI is tried after the fitting ones."""
+    import content_ranker
+    import main
+
+    tools = [{"tool_name": "Notif", "tag_line": "AI for your Apple Reminders", "description": ""},
+             {"tool_name": "Claude Duet", "tag_line": "Proactive agent that understands what needs your attention",
+              "description": ""},
+             {"tool_name": "Playad", "tag_line": "Hire your AI Marketing Team", "description": ""},
+             {"tool_name": "MeetPaw", "tag_line": "Join meetings from the menu bar", "description": ""}]
+    monkeypatch.setattr(content_ranker, "rank", lambda items, concept, kind_prefix="": [
+        {**items[0], "rank": {"score": 30, "fits": True}}, {**items[1], "rank": {"score": 20, "fits": False}},
+        {**items[2], "rank": {"score": 17, "fits": False}}, {**items[3], "rank": {"score": 9, "fits": False}}])
+    assert [t["tool_name"] for t in main.ai_tools_first(tools)] == ["Notif", "Claude Duet", "Playad"]
+
+
 def test_captions_step_aside_while_a_site_picture_is_shown():
     """10-18: in most rejected Reels the captions sat on the site picture's own text; no picture choice fixes
     that, so the template hides the captions during the two shots."""
