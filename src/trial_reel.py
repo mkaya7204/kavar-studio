@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from carousel_writer import _ask, _revision_prompt  # noqa: E402
 from distribution import build_post  # noqa: E402
-from hyperframes_builder import FINAL_PATH, PROOF_SIZE, SHOT_NAMES, _shot_frame, build_video_hyperframes  # noqa: E402
+from hyperframes_builder import FINAL_PATH, PROOF_SIZE, SHOT_NAMES, _fit_whole, _shot_frame, build_video_hyperframes  # noqa: E402
 from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
                            _load_language, _save_history, _script_price_mentions, judge_hooks, reel_rule_problems)
 from model_trial import BG as CARD_BG  # noqa: E402
@@ -115,10 +115,10 @@ def _is_answer_card(img: Image.Image) -> bool:
 
 
 def _proof(img: Image.Image) -> Image.Image:
-    """The hook's proof box. A picture is cropped to fill it; an answer card is shown WHOLE
-    (cropping cut the answer mid-sentence and the editor rejected the Reel, 2026-10-16)."""
+    """The hook's proof box. Everything is shown WHOLE: cropping cut an answer mid-sentence (2026-10-16),
+    and a cropped picture loses its edges (D-38 / D-42: never cropped)."""
     if not _is_answer_card(img):
-        return ImageOps.fit(img, PROOF_SIZE, Image.LANCZOS, centering=(0.5, 0.0))
+        return _fit_whole(img)
     bg = ImageColor.getrgb(CARD_BG)
     box = ImageChops.difference(img, Image.new("RGB", img.size, bg)).getbbox() or (0, 0, *img.size)
     pad = 24

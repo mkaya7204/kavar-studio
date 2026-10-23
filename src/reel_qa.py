@@ -8,6 +8,7 @@
 """
 
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -82,3 +83,48 @@ def pacing_report(video: Path | str) -> dict:
     gaps = [round(b - a, 2) for a, b in zip(points, points[1:])]
     return {"duration_sec": round(dur, 2), "visual_changes": len(changes),
             "longest_static_sec": max(gaps) if gaps else dur, "black_stretches": blacks}
+
+
+# D-42: a picture cut by the frame. The template's background is dark and soft (blur, glow, grid), so sharp
+# detail in the outer 24 px of a frame is a picture or its text running off the edge. Measured on the real
+# rejected frames: clean 0.3-0.8, a card sliding in 1.07, cut pictures 1.7-3.2 ("in Google Mee" 10-22 11.6 s,
+# 10-23 10.2-11.2 s).
+EDGE_STRIP = 24
+CUT_DETAIL = 1.4
+# A card sliding in also touches the edge (Voxelo 10-23 11.2 s: 3.58) for ~0.3-0.5 s; a cut picture stays for
+# most of a 2.5 s shot. 4 frames a second, 3 in a row (0.75 s) = a cut.
+CUT_FPS = 4
+CUT_RUN = 3
+
+
+def edge_detail(img: Image.Image) -> tuple[float, float]:
+    """Mean edge strength in the left and right strips of a 1080x1920 frame (rows 12-85 %, below the top UI)."""
+    gray = img.convert("L")
+    w, h = gray.size
+    edges = gray.filter(ImageFilter.FIND_EDGES)
+    top, bottom = round(h * 0.12), round(h * 0.85)
+    left = ImageStat.Stat(edges.crop((2, top, EDGE_STRIP, bottom))).mean[0]  # 2 px: FIND_EDGES' own border
+    right = ImageStat.Stat(edges.crop((w - EDGE_STRIP, top, w - 2, bottom))).mean[0]
+    return round(left, 2), round(right, 2)
+
+
+def cut_in(frames: list[Path], fps: float = CUT_FPS) -> list[float]:
+    """Seconds where a picture runs off the frame's edge in CUT_RUN measured frames in a row ([] = clean)."""
+    hot = []
+    for f in frames:
+        with Image.open(f) as img:
+            hot.append(max(edge_detail(img)) >= CUT_DETAIL)
+    return [round(i / fps, 2) for i in range(CUT_RUN - 1, len(hot)) if all(hot[i - CUT_RUN + 1:i + 1])]
+
+
+def cut_frames(video: Path | str, scratch: Path | None = None) -> list[float]:
+    """cut_in() over the whole video, CUT_FPS frames a second."""
+    video = Path(video)
+    work = (scratch or video.parent) / "_cut_check"
+    shutil.rmtree(work, ignore_errors=True)
+    work.mkdir(parents=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(video), "-vf", f"fps={CUT_FPS}", "-q:v", "3",
+                    str(work / "f_%04d.jpg")], check=True, timeout=600)
+    found = cut_in(sorted(work.glob("f_*.jpg")))
+    shutil.rmtree(work, ignore_errors=True)
+    return found
