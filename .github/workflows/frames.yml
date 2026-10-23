@@ -37,7 +37,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: ffmpeg
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+        run: bash .github/apt_install.sh ffmpeg
       - name: Contact sheet
         run: |
           gh run download "${{ github.event.inputs.run }}" -R "${{ github.repository }}" -n "${{ github.event.inputs.artifact }}" -D in

@@ -48,7 +48,7 @@ jobs:
 
       - name: Python packages, Chromium and Claude Code CLI
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          bash .github/apt_install.sh ffmpeg
           pip install -q -r requirements.txt
           python -m playwright install --with-deps chromium
           for i in 1 2 3; do

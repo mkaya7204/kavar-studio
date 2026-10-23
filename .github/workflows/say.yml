@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg && pip install -q -r requirements.txt && npm install -g @anthropic-ai/claude-code@2.1.301
+      - run: bash .github/apt_install.sh ffmpeg && pip install -q -r requirements.txt && npm install -g @anthropic-ai/claude-code@2.1.301
       - name: Speak
         run: |
           python -c "import os,sys,json; sys.path.insert(0,'src'); import tts_engine as t; s=os.environ['SAY_TEXT']; r=t.synthesize(s, out_path='output/say/say.mp3', voice=t.voice_for('tr')); print(json.dumps(r, ensure_ascii=False)); print('known:', json.dumps(t._lexicon(), ensure_ascii=False)); print(open('output/say/say_words.json',encoding='utf-8').read()[:800])"
