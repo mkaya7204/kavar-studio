@@ -430,5 +430,71 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-10-23",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "price"
+  ],
+  "detail": "Kapak ve kanıt görselinde para birimi ve tutar var: telefon ekranında 'Budget Summary: Total Estimated $1,730.00 / Total Actual $1,820.00 (Variance -$95.00)'. Sayfa politikası bunu yasaklıyor (ders 2026-10-16: görselde küçük de olsa fiyat/para birimi olmaz).; Aynı görsel 10.2 s ve 11.2 s karelerinde"
+ },
+ {
+  "date": "2026-10-23",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "~10.7 sn karesi: site görseli kırpılmış, 'in Google Mee' yazısı yarım ve 'workspaceupdates.googleb…' kaynak etiketi kenardan kesiliyor. Kesik metin kabul edilmez, bu bir şablon/kırpma hatası.; 11.7 sn karesinde 3. kart boş cam kutu (başlık yok, yalnızca alttaki 'BİLDİĞİN DİLLERİ' etiketi var). Giriş"
+ },
+ {
+  "date": "2026-10-23",
+  "stage": "news",
+  "kind": "news",
+  "item": "Uber brings ChatGPT Work to all employees with OpenAI",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-23",
+  "stage": "news",
+  "kind": "news",
+  "item": "Beyond tree cover: mapping the world’s forest types",
+  "rendered": true,
+  "host": "deepmind.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-23",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "off_concept",
+   "price"
+  ],
+  "detail": "▶ [1/5] Fetching latest SaaS/AI tools...    ✖ Loom Record for agents — https://www.producthunt.com/products/loom    ✖ Causo — https://www.producthunt.com/products/causo [carousel_writer] Writing with `claude -p`... ✔ [1/5] Fetching latest SaaS/AI tools done (200.0s) ▶ [2/5] Checking and capturing ht"
  }
 ]

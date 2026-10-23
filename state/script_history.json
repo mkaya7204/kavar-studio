@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Popcraft",
-    "hook": "Video, görsel, ses tek yerde",
-    "pattern": "result",
-    "spoken_hook": "Video, görsel ve ses artık tek yerde üretiliyor.",
-    "cta": "Bunu içerik üreten arkadaşına at."
-  },
-  {
-    "tool": "Gemini",
-    "hook": "Kıyafeti almadan üstünde gör",
-    "pattern": "result",
-    "spoken_hook": "Kıyafeti almadan önce üstünde görebilirsin.",
-    "cta": "Kombin kuran arkadaşına gönder."
-  },
-  {
     "tool": "readywhen",
     "hook": "Verdiğin sözü asistan yakalıyor",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "result",
     "spoken_hook": "Görsel ve videolarının adı kendiliğinden düzene giriyor.",
     "cta": "Dosya yığını olan arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Google Docs artık dinliyor",
+    "pattern": "news",
+    "spoken_hook": "Google Docs mobilde artık konuşarak belge hazırlıyor.",
+    "cta": "Bunu ekibine gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Google Meet 63 dilde çeviriyor",
+    "pattern": "news",
+    "spoken_hook": "Google Meet artık konuşmayı 63 dilde çeviriyor.",
+    "cta": "Yurtdışıyla çalışan ekibine gönder."
   }
 ]

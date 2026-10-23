@@ -441,5 +441,18 @@
     "duration_sec": 22.4,
     "words": 39,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-23_google",
+    "date": "2026-10-23",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "news",
+    "headline": "Google Meet 63 dilde çeviriyor",
+    "spoken_hook": "Google Meet artık konuşmayı 63 dilde çeviriyor.",
+    "cta": "Yurtdışıyla çalışan ekibine gönder.",
+    "duration_sec": 21.4,
+    "words": 37,
+    "status": "rejected: ~10.7 sn karesi: site görseli kırpılmış, 'in Google Mee' yazısı yarım ve 'workspaceupdates.googleb…' kaynak etiketi kenardan kesiliyor. Kesik metin kabul edilmez, bu bir şablon/kırpma hatası.; 11.7 sn karesinde 3. kart boş cam kutu (başlık yok, yalnızca alttaki 'BİLDİĞİN DİLLERİ' etiketi var). Giriş animasyonu olabilir ama sonraki kare gösterilmedi, doğrulanamadı. 2. kart ('Dili Meet kendisi algılıyor') örnek karelerde hiç görünmüyor.; Kanıt görseli yalnızca haber başlığındaki tanıtım resmi (Meet logosu ve iki kişilik görüşme). Çeviri düğmesini, dil algılamayı veya çeviri altyazısını göstermiyor. Vaadi kanıtlamıyor."
   }
 ]
