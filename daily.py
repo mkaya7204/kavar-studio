@@ -39,7 +39,7 @@ from model_trial import testable_first  # noqa: E402
 from news_writer import NewsScript, revise_for_editor  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
 from reel_metrics import update as update_metrics  # noqa: E402
-from reel_qa import first_frame_report, make_cover, pacing_report  # noqa: E402
+from reel_qa import cut_frames, first_frame_report, make_cover, pacing_report  # noqa: E402
 import failures  # noqa: E402
 import reserve  # noqa: E402
 from tts_engine import DRAFT_ENV  # noqa: E402
@@ -207,8 +207,11 @@ REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
 GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no voice, D-30); the rest waits for it
 # D-33 fixed a rejected silent draft twice (src/reel_fixer.py); D-38 (user 2026-10-22) switched it off: its fixes
-# cropped the proof picture (cut text in 12 of 14 fix rounds, 10-19..10-21) and a rejected draft is now simply rejected
-REEL_FIX_ROUNDS = 0
+# cropped the proof picture (cut text in 12 of 14 fix rounds, 10-19..10-21). D-42 (user 10-23: "düzeltilerek uygun
+# hale getirilecek varsa yapmayıp boş denilmesinden bıktım") turns it on again: the crops are gone (whole pictures,
+# windows end in a gap, shots never reach the frame's edge) and every fixed draft is measured for cuts first.
+REEL_FIX_ROUNDS = 2
+GUIDE_EXTRA = 2  # D-42: guide Reel drafts the rest stage may make for a Reel slot that is still empty
 REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
 
 
@@ -273,8 +276,52 @@ def _voice_approved_reel(out: Path) -> bool:
     if not first["ok"] or not REEL_SECONDS[0] <= dur <= REEL_SECONDS[1]:
         log(f"   voiced Reel failed the measured checks: first frame ok={first['ok']}, {dur:.1f}s")
         return False
+    if cut := cut_frames(out / "final_video.mp4", out):
+        log(f"   voiced Reel: a picture runs off the frame at {cut[:6]} s; not queued")
+        return False
     log(f"   voiced with George: {dur:.1f}s")
     return True
+
+
+def _still_if_cut(out: Path) -> list[float]:
+    """D-42: the draft is measured before the editor sees it. A picture running off the frame (the cut text
+    the editor rejected on 10-19, 10-21, 10-22 and 10-23) rebuilds the same Reel without the shot zoom, on
+    the silent voice; returns the seconds still cut ([] = clean)."""
+    cut = cut_frames(out / "final_video.mp4", out)
+    if not cut:
+        return []
+    log(f"   measured: a picture runs off the frame at {cut[:6]} s; rebuilding it without the zoom")
+    capture_path = ROOT / "output" / "temp" / "capture.json"
+    try:
+        capture = json.loads(capture_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return cut
+    if capture.get("still"):
+        return cut
+    capture_path.write_text(json.dumps({**capture, "still": True}, indent=2, ensure_ascii=False), encoding="utf-8")
+    try:
+        proc = subprocess.run([sys.executable, "src/voice_final.py"], cwd=ROOT, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
+                              env={**os.environ, DRAFT_ENV: "1"})
+    except subprocess.TimeoutExpired:
+        log("   still rebuild timed out")
+        return cut
+    if proc.returncode != 0:
+        log("   still rebuild failed: " + (proc.stderr or proc.stdout or "").strip()[-300:])
+        return cut
+    _copy_draft(out, json.loads((ROOT / "output" / "temp" / "script.json").read_text(encoding="utf-8")))
+    cut = cut_frames(out / "final_video.mp4", out)
+    log(f"   after the still rebuild: {f'still cut at {cut[:6]} s' if cut else 'no picture runs off the frame'}")
+    return cut
+
+
+def _review(out: Path, script: dict, tool: dict) -> dict:
+    """The measured cut check first (a cut the rebuild can't remove is a reject the fixer works on), then the
+    editor."""
+    if cut := _still_if_cut(out):
+        return {"verdict": "reject", "problems": [f"görsel kenardan kesik (ölçüldü: {cut[:6]} s); kesik yazı kabul "
+                                                  f"edilmez, görseli bütün gösteren başka bir görsel seç"], "fixes": []}
+    return review_reel(out / "final_video.mp4", script, tool)
 
 
 def _copy_draft(out: Path, script: dict) -> None:
@@ -340,7 +387,7 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     _copy_draft(out, script)
     log(f"   hook [{script.get('hook_pattern', '?')}]: \"{script['hook']}\""
         + (f" (judge: {script['hook_judge']['reason']})" if script.get("hook_judge") else ""))
-    verdict = review_reel(out / "final_video.mp4", script, tool)
+    verdict = _review(out, script, tool)
     log(f"   editor: {verdict['verdict']} {verdict['problems'][:4]}")
     for fix_round in range(1, REEL_FIX_ROUNDS + 1):  # D-33: a rejected draft is fixed before another is tried
         if verdict["verdict"] == "publish" or not _time_for_a_reel():
@@ -349,7 +396,7 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         if fixed is None:
             break
         script = fixed
-        verdict = review_reel(out / "final_video.mp4", script, tool)
+        verdict = _review(out, script, tool)
         log(f"   editor (after fix {fix_round}): {verdict['verdict']} {verdict['problems'][:4]}")
     if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
         update_metrics(out.name, status="approved draft, but the voiced Reel failed")
@@ -481,6 +528,8 @@ def _produce_rest(slots: list[dict], only: str) -> None:
                 break
             reels.append(tool_reel)
             save_queue(_build_queue(slots, list(news), reels, morning))
+    if only != "news":
+        morning = _fill_empty_reel_slots(slots, news, reels, morning)
     queue = _build_queue(slots, list(news), reels, morning)
     save_queue(queue)
     queued = {q.get("folder") for q in queue}
@@ -491,6 +540,39 @@ def _produce_rest(slots: list[dict], only: str) -> None:
     # the later runs (08:00 cron-job.org, produce.yml backups) to try again
     if only in ("", "rest") and any(q["status"] == "ready" for q in queue):
         _mark_done("rest")
+
+
+def _fill_empty_reel_slots(slots: list[dict], news: list[dict], reels: list[dict], morning: dict | None) -> dict | None:
+    """D-42 (user 10-23: "reel boş deyip ... boş denilmesinden bıktım"): a Reel slot the trial and tool Reels
+    left empty is not given up. The guide Reel (its own concept, the next unused company post each time) is
+    made for it: first for an empty 07:30 guide slot (it goes out later that morning), then for the other
+    Reel slots. `reels` grows in place; returns the guide slot's Reel."""
+    cfg = schedule()
+    has_guide_slot = any(s.get("concept") == "guide" for s in slots)
+    if not (cfg.get("guide_reel") or has_guide_slot):
+        return morning
+    open_slots = sum(s["kind"] == "reel" and s.get("concept") != "guide" for s in slots) - len(reels) \
+        - (1 if morning and not has_guide_slot else 0)
+    tries = GUIDE_EXTRA
+    if has_guide_slot and morning is None and tries and _time_for_a_reel():
+        log("reel: the 07:30 guide slot is empty; making a guide Reel for it now")
+        tries -= 1
+        if extra := produce_guide_reel():
+            morning = extra
+            save_queue(_build_queue(slots, list(news), reels, morning))
+    while open_slots > 0 and tries and _time_for_a_reel():
+        log(f"reel: {open_slots} Reel slot(s) still empty; trying a guide Reel for it")
+        tries -= 1
+        extra = produce_guide_reel()
+        if extra is None:
+            continue
+        if morning is None and not has_guide_slot:
+            morning = extra  # D-38 day: the guide Reel is the last choice for a Reel slot
+        else:
+            reels.append(extra)
+        open_slots -= 1
+        save_queue(_build_queue(slots, list(news), reels, morning))
+    return morning
 
 
 def empty_day() -> bool:

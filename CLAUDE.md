@@ -41,11 +41,15 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    currencies, discounts, campaigns, trials, "bedava / ücretsiz" as a selling line.
 2. **Editor gate** (2026-10-13): only content the editor review (src/editor_review.py) marks
    "publish" is queued. FIX_ROUNDS = 2 for carousels, REEL_ATTEMPTS = 3.
-   D-33 (2026-10-18) fixed a rejected silent Reel draft with src/reel_fixer.py. **D-38 (2026-10-22): switched
-   off** (REEL_FIX_ROUNDS = 0): its picture fixes cropped the proof (cut text in 12 of 14 fix rounds). A
-   rejected Reel draft is rejected; the empty slot is filled from the reserve (D-37) or by hand (§1.3).
-   Every picture in a proof box is shown whole, never cropped (`_fit_whole`). Claude failures are logged
-   with their reason, and a day with nothing ready ends the cloud run with exit 1.
+   D-33 (2026-10-18) fixed a rejected silent Reel draft with src/reel_fixer.py; D-38 switched it off for its
+   crops. **D-43 (2026-10-23, the user: "düzeltilerek uygun hale getirilecek varsa yapmayıp boş denilmesinden
+   bıktım ... gerçekten otomatik akıllı hale getir"): on again, REEL_FIX_ROUNDS = 2**, with the crops gone.
+   Every draft is MEASURED before the editor (`reel_qa.cut_frames`): a picture running off the frame rebuilds
+   the Reel without the shot zoom (capture "still"); a cut it can't remove goes to the fixer, never out. Shots
+   never reach the frame's edge (`SHOT_MAX`). An empty Reel slot is retried with guide Reels
+   (`_fill_empty_reel_slots`), then the reserve (D-37). Every picture is shown whole, never cropped
+   (`_fit_whole`). Claude failures are logged with their reason, and a day with nothing ready ends the cloud
+   run with exit 1.
 3. **Rejected content → Claude fixes it by hand, then teaches the editor** (2026-10-14, made
    permanent 2026-10-16). During the morning "yükle", for each rejection:
    - read the verdict and decide whether it was right;

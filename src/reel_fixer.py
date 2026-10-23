@@ -100,7 +100,7 @@ def _ask(message: str, system: str) -> dict | None:
 def candidates(capture: dict) -> list[Path]:
     """Every picture we have of the product, as files: the pipeline's own pictures (guide / trial Reels list
     them in capture["pictures"]), else proof-shaped windows over the site's full page (tool Reels)."""
-    from hyperframes_builder import PROOF_SIZE, _proof_windows
+    from hyperframes_builder import PROOF_SIZE, _proof_windows, _row_activity, _snap_window
 
     WORK.mkdir(parents=True, exist_ok=True)
     out = []
@@ -132,9 +132,12 @@ def candidates(capture: dict) -> list[Path]:
         tops = sorted(set(picked) | set(range(0, max(1, img.height - win_h + 1), max(1, win_h // 2))))
         room = MAX_CANDIDATES - len(out)
         step = max(1, len(tops) // room + (len(tops) % room > 0))
-        for top in tops[::step][:room]:
+        rows = _row_activity(img)
+        for t in tops[::step][:room]:
             dst = WORK / f"cand_{len(out)}.png"
-            img.crop((0, top, img.width, min(img.height, top + win_h))).save(dst)
+            # D-42: the window ends in a gap between lines (fixed steps cut text, D-38: 12 of 14 fix rounds)
+            top, bottom = _snap_window(rows, img.height, t, win_h)
+            img.crop((0, top, img.width, bottom)).save(dst)
             out.append(dst)
     return out
 

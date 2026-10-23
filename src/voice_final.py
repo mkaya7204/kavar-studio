@@ -6,6 +6,9 @@ the editor reviews a Reel built on a silent voice with estimated timings and no 
 attempts. When the editor says "publish", this script re-renders the same script and pictures with
 George once and rewrites output/final (video, post.json, reel_qa.json).
 
+With KAVAR_DRAFT_VOICE set it rebuilds the draft instead (D-42: daily.py rebuilds a draft whose pictures
+were measured cut, with capture["still"], on the silent voice).
+
     python src/voice_final.py        # heavy (render): cloud only
 """
 
@@ -28,13 +31,14 @@ def save_capture(capture: dict) -> None:
 def main() -> int:
     from distribution import build_post
     from hyperframes_builder import FINAL_PATH, build_video_hyperframes
-    from tts_engine import TTSError, synthesize, voice_for
+    from tts_engine import TTSError, reel_voice, voice_for
 
     script = json.loads((TEMP_DIR / "script.json").read_text(encoding="utf-8"))
     capture = json.loads(CAPTURE_PATH.read_text(encoding="utf-8"))
     language = json.loads((ROOT / "config.json").read_text(encoding="utf-8")).get("language", "en")
     try:
-        voice = synthesize(script["voiceover"], voice=voice_for(language))
+        # George; with KAVAR_DRAFT_VOICE set (D-42: a draft rebuilt still after a measured cut) the silent draft
+        voice = reel_voice(script["voiceover"], voice=voice_for(language))
     except TTSError as exc:
         print(f"✖ no voice: {exc}"[:600])
         return 2

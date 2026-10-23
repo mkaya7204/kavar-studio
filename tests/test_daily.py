@@ -231,6 +231,23 @@ def test_morning_stage_makes_only_the_guide_reel_and_next_runs_the_rest(monkeypa
     assert calls == ["news"]
 
 
+def test_an_empty_reel_slot_gets_a_guide_reel(monkeypatch, sandbox):
+    """D-43 (10-23: the guide Reel was rejected twice, one tool was tried, all three Reel slots stayed empty):
+    an empty guide slot and then the other empty Reel slots get guide Reels before the day gives up."""
+    monkeypatch.setattr(daily, "schedule", lambda: {"guide_reel": True, "slots": GUIDE_SLOTS})
+    guides = iter([None, {"kind": "reel", "folder": "g2", "title": "Meet", "concept": "guide"},
+                   {"kind": "reel", "folder": "g3", "title": "Docs", "concept": "guide"}])
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: next(guides))
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: list(CAROUSELS))
+    monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda: None)
+    daily.produce()  # morning: None; rest: the guide slot gets "Meet", 20:30 gets "Docs"
+    q = {x["time"]: (x.get("title"), x["status"]) for x in _queue(sandbox)}
+    assert q["07:30"] == ("Meet", "ready")
+    assert q["20:30"] == ("Docs", "ready")
+    assert q["11:45"] == (None, "empty")  # GUIDE_EXTRA tries spent; nothing invented
+
+
 def test_no_guide_reel_still_lets_the_rest_start(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "schedule", lambda: {"slots": GUIDE_SLOTS})
     monkeypatch.setattr(daily, "produce_guide_reel", lambda: None)

@@ -330,13 +330,21 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
 
 
 SHOT_NAMES = ("shot1.png", "shot2.png")  # written next to proof.png; replace the raw site captures
+SHOT_ZOOM = 1.12  # templates/hyperframes_news/index.html: the site shots zoom up to 1.12
+SHOT_MARGIN = 48  # px left free on each side of the frame at full zoom
+# D-42: a 960 px shot at 1.12 = 1075 of 1080 px, so its text touched the frame's edges and read as cut
+# ("in Google Mee", ") across", editor 10-23). Every Reel kind's shots pass here, so the cap holds for all.
+SHOT_MAX = (int((1080 - 2 * SHOT_MARGIN) / SHOT_ZOOM), 1300)
 
 
 def _shot_frame(crop: Image.Image, out: Path) -> None:
     """A 1080x1920 frame for a site shot: the approved crop on a blurred, darkened copy of itself.
-    Raw viewport captures showed nav bars, logos, sign-up buttons and 'no credit card' lines."""
+    Raw viewport captures showed nav bars, logos, sign-up buttons and 'no credit card' lines.
+    The picture is whole and small enough that the zoom never pushes it to the frame's edge (SHOT_MAX)."""
     from PIL import ImageDraw, ImageFilter, ImageOps
 
+    if crop.width > SHOT_MAX[0] or crop.height > SHOT_MAX[1]:
+        crop = ImageOps.contain(crop, SHOT_MAX, Image.LANCZOS)
     bg = ImageOps.fit(crop, (1080, 1920), Image.LANCZOS).filter(ImageFilter.GaussianBlur(40))
     bg = Image.blend(bg, Image.new("RGB", bg.size, "black"), 0.55)
     mask = Image.new("L", crop.size, 0)
@@ -528,6 +536,7 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
         "captions": json.dumps(captions),
         "total": total,
         "has_proof": has_proof,
+        "still": bool(capture.get("still")),  # D-42: rebuilt without the shot zoom after a cut was measured
         "cta_text": (seg or {}).get("cta") or labels["follow_label"],
     }
     for i, point in enumerate(points[:3], 1):

@@ -36,6 +36,7 @@ def reel_sandbox(monkeypatch, tmp_path):
     monkeypatch.setattr(daily, "make_cover", lambda v, o: {})
     monkeypatch.setattr(daily, "first_frame_report", lambda v, o: {"ok": True})
     monkeypatch.setattr(daily, "pacing_report", lambda v: {"duration_sec": 22.0})
+    monkeypatch.setattr(daily, "cut_frames", lambda v, o=None: [])
     return daily, calls
 
 
@@ -58,14 +59,83 @@ def test_a_rejected_draft_spends_no_voice(monkeypatch, reel_sandbox):
     assert not any("src/voice_final.py" in cmd for cmd, _ in calls)
 
 
-def test_a_rejected_draft_is_not_sent_to_the_fixer(monkeypatch, reel_sandbox):
-    """D-38 (user 2026-10-22) switched D-33 off: the fixer cropped the proof picture (cut text in 12 of 14 fix
-    rounds, 10-19..10-21). A rejected draft is rejected; no fixer run, no voice."""
+def test_a_rejected_draft_goes_to_the_fixer_on_the_silent_voice(monkeypatch, reel_sandbox):
+    """D-42 (user 10-23: "düzeltilerek uygun hale getirilecek varsa yapmayıp boş denilmesinden bıktım") turns the
+    D-33 fixer on again (D-38 had switched it off for its crops, which are gone). Two rounds, no voice spent."""
     daily, calls = reel_sandbox
-    assert daily.REEL_FIX_ROUNDS == 0
+    assert daily.REEL_FIX_ROUNDS == 2
     monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["kanıt yok"]})
     assert daily._reel_attempt() == (None, True)
-    assert not any("src/reel_fixer.py" in cmd or "src/voice_final.py" in cmd for cmd, _ in calls)
+    fixes = [draft for cmd, draft in calls if "src/reel_fixer.py" in cmd]
+    assert fixes == ["1", "1"]
+    assert not any("src/voice_final.py" in cmd for cmd, _ in calls)
+
+
+def test_a_fixed_draft_the_editor_approves_is_voiced(monkeypatch, reel_sandbox):
+    daily, calls = reel_sandbox
+    verdicts = iter([{"verdict": "reject", "problems": ["kanıt yok"]}, {"verdict": "publish", "problems": []}])
+    monkeypatch.setattr(daily, "review_reel", lambda *a: next(verdicts))
+    item, rendered = daily._reel_attempt()
+    assert item and rendered
+    assert [c for c, _ in calls if "src/reel_fixer.py" in c] and calls[-1][1] is None  # George once, at the end
+
+
+def test_a_measured_cut_is_rebuilt_still_before_the_editor(monkeypatch, reel_sandbox, tmp_path):
+    """D-42: the editor rejected cut pictures on 10-19, 10-21, 10-22 and 10-23. The draft is measured first; a cut
+    rebuilds the same Reel without the shot zoom (capture "still") on the silent voice, then the editor sees it."""
+    daily, calls = reel_sandbox
+    (tmp_path / "output" / "temp" / "capture.json").write_text("{}", encoding="utf-8")
+    cuts = iter([[10.5, 11.0], []])
+    monkeypatch.setattr(daily, "cut_frames", lambda v, o=None: next(cuts, []))
+    seen = []
+    monkeypatch.setattr(daily, "review_reel", lambda *a: seen.append(1) or {"verdict": "publish", "problems": []})
+    item, _ = daily._reel_attempt()
+    assert item and seen == [1]
+    rebuild = calls[1]
+    assert "src/voice_final.py" in rebuild[0] and rebuild[1] == "1"  # the still rebuild: silent voice
+    assert json.loads((tmp_path / "output" / "temp" / "capture.json").read_text(encoding="utf-8"))["still"] is True
+
+
+def test_a_cut_the_rebuild_cannot_remove_never_reaches_the_editor(monkeypatch, reel_sandbox, tmp_path):
+    daily, calls = reel_sandbox
+    (tmp_path / "output" / "temp" / "capture.json").write_text('{"still": true}', encoding="utf-8")
+    monkeypatch.setattr(daily, "cut_frames", lambda v, o=None: [10.5, 11.0])
+    monkeypatch.setattr(daily, "review_reel", lambda *a: pytest.fail("the editor saw a cut Reel"))
+    assert daily._reel_attempt() == (None, True)
+    assert [c for c, _ in calls if "src/reel_fixer.py" in c]  # the fixer chooses whole pictures instead
+
+
+def test_cut_pictures_are_measured_on_the_real_rejected_frames():
+    """D-42: the frames the editor called cut ("in Google Mee" 10-22 11.6 s, 10-23 10.7 s) are found; a clean frame
+    and a card sliding in (one frame) are not."""
+    from reel_qa import CUT_DETAIL, cut_in, edge_detail
+    from PIL import Image
+
+    fx = ROOT / "tests" / "fixtures"
+    for name, cut in (("reel_cut_frame_1022.jpg", True), ("reel_cut_frame_1023.jpg", True),
+                      ("reel_clean_frame_1022.jpg", False), ("reel_card_sliding_1023.jpg", False)):
+        with Image.open(fx / name) as img:
+            assert (max(edge_detail(img)) >= CUT_DETAIL) is cut, name
+    clean, cut, card = fx / "reel_clean_frame_1022.jpg", fx / "reel_cut_frame_1022.jpg", fx / "reel_card_sliding_1023.jpg"
+    assert cut_in([clean, cut, cut, clean]) == [1.0]  # two in a row
+    assert cut_in([clean, cut, clean, card, clean]) == []  # a single frame is a passing card
+
+
+def test_shots_never_reach_the_frame_edge_at_full_zoom(tmp_path):
+    """D-42: a 960 px shot at the 1.12 zoom was 1075 of 1080 px; its text touched the edges and read as cut."""
+    from PIL import Image
+
+    from hyperframes_builder import SHOT_MARGIN, SHOT_ZOOM, _shot_frame
+
+    pic = Image.new("RGB", (1600, 900), (255, 0, 0))
+    _shot_frame(pic, tmp_path / "s.png")
+    with Image.open(tmp_path / "s.png") as frame:
+        row = [frame.getpixel((x, 1920 // 2 - 120)) for x in range(1080)]
+    red = [x for x, p in enumerate(row) if p[0] > 230 and p[1] < 40]
+    width = red[-1] - red[0] + 1
+    assert width * SHOT_ZOOM <= 1080 - 2 * SHOT_MARGIN + 2
+    html = (ROOT / "templates" / "hyperframes_news" / "index.html").read_text(encoding="utf-8")
+    assert "scale: 1.12, y: 120" in html and '{"id":"still"' in html and "if (v.still)" in html
 
 
 def test_the_fixer_never_crops_a_picture(tmp_path, monkeypatch):
