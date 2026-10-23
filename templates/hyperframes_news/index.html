@@ -765,6 +765,21 @@
       const ctaWords = words($("outro-cta"), cta, 2);
       $("outro-domain").textContent = v.tool_name + " · " + v.domain;
 
+      // D-43: "workspaceupdates.googleblog.com" ran past the shot tag and read as cut text (editor 10-23, twice).
+      // Every domain line shrinks until it fits its place, measured again once the fonts are in.
+      const fitDomains = () => document.querySelectorAll("[data-domain], #outro-domain").forEach((el) => {
+        el.style.whiteSpace = "nowrap";
+        // room left in the parent; offsetLeft is only comparable when the parent is the offset parent
+        const room = () => (el.offsetParent === el.parentElement ? el.parentElement.clientWidth - el.offsetLeft : Infinity);
+        let size = parseFloat(getComputedStyle(el).fontSize);
+        while (size > 18 && (el.scrollWidth > el.clientWidth + 1 || el.offsetWidth > room() + 1)) {
+          size -= 2;
+          el.style.fontSize = size + "px";
+        }
+      });
+      fitDomains();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitDomains);
+
       // Full-page pan distance: fullpage.png is 1080px wide, fullpage_height tall.
       const panY = -Math.max(0, Math.min(Number(v.fullpage_height) || 1920, 1920 * 3) - 1920);
 

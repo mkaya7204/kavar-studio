@@ -138,6 +138,14 @@ def test_shots_never_reach_the_frame_edge_at_full_zoom(tmp_path):
     assert "scale: 1.12, y: 120" in html and '{"id":"still"' in html and "if (v.still)" in html
 
 
+def test_a_long_domain_shrinks_to_fit_its_tag():
+    """D-43: "workspaceupdates.googleb…" was cut at the shot tag's right edge (editor 10-23, both guide drafts)."""
+    html = (ROOT / "templates" / "hyperframes_news" / "index.html").read_text(encoding="utf-8")
+    fit = html[html.index("const fitDomains"):html.index("// Full-page pan distance")]
+    assert '"[data-domain], #outro-domain"' in fit and "nowrap" in fit and "document.fonts.ready.then(fitDomains)" in fit
+    assert html.index("const fitDomains") > html.index('$("outro-domain").textContent = v.tool_name')  # after the text
+
+
 def test_the_fixer_never_crops_a_picture(tmp_path, monkeypatch):
     """D-36/D-38: ImageOps.fit cut 'todo.is' to 'odo.is' (10-21). A wide picture keeps its edges, whole."""
     import reel_fixer
