@@ -23,8 +23,9 @@ jobs:
         env:
           K1: ${{ secrets.ELEVENLABS_API_KEY }}
           K2: ${{ secrets.ELEVENLABS_API_KEY_2 }}
+          K3: ${{ secrets.ELEVENLABS_API_KEY_3 }}
         run: |
-          for n in 1 2; do
+          for n in 1 2 3; do
             eval K=\$K$n
             [ -n "$K" ] || { echo "key $n: not set"; continue; }
             s=$(curl -s -H "xi-api-key: $K" https://api.elevenlabs.io/v1/user/subscription)

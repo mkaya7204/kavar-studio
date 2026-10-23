@@ -25,6 +25,7 @@ jobs:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
       ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}  # second account, same George (D-23)
+      ELEVENLABS_API_KEY_3: ${{ secrets.ELEVENLABS_API_KEY_3 }}  # third account, same George (D-46)
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -71,6 +72,8 @@ jobs:
 
       - name: Biz denedik Reel + editor review
         if: github.event.inputs.reel == 'yes'
+        env:
+          KAVAR_DRAFT_VOICE: "1"  # D-46 (user 10-23): a test never spends George; only a Reel going out is voiced
         run: |
           D=$(ls -d output/carousel/*_haber-* | head -1)
           python src/trial_reel.py "$D" 2>&1 | tee output/reel-test.log

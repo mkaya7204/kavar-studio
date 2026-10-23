@@ -79,6 +79,11 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    George. If both fail, no Reel is made; tell the user. `probe.yml` shows both accounts' state.
    Don't propose another voice. Voice is spent only on the Reel the editor approved (D-30, 2026-10-18):
    attempts use a silent draft voice, then `src/voice_final.py` voices the approved one once.
+   **D-46 (2026-10-23, the user, repeated "hata olmaması için"): George ONLY for a Reel ready to go out.**
+   Tests, searches, fixes, agent renders, dry runs (`KAVAR_DRY`), news-test, rerender (default draft=yes)
+   never spend it. An approved Reel of a test run stays silent with its parts in `<reel>/_voice`;
+   `voice.yml` (run_id, reel) voices it once when it is chosen to be published. Keys: ELEVENLABS_API_KEY,
+   _2, _3 (all George).
    **D-34 (2026-10-18):** George says every product / company name the way Turkish tech people say it, also
    new names: `tts_engine.spoken_text` (hand-checked `rules/pronunciation.json` first, then names Claude
    learns before voicing, kept in `state/pronunciations.json`). Captions and screens keep the real spelling.

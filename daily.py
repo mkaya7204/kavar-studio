@@ -285,6 +285,35 @@ def _voice_approved_reel(out: Path) -> bool:
     return True
 
 
+DRY_ENV = "KAVAR_DRY"  # produce.yml dry=yes (D-46)
+VOICE_KIT = "_voice"  # inside a Reel's folder: what voice.yml needs to voice it later
+
+
+def _keep_for_voice(out: Path) -> None:
+    """D-46 (the user, 10-23: "deneme veya işte reel ararken yada reel de düzenleme ekleme yapılırken seslendirme
+    kullanılmayacak"): an approved Reel of a test run stays silent. Its words, facts and the exact pictures are
+    kept in <reel>/_voice, so voice.yml can voice the same Reel once, if it is chosen to go out."""
+    temp = ROOT / "output" / "temp"
+    kit = out / VOICE_KIT
+    shutil.rmtree(kit, ignore_errors=True)
+    kit.mkdir(parents=True)
+    for name in ("script.json", "tool.json"):
+        if (temp / name).exists():
+            shutil.copy(temp / name, kit / name)
+    try:
+        capture = json.loads((temp / "capture.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        capture = {}
+    for key in ("proof_path", "screenshot_path", "fullpage_path", "logo_path"):
+        src = Path(capture[key]) if capture.get(key) else None
+        if src and src.exists():
+            dst = kit / f"{key}{src.suffix}"
+            shutil.copy(src, dst)
+            capture[key] = _rel(dst)
+    capture.pop("pictures", None)  # the fixer's choices are made; the voiced Reel shows exactly these
+    (kit / "capture.json").write_text(json.dumps(capture, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+
+
 def _still_if_cut(out: Path) -> list[float]:
     """D-42: the draft is measured before the editor sees it. A picture running off the frame (the cut text
     the editor rejected on 10-19, 10-21, 10-22 and 10-23) rebuilds the same Reel without the shot zoom, on
@@ -401,6 +430,11 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         script = fixed
         verdict = _review(out, script, tool)
         log(f"   editor (after fix {fix_round}): {verdict['verdict']} {verdict['problems'][:4]}")
+    if verdict["verdict"] == "publish" and os.getenv(DRY_ENV):
+        _keep_for_voice(out)
+        log("   approved in a test run: kept silent for voice.yml (George only for a Reel going out, D-46)")
+        failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
+        return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True}, True
     if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
         update_metrics(out.name, status="approved draft, but the voiced Reel failed")
         failures.record("reel", kind, script["tool_name"], "no voice / voiced Reel failed", rendered=False)
