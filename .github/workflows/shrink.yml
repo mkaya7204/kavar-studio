@@ -19,7 +19,7 @@ on:
 
 permissions:
   actions: read
-  contents: read
+  contents: write  # D-49: deliver.sh
 
 jobs:
   shrink:
@@ -50,8 +50,15 @@ jobs:
           ffmpeg -y -loglevel error -i "$IN" -c:v libx264 -preset slow -b:v ${V}k -pass 2 -pix_fmt yuv420p \
             -c:a aac -b:a 128k -movflags +faststart small.mp4
           ls -la "$IN" small.mp4
+      # D-49: the artifact storage quota lost a whole day on 10-24; a failed upload goes to a release (out-<run id>)
       - uses: actions/upload-artifact@v7
+        id: up
+        continue-on-error: true
         with:
           name: shrink
+          if-no-files-found: error
           path: small.mp4
           retention-days: 3
+      - name: By release (the artifact upload failed)
+        if: steps.up.outcome == 'failure'
+        run: bash .github/deliver.sh small.mp4

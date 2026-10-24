@@ -28,6 +28,9 @@ jobs:
       ELEVENLABS_API_KEY_3: ${{ secrets.ELEVENLABS_API_KEY_3 }}  # third account, same George (D-46)
     steps:
       - uses: actions/checkout@v7
+      # D-49: the PC hook (.claude/settings.json) calls a Windows path; here it fails and blocks every Bash call
+      - name: Cloud runner (drop the PC-only hook)
+        run: rm -f .claude/settings.json
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"

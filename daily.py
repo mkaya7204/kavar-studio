@@ -236,7 +236,11 @@ def produce_reel() -> dict | None:
             log("reel: no time left in the job for another render")
             return None
         log(f"reel: running the video pipeline (attempt {attempt}/{REEL_ATTEMPTS})")
-        item, rendered = _reel_attempt()
+        try:
+            item, rendered = _reel_attempt()
+        except Exception as exc:  # noqa: BLE001  D-49: one broken attempt never ends the day's tool Reels
+            log(f"   reel attempt failed: {type(exc).__name__}: {str(exc)[:300]}")
+            continue
         if item or not rendered:  # queued, or the pipeline found nothing to film
             return item
     return None
@@ -284,10 +288,45 @@ def _voice_approved_reel(out: Path) -> bool:
         log(f"   voiced Reel failed the measured checks: first frame ok={first['ok']}, {dur:.1f}s")
         return False
     if cut := cut_frames(out / "final_video.mp4", out):
-        log(f"   voiced Reel: a picture runs off the frame at {cut[:6]} s; not queued")
-        return False
+        # D-49 (10-24 gerty: approved, voiced, then dropped for a cut at 11.25 s): rebuilt still on the same
+        # George audio (voice_final keeps it), never voiced again
+        log(f"   voiced Reel: a picture runs off the frame at {cut[:6]} s; rebuilding it still on the same voice")
+        if cut := _voiced_still_rebuild(out):
+            log(f"   voiced Reel still cut at {cut[:6]} s after the still rebuild; not queued")
+            return False
     log(f"   voiced with George: {dur:.1f}s")
     return True
+
+
+def _voiced_still_rebuild(out: Path) -> list[float]:
+    """The approved Reel again without the shot zoom, on the George audio already made (REUSE_VOICE_ENV);
+    returns the seconds still cut ([] = clean, files in `out` replaced)."""
+    from voice_final import REUSE_VOICE_ENV
+
+    capture_path = ROOT / "output" / "temp" / "capture.json"
+    try:
+        capture = json.loads(capture_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return [-1.0]
+    if capture.get("still"):
+        return cut_frames(out / "final_video.mp4", out)
+    capture_path.write_text(json.dumps({**capture, "still": True}, indent=2, ensure_ascii=False), encoding="utf-8")
+    env = {k: v for k, v in os.environ.items() if k != DRAFT_ENV}
+    try:
+        proc = subprocess.run([sys.executable, "src/voice_final.py"], cwd=ROOT, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
+                              env={**env, REUSE_VOICE_ENV: "1"})
+    except subprocess.TimeoutExpired:
+        return [-1.0]
+    if proc.returncode != 0:
+        log("   voiced still rebuild failed: " + (proc.stderr or proc.stdout or "").strip()[-300:])
+        return [-1.0]
+    final = ROOT / "output" / "final"
+    for name in ("final_video.mp4", "post.json", "reel_qa.json"):
+        if (final / name).exists():
+            shutil.copy(final / name, out / name)
+    make_cover(out / "final_video.mp4", out)
+    return cut_frames(out / "final_video.mp4", out)
 
 
 DRY_ENV = "KAVAR_DRY"  # produce.yml dry=yes (D-46)
@@ -446,6 +485,9 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
         return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True}, True
     if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
+        # D-49: logged before its status is set (10-24 gerty: update_metrics raised KeyError on an unlogged
+        # Reel, which ended every tool Reel of the day)
+        log_reel(out.name, script, 0.0, kind=kind)
         update_metrics(out.name, status="approved draft, but the voiced Reel failed")
         failures.record("reel", kind, script["tool_name"], "no voice / voiced Reel failed", rendered=False)
         return None, False  # no voice left (or a broken render): another attempt would fail the same way
@@ -820,6 +862,11 @@ def fetch() -> None:
     log("no cloud run with today's queue yet")
 
 
+# D-49: where .github/deliver.sh puts an archive whose artifact upload failed (storage quota, 10-24)
+RELEASE_TAG = "out-{run_id}"
+RELEASE_FILES = {"kavar-output": "kavar-*.tgz", "kavar-morning": "morning-*.tgz"}
+
+
 def _download_archive(run_id: int, name: str, tmp: Path) -> tuple[Path | None, str]:
     """The .tgz of one artifact of a run. `gh run download` first; for a run still going (D-40: the
     morning artifact) the artifacts API, which lists an artifact as soon as its upload step is done."""
@@ -834,6 +881,11 @@ def _download_archive(run_id: int, name: str, tmp: Path) -> tuple[Path | None, s
                           f'.artifacts[] | select(.name == "{name}" and (.expired | not)) | .id'], cwd=ROOT,
                          capture_output=True, text=True, encoding="utf-8").stdout.split()
     if not ids:
+        # D-49: an archive whose artifact upload failed is a release of the run (.github/deliver.sh)
+        subprocess.run([_gh(), "release", "download", RELEASE_TAG.format(run_id=run_id), "-p",
+                        RELEASE_FILES[name], "--dir", str(tmp)], cwd=ROOT, capture_output=True)
+        if archives := list(tmp.rglob("*.tgz")):
+            return archives[0], ""
         return None, proc.stderr.strip()
     data = subprocess.run([_gh(), "api", f"repos/{{owner}}/{{repo}}/actions/artifacts/{ids[0]}/zip"], cwd=ROOT,
                           capture_output=True).stdout
