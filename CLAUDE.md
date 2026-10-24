@@ -28,6 +28,12 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
   example that failed. No new feature, slot or concept that doesn't remove a recorded failure cause. Work from
   the records (logs, state/failures.json, the rejected files), never from a guess.
 
+- **"Fixed" only after a run shows it (D-49, user 2026-10-24: "şunu yaparım bunu yaparım diyorsun hepsi yalan").**
+  On 10-23 two fixes (artifact quota, agent render) were reported done from code alone; the next morning both
+  failed and the day was lost. A fix is "done" only when a cloud run's log or files show it working; until then
+  say "kodda, henüz koşuda görülmedi". Every production run must deliver its archive (artifact, else release
+  `out-<run id>`); a red "Delivery check" means the day did not reach the PC.
+
 - **Log every decision in `DECISIONS.md`** (user, 2026-10-16): date, the user's words, what was
   built, where it lives, what test guards it. Same commit as the change. Never delete an entry.
 
