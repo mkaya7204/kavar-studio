@@ -110,6 +110,13 @@ def test_deliver_names_the_release_the_way_fetch_reads_it():
     assert "--clobber" in script
 
 
+def test_shrink_reads_a_release_when_the_run_has_no_artifact():
+    """10-24: the hand-fixed Movo Reel (rerender 40080428525) was delivered as a release; shrink read artifacts only."""
+    steps = _steps("shrink.yml")
+    get = steps[_index(steps, "Video from the run")]["run"]
+    assert 'gh release download "out-$R"' in get and get.index("release download") < get.index("gh run download")
+
+
 def test_release_tags_do_not_start_the_checks():
     flow = yaml.safe_load((WORKFLOWS / "checks.yml").read_text(encoding="utf-8"))
     assert flow[True]["push"]["branches"] == ["**"]  # yaml reads `on:` as True

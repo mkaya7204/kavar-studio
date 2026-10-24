@@ -33,7 +33,12 @@ jobs:
       - name: Video from the run
         run: |
           A="${{ github.event.inputs.artifact }}"
-          if [ "$A" = "kavar-output" ]; then
+          R="${{ github.event.inputs.run }}"
+          # D-49: a run whose artifact upload failed delivered a release out-<run id> (deliver.sh) instead
+          if ! gh api "repos/${{ github.repository }}/actions/runs/$R/artifacts" --jq '.artifacts[].name' | grep -qx "$A"; then
+            gh release download "out-$R" -R "${{ github.repository }}" -p "*.tgz" -D /tmp/rel
+            tar -xzf /tmp/rel/*.tgz "${{ github.event.inputs.video }}"
+          elif [ "$A" = "kavar-output" ]; then
             gh run download "${{ github.event.inputs.run }}" -R "${{ github.repository }}" -n kavar-output -D /tmp/kavar
             tar -xzf /tmp/kavar/kavar-*.tgz "${{ github.event.inputs.video }}"
           else
