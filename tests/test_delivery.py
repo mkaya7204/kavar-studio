@@ -29,7 +29,8 @@ def test_every_workflow_with_claude_drops_the_pc_hook_before_running_anything():
         steps = _steps(name)
         drop = _index(steps, "rm -f .claude/settings.json")
         # the first step that runs project code (the guard's `python3 -c` reads a json file only)
-        first_python = min(i for i, s in enumerate(steps) if re.search(r"python3? (-m pytest|\S+\.py)", s.get("run", "")))
+        first_python = min((i for i, s in enumerate(steps) if re.search(r"\bpython3?\b(?! -c)", s.get("run", ""))),
+                           default=len(steps))
         assert drop < first_python, name
 
 
@@ -61,6 +62,8 @@ def test_a_failed_upload_goes_to_a_release_and_only_a_delivered_day_counts_as_pr
     assert "steps.up_day.outcome == 'success'" in save["if"] and "steps.rel_day.outcome == 'success'" in save["if"]
     # the runner dropped the PC hook: put back before the rebase, or "You have unstaged changes" loses the state
     assert save["run"].index("git checkout -- .claude/settings.json") < save["run"].index("git pull --rebase")
+    check = steps[_index(steps, "Delivery check")]
+    assert "exit 1" in check["run"]
 
 
 def test_publishing_workflows_deliver_by_release_when_the_artifact_upload_fails():
@@ -72,8 +75,6 @@ def test_publishing_workflows_deliver_by_release_when_the_artifact_upload_fails(
             assert up.get("continue-on-error") is True, name
             assert any(f"steps.{up['id']}.outcome == 'failure'" in str(s.get("if", "")) and "deliver.sh" in s["run"]
                        for s in steps), name
-    check = steps[_index(steps, "Delivery check")]
-    assert "exit 1" in check["run"]
 
 
 def test_fetch_reads_the_release_when_the_artifact_is_missing(monkeypatch, tmp_path):
