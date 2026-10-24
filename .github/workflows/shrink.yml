@@ -28,6 +28,8 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
+      # .github/apt_install.sh (10-23) and deliver.sh (D-49) live in the repo; without it shrink failed with 127
+      - uses: actions/checkout@v7
       - name: ffmpeg
         run: bash .github/apt_install.sh ffmpeg
       - name: Video from the run

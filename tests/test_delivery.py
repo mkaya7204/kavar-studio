@@ -117,6 +117,15 @@ def test_shrink_reads_a_release_when_the_run_has_no_artifact():
     assert 'gh release download "out-$R"' in get and get.index("release download") < get.index("gh run download")
 
 
+def test_every_workflow_checks_out_the_repo_before_using_its_scripts():
+    """10-24: shrink.yml ran `bash .github/apt_install.sh` with no checkout (exit 127) since 10-23."""
+    for path in WORKFLOWS.glob("*.yml"):
+        steps = _steps(path.name)
+        uses_repo = [i for i, s in enumerate(steps) if ".github/" in s.get("run", "") or re.search(r"\b(src/|daily\.py|main\.py)", s.get("run", ""))]
+        if uses_repo:
+            assert _index(steps, "actions/checkout") < uses_repo[0], path.name
+
+
 def test_release_tags_do_not_start_the_checks():
     flow = yaml.safe_load((WORKFLOWS / "checks.yml").read_text(encoding="utf-8"))
     assert flow[True]["push"]["branches"] == ["**"]  # yaml reads `on:` as True

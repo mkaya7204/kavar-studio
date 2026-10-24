@@ -36,6 +36,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
+      - uses: actions/checkout@v7  # .github/apt_install.sh lives in the repo (10-24: missing since 10-23, exit 127)
       - name: ffmpeg
         run: bash .github/apt_install.sh ffmpeg
       - name: Contact sheet
