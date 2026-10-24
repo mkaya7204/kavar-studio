@@ -583,5 +583,116 @@
    "cut_text"
   ],
   "detail": "görsel kenardan kesik (ölçüldü: [1.25, 8.25, 8.5, 8.75, 9.0, 9.25] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "See what 5 builders are making with Gemini 4 Argon",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "Flint-interactive: A language for creating interactive data visualizations",
+  "rendered": true,
+  "host": "microsoft.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "MOVO AI",
+  "rendered": true,
+  "host": "movoai.pro",
+  "outcome": "failed",
+  "categories": [
+   "cut_text"
+  ],
+  "detail": "görsel kenardan kesik (ölçüldü: [7.25, 7.5, 7.75, 8.0, 8.25, 8.5] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "ShogunAI",
+  "rendered": true,
+  "host": "shogunai.si",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "DotMD",
+  "rendered": false,
+  "host": "getdotmd.com",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty"
+  ],
+  "detail": "editor gave no verdict (success, is_error=True: You've hit your session limit · resets 11:10am (Europe/Istanbul))"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "  ✖ Product Hunt Visual Launch Editor — https://www.producthunt.com/products/producthunt    ✖ FLUX 3 Max — https://www.producthunt.com/products/fal-ai    ✖ Truffle — https://www.producthunt.com/products/truffle-music-tag-editor    ✖ Inyon — https://www.producthunt.com/products/inyon    ✖ Termi Proto"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "o carousel (success, is_error=True, exit 1: You've hit your session limit · resets 11:10am (Europe/Istanbul)). [article] 'networkidle' not reached; continuing [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit yo"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "10am (Europe/Istanbul)). [article] workspaceupdates.googleblog.com answered 429; reading it through the reader [article] 'networkidle' not reached; continuing [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit yo"
  }
 ]

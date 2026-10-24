@@ -456,19 +456,6 @@
     "status": "rejected: ~10.7 sn karesi: site görseli kırpılmış, 'in Google Mee' yazısı yarım ve 'workspaceupdates.googleb…' kaynak etiketi kenardan kesiliyor. Kesik metin kabul edilmez, bu bir şablon/kırpma hatası.; 11.7 sn karesinde 3. kart boş cam kutu (başlık yok, yalnızca alttaki 'BİLDİĞİN DİLLERİ' etiketi var). Giriş animasyonu olabilir ama sonraki kare gösterilmedi, doğrulanamadı. 2. kart ('Dili Meet kendisi algılıyor') örnek karelerde hiç görünmüyor.; Kanıt görseli yalnızca haber başlığındaki tanıtım resmi (Meet logosu ve iki kişilik görüşme). Çeviri düğmesini, dil algılamayı veya çeviri altyazısını göstermiyor. Vaadi kanıtlamıyor."
   },
   {
-    "id": "2026-10-24_google",
-    "date": "2026-10-24",
-    "kind": "guide",
-    "tool": "Google",
-    "hook_pattern": "result",
-    "headline": "Uygulamanı tek tıkla siteye at",
-    "spoken_hook": "Yapay zekâyla yaptığın uygulamayı tek tıkla siteye aktarabilirsin.",
-    "cta": "Bunu uygulama yapan arkadaşına gönder.",
-    "duration_sec": 21.7,
-    "words": 38,
-    "status": "rejected: görsel kenardan kesik (ölçüldü: [8.0, 8.25, 8.5, 8.75, 9.0, 12.0] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
-  },
-  {
     "id": "2026-10-24_google-workspace",
     "date": "2026-10-24",
     "kind": "guide",
@@ -480,5 +467,57 @@
     "duration_sec": 23.3,
     "words": 38,
     "status": "rejected: görsel kenardan kesik (ölçüldü: [1.25, 8.25, 8.5, 8.75, 9.0, 9.25] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
+  },
+  {
+    "id": "2026-10-24_google",
+    "date": "2026-10-24",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "question",
+    "headline": "Sunumu önceden görsen?",
+    "spoken_hook": "Yapay zekâ sunumunu üretmeden taslağı görsen?",
+    "cta": "Kademeli açılıyor; sunum yapan arkadaşına gönder.",
+    "duration_sec": 21.6,
+    "words": 34,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-24_movo-ai",
+    "date": "2026-10-24",
+    "kind": "tool",
+    "tool": "MOVO AI",
+    "hook_pattern": "result",
+    "headline": "Fikirden uzun video çıkıyor",
+    "spoken_hook": "Aklındaki fikir, telefonda uzun bir videoya dönüşüyor.",
+    "cta": "Video üreten arkadaşına gönder.",
+    "duration_sec": 21.2,
+    "words": 41,
+    "status": "rejected: görsel kenardan kesik (ölçüldü: [7.25, 7.5, 7.75, 8.0, 8.25, 8.5] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
+  },
+  {
+    "id": "2026-10-24_shogunai",
+    "date": "2026-10-24",
+    "kind": "tool",
+    "tool": "ShogunAI",
+    "hook_pattern": "result",
+    "headline": "Yapay zekâ işini hatırlıyor",
+    "spoken_hook": "Yapay zekâ yaptığın işleri hatırlayıp sana yardım ediyor.",
+    "cta": "Toplantısı yoğun arkadaşına gönder.",
+    "duration_sec": 21.2,
+    "words": 40,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-24_dotmd",
+    "date": "2026-10-24",
+    "kind": "tool",
+    "tool": "DotMD",
+    "hook_pattern": "result",
+    "headline": "Ajanın yazdığını PR gibi incele",
+    "spoken_hook": "Yapay zekâ ajanının yazdığını pull request gibi inceleyebilirsin.",
+    "cta": "Ajanla çalışan arkadaşına gönder.",
+    "duration_sec": 20.5,
+    "words": 35,
+    "status": "rejected: editor gave no verdict (success, is_error=True: You've hit your session limit · resets 11:10am (Europe/Istanbul))"
   }
 ]

@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Dadan",
-    "hook": "Ekran kaydın paylaşıma hazır",
-    "pattern": "result",
-    "spoken_hook": "Ekran kaydın düzenlenip paylaşıma hazır hâle geliyor.",
-    "cta": "Bunu eğitim videosu çeken arkadaşına gönder."
-  },
-  {
-    "tool": "Archivist",
-    "hook": "Görsel ve videon düzene giriyor",
-    "pattern": "result",
-    "spoken_hook": "Görsel ve videolarının adı kendiliğinden düzene giriyor.",
-    "cta": "Dosya yığını olan arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
-    "hook": "Google Docs artık dinliyor",
-    "pattern": "news",
-    "spoken_hook": "Google Docs mobilde artık konuşarak belge hazırlıyor.",
-    "cta": "Bunu ekibine gönder."
-  },
-  {
-    "tool": "Google",
-    "hook": "Google Meet 63 dilde çeviriyor",
-    "pattern": "news",
-    "spoken_hook": "Google Meet artık konuşmayı 63 dilde çeviriyor.",
-    "cta": "Yurtdışıyla çalışan ekibine gönder."
-  },
-  {
     "tool": "Google",
     "hook": "Sunumu üretmeden taslağı düzelt",
     "pattern": "result",
@@ -68,5 +40,33 @@
     "pattern": "result",
     "spoken_hook": "Notlarına sohbetten kaynak ekleyip soru sorabilirsin.",
     "cta": "Not tutan arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Sunumu önceden görsen?",
+    "pattern": "question",
+    "spoken_hook": "Yapay zekâ sunumunu üretmeden taslağı görsen?",
+    "cta": "Kademeli açılıyor; sunum yapan arkadaşına gönder."
+  },
+  {
+    "tool": "MOVO AI",
+    "hook": "Fikirden uzun video çıkıyor",
+    "pattern": "result",
+    "spoken_hook": "Aklındaki fikir, telefonda uzun bir videoya dönüşüyor.",
+    "cta": "Video üreten arkadaşına gönder."
+  },
+  {
+    "tool": "ShogunAI",
+    "hook": "Yapay zekâ işini hatırlıyor",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ yaptığın işleri hatırlayıp sana yardım ediyor.",
+    "cta": "Toplantısı yoğun arkadaşına gönder."
+  },
+  {
+    "tool": "DotMD",
+    "hook": "Ajanın yazdığını PR gibi incele",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ ajanının yazdığını pull request gibi inceleyebilirsin.",
+    "cta": "Ajanla çalışan arkadaşına gönder."
   }
 ]
