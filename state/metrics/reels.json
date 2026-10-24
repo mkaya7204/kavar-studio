@@ -456,19 +456,6 @@
     "status": "rejected: ~10.7 sn karesi: site görseli kırpılmış, 'in Google Mee' yazısı yarım ve 'workspaceupdates.googleb…' kaynak etiketi kenardan kesiliyor. Kesik metin kabul edilmez, bu bir şablon/kırpma hatası.; 11.7 sn karesinde 3. kart boş cam kutu (başlık yok, yalnızca alttaki 'BİLDİĞİN DİLLERİ' etiketi var). Giriş animasyonu olabilir ama sonraki kare gösterilmedi, doğrulanamadı. 2. kart ('Dili Meet kendisi algılıyor') örnek karelerde hiç görünmüyor.; Kanıt görseli yalnızca haber başlığındaki tanıtım resmi (Meet logosu ve iki kişilik görüşme). Çeviri düğmesini, dil algılamayı veya çeviri altyazısını göstermiyor. Vaadi kanıtlamıyor."
   },
   {
-    "id": "2026-10-24_google-workspace",
-    "date": "2026-10-24",
-    "kind": "guide",
-    "tool": "Google Workspace",
-    "hook_pattern": "result",
-    "headline": "Notların sohbetten yönetiliyor",
-    "spoken_hook": "Notlarına sohbetten kaynak ekleyip soru sorabilirsin.",
-    "cta": "Not tutan arkadaşına gönder.",
-    "duration_sec": 23.3,
-    "words": 38,
-    "status": "rejected: görsel kenardan kesik (ölçüldü: [1.25, 8.25, 8.5, 8.75, 9.0, 9.25] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
-  },
-  {
     "id": "2026-10-24_google",
     "date": "2026-10-24",
     "kind": "guide",
@@ -519,5 +506,44 @@
     "duration_sec": 20.5,
     "words": 35,
     "status": "rejected: editor gave no verdict (success, is_error=True: You've hit your session limit · resets 11:10am (Europe/Istanbul))"
+  },
+  {
+    "id": "2026-10-24_mypip",
+    "date": "2026-10-24",
+    "kind": "tool",
+    "tool": "myPip",
+    "hook_pattern": "result",
+    "headline": "Oyunun dakikalar içinde hazır",
+    "spoken_hook": "Anlattığın oyun dakikalar içinde yapay zekâyla hazırlanıyor.",
+    "cta": "Oyun yapmak isteyen arkadaşına gönder.",
+    "duration_sec": 22.6,
+    "words": 39,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-24_canva-craft",
+    "date": "2026-10-24",
+    "kind": "tool",
+    "tool": "Canva Craft",
+    "hook_pattern": "result",
+    "headline": "Yazdığın tasarıma dönüşüyor",
+    "spoken_hook": "Yazdığın cümle, düzenleyebileceğin bir görsele dönüşüyor.",
+    "cta": "Tasarımcı arkadaşına gönder.",
+    "duration_sec": 24.7,
+    "words": 42,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-24_google-workspace",
+    "date": "2026-10-24",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "Toplantı özeti sohbete düşüyor",
+    "spoken_hook": "Toplantı özeti sohbete kendiliğinden düşüyor.",
+    "cta": "Toplantıyı hep kaçıran arkadaşına at.",
+    "duration_sec": 21.5,
+    "words": 38,
+    "status": "produced"
   }
 ]

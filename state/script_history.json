@@ -1,27 +1,6 @@
 [
   {
     "tool": "Google",
-    "hook": "Sunumu üretmeden taslağı düzelt",
-    "pattern": "result",
-    "spoken_hook": "Sunumu üretmeden önce taslağı düzeltebilirsin.",
-    "cta": "Sunum yapan arkadaşına gönder."
-  },
-  {
-    "tool": "Gerty",
-    "hook": "Yapay zekân Mac'inde çalışıyor",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ artık internetsiz, doğrudan Mac'inde çalışabiliyor.",
-    "cta": "Gizliliğe önem veren arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
-    "hook": "Maillerden görev listesi çıkıyor",
-    "pattern": "result",
-    "spoken_hook": "Mailindeki yapılacaklar kendiliğinden listeye dönüyor.",
-    "cta": "Ekibine gönder."
-  },
-  {
-    "tool": "Google",
     "hook": "Uygulamanı tek tıkla siteye at",
     "pattern": "result",
     "spoken_hook": "Yapay zekâyla yaptığın uygulamayı tek tıkla siteye aktarabilirsin.",
@@ -68,5 +47,26 @@
     "pattern": "result",
     "spoken_hook": "Yapay zekâ ajanının yazdığını pull request gibi inceleyebilirsin.",
     "cta": "Ajanla çalışan arkadaşına gönder."
+  },
+  {
+    "tool": "myPip",
+    "hook": "Oyunun dakikalar içinde hazır",
+    "pattern": "result",
+    "spoken_hook": "Anlattığın oyun dakikalar içinde yapay zekâyla hazırlanıyor.",
+    "cta": "Oyun yapmak isteyen arkadaşına gönder."
+  },
+  {
+    "tool": "Canva Craft",
+    "hook": "Yazdığın tasarıma dönüşüyor",
+    "pattern": "result",
+    "spoken_hook": "Yazdığın cümle, düzenleyebileceğin bir görsele dönüşüyor.",
+    "cta": "Tasarımcı arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Toplantı özeti sohbete düşüyor",
+    "pattern": "result",
+    "spoken_hook": "Toplantı özeti sohbete kendiliğinden düşüyor.",
+    "cta": "Toplantıyı hep kaçıran arkadaşına at."
   }
 ]
