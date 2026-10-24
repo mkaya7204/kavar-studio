@@ -4,6 +4,7 @@ name: checks
 
 on:
   push:
+    branches: ["**"]  # D-49: not on the out-<run> release tags of deliver.sh
   workflow_dispatch:
 
 jobs:

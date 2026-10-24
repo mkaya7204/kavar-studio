@@ -12,6 +12,9 @@ on:
         description: "yes (default) = silent draft voice; no = George, only for a Reel going out (D-30, D-46)"
         default: "yes"
 
+permissions:
+  contents: write  # D-49: deliver.sh
+
 jobs:
   rerender:
     runs-on: ubuntu-24.04
@@ -23,8 +26,12 @@ jobs:
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
       ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}  # second account, same George (D-23)
       ELEVENLABS_API_KEY_3: ${{ secrets.ELEVENLABS_API_KEY_3 }}  # third account, same George (D-46)
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7
+      # D-49: the PC hook (.claude/settings.json) calls a Windows path; here it fails and blocks every Bash call
+      - name: Cloud runner (drop the PC-only hook)
+        run: rm -f .claude/settings.json
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
@@ -65,10 +72,14 @@ jobs:
         continue-on-error: true
         run: |
           python -c "import sys,json; sys.path.insert(0,'src'); from pathlib import Path; from editor_review import review_reel; v=review_reel(Path('output/final/final_video.mp4'), json.load(open('rerender/${{ github.event.inputs.script }}',encoding='utf-8')), json.load(open('output/temp/tool.json',encoding='utf-8'))); print(json.dumps(v, indent=1, ensure_ascii=False)); Path('output/final/editor.json').write_text(json.dumps(v, indent=1, ensure_ascii=False), encoding='utf-8')"
+      # D-49: the artifact storage quota lost a whole day on 10-24; a failed upload goes to a release (out-<run id>)
       - uses: actions/upload-artifact@v7
+        id: up
+        continue-on-error: true
         if: always()
         with:
           name: rerender
+          if-no-files-found: error
           path: |
             output/final/final_video.mp4
             output/final/cover.jpg
@@ -80,3 +91,9 @@ jobs:
             output/temp/_proof_candidates.jpg
             output/temp/product/
           retention-days: 3
+      - name: By release (the artifact upload failed)
+        if: always() && steps.up.outcome == 'failure'
+        run: |
+          tar -czf rerender.tgz --ignore-failed-read output/final/final_video.mp4 output/final/cover.jpg \
+            output/final/last_frame.jpg output/final/post.json output/final/editor.json output/final/_review_sheet.jpg
+          bash .github/deliver.sh rerender.tgz

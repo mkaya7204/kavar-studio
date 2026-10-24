@@ -372,3 +372,75 @@ def test_the_pipelines_never_call_the_paid_voice_directly():
     for path in ("main.py", "src/trial_reel.py", "src/guide_reel.py"):
         src = (ROOT / path).read_text(encoding="utf-8")
         assert "reel_voice(" in src and "synthesize(" not in src, path
+
+
+def test_a_failed_voiced_reel_is_logged_before_its_status_and_never_raises(monkeypatch, reel_sandbox):
+    """D-49, 10-24 gerty: update_metrics ran before log_reel, raised KeyError and ended every tool Reel of the day."""
+    daily, _ = reel_sandbox
+    order = []
+    monkeypatch.setattr(daily, "log_reel", lambda name, *a, **k: order.append("log_reel"))
+    monkeypatch.setattr(daily, "update_metrics", lambda name, **k: order.append("update_metrics"))
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "publish", "problems": []})
+    monkeypatch.setattr(daily, "_voice_approved_reel", lambda out: False)
+    assert daily._reel_attempt() == (None, False)
+    assert order == ["log_reel", "update_metrics"]
+
+
+def test_a_voiced_reel_with_a_cut_is_rebuilt_still_on_the_same_george_audio(monkeypatch, reel_sandbox, tmp_path):
+    """D-49, 10-24 gerty: approved, voiced with George, then dropped for a cut at 11.25 s. Now: one still rebuild on
+    the George audio already made (KAVAR_REUSE_VOICE), no second voicing, and the Reel goes out."""
+    daily, _ = reel_sandbox
+    (tmp_path / "output" / "temp" / "capture.json").write_text("{}", encoding="utf-8")
+    runs, cuts = [], iter([[], [11.25], []])  # draft clean, voiced cut, after the still rebuild clean
+
+    def run(cmd, **kw):
+        env = kw.get("env") or {}
+        runs.append((" ".join(cmd), env.get("KAVAR_DRAFT_VOICE"), env.get("KAVAR_REUSE_VOICE")))
+        (tmp_path / "output" / "final" / "final_video.mp4").write_bytes(b"v")
+        return SimpleNamespace(returncode=0, stdout="")
+
+    monkeypatch.setattr(daily.subprocess, "run", run)
+    monkeypatch.setattr(daily, "cut_frames", lambda v, o=None: next(cuts))
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "publish", "problems": []})
+    item, rendered = daily._reel_attempt()
+    assert item and rendered
+    voiced = [r for r in runs if "voice_final" in r[0]]
+    assert [(d, r) for _, d, r in voiced] == [(None, None), (None, "1")]  # George once, then reused
+    capture = json.loads((tmp_path / "output" / "temp" / "capture.json").read_text(encoding="utf-8"))
+    assert capture["still"] is True
+
+
+def test_one_broken_tool_reel_attempt_does_not_end_the_days_tool_reels(monkeypatch):
+    import daily
+
+    tries = iter([KeyError("no Reel with id '2026-10-24_gerty'"), ({"kind": "reel", "title": "Next"}, True)])
+
+    def attempt():
+        nxt = next(tries)
+        if isinstance(nxt, Exception):
+            raise nxt
+        return nxt
+
+    monkeypatch.setattr(daily, "_reel_attempt", attempt)
+    monkeypatch.setattr(daily, "_time_for_a_reel", lambda: True)
+    monkeypatch.setattr(daily, "log", lambda *a: None)
+    assert daily.produce_reel() == {"kind": "reel", "title": "Next"}
+
+
+def test_george_audio_is_kept_only_for_the_same_words(monkeypatch, tmp_path):
+    import voice_final
+
+    monkeypatch.setattr(voice_final, "KEPT_VOICE", tmp_path / "george")
+    files = {}
+    for key, name in (("audio_path", "voiceover.mp3"), ("srt_path", "voiceover.srt"),
+                      ("words_path", "voiceover_words.json")):
+        (tmp_path / name).write_text("x", encoding="utf-8")
+        files[key] = str(tmp_path / name)
+    voice_final.keep_voice({**files, "provider": "elevenlabs", "duration_sec": 20.1}, "aynı sözler")
+    (tmp_path / "voiceover.mp3").unlink()  # the next draft voice overwrites the working copy: the kept one stays
+    kept = voice_final.kept_voice("aynı sözler")
+    assert kept and Path(kept["audio_path"]).exists() and Path(kept["audio_path"]).parent.name == "george"
+    assert voice_final.kept_voice("başka sözler") is None
+    (tmp_path / "voiceover.mp3").write_text("silent", encoding="utf-8")
+    voice_final.keep_voice({**files, "provider": "draft"}, "aynı sözler")
+    assert voice_final.kept_voice("aynı sözler") is None  # a silent draft is never "the George voice"

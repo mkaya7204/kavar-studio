@@ -17,7 +17,7 @@ on:
         default: "kavar-dryrun"
 
 permissions:
-  contents: read
+  contents: write  # D-49: deliver.sh
   actions: read
 
 jobs:
@@ -65,12 +65,21 @@ jobs:
         run: python src/voice_kept.py "output/reels/${{ github.event.inputs.reel }}"
       - name: Upload-size copy (Business Suite in the browser takes at most 10 MB)
         run: bash .github/upload_size.sh "output/reels/${{ github.event.inputs.reel }}"
+      # D-49: the artifact storage quota lost a whole day on 10-24; a failed upload goes to a release (out-<run id>)
       - uses: actions/upload-artifact@v7
+        id: up
+        continue-on-error: true
         with:
           name: kavar-voiced
+          if-no-files-found: error
           path: |
             output/reels/${{ github.event.inputs.reel }}/upload.mp4
             output/reels/${{ github.event.inputs.reel }}/final_video.mp4
             output/reels/${{ github.event.inputs.reel }}/cover.jpg
             output/reels/${{ github.event.inputs.reel }}/post.json
           retention-days: 3
+      - name: By release (the artifact upload failed)
+        if: steps.up.outcome == 'failure'
+        run: |
+          tar -czf voiced-${{ github.event.inputs.reel }}.tgz output/reels/${{ github.event.inputs.reel }}/upload.mp4 output/reels/${{ github.event.inputs.reel }}/final_video.mp4 output/reels/${{ github.event.inputs.reel }}/cover.jpg output/reels/${{ github.event.inputs.reel }}/post.json
+          bash .github/deliver.sh voiced-*.tgz
