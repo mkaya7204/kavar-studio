@@ -1,47 +1,5 @@
 [
   {
-    "tool": "readywhen",
-    "hook": "Verdiğin sözü asistan yakalıyor",
-    "pattern": "result",
-    "spoken_hook": "Müşteriye verdiğin sözü artık bir asistan yakalıyor.",
-    "cta": "Bunu kendi işini yürüten arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
-    "hook": "Arabada mailine sesle sor",
-    "pattern": "result",
-    "spoken_hook": "Araba kullanırken mailine, takvimine sesle sorabilirsin.",
-    "cta": "Arabası olan arkadaşına gönder."
-  },
-  {
-    "tool": "Stella",
-    "hook": "Kafandakini sesle anlatıyorsun",
-    "pattern": "result",
-    "spoken_hook": "Kafandakini artık bir yapay zekâya sesle anlatabilirsin.",
-    "cta": "Kafası meşgul arkadaşına gönder."
-  },
-  {
-    "tool": "Composio Instant",
-    "hook": "Yapay zekân 1.500+ uygulamada",
-    "pattern": "result",
-    "spoken_hook": "Kullandığın yapay zekâ, 1.500'den fazla uygulamada iş yapabiliyor.",
-    "cta": "Bunu ekip işlerini yürüten birine at."
-  },
-  {
-    "tool": "ToDo.is",
-    "hook": "Yazdığın işi ajan yapıyor",
-    "pattern": "result",
-    "spoken_hook": "Yazdığın görevi artık yapay zekâ ajanı yapıyor.",
-    "cta": "Listesi hiç bitmeyen arkadaşına gönder."
-  },
-  {
-    "tool": "bonds",
-    "hook": "Grubun yeni üyesi insan değil",
-    "pattern": "curiosity",
-    "spoken_hook": "Arkadaş grubunun yeni üyesi bu sefer insan değil.",
-    "cta": "Bunu grubun sessiz üyesine at."
-  },
-  {
     "tool": "Dadan",
     "hook": "Ekran kaydın paylaşıma hazır",
     "pattern": "result",
@@ -68,5 +26,47 @@
     "pattern": "news",
     "spoken_hook": "Google Meet artık konuşmayı 63 dilde çeviriyor.",
     "cta": "Yurtdışıyla çalışan ekibine gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Sunumu üretmeden taslağı düzelt",
+    "pattern": "result",
+    "spoken_hook": "Sunumu üretmeden önce taslağı düzeltebilirsin.",
+    "cta": "Sunum yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Gerty",
+    "hook": "Yapay zekân Mac'inde çalışıyor",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ artık internetsiz, doğrudan Mac'inde çalışabiliyor.",
+    "cta": "Gizliliğe önem veren arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Maillerden görev listesi çıkıyor",
+    "pattern": "result",
+    "spoken_hook": "Mailindeki yapılacaklar kendiliğinden listeye dönüyor.",
+    "cta": "Ekibine gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Uygulamanı tek tıkla siteye at",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâyla yaptığın uygulamayı tek tıkla siteye aktarabilirsin.",
+    "cta": "Bunu uygulama yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Sheets'e iPhone'da Gemini geldi",
+    "pattern": "news",
+    "spoken_hook": "Google, Sheets'e iPhone'da Gemini getirdi.",
+    "cta": "Tablo kullanan arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Notların sohbetten yönetiliyor",
+    "pattern": "result",
+    "spoken_hook": "Notlarına sohbetten kaynak ekleyip soru sorabilirsin.",
+    "cta": "Not tutan arkadaşına gönder."
   }
 ]

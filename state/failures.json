@@ -496,5 +496,92 @@
    "price"
   ],
   "detail": "▶ [1/5] Fetching latest SaaS/AI tools...    ✖ Loom Record for agents — https://www.producthunt.com/products/loom    ✖ Causo — https://www.producthunt.com/products/causo [carousel_writer] Writing with `claude -p`... ✔ [1/5] Fetching latest SaaS/AI tools done (200.0s) ▶ [2/5] Checking and capturing ht"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "See what 5 builders are making with Gemini 4 Argon",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "Flint-interactive: A language for creating interactive data visualizations",
+  "rendered": true,
+  "host": "microsoft.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanıt görseli sıradan bir Gmail gelen kutusu. Başlık 'Maillerden görev listesi çıkıyor' diyor ama ekranda görev listesi, AI Inbox ekranı ya da çıktısı yok. Kenar çubuğundaki küçük 'AI Inbox' satırı vaadi kanıtlamıyor. Kanıt, vaadi göstermiyor.; Kapak ve kanca yanıltıcı. Özellik yalnızca ABD'de, EN-U"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "cut_text"
+  ],
+  "detail": "görsel kenardan kesik (ölçüldü: [8.0, 8.25, 8.5, 8.75, 9.0, 12.0] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "facts"
+  ],
+  "detail": "Kanıt görseli vaadi göstermiyor: 'Instructions / Enter stock symbol in cell B4' ve 'GOOG' içeren bir hisse şablonu parçası. Gemini paneli, soru, cevap veya grafik yok; yalnızca araç çubuğunda küçük bir yıldız simgesi var.; Görsel kesik: 'Alphabet In' yazısı ve '<< optionally, enter' metni kenarda ya"
+ },
+ {
+  "date": "2026-10-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "cut_text"
+  ],
+  "detail": "görsel kenardan kesik (ölçüldü: [1.25, 8.25, 8.5, 8.75, 9.0, 9.25] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
  }
 ]

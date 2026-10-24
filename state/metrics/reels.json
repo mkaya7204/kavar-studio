@@ -454,5 +454,31 @@
     "duration_sec": 21.4,
     "words": 37,
     "status": "rejected: ~10.7 sn karesi: site görseli kırpılmış, 'in Google Mee' yazısı yarım ve 'workspaceupdates.googleb…' kaynak etiketi kenardan kesiliyor. Kesik metin kabul edilmez, bu bir şablon/kırpma hatası.; 11.7 sn karesinde 3. kart boş cam kutu (başlık yok, yalnızca alttaki 'BİLDİĞİN DİLLERİ' etiketi var). Giriş animasyonu olabilir ama sonraki kare gösterilmedi, doğrulanamadı. 2. kart ('Dili Meet kendisi algılıyor') örnek karelerde hiç görünmüyor.; Kanıt görseli yalnızca haber başlığındaki tanıtım resmi (Meet logosu ve iki kişilik görüşme). Çeviri düğmesini, dil algılamayı veya çeviri altyazısını göstermiyor. Vaadi kanıtlamıyor."
+  },
+  {
+    "id": "2026-10-24_google",
+    "date": "2026-10-24",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Uygulamanı tek tıkla siteye at",
+    "spoken_hook": "Yapay zekâyla yaptığın uygulamayı tek tıkla siteye aktarabilirsin.",
+    "cta": "Bunu uygulama yapan arkadaşına gönder.",
+    "duration_sec": 21.7,
+    "words": 38,
+    "status": "rejected: görsel kenardan kesik (ölçüldü: [8.0, 8.25, 8.5, 8.75, 9.0, 12.0] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
+  },
+  {
+    "id": "2026-10-24_google-workspace",
+    "date": "2026-10-24",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "Notların sohbetten yönetiliyor",
+    "spoken_hook": "Notlarına sohbetten kaynak ekleyip soru sorabilirsin.",
+    "cta": "Not tutan arkadaşına gönder.",
+    "duration_sec": 23.3,
+    "words": 38,
+    "status": "rejected: görsel kenardan kesik (ölçüldü: [1.25, 8.25, 8.5, 8.75, 9.0, 9.25] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
   }
 ]
