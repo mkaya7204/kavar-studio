@@ -363,7 +363,9 @@
         inset: 40px;
         border-radius: 48px;
         border: 4px solid var(--neon);
-        box-shadow: 0 0 40px var(--neon), inset 0 0 40px rgba(31, 213, 255, 0.35);
+        /* D-50: a 40px outer glow 40px in ran to the frame's edge and the cut check read it as a cut picture
+           (10-24, every shot); 12px keeps the glow's ramp out of the outer 24px (tests/test_voice_last.py) */
+        box-shadow: 0 0 12px var(--neon), inset 0 0 40px rgba(31, 213, 255, 0.35);
       }
       .shot-tag {
         position: absolute;
@@ -904,7 +906,8 @@
         if (v.still) tl.set(cam, { scale: 1, y: 0 }, t);
         else if (n === 1) tl.fromTo(cam, { scale: 1.02, y: 0 }, { scale: 1.12, y: 120, duration: d, ease: "sine.inOut" }, t);
         else tl.fromTo(cam, { y: 0, scale: 1.12 }, { y: panY * 0.55, scale: 1.02, duration: d, ease: "power1.inOut" }, t);
-        tl.fromTo("#shot" + n + "-frame", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }, t + 0.05);
+        // D-50: from 1.08 the frame's border entered at the frame's edge (x 0); 1.02 keeps it 30 px in
+        tl.fromTo("#shot" + n + "-frame", { opacity: 0, scale: 1.02 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }, t + 0.05);
         tl.fromTo("#shot" + n + "-tag", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, t + 0.25);
         tl.to(cam, { opacity: 0, duration: 0.2, ease: "none" }, t + d - 0.2);
         // the site picture fills the caption band (and the zoom pushes it further): captions sat on the

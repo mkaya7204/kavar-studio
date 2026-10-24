@@ -49,7 +49,8 @@ companies' own pictures (§1.9); the outro keeps @thekavar.ai + "+ TAKİP ET" (�
   a page window ends in a gap between lines; leave 48 px free at every frame edge at full zoom; long
   labels shrink to fit; if it still touches an edge, build the Reel without zoom (capture "still").
 - **Check (measured, D-43):** `reel_qa.cut_frames`: sharp detail in the outer 24 px of the frame in two
-  frames in a row = cut (clean 0.3-0.83, cut 1.68-3.23 on the real frames). Also look at the hook box
+  frames in a row = cut. D-50: only sharp edges count (a glow or blur at the edge is not a cut; the shot frame's
+  glow read as one on 10-24); clean 0.43-0.79, cut 1.86-6.5 on the real frames. Also look at the hook box
   edges at 0, 1 and 2.5 s.
 
 ### A3. Text over text / overlapping elements (6 rejected Reels)

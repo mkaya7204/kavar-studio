@@ -189,6 +189,51 @@ def test_cut_pictures_are_measured_on_the_real_rejected_frames():
     assert cut_in([clean, entering, entering, clean, card, clean]) == []  # ...but a card passes in under 0.75 s
 
 
+def test_a_shot_frames_glow_is_not_a_cut_picture():
+    """D-50: on 10-24 two guide Reels were rejected as cut at 8-9.25 s and 11.75-12 s (their site shots), with the
+    zoom and again without it. Nothing sharp is in the outer 24 px of a shot (the picture stays 48 px in, captions
+    are off); the neon frame's glow ran to the edge and the codec's block steps on it counted as detail. The real
+    10-21 shot frame (todo.is, 9.9 s) read 1.75 under the old mean; it must read clean, and a shot never stops a
+    Reel, while the real cut frames still do."""
+    import numpy as np
+    from PIL import Image, ImageFilter
+
+    from reel_qa import CUT_DETAIL, EDGE_STRIP, cut_in, edge_detail
+
+    fx = ROOT / "tests" / "fixtures"
+    shot = fx / "reel_shot_glow_1021.jpg"
+    with Image.open(shot) as img:
+        raw = np.asarray(img.convert("L").filter(ImageFilter.FIND_EDGES), dtype=float)
+        top, bottom = round(img.height * 0.12), round(img.height * 0.85)
+        assert raw[top:bottom, 2:EDGE_STRIP].mean() >= 1.4  # what the old check saw: "cut"
+        assert max(edge_detail(img)) < CUT_DETAIL * 0.6  # the glow is not a picture (0.55)
+    assert cut_in([shot] * 8) == []  # a whole 2 s shot passes
+    for name in ("reel_cut_frame_1022.jpg", "reel_cut_frame_1023.jpg"):  # the margin both ways is kept
+        with Image.open(fx / name) as img:
+            assert max(edge_detail(img)) >= CUT_DETAIL * 1.4, name  # 1.86, 2.13
+    assert cut_in([shot, fx / "reel_cut_frame_1022.jpg", fx / "reel_cut_frame_1023.jpg", fx / "reel_cut_frame_1022.jpg"]) \
+        == [0.75]
+
+
+def test_no_glow_of_the_shot_frame_reaches_the_measured_edge():
+    """D-50: the shot frame sits 40 px in; its outer glow (CSS blur B = a Gaussian with sigma B/2) must fade out
+    (2.5 sigma) before the outer EDGE_STRIP px, and its entrance zoom must not put the border there. The old 40px
+    glow reached x = -10 and the 1.08 entrance put the border at x = 0."""
+    import re
+
+    from reel_qa import EDGE_STRIP
+
+    html = (ROOT / "templates" / "hyperframes_news" / "index.html").read_text(encoding="utf-8")
+    css = html[html.index(".shot-frame {"):]
+    css = css[:css.index("}")]
+    inset = int(re.search(r"inset:\s*(\d+)px", css).group(1))
+    blur = int(re.search(r"box-shadow:\s*0 0 (\d+)px var\(--neon\)", css).group(1))
+    assert inset - 2.5 * blur / 2 >= EDGE_STRIP, (inset, blur)
+    enter = float(re.search(r'"#shot" \+ n \+ "-frame", \{ opacity: 0, scale: ([\d.]+) \}', html).group(1))
+    assert 540 - (540 - inset) * enter >= EDGE_STRIP, enter
+    assert 540 - (540 - inset) * 1.08 < EDGE_STRIP  # (the old entrance, for the record)
+
+
 def test_shots_never_reach_the_frame_edge_at_full_zoom(tmp_path):
     """D-42: a 960 px shot at the 1.12 zoom was 1075 of 1080 px; its text touched the edges and read as cut."""
     from PIL import Image
