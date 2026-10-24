@@ -90,7 +90,14 @@ def pacing_report(video: Path | str) -> dict:
 # rejected frames: clean 0.3-0.8, a card sliding in 1.07, cut pictures 1.7-3.2 ("in Google Mee" 10-22 11.6 s,
 # 10-23 10.2-11.2 s).
 EDGE_STRIP = 24
-CUT_DETAIL = 1.4
+# D-50: the mean of ALL edge values also counted the video codec's 8 px block steps on a smooth glow. Every
+# site shot has its neon frame 40 px in, and that glow ramp read 1.40-1.75 (= "cut") with nothing at the edge
+# (10-21 todo.is shot frames, tests/fixtures/reel_shot_glow_1021.jpg), so on 10-24 two guide Reels were
+# rejected for their shots at 8-9.25 s and 11.75-12 s, with or without the zoom. Only edge pixels of at least
+# EDGE_FLOOR count now (a letter or a picture's edge is 30-200; codec steps on a glow or blur are 1-7). On the
+# real frames: clean 0.43, card 0.79, shot glow 0.21-0.55; cut pictures 1.86-6.5.
+EDGE_FLOOR = 8
+CUT_DETAIL = 1.2
 # A card sliding in also touches the edge (Voxelo 10-23 11.2 s: 3.58) for ~0.3-0.5 s; a cut picture stays for
 # most of a 2.5 s shot. 4 frames a second, 3 in a row (0.75 s) = a cut.
 CUT_FPS = 4
@@ -98,10 +105,11 @@ CUT_RUN = 3
 
 
 def edge_detail(img: Image.Image) -> tuple[float, float]:
-    """Mean edge strength in the left and right strips of a 1080x1920 frame (rows 12-85 %, below the top UI)."""
+    """Mean edge strength in the left and right strips of a 1080x1920 frame (rows 12-85 %, below the top UI),
+    counting only sharp edges (EDGE_FLOOR): a smooth glow or blur at the edge is not a cut picture."""
     gray = img.convert("L")
     w, h = gray.size
-    edges = gray.filter(ImageFilter.FIND_EDGES)
+    edges = gray.filter(ImageFilter.FIND_EDGES).point(lambda v: v if v >= EDGE_FLOOR else 0)
     top, bottom = round(h * 0.12), round(h * 0.85)
     left = ImageStat.Stat(edges.crop((2, top, EDGE_STRIP, bottom))).mean[0]  # 2 px: FIND_EDGES' own border
     right = ImageStat.Stat(edges.crop((w - EDGE_STRIP, top, w - 2, bottom))).mean[0]
