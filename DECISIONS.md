@@ -373,3 +373,15 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Built:** daily.py `_new_reel_folder`: today's Reel folder is `<date>_<product>`, and when it already exists
   `-2`, `-3`. Every Reel path (guide, tool, trial) names its folder there.
 - **Guarded by:** tests/test_voice_last.py::test_a_second_reel_of_the_same_product_never_overwrites_the_first.
+
+## D-52 · 2026-10-25 · The repository is public (GitHub Actions minutes)
+- **User:** "Herkese açık yap depoyu kim ne yapacak bizim bu önemsiz çalışmamizi" (2026-10-25), after the
+  alternatives (spending limit, public, fewer minutes, a self-hosted runner) were laid out.
+- **Evidence:** from 10:06 TRT every run (checks 40171509376, news-test 40171686088) stopped in 3-5 s:
+  "recent account payments have failed or your spending limit needs to be increased". October had used
+  ~1,925 min in the last 300 runs alone (produce 1,582), over the private Free plan's 2,000.
+- **Built:** `gh repo edit --visibility public`. Before it: the whole git history was scanned for keys and
+  tokens (none, only variable names) and no workflow runs on pull_request / issue events, so outsiders can't
+  start a run or reach the secrets. Artifacts, releases and logs are now public too.
+- **Guarded by:** nothing in tests; if a workflow ever gets a `pull_request_target` / `issue_comment` trigger,
+  the secrets become reachable from forks. Don't add one.
