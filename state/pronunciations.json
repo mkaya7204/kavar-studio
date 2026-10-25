@@ -2,7 +2,9 @@
  "Android": "Androyd",
  "Archivist": "Arkayvist",
  "Auto": "Oto",
+ "BigQuery": "Bigkuveri",
  "Business": "Biznıs",
+ "CAD": "ked",
  "Canva": "Kanva",
  "Chat": "Çet",
  "Craft": "Kraft",
@@ -11,9 +13,11 @@
  "Enterprise": "Entırprayz",
  "Gerty": "Görti",
  "Intelligence": "İntelicens",
+ "Live": "Layv",
  "MCP": "Emsipi",
  "Meet": "Mit",
  "Notebook": "Notbuk",
+ "Parametrik": "parametrik",
  "Personal": "Persınıl",
  "Research": "Risörç",
  "Review": "Rivyu",
@@ -25,5 +29,6 @@
  "mail": "meyl",
  "myPip": "maypip",
  "readywhen": "Rediven",
- "remixleyebilirsin": "rimikleyebilirsin"
+ "remixleyebilirsin": "rimikleyebilirsin",
+ "zCAD": "zikedi"
 }

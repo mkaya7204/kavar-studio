@@ -545,5 +545,31 @@
     "duration_sec": 21.5,
     "words": 38,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-25_zcad-ai",
+    "date": "2026-10-25",
+    "kind": "tool",
+    "tool": "zCAD AI",
+    "hook_pattern": "result",
+    "headline": "Yapay zekâ parça üretiyor",
+    "spoken_hook": "Yapay zekâ artık düzenlenebilir parçalar ve montajlar üretiyor.",
+    "cta": "Ürün tasarlayan arkadaşına gönder.",
+    "duration_sec": 23.1,
+    "words": 41,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-25_google-workspace",
+    "date": "2026-10-25",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "Büyük veriyle tabloda sohbet",
+    "spoken_hook": "Büyük veriyi tabloda sohbetle analiz edebilirsin.",
+    "cta": "Veri ekibine at.",
+    "duration_sec": 21.0,
+    "words": 38,
+    "status": "produced"
   }
 ]

@@ -727,5 +727,75 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-10-25",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-25",
+  "stage": "news",
+  "kind": "news",
+  "item": "Securing our frontier model training environment",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-25",
+  "stage": "news",
+  "kind": "news",
+  "item": "LitPivot: Developing research ideas through dynamic contextualization within the literature landscape",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-25",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "zCAD AI",
+  "rendered": true,
+  "host": "zcad.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-25",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "off_concept",
+   "price"
+  ],
+  "detail": "Fetching latest SaaS/AI tools...    ✖ 1Password for Agents — https://www.producthunt.com/products/1password    ✖ Many Displays — https://www.producthunt.com/products/many-displays    ✖ AgentValley — https://www.producthunt.com/products/agentvalley [carousel_writer] Writing with `claude -p`... ✔ [1/5"
+ },
+ {
+  "date": "2026-10-25",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

@@ -1,27 +1,6 @@
 [
   {
     "tool": "Google",
-    "hook": "Uygulamanı tek tıkla siteye at",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâyla yaptığın uygulamayı tek tıkla siteye aktarabilirsin.",
-    "cta": "Bunu uygulama yapan arkadaşına gönder."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Sheets'e iPhone'da Gemini geldi",
-    "pattern": "news",
-    "spoken_hook": "Google, Sheets'e iPhone'da Gemini getirdi.",
-    "cta": "Tablo kullanan arkadaşına gönder."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Notların sohbetten yönetiliyor",
-    "pattern": "result",
-    "spoken_hook": "Notlarına sohbetten kaynak ekleyip soru sorabilirsin.",
-    "cta": "Not tutan arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
     "hook": "Sunumu önceden görsen?",
     "pattern": "question",
     "spoken_hook": "Yapay zekâ sunumunu üretmeden taslağı görsen?",
@@ -68,5 +47,26 @@
     "pattern": "result",
     "spoken_hook": "Toplantı özeti sohbete kendiliğinden düşüyor.",
     "cta": "Toplantıyı hep kaçıran arkadaşına at."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Gelen kutun sesle cevap veriyor",
+    "pattern": "result",
+    "spoken_hook": "Gelen kutun sorularına sesli cevap veriyor artık.",
+    "cta": "İş arkadaşına gönder."
+  },
+  {
+    "tool": "zCAD AI",
+    "hook": "Yapay zekâ parça üretiyor",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ artık düzenlenebilir parçalar ve montajlar üretiyor.",
+    "cta": "Ürün tasarlayan arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Büyük veriyle tabloda sohbet",
+    "pattern": "result",
+    "spoken_hook": "Büyük veriyi tabloda sohbetle analiz edebilirsin.",
+    "cta": "Veri ekibine at."
   }
 ]
