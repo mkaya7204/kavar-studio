@@ -61,6 +61,18 @@ def test_attempt_is_silent_and_only_the_approved_reel_is_voiced(monkeypatch, ree
     assert len(calls) == 2
 
 
+def test_a_second_reel_of_the_same_product_never_overwrites_the_first(monkeypatch, reel_sandbox):
+    """10-25: the empty-slot guide Reel (Google Workspace, Sheets) took the 07:30 one's folder (Google Workspace,
+    Gmail Live) and the queue listed one folder at 07:30 and 11:45."""
+    daily, _ = reel_sandbox
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "publish", "problems": []})
+    first, _ = daily._reel_attempt(["python", "src/guide_reel.py"])
+    (daily.ROOT / first["folder"] / "keep.txt").write_text("07:30", encoding="utf-8")
+    second, _ = daily._reel_attempt(["python", "src/guide_reel.py"])
+    assert first["folder"] != second["folder"] and second["folder"].endswith("_tool-2")
+    assert (daily.ROOT / first["folder"] / "keep.txt").read_text(encoding="utf-8") == "07:30"
+
+
 def test_a_rejected_draft_spends_no_voice(monkeypatch, reel_sandbox):
     daily, calls = reel_sandbox
     monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "reject", "problems": ["x"]})

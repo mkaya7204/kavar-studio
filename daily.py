@@ -434,6 +434,17 @@ def _fix_draft(out: Path, verdict: dict, fix_round: int) -> dict | None:
     return script
 
 
+def _new_reel_folder(tool_name: str) -> Path:
+    """Today's folder for a new Reel. 10-25: the empty-slot guide Reel was named after the same product as the
+    07:30 one (Google Workspace) and overwrote it, and the queue listed one folder in two slots; a second Reel
+    of the same name gets "-2", "-3"."""
+    base = REELS_DIR / f"{date.today().isoformat()}_{re.sub(r'[^a-z0-9]+', '-', tool_name.lower()).strip('-')}"
+    out, n = base, 2
+    while out.exists():
+        out, n = base.with_name(f"{base.name}-{n}"), n + 1
+    return out
+
+
 def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
     A rejected tool is in the script history, so the next run moves on to another tool.
@@ -459,7 +470,7 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     temp = ROOT / "output" / "temp"
     script = json.loads((temp / "script.json").read_text(encoding="utf-8"))
     tool = json.loads((temp / "tool.json").read_text(encoding="utf-8"))
-    out = REELS_DIR / f"{date.today().isoformat()}_{re.sub(r'[^a-z0-9]+', '-', script['tool_name'].lower()).strip('-')}"
+    out = _new_reel_folder(script["tool_name"])
     _copy_draft(out, script)
     log(f"   hook [{script.get('hook_pattern', '?')}]: \"{script['hook']}\""
         + (f" (judge: {script['hook_judge']['reason']})" if script.get("hook_judge") else ""))
