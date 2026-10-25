@@ -6,5 +6,21 @@
     "folder": "reserve/2026-10-21_haber-openai-acquires-orchestra-bio",
     "made": "2026-10-21",
     "editor": "publish"
+  },
+  {
+    "kind": "reel",
+    "concept": "guide",
+    "title": "Google Workspace",
+    "folder": "reserve/2026-10-25_google-workspace",
+    "made": "2026-10-25",
+    "editor": "publish"
+  },
+  {
+    "kind": "reel",
+    "concept": "guide",
+    "title": "Gmail Live (Google Workspace)",
+    "folder": "reserve/2026-10-25_gmail-live",
+    "made": "2026-10-25",
+    "editor": "publish"
   }
 ]
