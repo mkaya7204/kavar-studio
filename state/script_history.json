@@ -1,47 +1,5 @@
 [
   {
-    "tool": "Google",
-    "hook": "Sunumu önceden görsen?",
-    "pattern": "question",
-    "spoken_hook": "Yapay zekâ sunumunu üretmeden taslağı görsen?",
-    "cta": "Kademeli açılıyor; sunum yapan arkadaşına gönder."
-  },
-  {
-    "tool": "MOVO AI",
-    "hook": "Fikirden uzun video çıkıyor",
-    "pattern": "result",
-    "spoken_hook": "Aklındaki fikir, telefonda uzun bir videoya dönüşüyor.",
-    "cta": "Video üreten arkadaşına gönder."
-  },
-  {
-    "tool": "ShogunAI",
-    "hook": "Yapay zekâ işini hatırlıyor",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ yaptığın işleri hatırlayıp sana yardım ediyor.",
-    "cta": "Toplantısı yoğun arkadaşına gönder."
-  },
-  {
-    "tool": "DotMD",
-    "hook": "Ajanın yazdığını PR gibi incele",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ ajanının yazdığını pull request gibi inceleyebilirsin.",
-    "cta": "Ajanla çalışan arkadaşına gönder."
-  },
-  {
-    "tool": "myPip",
-    "hook": "Oyunun dakikalar içinde hazır",
-    "pattern": "result",
-    "spoken_hook": "Anlattığın oyun dakikalar içinde yapay zekâyla hazırlanıyor.",
-    "cta": "Oyun yapmak isteyen arkadaşına gönder."
-  },
-  {
-    "tool": "Canva Craft",
-    "hook": "Yazdığın tasarıma dönüşüyor",
-    "pattern": "result",
-    "spoken_hook": "Yazdığın cümle, düzenleyebileceğin bir görsele dönüşüyor.",
-    "cta": "Tasarımcı arkadaşına gönder."
-  },
-  {
     "tool": "Google Workspace",
     "hook": "Toplantı özeti sohbete düşüyor",
     "pattern": "result",
@@ -68,5 +26,47 @@
     "pattern": "result",
     "spoken_hook": "Büyük veriyi tabloda sohbetle analiz edebilirsin.",
     "cta": "Veri ekibine at."
+  },
+  {
+    "tool": "Llama Windows",
+    "hook": "Her uygulamaya ayrı model mi?",
+    "pattern": "pain",
+    "spoken_hook": "Her uygulama için ayrı yapay zekâ kurmaktan yoruldun mu?",
+    "cta": "Yerel model deneyen arkadaşına gönder."
+  },
+  {
+    "tool": "AgentGrid.io",
+    "hook": "Ajanla aynı dosyada çalış",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ ajanıyla aynı dosyada birlikte çalışabilirsin.",
+    "cta": "Ajan kullanan ekibine gönder."
+  },
+  {
+    "tool": "Papermark Data Rooms",
+    "hook": "Gizli belge paylaşmak riskli",
+    "pattern": "pain",
+    "spoken_hook": "Gizli belgeyi paylaşırken kimin baktığını bilmiyorsun.",
+    "cta": "Yatırım turuna çıkan arkadaşına gönder."
+  },
+  {
+    "tool": "Specsight",
+    "hook": "Ekip yayına yetişemiyor",
+    "pattern": "pain",
+    "spoken_hook": "Yapay zekâyla hızlı yayınlıyorsun, ama ekibin yetişemiyor.",
+    "cta": "Hızlı ürün çıkaran ekibine gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Toplantı sonrası mail elle mi?",
+    "pattern": "question",
+    "spoken_hook": "Toplantı sonrası maili hâlâ elle mi yazıyorsun?",
+    "cta": "Ekibine gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Sınıfın soruları tek özette",
+    "pattern": "result",
+    "spoken_hook": "Öğrencilerin ne sorduğu tek özette çıkıyor.",
+    "cta": "Öğretmene gönder."
   }
 ]

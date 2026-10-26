@@ -797,5 +797,119 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 30 [Google Workspace Updates] An easier way to customize how Gemini works for you (Customizing how Gemini works for you is a usable Gemini feature with a clear how)    rank 26 [Google Workspace Updates] An update on the launch of skills in the Ge"
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "news",
+  "kind": "news",
+  "item": "Rapidly scaling online storage to serve over 1 billion ChatGPT users (Part II)",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Llama Windows",
+  "rendered": true,
+  "host": "llama.app",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "AgentGrid.io",
+  "rendered": true,
+  "host": "agentgrid.io",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kapak ve ilk karelerdeki kanıt görselinde 'Market Expansion Brief' kartında para birimli tutarlar var (€280M, €4.2M). Sayfa politikası para birimi ve tutar göstermeyi yasaklıyor; görseldeki küçük tutar da kabul edilmez.; Kanıt görseli kapakta ve 0-5 sn boyunca duruyor, yani tutarlar ilk saniyelerde "
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Papermark Data Rooms",
+  "rendered": true,
+  "host": "papermark.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "off_concept",
+   "facts"
+  ],
+  "detail": "Kanıt görseli ('Business Plan.pdf' redaksiyon/Auto-redact ekranı) vaadi göstermiyor: hook 'kimin baktığını bilmiyorsun', ses 'hangi sayfaya kimin baktığını görüyorsun' diyor, ekranda ise kimin baktığını gösteren hiçbir analiz yok. Bu, kanıt olmayan bir kanıt (ders: 'Proof that does not prove the hoo"
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Specsight",
+  "rendered": true,
+  "host": "specsight.app",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kaynak metin Specsight'ın kendisinin yapay zekâ olduğunu söylemiyor. 'AI' ifadesi yalnızca 'AI ile hızlı yayın yapan ekipler' için geçiyor. Araç ürün gözlemlenebilirliği ve değişiklik özetleme aracı. Oysa #yapayzeka ve #aitools etiketleri gönderiyi yapay zekâ haberi gibi gösteriyor. Rehber Reel ders"
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "Plan bilgisi kaynaktan geniş: kaynak yalnızca Business Standard ve Plus, Enterprise Standard ve Plus (ve Education eklentisi Google AI Pro for Education) diyor. Seslendirme (\"Business ve Enterprise'da açılıyor\"), why_it_matters ve caption (\"Business ve Enterprise planlarında\") tüm Business/Enterpris"
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 29 [Google Workspace Updates] An easier way to customize how Gemini works for you (Customising how Gemini works for you is a usable AI feature with a clear how-to.)    rank 26 [Google Workspace Updates] An update on the launch of skills in the Ge"
  }
 ]

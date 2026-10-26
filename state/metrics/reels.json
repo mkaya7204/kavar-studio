@@ -571,5 +571,83 @@
     "duration_sec": 21.0,
     "words": 38,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-26_llama-windows",
+    "date": "2026-10-26",
+    "kind": "tool",
+    "tool": "Llama Windows",
+    "hook_pattern": "pain",
+    "headline": "Her uygulamaya ayrı model mi?",
+    "spoken_hook": "Her uygulama için ayrı yapay zekâ kurmaktan yoruldun mu?",
+    "cta": "Yerel model deneyen arkadaşına gönder.",
+    "duration_sec": 24.5,
+    "words": 43,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-26_agentgrid-io",
+    "date": "2026-10-26",
+    "kind": "tool",
+    "tool": "AgentGrid.io",
+    "hook_pattern": "result",
+    "headline": "Ajanla aynı canlı dosyada çalış",
+    "spoken_hook": "Yapay zekâ ajanlarıyla aynı canlı dosyalar üzerinde çalışabilirsin.",
+    "cta": "Ajan kullanan ekibine gönder.",
+    "duration_sec": 20.8,
+    "words": 39,
+    "status": "rejected: Kapak ve ilk karelerdeki kanıt görselinde 'Market Expansion Brief' kartında para birimli tutarlar var (€280M, €4.2M). Sayfa politikası para birimi ve tutar göstermeyi yasaklıyor; görseldeki küçük tutar da kabul edilmez.; Kanıt görseli kapakta ve 0-5 sn boyunca duruyor, yani tutarlar ilk saniyelerde ekranda. Tutar içermeyen bir kırpma ya da başka bir görsel seçilmeli.; Kartlar 1 ve 2 ile sesin eşleşmesi iyi, ancak 11.8 sn karesindeki kaynak kartı İngilizce slogan ('One file, everyone's source of truth'). Bu zayıf bir kanıt; arayüzü ya da çıktıyı göstermiyor (SHOULD)."
+  },
+  {
+    "id": "2026-10-26_papermark-data-rooms",
+    "date": "2026-10-26",
+    "kind": "tool",
+    "tool": "Papermark Data Rooms",
+    "hook_pattern": "pain",
+    "headline": "Gizli belge paylaşmak riskli",
+    "spoken_hook": "Gizli belgeyi paylaşırken kimin baktığını bilmiyorsun.",
+    "cta": "Yatırım turuna çıkan arkadaşına gönder.",
+    "duration_sec": 21.5,
+    "words": 35,
+    "status": "rejected: Kanıt görseli ('Business Plan.pdf' redaksiyon/Auto-redact ekranı) vaadi göstermiyor: hook 'kimin baktığını bilmiyorsun', ses 'hangi sayfaya kimin baktığını görüyorsun' diyor, ekranda ise kimin baktığını gösteren hiçbir analiz yok. Bu, kanıt olmayan bir kanıt (ders: 'Proof that does not prove the hook').; Konu yapay zekâ değil: Papermark Data Rooms bir belge paylaşım / veri odası aracı. Kaynakta yapay zekâ özelliği, model veya asistan yok (slogandaki 'AI agents' sadece kurulum notu). #yapayzeka ve #aitools yanlış; KAVAR yalnızca yapay zekâ içeriği yayınlar.; Hook 'Gizli belge paylaşmak riskli' kaynakta olmayan genel bir iddia; kaynak sadece sayfa bazlı analitik, ayrıntılı izinler ve denetime uygun kontrolleri söylüyor."
+  },
+  {
+    "id": "2026-10-26_specsight",
+    "date": "2026-10-26",
+    "kind": "tool",
+    "tool": "Specsight",
+    "hook_pattern": "pain",
+    "headline": "Ekip yayına yetişemiyor",
+    "spoken_hook": "Yapay zekâyla hızlı yayınlıyorsun, ama ekibin yetişemiyor.",
+    "cta": "Hızlı ürün çıkaran ekibine gönder.",
+    "duration_sec": 21.1,
+    "words": 36,
+    "status": "rejected: Kaynak metin Specsight'ın kendisinin yapay zekâ olduğunu söylemiyor. 'AI' ifadesi yalnızca 'AI ile hızlı yayın yapan ekipler' için geçiyor. Araç ürün gözlemlenebilirliği ve değişiklik özetleme aracı. Oysa #yapayzeka ve #aitools etiketleri gönderiyi yapay zekâ haberi gibi gösteriyor. Rehber Reel dersine göre özelliğin kendisi yapay zekâ olmalı.; Araç hakkındaki bilgi çok az (tek cümlelik açıklama). 'Gözlemlenebilirlik' Türkçe izleyiciye soyut kalıyor. Reel'de somut bir sonuç ya da örnek gösterilmiyor.; Kanıt görseli İngilizce ve çok küçük, telefonda okunmuyor. Değişikliklerin sade dille açıklandığı vaadi ekranda okunarak doğrulanamıyor."
+  },
+  {
+    "id": "2026-10-26_google-workspace",
+    "date": "2026-10-26",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "question",
+    "headline": "Toplantı sonrası mail elle mi?",
+    "spoken_hook": "Toplantı sonrası maili hâlâ elle mi yazıyorsun?",
+    "cta": "Ekibine gönder.",
+    "duration_sec": 21.6,
+    "words": 38,
+    "status": "rejected: Plan bilgisi kaynaktan geniş: kaynak yalnızca Business Standard ve Plus, Enterprise Standard ve Plus (ve Education eklentisi Google AI Pro for Education) diyor. Seslendirme (\"Business ve Enterprise'da açılıyor\"), why_it_matters ve caption (\"Business ve Enterprise planlarında\") tüm Business/Enterprise planlarını kapsıyormuş gibi okunuyor. Şöyle olmalı: \"Business Standard ve Plus, Enterprise Standard ve Plus planlarında\".; \"Take notes for me\" şartı yalnızca Tasks maddesine bağlanmış (nokta 3). Kaynakta hiçbir sonraki adımın, takip maili dahil, bu ayar açık olmadan görünmediği yazıyor. Seslendirme, takip mailinin bu ayar olmadan da çıkacağı izlenimini veriyor.; Kaynakta toplantı sonrası ekranda \"Take notes for me\" açıkken ve kullanıcı rutini açtığında bu işlerin yapıldığı yazıyor. \"Tek dokunuşla takip maili hazır\" ve \"maddeler Tasks'e düşüyor\" bunu kısaltıyor. Yöneticinin kapatabildiği, kademeli açılan bir özellik olduğu için fiillerin kaynaktaki \"taslak hazırlıyor / ekliyor\" ifadesine yakın tutulması gerekiyor."
+  },
+  {
+    "id": "2026-10-26_google-workspace-2",
+    "date": "2026-10-26",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "Sınıfın soruları tek özette",
+    "spoken_hook": "Öğrencilerin ne sorduğu tek özette çıkıyor.",
+    "cta": "Öğretmene gönder.",
+    "duration_sec": 22.1,
+    "words": 38,
+    "status": "produced"
   }
 ]
