@@ -911,5 +911,77 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`...    rank 29 [Google Workspace Updates] An easier way to customize how Gemini works for you (Customising how Gemini works for you is a usable AI feature with a clear how-to.)    rank 26 [Google Workspace Updates] An update on the launch of skills in the Ge"
+ },
+ {
+  "date": "2026-10-27",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Gemini",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-27",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing GPT-6.1 Terra",
+  "rendered": false,
+  "host": "openai.com",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: article has no cover image or too little text"
+ },
+ {
+  "date": "2026-10-27",
+  "stage": "news",
+  "kind": "news",
+  "item": "ChatGPT’s expanding world of work",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Jobmate AI",
+  "rendered": true,
+  "host": "usejobmate.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Kiwi",
+  "rendered": true,
+  "host": "heykiwi.co",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "price"
+  ],
+  "detail": "11.6 sn karesi: büyük kısmı bulanık gri bir kutu ve içinde küçük, neredeyse boş bir telefon çizimi var. Okunur bir arayüz veya çıktı yok, kırpılmış ya da bozuk yakalama gibi görünüyor.; Aynı sahne yaklaşık 3,5 sn hareketsiz kalıyor. Bu sırada ses 'iMessage veya WhatsApp' diyor ama ekranda iMessage/W"
+ },
+ {
+  "date": "2026-10-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "VibeiDE",
+  "rendered": true,
+  "host": "vibeide.dev",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

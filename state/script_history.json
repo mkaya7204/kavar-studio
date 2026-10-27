@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Google Workspace",
-    "hook": "Toplantı özeti sohbete düşüyor",
-    "pattern": "result",
-    "spoken_hook": "Toplantı özeti sohbete kendiliğinden düşüyor.",
-    "cta": "Toplantıyı hep kaçıran arkadaşına at."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Gelen kutun sesle cevap veriyor",
-    "pattern": "result",
-    "spoken_hook": "Gelen kutun sorularına sesli cevap veriyor artık.",
-    "cta": "İş arkadaşına gönder."
-  },
-  {
-    "tool": "zCAD AI",
-    "hook": "Yapay zekâ parça üretiyor",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ artık düzenlenebilir parçalar ve montajlar üretiyor.",
-    "cta": "Ürün tasarlayan arkadaşına gönder."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Büyük veriyle tabloda sohbet",
-    "pattern": "result",
-    "spoken_hook": "Büyük veriyi tabloda sohbetle analiz edebilirsin.",
-    "cta": "Veri ekibine at."
-  },
-  {
     "tool": "Llama Windows",
     "hook": "Her uygulamaya ayrı model mi?",
     "pattern": "pain",
@@ -68,5 +40,33 @@
     "pattern": "result",
     "spoken_hook": "Öğrencilerin ne sorduğu tek özette çıkıyor.",
     "cta": "Öğretmene gönder."
+  },
+  {
+    "tool": "Gemini",
+    "hook": "Notlarından sınav sorusu çıkıyor",
+    "pattern": "result",
+    "spoken_hook": "Ders notlarından kendine sınav sorusu çıkarabilirsin.",
+    "cta": "Sınava girecek arkadaşına at."
+  },
+  {
+    "tool": "Jobmate AI",
+    "hook": "Formları elle mi dolduruyorsun?",
+    "pattern": "question",
+    "spoken_hook": "İş başvurusu formlarını hâlâ elle mi dolduruyorsun?",
+    "cta": "İş arayan arkadaşına gönder."
+  },
+  {
+    "tool": "Kiwi",
+    "hook": "Yapay zekâ önce sana yazıyor",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ sen sormadan önce sana yazıyor.",
+    "cta": "Unutkan arkadaşına gönder."
+  },
+  {
+    "tool": "VibeiDE",
+    "hook": "Ajanı tek tek mi bekliyorsun?",
+    "pattern": "question",
+    "spoken_hook": "Kodlama ajanlarını hâlâ tek tek mi bekliyorsun?",
+    "cta": "Solo kurucu arkadaşına gönder."
   }
 ]

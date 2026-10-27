@@ -649,5 +649,57 @@
     "duration_sec": 22.1,
     "words": 38,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-27_gemini",
+    "date": "2026-10-27",
+    "kind": "guide",
+    "tool": "Gemini",
+    "hook_pattern": "result",
+    "headline": "Notlarından sınav sorusu çıkıyor",
+    "spoken_hook": "Ders notlarından kendine sınav sorusu çıkarabilirsin.",
+    "cta": "Sınava girecek arkadaşına at.",
+    "duration_sec": 22.6,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-27_jobmate-ai",
+    "date": "2026-10-27",
+    "kind": "tool",
+    "tool": "Jobmate AI",
+    "hook_pattern": "question",
+    "headline": "Formları elle mi dolduruyorsun?",
+    "spoken_hook": "İş başvurusu formlarını hâlâ elle mi dolduruyorsun?",
+    "cta": "İş arayan arkadaşına gönder.",
+    "duration_sec": 23.5,
+    "words": 41,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-27_kiwi",
+    "date": "2026-10-27",
+    "kind": "tool",
+    "tool": "Kiwi",
+    "hook_pattern": "result",
+    "headline": "Yapay zekâ önce sana yazıyor",
+    "spoken_hook": "Yapay zekâ sen sormadan önce sana yazıyor.",
+    "cta": "Unutkan arkadaşına gönder.",
+    "duration_sec": 21.2,
+    "words": 41,
+    "status": "rejected: 11.6 sn karesi: büyük kısmı bulanık gri bir kutu ve içinde küçük, neredeyse boş bir telefon çizimi var. Okunur bir arayüz veya çıktı yok, kırpılmış ya da bozuk yakalama gibi görünüyor.; Aynı sahne yaklaşık 3,5 sn hareketsiz kalıyor. Bu sırada ses 'iMessage veya WhatsApp' diyor ama ekranda iMessage/WhatsApp sohbeti yok. Üçüncü kart (Mesajlaşma uygulamandan yönet) örnek karelerde görünmüyor; kart ile ses birbirini tutmuyor.; Bu sahnenin görseli 'ürün vaadini kanıtlayan' bir görsel değil. Daha iyi bir site yakalaması bulunursa (örneğin WhatsApp/iMessage sohbet ekranı) yeniden üretilebilir."
+  },
+  {
+    "id": "2026-10-27_vibeide",
+    "date": "2026-10-27",
+    "kind": "tool",
+    "tool": "VibeiDE",
+    "hook_pattern": "question",
+    "headline": "Ajanı tek tek mi bekliyorsun?",
+    "spoken_hook": "Kodlama ajanlarını hâlâ tek tek mi bekliyorsun?",
+    "cta": "Solo kurucu arkadaşına gönder.",
+    "duration_sec": 20.0,
+    "words": 36,
+    "status": "produced"
   }
 ]
