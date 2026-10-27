@@ -609,5 +609,31 @@
     "shares": 0,
     "saves": 0,
     "avg_watch_sec": 3
+  },
+  {
+    "published": "2026-10-26 07:31",
+    "kind": "reel",
+    "title": "Google Workspace BigQuery rehber Reel",
+    "reach": 164,
+    "views": 188,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 4
+  },
+  {
+    "published": "2026-10-26 11:46",
+    "kind": "reel",
+    "title": "Classroom Gemini Notebook Reel",
+    "reach": 130,
+    "views": 149,
+    "follows": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 2
   }
 ]
