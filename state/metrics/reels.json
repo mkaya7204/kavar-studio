@@ -701,5 +701,83 @@
     "duration_sec": 20.0,
     "words": 36,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-28_google",
+    "date": "2026-10-28",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "news",
+    "headline": "Gemini 4 Argon neler yapıyor?",
+    "spoken_hook": "Google'ın yeni modeli Gemini 4 Argon neler yapıyor?",
+    "cta": "Merak eden arkadaşına gönder.",
+    "duration_sec": 20.6,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-28_savorapp-ai",
+    "date": "2026-10-28",
+    "kind": "tool",
+    "tool": "SavorApp_AI",
+    "hook_pattern": "result",
+    "headline": "Fikrin sesle not oluyor",
+    "spoken_hook": "Aklındaki fikri sesinle nota çevirebilirsin.",
+    "cta": "Not tutmayı unutan arkadaşına gönder.",
+    "duration_sec": 22.5,
+    "words": 34,
+    "status": "rejected: Kaynak veride (açıklama, slogan) yapay zekâ yok: Savor sesle/foto/yazıyla not alan, hatırlatıcı kuran bir not uygulaması. KAVAR yapay zekâ sayfası; konu yapay zekâ değil (2026-10-18 dersi).; #yapayzeka ve #aitools etiketleri yanlış: gönderi YZ özelliği göstermiyor, okuyucuyu yanıltır.; Kanıt görseli ('The tide' listesi, 'Email info about Savor to colleagues') sesle not almayı göstermiyor; başlıktaki vaat (fikrin sesle not oluyor) görselle kanıtlanmıyor."
+  },
+  {
+    "id": "2026-10-28_spacesheep",
+    "date": "2026-10-28",
+    "kind": "tool",
+    "tool": "Spacesheep",
+    "hook_pattern": "result",
+    "headline": "Belgeyi yapay zekâ hazırlıyor",
+    "spoken_hook": "Ekibin okuyacağı belgeyi yapay zekâ hazırlıyor.",
+    "cta": "Ekip kuran arkadaşına at.",
+    "duration_sec": 21.1,
+    "words": 39,
+    "status": "rejected: Kanıt görseli ürünün arayüzü ya da çıktısı değil: sitenin İngilizce slogan/açıklama paragrafı ('Spaces are the place your teams and agents can be productive...') ve bir komut kutusu. Bu, 'Craft Agents' dersindeki slogan kartıyla aynı durum. Başlık 'Belgeyi yapay zekâ hazırlıyor' diyor ama ekranda hazırlanmış bir belge ya da Space yok.; Başlıktaki 'belge' vaadini kaynak doğrudan desteklemiyor. Kaynak AI'nın 'space' yaptığını söylüyor. Ekranda belge görünmüyor, yalnızca bir slogan var.; Kart 3 'Üstüne yeni iş kurulabiliyor / Ekip belgenin üzerine kendi işini ekleyebiliyor' kaynaktaki 'builds on it' ifadesinden biraz daha geniş. Ekranda da bunu gösteren bir şey yok."
+  },
+  {
+    "id": "2026-10-28_notra",
+    "date": "2026-10-28",
+    "kind": "tool",
+    "tool": "Notra",
+    "hook_pattern": "question",
+    "headline": "ChatGPT seni öneriyor mu?",
+    "spoken_hook": "Müşteri sorunca ChatGPT seni öneriyor mu?",
+    "cta": "Pazarlamacı arkadaşına gönder.",
+    "duration_sec": 21.6,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-28_ninx",
+    "date": "2026-10-28",
+    "kind": "tool",
+    "tool": "NINX",
+    "hook_pattern": "pain",
+    "headline": "Gizli işin buluta gitmesin",
+    "spoken_hook": "Gizli işlerini buluta yüklemek istemiyorsan, buna bak.",
+    "cta": "Gizliliği önemseyen arkadaşına gönder.",
+    "duration_sec": 22.6,
+    "words": 38,
+    "status": "rejected: Kanıt görseli ürünün arayüzü, çıktısı ya da iş akışı değil; sitedeki dekoratif 3B kâğıt-kesim illüstrasyonu (mikrofon, dağlar). 'Gizli işin buluta gitmesin' vaadini (cihaz üstünde çalışma) hiçbir şekilde göstermiyor. Ders: süs/slogan görseli kanıt sayılmaz.; İllüstrasyonda Slack logosu gibi başka markaların logoları görünüyor; kapak ve ilk 3 saniye boyunca ana görsel bu.; Sitede gerçek bir ürün ekranı bulunamamış; kanıtı vaatle eşleşmeyen bir aracın Reel'i çıkmamalı, araç atlanmalı ya da kanıt gösterilebilecek bir kanca seçilmeli."
+  },
+  {
+    "id": "2026-10-28_pulsedev",
+    "date": "2026-10-28",
+    "kind": "tool",
+    "tool": "PulseDev",
+    "hook_pattern": "result",
+    "headline": "Arayüz hatasına tıkla, düzelsin",
+    "spoken_hook": "Arayüzdeki hataya tıklıyorsun, yapay zekâ kodu düzeltiyor.",
+    "cta": "Frontend yazan arkadaşına gönder.",
+    "duration_sec": 23.6,
+    "words": 40,
+    "status": "produced"
   }
 ]

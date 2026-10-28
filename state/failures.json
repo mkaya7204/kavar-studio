@@ -983,5 +983,101 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-10-28",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-28",
+  "stage": "news",
+  "kind": "news",
+  "item": "Build specialized multimodal models with LFM3",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-28",
+  "stage": "news",
+  "kind": "news",
+  "item": "Genie 4: A new generation of world simulation",
+  "rendered": true,
+  "host": "deepmind.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-28",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "SavorApp_AI",
+  "rendered": true,
+  "host": "savorapp.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "off_concept"
+  ],
+  "detail": "Kaynak veride (açıklama, slogan) yapay zekâ yok: Savor sesle/foto/yazıyla not alan, hatırlatıcı kuran bir not uygulaması. KAVAR yapay zekâ sayfası; konu yapay zekâ değil (2026-10-18 dersi).; #yapayzeka ve #aitools etiketleri yanlış: gönderi YZ özelliği göstermiyor, okuyucuyu yanıltır.; Kanıt görseli"
+ },
+ {
+  "date": "2026-10-28",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Spacesheep",
+  "rendered": true,
+  "host": "spacesheep.dev",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanıt görseli ürünün arayüzü ya da çıktısı değil: sitenin İngilizce slogan/açıklama paragrafı ('Spaces are the place your teams and agents can be productive...') ve bir komut kutusu. Bu, 'Craft Agents' dersindeki slogan kartıyla aynı durum. Başlık 'Belgeyi yapay zekâ hazırlıyor' diyor ama ekranda ha"
+ },
+ {
+  "date": "2026-10-28",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Notra",
+  "rendered": true,
+  "host": "usenotra.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-28",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "NINX",
+  "rendered": true,
+  "host": "nin.in",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanıt görseli ürünün arayüzü, çıktısı ya da iş akışı değil; sitedeki dekoratif 3B kâğıt-kesim illüstrasyonu (mikrofon, dağlar). 'Gizli işin buluta gitmesin' vaadini (cihaz üstünde çalışma) hiçbir şekilde göstermiyor. Ders: süs/slogan görseli kanıt sayılmaz.; İllüstrasyonda Slack logosu gibi başka ma"
+ },
+ {
+  "date": "2026-10-28",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "PulseDev",
+  "rendered": true,
+  "host": "pulsedev.app",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

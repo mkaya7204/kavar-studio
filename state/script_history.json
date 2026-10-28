@@ -1,47 +1,5 @@
 [
   {
-    "tool": "Llama Windows",
-    "hook": "Her uygulamaya ayrı model mi?",
-    "pattern": "pain",
-    "spoken_hook": "Her uygulama için ayrı yapay zekâ kurmaktan yoruldun mu?",
-    "cta": "Yerel model deneyen arkadaşına gönder."
-  },
-  {
-    "tool": "AgentGrid.io",
-    "hook": "Ajanla aynı dosyada çalış",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ ajanıyla aynı dosyada birlikte çalışabilirsin.",
-    "cta": "Ajan kullanan ekibine gönder."
-  },
-  {
-    "tool": "Papermark Data Rooms",
-    "hook": "Gizli belge paylaşmak riskli",
-    "pattern": "pain",
-    "spoken_hook": "Gizli belgeyi paylaşırken kimin baktığını bilmiyorsun.",
-    "cta": "Yatırım turuna çıkan arkadaşına gönder."
-  },
-  {
-    "tool": "Specsight",
-    "hook": "Ekip yayına yetişemiyor",
-    "pattern": "pain",
-    "spoken_hook": "Yapay zekâyla hızlı yayınlıyorsun, ama ekibin yetişemiyor.",
-    "cta": "Hızlı ürün çıkaran ekibine gönder."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Toplantı sonrası mail elle mi?",
-    "pattern": "question",
-    "spoken_hook": "Toplantı sonrası maili hâlâ elle mi yazıyorsun?",
-    "cta": "Ekibine gönder."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Sınıfın soruları tek özette",
-    "pattern": "result",
-    "spoken_hook": "Öğrencilerin ne sorduğu tek özette çıkıyor.",
-    "cta": "Öğretmene gönder."
-  },
-  {
     "tool": "Gemini",
     "hook": "Notlarından sınav sorusu çıkıyor",
     "pattern": "result",
@@ -68,5 +26,47 @@
     "pattern": "question",
     "spoken_hook": "Kodlama ajanlarını hâlâ tek tek mi bekliyorsun?",
     "cta": "Solo kurucu arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Google PDF'i canlandırıyor",
+    "pattern": "news",
+    "spoken_hook": "Google'ın yeni modeli PDF'i animasyona çeviriyor.",
+    "cta": "Sınava çalışan arkadaşına gönder."
+  },
+  {
+    "tool": "SavorApp_AI",
+    "hook": "Fikrin sesle not oluyor",
+    "pattern": "result",
+    "spoken_hook": "Aklındaki fikri sesinle nota çevirebilirsin.",
+    "cta": "Not tutmayı unutan arkadaşına gönder."
+  },
+  {
+    "tool": "Spacesheep",
+    "hook": "Belgeyi yapay zekâ hazırlıyor",
+    "pattern": "result",
+    "spoken_hook": "Ekibin okuyacağı belgeyi yapay zekâ hazırlıyor.",
+    "cta": "Ekip kuran arkadaşına at."
+  },
+  {
+    "tool": "Notra",
+    "hook": "ChatGPT seni öneriyor mu?",
+    "pattern": "question",
+    "spoken_hook": "Müşteri sorunca ChatGPT seni öneriyor mu?",
+    "cta": "Pazarlamacı arkadaşına gönder."
+  },
+  {
+    "tool": "NINX",
+    "hook": "Gizli işin buluta gitmesin",
+    "pattern": "pain",
+    "spoken_hook": "Gizli işlerini buluta yüklemek istemiyorsan, buna bak.",
+    "cta": "Gizliliği önemseyen arkadaşına gönder."
+  },
+  {
+    "tool": "PulseDev",
+    "hook": "Arayüz hatasına tıkla, düzelsin",
+    "pattern": "result",
+    "spoken_hook": "Arayüzdeki hataya tıklıyorsun, yapay zekâ kodu düzeltiyor.",
+    "cta": "Frontend yazan arkadaşına gönder."
   }
 ]
