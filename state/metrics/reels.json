@@ -779,5 +779,57 @@
     "duration_sec": 23.6,
     "words": 40,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-29_gemini",
+    "date": "2026-10-29",
+    "kind": "guide",
+    "tool": "Gemini",
+    "hook_pattern": "curiosity",
+    "headline": "Google'ın yeni güvenlik modeli",
+    "spoken_hook": "Google yeni bir yapay zekâ modeli tanıttı.",
+    "cta": "Güvenlikçi arkadaşına gönder.",
+    "duration_sec": 19.4,
+    "words": 37,
+    "status": "rejected: Kapak başlığı \"Google'ın yeni güvenlik modeli\": Carbon genel amaçlı bir öncü model. Kaynak güvenlik/siber yeteneklerini öne çıkarıyor ama \"güvenlik modeli\" demiyor. Başlık makaleden güçlü.; Kapak, izleyicinin kullanamayacağı bir ürünü sunuyor ve kısıtlı erişimi söylemiyor. Bu bilgi ancak sesin üçüncü cümlesinde geliyor. Seçilen aday (\"En güçlü Google modeli kısıtlı\") ile ekrandaki başlık da birbirini tutmuyor.; Başlık ile ilk konuşulan cümle aynı vaadi vermiyor. Başlık \"güvenlik modeli\" diyor, ses sadece \"Google yeni bir yapay zekâ modeli tanıttı\" diyor."
+  },
+  {
+    "id": "2026-10-29_google-deepmind",
+    "date": "2026-10-29",
+    "kind": "guide",
+    "tool": "Google DeepMind",
+    "hook_pattern": "result",
+    "headline": "Google'a göre açık avında önde",
+    "spoken_hook": "Google'a göre yeni model açık bulmada önde.",
+    "cta": "Yazılımcı arkadaşına gönder.",
+    "duration_sec": 23.4,
+    "words": 36,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-29_yardlet",
+    "date": "2026-10-29",
+    "kind": "tool",
+    "tool": "Yardlet",
+    "hook_pattern": "result",
+    "headline": "Ajanlar tek Mac uygulamasında",
+    "spoken_hook": "Codex ve Claude Code'u tek Mac uygulamasında çalıştırabilirsin.",
+    "cta": "Ajan kullanan arkadaşına gönder.",
+    "duration_sec": 19.4,
+    "words": 36,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-29_google-workspace",
+    "date": "2026-10-29",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "Sheets tabloyu kendi dolduruyor",
+    "spoken_hook": "Google Sheets tabloyu senin yerine yapay zekâyla dolduruyor.",
+    "cta": "Tablocu arkadaşına gönder.",
+    "duration_sec": 20.3,
+    "words": 38,
+    "status": "produced"
   }
 ]

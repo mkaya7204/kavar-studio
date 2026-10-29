@@ -1079,5 +1079,101 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-10-29",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Gemini",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "Kapak başlığı \"Google'ın yeni güvenlik modeli\": Carbon genel amaçlı bir öncü model. Kaynak güvenlik/siber yeteneklerini öne çıkarıyor ama \"güvenlik modeli\" demiyor. Başlık makaleden güçlü.; Kapak, izleyicinin kullanamayacağı bir ürünü sunuyor ve kısıtlı erişimi söylemiyor. Bu bilgi ancak sesin üçünc"
+ },
+ {
+  "date": "2026-10-29",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google DeepMind",
+  "rendered": true,
+  "host": "deepmind.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-29",
+  "stage": "news",
+  "kind": "news",
+  "item": "Muse Is Now Available in Singapore: The World’s First Personal AI Agent Built for Everyone",
+  "rendered": true,
+  "host": "about.fb.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-29",
+  "stage": "news",
+  "kind": "news",
+  "item": "The future of the firm",
+  "rendered": false,
+  "host": "openai.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: capture of https://openai.com/index/the-future-of-the-firm failed: Page.screenshot: Timeout 90000ms exceeded."
+ },
+ {
+  "date": "2026-10-29",
+  "stage": "news",
+  "kind": "news",
+  "item": "NVIDIA Nemotron 3.5 Transcribe and Granary v2: Intelligent Multilingual Transcription You Can Prompt and Adapt",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-29",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Yardlet",
+  "rendered": true,
+  "host": "yardlet.app",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-29",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "off_concept",
+   "price"
+  ],
+  "detail": "Webhooks for your AI agents — https://www.producthunt.com/products/trigger-dev    ✖ App Store Screenshots — https://www.producthunt.com/products/app-store-screenshots    ✖ WebAI by Opera — https://www.producthunt.com/products/opera [carousel_writer] Writing with `claude -p`... ✔ [1/5] Fetching lates"
+ },
+ {
+  "date": "2026-10-29",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]
