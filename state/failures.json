@@ -1175,5 +1175,87 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-10-30",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kapak ve ilk karedeki kanıt görseli yazarın videosundan bir kare: gerçek bir kişinin yüzü ve 'Step 2. Then add this prompt to your entry' altyazısı var. Bu, başka bir içerik üreticisinin içeriği ve gerçek kişi olarak görünüyor; Gemini arayüzünü ya da çıktısını göstermiyor.; Kanıt kutusundaki görsel "
+ },
+ {
+  "date": "2026-10-30",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-30",
+  "stage": "news",
+  "kind": "news",
+  "item": "Welcome Le Chonk: Mistral Large 4 on Hugging Face",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-30",
+  "stage": "news",
+  "kind": "news",
+  "item": "You can now generate, preview, and edit documents, PDFs, presentations, spreadsheets, and more directly in Gemini.",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "facts",
+   "price"
+  ],
+  "detail": "Slayt 3: görsel bir YouTube video karesi ve ortasında oynatma düğmesi var, oynamayan bir kare; slayt yalnızca metin olmalı.; Slayt 2: makale sayfasının ekran görüntüsü telefonda okunamayacak kadar küçük; bilgi taşımıyor, metin slayta çevrilmeli.; Slayt 7 ('Neden önemli?'): 'sohbet ile başka bir uygu"
+ },
+ {
+  "date": "2026-10-30",
+  "stage": "news",
+  "kind": "news",
+  "item": "An updated Model Spec for more capable and beneficial AI",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-30",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Viggle JST-2",
+  "rendered": true,
+  "host": "viggle.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-30",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Suno MCP",
+  "rendered": true,
+  "host": "suno.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

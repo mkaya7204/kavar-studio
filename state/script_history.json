@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Google",
-    "hook": "Google PDF'i canlandırıyor",
-    "pattern": "news",
-    "spoken_hook": "Google'ın yeni modeli PDF'i animasyona çeviriyor.",
-    "cta": "Sınava çalışan arkadaşına gönder."
-  },
-  {
-    "tool": "SavorApp_AI",
-    "hook": "Fikrin sesle not oluyor",
-    "pattern": "result",
-    "spoken_hook": "Aklındaki fikri sesinle nota çevirebilirsin.",
-    "cta": "Not tutmayı unutan arkadaşına gönder."
-  },
-  {
-    "tool": "Spacesheep",
-    "hook": "Belgeyi yapay zekâ hazırlıyor",
-    "pattern": "result",
-    "spoken_hook": "Ekibin okuyacağı belgeyi yapay zekâ hazırlıyor.",
-    "cta": "Ekip kuran arkadaşına at."
-  },
-  {
-    "tool": "Notra",
-    "hook": "ChatGPT seni öneriyor mu?",
-    "pattern": "question",
-    "spoken_hook": "Müşteri sorunca ChatGPT seni öneriyor mu?",
-    "cta": "Pazarlamacı arkadaşına gönder."
-  },
-  {
     "tool": "NINX",
     "hook": "Gizli işin buluta gitmesin",
     "pattern": "pain",
@@ -68,5 +40,33 @@
     "pattern": "result",
     "spoken_hook": "Tablodaki yapay zekâ verisinin kaynağını artık hücrede görüyorsun.",
     "cta": "Tablocu arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "CV'ni dört adımda güncelle",
+    "pattern": "result",
+    "spoken_hook": "CV'ni güncelleyeceksen dört adım yeterli.",
+    "cta": "CV'ni yenileyen arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Sunum, tablo, PDF sohbette",
+    "pattern": "result",
+    "spoken_hook": "Sunumu, tabloyu, PDF'i sohbette hazırlayabilirsin.",
+    "cta": "Sunum yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Viggle JST-2",
+    "hook": "Tek modelden 3D sahne çıkıyor",
+    "pattern": "result",
+    "spoken_hook": "Tek modelden 3D sahne, karakter ve hareket çıkıyor.",
+    "cta": "3D çalışan arkadaşına gönder."
+  },
+  {
+    "tool": "Suno MCP",
+    "hook": "Sohbetten çıkmadan müzik üret",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ sohbetinden çıkmadan müzik üretebilirsin.",
+    "cta": "Yapay zekâ ajanı kuran arkadaşına gönder."
   }
 ]

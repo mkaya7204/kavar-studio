@@ -831,5 +831,57 @@
     "duration_sec": 20.3,
     "words": 38,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-30_google",
+    "date": "2026-10-30",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "CV'ni dört adımda güncelle",
+    "spoken_hook": "CV'ni güncelleyeceksen dört adım yeterli.",
+    "cta": "CV'ni yenileyen arkadaşına gönder.",
+    "duration_sec": 19.5,
+    "words": 37,
+    "status": "rejected: Kapak ve ilk karedeki kanıt görseli yazarın videosundan bir kare: gerçek bir kişinin yüzü ve 'Step 2. Then add this prompt to your entry' altyazısı var. Bu, başka bir içerik üreticisinin içeriği ve gerçek kişi olarak görünüyor; Gemini arayüzünü ya da çıktısını göstermiyor.; Kanıt kutusundaki görsel küçük ve dar, içindeki metin telefonda okunmuyor. Üstelik İngilizce ve bir Google Dokümanı görüntüsü; 'dört adım' vaadini göstermiyor.; 5 s karesinde kutu soluk, karartılmış bir videoyla dolu. Altyazı ('YAZMASINI İSTE') bu karartmanın üstünde silik ve zor okunuyor."
+  },
+  {
+    "id": "2026-10-30_google-2",
+    "date": "2026-10-30",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Sunum, tablo, PDF sohbette",
+    "spoken_hook": "Sunumu, tabloyu, PDF'i sohbette hazırlayabilirsin.",
+    "cta": "Sunum yapan arkadaşına gönder.",
+    "duration_sec": 22.9,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-30_viggle-jst-2",
+    "date": "2026-10-30",
+    "kind": "tool",
+    "tool": "Viggle JST-2",
+    "hook_pattern": "result",
+    "headline": "Tek modelden 3D sahne çıkıyor",
+    "spoken_hook": "Tek modelden 3D sahne, karakter ve hareket çıkıyor.",
+    "cta": "3D çalışan arkadaşına gönder.",
+    "duration_sec": 21.7,
+    "words": 39,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-30_suno-mcp",
+    "date": "2026-10-30",
+    "kind": "tool",
+    "tool": "Suno MCP",
+    "hook_pattern": "result",
+    "headline": "Sohbetten çıkmadan müzik üret",
+    "spoken_hook": "Yapay zekâ sohbetinden çıkmadan müzik üretebilirsin.",
+    "cta": "Yapay zekâ ajanı kuran arkadaşına gönder.",
+    "duration_sec": 22.0,
+    "words": 40,
+    "status": "produced"
   }
 ]
