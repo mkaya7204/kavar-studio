@@ -1,0 +1,11 @@
+{
+ "verdict": "fix",
+ "fixes": [],
+ "bad_visual_slides": [],
+ "problems": [
+  "Slayt 5: son cümle (kitaplığa öğrenci merkezinden ulaşılıyor, sohbet içi erişim yakında) slayt 4'ün tekrarı; gereksiz tekrar.",
+  "Slayt 7 \"Neden önemli?\": \"soru-cevabın ötesine geçip... yöneliyor\" ve \"yeni bir yol\" kaynakta yok, yorum/tahmin. Kaynağın söylediğine bağlanmalı.",
+  "Story 3 \"Türkçe listede yok\": kaynak Türkçeden hiç bahsetmiyor, bu çıkarım kaynağın kendi sözü değil; Türkiye/Türkçe ancak kaynak söylerse anılır. Başlık kaynağın diliyle olmalı.",
+  "Slayt 2 görseli sayfa ekran görüntüsü; metni telefonda okunmuyor ama dekoratif, kabul edilebilir."
+ ]
+}

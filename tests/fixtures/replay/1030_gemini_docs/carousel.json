@@ -1,0 +1,142 @@
+{
+  "slides": [
+    {
+      "role": "cover",
+      "title": "Gemini artık dosya hazırlıyor",
+      "body": "",
+      "visual": "cover",
+      "visual_index": 0,
+      "alt_text": "Gemini uygulamasında dosya oluşturma, önizleme ve düzenleme özelliğini gösteren Google görseli",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Dosyalar sohbetin içinde",
+      "body": "Google, 29 Ekim'de Gemini uygulamasına yeni bir özellik getirdi. Artık belge, PDF, sunum, e-tablo ve kod gibi dosyaları **sohbetten çıkmadan oluşturabiliyor, önizleyebiliyor ve düzenleyebiliyorsunuz.**",
+      "visual": "page",
+      "visual_index": 0,
+      "alt_text": "Google blogunun Gemini dosya özelliğini duyuran başlık alanı",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Nasıl çalışıyor?",
+      "body": "Dosyayı tam ekrana genişletip **düzenlemeleri doğrudan yazabilirsiniz.** Metni vurgulayıp Gemini'ye soru sorabilir ya da dosyayı Gemini'nin düzeltmesini isteyebilirsiniz. İsterseniz dosyayı elle de değiştirebilirsiniz.",
+      "visual": "figure",
+      "visual_index": 1,
+      "alt_text": "Gemini'de dosya oluşturma, düzenleme ve önizleme anlatan video görseli",
+      "visual_quote": "generate, edit and preview files in Gemini"
+    },
+    {
+      "role": "news",
+      "title": "Örnek: ders notundan PDF",
+      "body": "Google'ın örneğinde kullanıcı, yüklediği el yazısı ders notlarından Gemini'ye **PDF çalışma rehberi hazırlatıyor.** Sonra metni elle düzenliyor, bölümleri vurgulayıp Gemini'den metin veya görsel değişikliği istiyor, ek sorular soruyor.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "El yazısı notlardan PDF çalışma rehberi hazırlama örneği",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Hangi cihazda çalışır?",
+      "body": "**PDF önizleme ve düzenleme hem web'de hem mobilde** destekleniyor. Google Docs, Google Sheets, sunumlar, Markdown, TXT ve kod dosyaları ise **yalnızca web'de** destekleniyor.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Web ve mobil destek farkını anlatan metin slaytı",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Kimler kullanabilir?",
+      "body": "Google'a göre özellikler, **Gemini uygulamasının bulunduğu tüm ülkelerde ve dillerde, tüm kullanıcılara** açıldı. Yani özellikten, Gemini uygulamasının zaten sunulduğu yerlerdeki kullanıcılar yararlanabiliyor.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Özelliğin kimlere açıldığını anlatan metin slaytı",
+      "visual_quote": ""
+    },
+    {
+      "role": "why",
+      "title": "Neden önemli?",
+      "body": "Dosya hazırlamak için sohbet ile başka bir uygulama arasında gidip gelmek gerekmeyebilir. Taslak, düzenleme ve soru-cevap **tek ekranda** buluşuyor.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Özelliğin kullanıcı için önemini anlatan metin slaytı",
+      "visual_quote": ""
+    },
+    {
+      "role": "cta",
+      "title": "Yapay zekada olanları ilk sen öğren",
+      "body": "Takip et, yeni haberleri kaçırma.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Sayfayı takip etmeye çağıran son slayt",
+      "visual_quote": ""
+    }
+  ],
+  "story": [
+    {
+      "role": "hook",
+      "kicker": "Gemini",
+      "title": "Gemini artık dosya hazırlıyor",
+      "body": "Belge, PDF, sunum ve e-tablo sohbetin içinde oluşturulup düzenlenebiliyor.",
+      "visual": "screenshot",
+      "page_section": 0,
+      "poll_options": []
+    },
+    {
+      "role": "fact",
+      "kicker": "Nasıl?",
+      "title": "Tam ekranda düzenle",
+      "body": "Metni vurgula, Gemini'ye sor ya da düzeltmesini iste. Dosyayı elle de değiştirebilirsin.",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": []
+    },
+    {
+      "role": "fact",
+      "kicker": "Nerede?",
+      "title": "PDF mobilde de var",
+      "body": "PDF web ve mobilde çalışıyor. Docs, Sheets, sunum ve kod dosyaları yalnızca web'de.",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": []
+    },
+    {
+      "role": "poll",
+      "kicker": "Sence?",
+      "title": "Dosyaları Gemini ile hazırlar mıydın?",
+      "body": "",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": [
+        "Evet",
+        "Hayır"
+      ]
+    },
+    {
+      "role": "link",
+      "kicker": "",
+      "title": "Tamamı için linke dokun",
+      "body": "Haberin tamamı gönderide.",
+      "visual": "page",
+      "page_section": 0,
+      "poll_options": []
+    }
+  ],
+  "caption": "Gemini'de belge, PDF, sunum ve e-tablo oluşturma ve düzenleme artık sohbetin içinde.\nGoogle'a göre dosyalar tam ekranda düzenlenebiliyor, vurgulanan metin için Gemini'ye soru sorulabiliyor. PDF web ve mobilde, diğer formatlar yalnızca web'de.\nKaynak: Google",
+  "hashtags": [
+    "#yapayzeka",
+    "#gemini",
+    "#google",
+    "#geminiapp"
+  ],
+  "kind": "news",
+  "tool_name": "Google",
+  "website_url": "https://blog.google/innovation-and-ai/products/gemini-app/edit-files-directly/",
+  "title": "You can now generate, preview, and edit documents, PDFs, presentations, spreadsheets, and more directly in Gemini.",
+  "published": "2026-10-29T16:15:00+00:00",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "figures": 1,
+  "videos": 0
+}

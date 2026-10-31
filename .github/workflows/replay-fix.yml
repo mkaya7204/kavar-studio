@@ -1,0 +1,64 @@
+# D-53: replay a recorded editor "fix" on the real draft that lost a carousel, with the real writer, and show
+# whether the writer's revision now passes every rule. Nothing is rendered, queued, published or committed.
+#   gh workflow run replay-fix.yml -f cases="1030_gemini_docs 1031_gemini_immersive" -f tries=2
+# Each case is tests/fixtures/replay/<case>/ with carousel.json, article.json and verdict.json.
+name: replay-fix
+
+on:
+  workflow_dispatch:
+    inputs:
+      cases:
+        description: "folders in tests/fixtures/replay, space separated"
+        required: true
+      tries:
+        description: "times each case is replayed"
+        default: "1"
+
+jobs:
+  replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      TZ: Europe/Istanbul
+      PYTHONIOENCODING: utf-8
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      # D-49: the PC hook (.claude/settings.json) calls a Windows path; here it fails and blocks every Bash call
+      - name: Cloud runner (drop the PC-only hook)
+        run: rm -f .claude/settings.json
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Python packages and Claude Code CLI
+        run: |
+          pip install -q -r requirements.txt
+          npm install -g @anthropic-ai/claude-code@2.1.301 && claude --version
+
+      - name: Replay
+        run: |
+          python - ${{ github.event.inputs.tries }} ${{ github.event.inputs.cases }} <<'EOF'
+          import json, sys
+          from pathlib import Path
+          sys.path.insert(0, "src")
+          from news_writer import NewsScript, revise_for_editor
+          tries, cases = int(sys.argv[1]), sys.argv[2:]
+          ok = 0
+          for case in cases:
+              d = Path("tests/fixtures/replay") / case
+              script, article, verdict = (json.loads((d / f).read_text(encoding="utf-8"))
+                                          for f in ("carousel.json", "article.json", "verdict.json"))
+              for t in range(1, tries + 1):
+                  out = revise_for_editor(script, verdict, article)
+                  good = out is not None and NewsScript.model_validate(out) is not None
+                  ok += good
+                  print(f"REPLAY {case} try {t}: {'PASSES the rules' if good else 'FAILED (no valid revision)'}")
+                  if good:
+                      for i, s in enumerate(out["slides"], 1):
+                          print(f"   slide {i} {s['role']:<5} {s['visual']:<10} {len(s['body'].split()):>3} words | {s['body'][:110]}")
+          print(f"REPLAY RESULT: {ok}/{tries * len(cases)} valid")
+          EOF

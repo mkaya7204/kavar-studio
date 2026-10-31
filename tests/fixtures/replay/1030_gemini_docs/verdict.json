@@ -1,0 +1,14 @@
+{
+ "verdict": "fix",
+ "fixes": [],
+ "bad_visual_slides": [
+  2,
+  3
+ ],
+ "problems": [
+  "Slayt 3: görsel bir YouTube video karesi ve ortasında oynatma düğmesi var, oynamayan bir kare; slayt yalnızca metin olmalı.",
+  "Slayt 2: makale sayfasının ekran görüntüsü telefonda okunamayacak kadar küçük; bilgi taşımıyor, metin slayta çevrilmeli.",
+  "Slayt 7 ('Neden önemli?'): 'sohbet ile başka bir uygulama arasında gidip gelmek gerekmeyebilir' kaynakta yok, uydurma fayda; kaynağın söylediğiyle sınırlı kalmalı.",
+  "Slayt 6: 'Yani özellikten ... yararlanabiliyor' cümlesi önceki cümlenin tekrarı, gereksiz; kısaltılabilir."
+ ]
+}
