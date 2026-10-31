@@ -120,6 +120,30 @@ def test_the_editor_fix_is_rewritten_by_the_writer_and_a_bad_picture_stays_out(m
     assert "Slayt 5: görsel metinle uyuşmuyor" in seen["prompt"] and "story and caption" in seen["prompt"]
 
 
+def test_an_editor_revision_that_breaks_a_rule_is_sent_back(monkeypatch):
+    """10-31 Gemini immersive explorations (10-30 Gemini docs the same): the writer's one revision cut slide 5 to
+    15 words (needs 20-75), the editor's short text was pasted in and the post was lost."""
+    import news_writer
+
+    article = json.loads((FIX / "immersive_article_1031.json").read_text(encoding="utf-8"))
+    data = json.loads((FIX / "immersive_carousel_1031.json").read_text(encoding="utf-8"))
+    prompts = []
+
+    def ask(prompt, system, fmt):
+        prompts.append(prompt)
+        draft = news_writer.NewsDraft.model_validate(data).model_dump()
+        if len(prompts) == 1:  # as on 10-31: the repeated sentence dropped, slide 5 left with 15 words
+            draft["slides"][4]["body"] = " ".join(draft["slides"][4]["body"].split()[:15])
+        return draft, "m", "claude_code"
+
+    monkeypatch.setattr(news_writer, "_ask", ask)
+    verdict = {"verdict": "fix", "problems": ["Slayt 5: son cümle slayt 4'ün tekrarı"], "fixes": [],
+               "bad_visual_slides": []}
+    out = news_writer.revise_for_editor(data, verdict, article)
+    assert out is not None and len(prompts) == 2
+    assert "slide 5 (news): body has 15 words, needs 20-75" in prompts[1]
+
+
 def test_daily_sends_a_fix_verdict_to_the_writer(monkeypatch, tmp_path):
     import daily
 

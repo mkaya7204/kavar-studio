@@ -311,10 +311,12 @@ def generate_news(article: dict, attempts: int = 3) -> dict | None:
     return None
 
 
-def revise_for_editor(script: dict, verdict: dict, article: dict) -> dict | None:
+def revise_for_editor(script: dict, verdict: dict, article: dict, attempts: int = 3) -> dict | None:
     """D-40: the editor's "fix" is carried out by the writer, inside every rule, instead of pasting the editor's
     slide text in (10-22 YouTube: the pasted cover had 7 words and the post was thrown away; the story and the
-    caption it also criticised could not be changed). Slides with a wrong picture become text-only."""
+    caption it also criticised could not be changed). Slides with a wrong picture become text-only.
+    10-30 / 10-31 Gemini: the one revision cut a slide below 20 words and the post was lost; like
+    generate_news, a revision that breaks a rule is sent back with the rule it broke."""
     draft = NewsDraft.model_validate(script).model_dump()
     bad = {n for n in verdict.get("bad_visual_slides", []) if 1 < n <= len(draft["slides"])}
     for n in bad:
@@ -325,17 +327,20 @@ def revise_for_editor(script: dict, verdict: dict, article: dict) -> dict | None
                 + (f". Suggested text (keep within every rule, e.g. the headline length): {asked}" if asked else "")
                 + (f". Slides {sorted(bad)} now have no picture; keep them text-only" if bad else "")
                 + ". Fix every point (slides, story and caption alike), keep the same slides in the same order.")
-    draft2, model, source = _ask(_revision_prompt(_user_message(article), draft, problems), SYSTEM_PROMPT, NewsDraft)
-    if draft2 is None:
-        return None
-    if len(draft2["slides"]) == len(draft["slides"]):
-        for n in bad:  # the writer may not bring a rejected picture back
-            draft2["slides"][n - 1].update(visual="none", visual_index=0, visual_quote="")
-    try:
-        return _finish(draft2, article, source, model).model_dump(mode="json")
-    except ValueError as exc:
-        print(f"[news_writer] editor revision rejected: {str(exc)[:300]}")
-        return None
+    prompt = _revision_prompt(_user_message(article), draft, problems)
+    for attempt in range(1, attempts + 1):
+        draft2, model, source = _ask(prompt, SYSTEM_PROMPT, NewsDraft)
+        if draft2 is None:
+            return None
+        if len(draft2["slides"]) == len(draft["slides"]):
+            for n in bad:  # the writer may not bring a rejected picture back
+                draft2["slides"][n - 1].update(visual="none", visual_index=0, visual_quote="")
+        try:
+            return _finish(draft2, article, source, model).model_dump(mode="json")
+        except ValueError as exc:
+            print(f"[news_writer] editor revision {attempt} rejected: {str(exc)[:300]}")
+            prompt = _revision_prompt(prompt, draft2, f"{exc}. Keep every editor change; only fix these rules.")
+    return None
 
 
 def revise_news(script: dict, problems: list[str], article: dict) -> dict | None:

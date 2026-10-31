@@ -385,3 +385,15 @@ the decisions that are currently locked; this file explains why they exist and h
   start a run or reach the secrets. Artifacts, releases and logs are now public too.
 - **Guarded by:** nothing in tests; if a workflow ever gets a `pull_request_target` / `issue_comment` trigger,
   the secrets become reachable from forks. Don't add one.
+
+## D-53 · 2026-10-31 · An editor revision that breaks a rule goes back to the writer
+- **User:** "şimdi düzelt" (2026-10-31), about the Gemini carousel lost two days running.
+- **Evidence:** run 40996509866 (10-30, Gemini docs) and 41163706722 (10-31, Gemini immersive explorations): the
+  editor asked for a fix, `revise_for_editor` made ONE revision, which left a news slide at 13 / 15 words
+  (needs 20-75): "[news_writer] editor revision rejected: slide 5 (news): body has 15 words". daily then pasted
+  the editor's own text, which broke the same rule ("editor fixes break the rules"), and the post was rejected.
+  `generate_news` already sends a broken draft back with the rule it broke; the editor revision did not.
+- **Built:** src/news_writer.py `revise_for_editor(attempts=3)`: a revision that fails a rule is sent back with
+  the error ("keep every editor change; only fix these rules"), up to 3 tries; then the old fallback.
+- **Guarded by:** tests/test_causes.py::test_an_editor_revision_that_breaks_a_rule_is_sent_back (the real 10-31
+  carousel and article, tests/fixtures/immersive_*_1031.json).

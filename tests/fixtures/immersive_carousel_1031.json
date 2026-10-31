@@ -1,0 +1,130 @@
+{
+  "slides": [
+    {
+      "role": "cover",
+      "title": "Gemini'de etkileşimli keşif kütüphanesi",
+      "body": "",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Gemini uygulamasındaki etkileşimli keşif kütüphanesi haberinin kapağı",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Ne oldu?",
+      "body": "Google, 28 Ekim'de Gemini uygulamasına **sürükleyici keşiflerden oluşan bir kitaplık** ekledi. Konuları katman katman, etkileşimli ve görsel şekilde incelemeni sağlıyor: mikroskobik sistemlerden derin uzaya kadar.",
+      "visual": "page",
+      "visual_index": 0,
+      "alt_text": "Google blogunda Gemini sürükleyici keşifler haberinin başlık alanı",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Nasıl çalışıyor?",
+      "body": "Her sahne rehberli ve etkileşimli bir deneyime açılıyor. Örnekler: İpek Yolu ticaret rotaları, bir jet motorunun içi, yıldırımın fiziği. **Bir etikete dokunup daha derine iniyorsun**: gezegen ölçeğinden moleküllere ve atomlara kadar.",
+      "visual": "video",
+      "visual_index": 1,
+      "alt_text": "Gemini'de bir keşif sahnesinin etkileşimli akışı",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Nereden erişilecek?",
+      "body": "Kitaplığa şimdilik Gemini öğrenci merkezinde **“Try immersive explorations”** düğmesinden ulaşılıyor. Google'a göre yakında bu keşifleri doğrudan Gemini ile sohbet içinde de açabileceksin.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Gemini öğrenci merkezi ve sohbet içi erişim hakkında metin",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Sesli anlatım yolda",
+      "body": "Google, sürükleyici keşiflere yakında **sesli anlatım** ekleneceğini söylüyor. Anlatım seni her katmanda adım adım yönlendirecek. Kitaplığa şimdilik öğrenci merkezinden ulaşılıyor; sohbet içinden erişim de yakında geliyor.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Sesli anlatım özelliğinin yakında geleceğini belirten metin",
+      "visual_quote": ""
+    },
+    {
+      "role": "news",
+      "title": "Dil desteği",
+      "body": "Özellik İngilizce, Endonezce, Hintçe, Brezilya Portekizcesi, Fransızca ve sadeleştirilmiş Çinceyle kullanıma açık. **Diğer tüm dillerdeki kullanıcılar şimdilik yalnızca İngilizce deneyim alıyor.** Google daha fazla dilin geleceğini söylüyor.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Desteklenen diller ve yalnızca İngilizce deneyim hakkında metin",
+      "visual_quote": ""
+    },
+    {
+      "role": "why",
+      "title": "Neden önemli?",
+      "body": "Gemini, soru-cevabın ötesine geçip konuları görsel ve etkileşimli biçimde öğretmeye yöneliyor. Öğrenme amaçlı kullananlar için konuya katman katman inmek yeni bir yol.",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Neden önemli başlıklı özet slaydı",
+      "visual_quote": ""
+    },
+    {
+      "role": "cta",
+      "title": "Yapay zekada olanları ilk sen öğren",
+      "body": "",
+      "visual": "none",
+      "visual_index": 0,
+      "alt_text": "Takip etme çağrısı",
+      "visual_quote": ""
+    }
+  ],
+  "story": [
+    {
+      "role": "hook",
+      "kicker": "Gemini",
+      "title": "Gemini'ye etkileşimli keşif kütüphanesi geldi",
+      "body": "",
+      "visual": "page",
+      "page_section": 0,
+      "poll_options": []
+    },
+    {
+      "role": "fact",
+      "kicker": "",
+      "title": "Katman katman keşif",
+      "body": "Jet motorunun içine bak, İpek Yolu'nu izle. Etikete dokunup gezegenden atoma kadar in.",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": []
+    },
+    {
+      "role": "fact",
+      "kicker": "Diller",
+      "title": "Türkçe listede yok",
+      "body": "Altı dilde açık. Diğer dillerdeki kullanıcılar şimdilik yalnızca İngilizce deneyim alıyor.",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": []
+    },
+    {
+      "role": "link",
+      "kicker": "",
+      "title": "Tüm haber için linke dokun",
+      "body": "Ayrıntılar gönderide.",
+      "visual": "none",
+      "page_section": 0,
+      "poll_options": []
+    }
+  ],
+  "caption": "Gemini uygulamasına etkileşimli \"sürükleyici keşifler\" kütüphanesi eklendi.\nGoogle'a göre konuları mikroskobik sistemlerden derin uzaya kadar katman katman inceleyebiliyorsun. Sohbet içi erişim ve sesli anlatım yakında geliyor.\nÖzellik altı dilde açık, diğer dillerde şimdilik yalnızca İngilizce.\nKaynak: Google",
+  "hashtags": [
+    "#yapayzeka",
+    "#gemini",
+    "#google",
+    "#geminiapp"
+  ],
+  "kind": "news",
+  "tool_name": "Google",
+  "website_url": "https://blog.google/innovation-and-ai/products/gemini-app/immersive-explorations-student-hub/",
+  "title": "Dive into new topics with immersive explorations in the Gemini app.",
+  "published": "2026-10-28T18:00:00+00:00",
+  "source": "claude_code",
+  "model": "claude-sonnet-5-5",
+  "figures": 0,
+  "videos": 1
+}
