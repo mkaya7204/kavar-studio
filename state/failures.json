@@ -1257,5 +1257,73 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-10-31",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-31",
+  "stage": "news",
+  "kind": "news",
+  "item": "Granite Switch 4.1.1 — Update models like you update software",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-31",
+  "stage": "news",
+  "kind": "news",
+  "item": "Dive into new topics with immersive explorations in the Gemini app.",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "facts"
+  ],
+  "detail": "Slayt 5: son cümle (kitaplığa öğrenci merkezinden ulaşılıyor, sohbet içi erişim yakında) slayt 4'ün tekrarı; gereksiz tekrar.; Slayt 7 \"Neden önemli?\": \"soru-cevabın ötesine geçip... yöneliyor\" ve \"yeni bir yol\" kaynakta yok, yorum/tahmin. Kaynağın söylediğine bağlanmalı.; Story 3 \"Türkçe listede yo"
+ },
+ {
+  "date": "2026-10-31",
+  "stage": "news",
+  "kind": "news",
+  "item": "Community safety report and new protections for teens",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-31",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Norah Studio",
+  "rendered": true,
+  "host": "norahstudio.app",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-10-31",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Canva Brush",
+  "rendered": true,
+  "host": "canva.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

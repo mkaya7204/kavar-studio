@@ -883,5 +883,44 @@
     "duration_sec": 22.0,
     "words": 40,
     "status": "produced"
+  },
+  {
+    "id": "2026-10-31_google",
+    "date": "2026-10-31",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Uzayı katman katman keşfet",
+    "spoken_hook": "Uzayı katman katman keşfedebilirsin.",
+    "cta": "Öğrenci arkadaşına gönder, işine yarar.",
+    "duration_sec": 21.4,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-31_norah-studio",
+    "date": "2026-10-31",
+    "kind": "tool",
+    "tool": "Norah Studio",
+    "hook_pattern": "result",
+    "headline": "Her şarkıyı parçalarına ayır",
+    "spoken_hook": "Herhangi bir şarkıyı parçalarına ayırabilirsin.",
+    "cta": "Müzisyen arkadaşına gönder.",
+    "duration_sec": 18.6,
+    "words": 34,
+    "status": "produced"
+  },
+  {
+    "id": "2026-10-31_canva-brush",
+    "date": "2026-10-31",
+    "kind": "tool",
+    "tool": "Canva Brush",
+    "hook_pattern": "result",
+    "headline": "Tasarımı yapay zekâ düzenliyor",
+    "spoken_hook": "Tasarımını yapay zekâ senin yerine düzenliyor.",
+    "cta": "Tasarım yapan ekip arkadaşına at.",
+    "duration_sec": 22.2,
+    "words": 41,
+    "status": "produced"
   }
 ]

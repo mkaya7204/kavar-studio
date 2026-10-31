@@ -1,26 +1,5 @@
 [
   {
-    "tool": "NINX",
-    "hook": "Gizli işin buluta gitmesin",
-    "pattern": "pain",
-    "spoken_hook": "Gizli işlerini buluta yüklemek istemiyorsan, buna bak.",
-    "cta": "Gizliliği önemseyen arkadaşına gönder."
-  },
-  {
-    "tool": "PulseDev",
-    "hook": "Arayüz hatasına tıkla, düzelsin",
-    "pattern": "result",
-    "spoken_hook": "Arayüzdeki hataya tıklıyorsun, yapay zekâ kodu düzeltiyor.",
-    "cta": "Frontend yazan arkadaşına gönder."
-  },
-  {
-    "tool": "Gemini",
-    "hook": "En güçlü Google modeli kısıtlı",
-    "pattern": "curiosity",
-    "spoken_hook": "Google'ın en güçlü modeli herkese açık değil.",
-    "cta": "Güvenlikçi arkadaşına gönder."
-  },
-  {
     "tool": "Google DeepMind",
     "hook": "Yapay zekâ günlerce işte kalıyor",
     "pattern": "result",
@@ -68,5 +47,26 @@
     "pattern": "result",
     "spoken_hook": "Yapay zekâ sohbetinden çıkmadan müzik üretebilirsin.",
     "cta": "Yapay zekâ ajanı kuran arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Jet motorunun içine bak",
+    "pattern": "result",
+    "spoken_hook": "Jet motorunun içine telefondan bakabilirsin.",
+    "cta": "Öğrenci arkadaşına gönder, işine yarar."
+  },
+  {
+    "tool": "Norah Studio",
+    "hook": "Her şarkıyı parçalarına ayır",
+    "pattern": "result",
+    "spoken_hook": "Herhangi bir şarkıyı vokal, davul ve enstrümantale ayırabilirsin.",
+    "cta": "Müzisyen arkadaşına gönder."
+  },
+  {
+    "tool": "Canva Brush",
+    "hook": "Tasarımı yapay zekâ düzenliyor",
+    "pattern": "result",
+    "spoken_hook": "Tasarımını yapay zekâ senin yerine düzenliyor.",
+    "cta": "Tasarım yapan ekip arkadaşına at."
   }
 ]

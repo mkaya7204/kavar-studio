@@ -4,6 +4,7 @@
  "Archivist": "Arkayvist",
  "Auto": "Oto",
  "BigQuery": "Bigkuveri",
+ "Brush": "Braş",
  "Business": "Biznıs",
  "CAD": "ked",
  "Canva": "Kanva",
@@ -25,6 +26,7 @@
  "Live": "Layv",
  "MCP": "Emsipi",
  "Meet": "Mit",
+ "Norah": "Nora",
  "Notebook": "Notbuk",
  "OpenCode": "Openkod",
  "PDF": "Pidiyef",
@@ -48,6 +50,7 @@
  "quiz": "kviz",
  "readywhen": "Rediven",
  "remixleyebilirsin": "rimikleyebilirsin",
+ "web": "veb",
  "with": "vit",
  "zCAD": "zikedi"
 }
