@@ -142,6 +142,8 @@ def test_an_editor_revision_that_breaks_a_rule_is_sent_back(monkeypatch):
     out = news_writer.revise_for_editor(data, verdict, article)
     assert out is not None and len(prompts) == 2
     assert "slide 5 (news): body has 15 words, needs 20-75" in prompts[1]
+    # and the length rule is said before the first revision is written
+    assert "must not make a slide too short" in prompts[0] and "20-75 words" in prompts[0]
 
 
 def test_daily_sends_a_fix_verdict_to_the_writer(monkeypatch, tmp_path):

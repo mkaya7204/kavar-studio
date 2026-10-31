@@ -326,7 +326,13 @@ def revise_for_editor(script: dict, verdict: dict, article: dict, attempts: int 
     problems = ("the editor-in-chief asked for these changes: " + "; ".join(verdict.get("problems", []))
                 + (f". Suggested text (keep within every rule, e.g. the headline length): {asked}" if asked else "")
                 + (f". Slides {sorted(bad)} now have no picture; keep them text-only" if bad else "")
-                + ". Fix every point (slides, story and caption alike), keep the same slides in the same order.")
+                + ". Fix every point (slides, story and caption alike), keep the same slides in the same order."
+                # 10-30 / 10-31 Gemini: told to cut a repeated or invented sentence, the writer left the slide at
+                # 13 / 15 words and the post was lost; the length rule is said before it writes (D-53)
+                + " Removing a repeated or unsupported sentence must not make a slide too short: every news slide "
+                  f"body keeps {BODY_WORDS['news'][0]}-{BODY_WORDS['news'][1]} words and the why slide "
+                  f"{BODY_WORDS['why'][0]}-{BODY_WORDS['why'][1]}; if a slide falls short, add another fact "
+                  "from the article (never a guess).")
     prompt = _revision_prompt(_user_message(article), draft, problems)
     for attempt in range(1, attempts + 1):
         draft2, model, source = _ask(prompt, SYSTEM_PROMPT, NewsDraft)

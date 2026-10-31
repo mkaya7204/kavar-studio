@@ -401,3 +401,13 @@ the decisions that are currently locked; this file explains why they exist and h
   the draft, the article, the editor's verdict from the run log) on the real writer. Run 41177698135: 4/4 valid;
   in 3 of 4 the writer again left a slide at 13 / 15 words on try 1 and fixed it on try 2. Not yet seen: the
   editor's verdict on such a revision in a production run.
+
+## D-54 · 2026-10-31 · The editor revision is told the slide length rule before it writes
+- **User:** "yazara baştan söyleme çözümünü de şimdi yap" (2026-10-31), after the D-53 replay.
+- **Evidence:** replay-fix run 41177698135: in 3 of 4 replays the writer again cut a news slide to 13 / 15 words
+  on its first revision (told to remove a repeated / invented sentence); only D-53's retry saved it.
+- **Built:** src/news_writer.py `revise_for_editor`: the revision prompt says that removing a sentence must not
+  take a slide under the BODY_WORDS limits (news 20-75, why 12-45) and to add another fact from the article
+  (never a guess). D-53's retry stays as the safety net.
+- **Guarded by:** tests/test_causes.py::test_an_editor_revision_that_breaks_a_rule_is_sent_back (the rule is in
+  the first revision prompt); replay-fix.yml on tests/fixtures/replay/ shows how often try 1 now passes.
