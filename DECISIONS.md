@@ -411,3 +411,5 @@ the decisions that are currently locked; this file explains why they exist and h
   (never a guess). D-53's retry stays as the safety net.
 - **Guarded by:** tests/test_causes.py::test_an_editor_revision_that_breaks_a_rule_is_sent_back (the rule is in
   the first revision prompt); replay-fix.yml on tests/fixtures/replay/ shows how often try 1 now passes.
+- **Seen:** replay-fix run 41179183590 (same 2 cases x 2): 4/4 valid, all 4 on the writer's first revision, no
+  retry needed (before, run 41177698135: 1 of 4 on the first try). Not yet seen in a production run.
