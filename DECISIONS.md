@@ -397,3 +397,7 @@ the decisions that are currently locked; this file explains why they exist and h
   the error ("keep every editor change; only fix these rules"), up to 3 tries; then the old fallback.
 - **Guarded by:** tests/test_causes.py::test_an_editor_revision_that_breaks_a_rule_is_sent_back (the real 10-31
   carousel and article, tests/fixtures/immersive_*_1031.json).
+- **Seen working:** `.github/workflows/replay-fix.yml` replays the recorded failing input (tests/fixtures/replay/<case>/:
+  the draft, the article, the editor's verdict from the run log) on the real writer. Run 41177698135: 4/4 valid;
+  in 3 of 4 the writer again left a slide at 13 / 15 words on try 1 and fixed it on try 2. Not yet seen: the
+  editor's verdict on such a revision in a production run.
