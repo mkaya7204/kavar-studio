@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Google DeepMind",
-    "hook": "Yapay zekâ günlerce işte kalıyor",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ artık günlerce tek işte kalabiliyor.",
-    "cta": "Yazılımcı arkadaşına gönder."
-  },
-  {
-    "tool": "Yardlet",
-    "hook": "Ajanların tek Mac penceresinde",
-    "pattern": "result",
-    "spoken_hook": "Kodlama ajanlarını tek Mac penceresinde yan yana çalıştırabilirsin.",
-    "cta": "Ajan kullanan arkadaşına gönder."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Her hücrenin kaynağı görünüyor",
-    "pattern": "result",
-    "spoken_hook": "Tablodaki yapay zekâ verisinin kaynağını artık hücrede görüyorsun.",
-    "cta": "Tablocu arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
-    "hook": "CV'ni dört adımda güncelle",
-    "pattern": "result",
-    "spoken_hook": "CV'ni güncelleyeceksen dört adım yeterli.",
-    "cta": "CV'ni yenileyen arkadaşına gönder."
-  },
-  {
     "tool": "Google",
     "hook": "Sunum, tablo, PDF sohbette",
     "pattern": "result",
@@ -68,5 +40,33 @@
     "pattern": "result",
     "spoken_hook": "Tasarımını yapay zekâ senin yerine düzenliyor.",
     "cta": "Tasarım yapan ekip arkadaşına at."
+  },
+  {
+    "tool": "SKI",
+    "hook": "Ajanınla konuşarak kod yaz",
+    "pattern": "result",
+    "spoken_hook": "Kodlama ajanınla artık sesli konuşabilirsin.",
+    "cta": "Kodcu arkadaşına gönder."
+  },
+  {
+    "tool": "Mo",
+    "hook": "232 görev, tek küçük karakter",
+    "pattern": "result",
+    "spoken_hook": "Tek bir küçük karakter 232 görevi yapabiliyor.",
+    "cta": "Mac kullanan arkadaşına gönder."
+  },
+  {
+    "tool": "BaseTab AI",
+    "hook": "Yeni sekmen çalışma alanı oluyor",
+    "pattern": "result",
+    "spoken_hook": "Yeni sekmen artık yapay zekâlı bir çalışma alanına dönüşüyor.",
+    "cta": "Chrome'da çok sekme açan arkadaşına at."
+  },
+  {
+    "tool": "Godwit",
+    "hook": "Mailini yapay zekâ özetliyor",
+    "pattern": "result",
+    "spoken_hook": "Uzun mailleri yapay zekâ senin için özetleyebilir.",
+    "cta": "Mail kutusu dolu arkadaşına gönder."
   }
 ]

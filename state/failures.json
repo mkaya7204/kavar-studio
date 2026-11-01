@@ -1325,5 +1325,103 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-01",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 34 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini editing whole Slides decks is a usable AI feature many students and worke)    rank 34 [Google Workspace Updates] An easier way to customize how Gemini wo"
+ },
+ {
+  "date": "2026-11-01",
+  "stage": "news",
+  "kind": "news",
+  "item": "Making it easier for websites to express AI training preferences",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-01",
+  "stage": "news",
+  "kind": "news",
+  "item": "Things That Go Beep in the Night: Agentic AI Joins the Search for Extraterrestrial Signals",
+  "rendered": true,
+  "host": "blogs.nvidia.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-01",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "SKI",
+  "rendered": true,
+  "host": "justski.it",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-01",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Mo",
+  "rendered": true,
+  "host": "appsbymo.app",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "facts"
+  ],
+  "detail": "Kaynakta yapay zekâ yok: Mo yalnızca 'Mac'inde yaşayan, 232 görev yapan küçük karakter'. Sayfa AI konusu değil; #yapayzeka, #aitools ve #yapayzekaasistani etiketleri yanlış.; Kaynakta olmayan iddialar: 'Tekrar eden işlere daha az vakit gider' ve 'yapmak istemediğin işleri ona bırakabilirsin' kaynakt"
+ },
+ {
+  "date": "2026-11-01",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "BaseTab AI",
+  "rendered": true,
+  "host": "basetab.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "facts"
+  ],
+  "detail": "Uydurma iddia: 'Saat, hava durumu ve arama kutusu hazır' kaynakta yok. Kaynak yalnızca widget, yer imi, yapay zekâ sohbeti ve Google entegrasyonlarını söylüyor. Ekranda hava durumu görünmüyor, saat yerine Pomodoro var. Bu iddia 2. kartta, seslendirmede ve açıklamada geçiyor.; Hook'taki 'çalışma alan"
+ },
+ {
+  "date": "2026-11-01",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Godwit",
+  "rendered": true,
+  "host": "godwit.email",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-01",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 35 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini editing whole Slides presentations is a concrete AI feature many students)    rank 32 [Google Workspace Updates] An easier way to customize how Gemini wo"
  }
 ]
