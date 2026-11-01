@@ -413,3 +413,30 @@ the decisions that are currently locked; this file explains why they exist and h
   the first revision prompt); replay-fix.yml on tests/fixtures/replay/ shows how often try 1 now passes.
 - **Seen:** replay-fix run 41179183590 (same 2 cases x 2): 4/4 valid, all 4 on the writer's first revision, no
   retry needed (before, run 41177698135: 1 of 4 on the first try). Not yet seen in a production run.
+- **Seen in production (11-01, run 41268555060):** the NVIDIA SETI carousel got two editor fix rounds; the writer
+  rewrote both, no "editor revision N rejected" in the run's stdout, then "publish" and queued at 18:00.
+
+## D-55 · 2026-11-01 · A guide post with no picture uses its help page; a bare title is read from its page
+- **User:** "görsel yoksa bile buna bir çözüm bul ve diğer çözümde yeterince metin yok denildiğinde çözüm bul"
+  (2026-11-01, after the 07:30 slot was empty).
+- **Evidence:** run 41268555060 (11-01): the only 2 guide candidates (Workspace Updates: "Edit entire presentations
+  with Gemini in Google Slides", "An easier way to customize how Gemini works for you") were skipped with "no
+  picture on the company's page", twice, and 07:30 stayed empty (filled by hand from the reserve). 10-26: the same
+  for two more Workspace posts. The Slides post has no image but links to its Help Center page
+  (support.google.com/docs/answer/17111393), whose 512 px picture is Slides' own screen; the 600 px figure bar would
+  have dropped it. The same run's ranker dropped Hugging Face's "nemotron-halloween" as "No summary, only a title,
+  so nothing can be told": its feed entry has no summary and the page's description is "A Blog post by NVIDIA on
+  Hugging Face"; the post itself starts "TL;DR: MonsterHouse is an interactive projection...".
+- **Built:** src/article_capture.py returns the post's links and takes `min_figure_width`. The guide Reel
+  (src/guide_reel) `_own_links` (links whose site name is in the post's host: support.google.com for googleblog.com /
+  blog.google, help.openai.com for openai.com; never YouTube, social or short links) and `_linked_figures`: when the
+  post has no picture, up to LINKED_PAGES = 2 of those pages are captured with a 480 px bar and their pictures are
+  the shots. The facts still come only from the post. The page screenshot stays out (10-18 rule, its test
+  unchanged). src/news_fetcher.py `page_summary` (the page's own description, else its first sentences inside
+  <main>) and src/content_ranker.py `rank`: a candidate with under MIN_SUMMARY = 40 characters of summary gets it
+  from its page before scoring. This serves every slot (news, guide, tool).
+- **Guarded by:** tests/test_causes.py::test_a_guide_post_links_to_the_companys_own_pages_only,
+  ::test_a_guide_post_with_no_picture_takes_the_help_pages_screen (the real Slides help picture,
+  tests/fixtures/slides_help_screen_1101.png), ::test_the_linked_page_is_tried_in_the_morning_flow,
+  ::test_a_bare_title_gets_its_summary_from_the_page (the real page, tests/fixtures/hf_nemotron_halloween_1101.html),
+  ::test_the_ranker_reads_a_missing_summary_before_judging.

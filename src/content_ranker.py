@@ -22,6 +22,7 @@ from pydantic import BaseModel
 
 ROOT = Path(__file__).resolve().parent.parent
 METRICS = ROOT / "state" / "metrics" / "posts.json"
+MIN_SUMMARY = 40  # characters of plain text; less is a bare title (D-55)
 
 CATEGORIES = ("everyday_ai_product", "model_release", "ai_tool", "research_science", "enterprise_customer",
               "chips_infrastructure", "gaming_hardware", "policy_business", "turkey_tech")
@@ -119,8 +120,15 @@ def rank(candidates: list[dict], concept: str, kind_prefix: str = "carousel") ->
     The input order is kept if the call fails."""
     from carousel_writer import _ask
 
+    from news_fetcher import page_summary, plain
+
     if len(candidates) < 2:
         return candidates
+    for c in candidates:  # D-55: a bare title is read from its page, never judged as "nothing can be told"
+        if len(plain(str(c.get("summary") or ""))) < MIN_SUMMARY and c.get("url"):
+            if found := page_summary(c["url"]):
+                c["summary"] = found
+                print(f"[ranker] summary read from the page: {c['title'][:60]}")
     recent = recent_titles()
     listing = "\n".join(f"{i}. [{c.get('source', '')}] {c['title']} - {str(c.get('summary', ''))[:300]}"
                         for i, c in enumerate(candidates))

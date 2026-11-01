@@ -48,6 +48,8 @@ PER_FEED = 5
 GUIDE_FEED_POSTS = 15  # D-41: posts per guide-only source
 TRIES = 6  # pages tried per morning: OpenAI refuses the cloud reader at times, Samsung times out (10-18 dry run)
 WORDS = (32, 38)  # same as the other Reels: under 26 s
+LINKED_PAGES = 2  # D-55: the company's own linked pages tried for a post with no picture
+LINKED_MIN_WIDTH = 480
 
 GUIDE_RULES = """
 
@@ -116,6 +118,36 @@ def _video_frames(videos: list[str], folder: Path) -> list[str]:
         if still.exists():
             out.append(str(still))
     return out
+
+
+def _own_links(page: dict) -> list[str]:
+    """The company's own pages the post links to (Workspace Updates -> support.google.com): the link's site name
+    ("google" in support.google.com) is part of the post's host. Social, YouTube and other sites are left out."""
+    host = urlsplit(page["url"]).hostname or ""
+    out = []
+    for link in page.get("links", []):
+        h = urlsplit(link).hostname or ""
+        name = h.split(".")[-2] if h.count(".") else ""
+        own = len(name) >= 4 and any(label.startswith(name) for label in host.split("."))
+        if own and h != host and link not in out:
+            out.append(link)
+    return out
+
+
+def _linked_figures(page: dict) -> list[dict]:
+    """D-55: a post with no picture (11-01: Slides, Gemini settings; 10-26: two more; both 07:30 Reels lost)
+    still links to the feature's help page, whose screenshots show the product's own screen. Their pictures are
+    smaller (the Slides one is 512 px), so the bar is 480 px there."""
+    for n, link in enumerate(_own_links(page)[:LINKED_PAGES], 1):
+        try:
+            linked = capture_article(link, WORK / f"linked_{n}", min_figure_width=LINKED_MIN_WIDTH)
+        except CaptureError as exc:
+            print(f"   linked page failed: {str(exc)[:120]}")
+            continue
+        print(f"   {len(linked['figures'])} pictures on the company's linked page {link}")
+        if linked["figures"]:
+            return linked["figures"]
+    return []
 
 
 def _frames(page: dict, folder: Path) -> dict | None:
@@ -202,6 +234,8 @@ def _make_from(candidates: list[dict]) -> int:
             print(f"   capture failed: {exc}")
             continue
         capture = _frames(page, TEMP_DIR / "guide_frames")
+        if capture is None and (linked := _linked_figures(page)):
+            capture = _frames({**page, "figures": linked}, TEMP_DIR / "guide_frames")
         if capture is None:
             print("   no picture on the company's page: skipped")
             continue

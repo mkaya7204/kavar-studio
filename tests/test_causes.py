@@ -268,3 +268,86 @@ def test_the_workflow_uploads_the_morning_reel_before_the_rest(name):
                   if "kavar-morning" in str(s.get("with", {}).get("name", "")))
     rest = steps.index("Produce the rest of the day (news carousels + Reels, each reviewed by the editor)")
     assert morning < upload < rest
+
+
+# --- D-55: a guide post with no picture, a news item with no summary (11-01 run 41268555060) ----------------------
+
+SLIDES_POST = "http://workspaceupdates.googleblog.com/2026/10/edit-entire-presentations-with-gemini-in-Google-Slides.html"
+SLIDES_LINKS = ["https://support.google.com/docs/answer/17111393", "https://support.google.com/a?p=limits",
+                "https://support.google.com/a/answer/172177", "https://workspaceupdates.googleblog.com/search/label/x",
+                "https://www.youtube.com/watch?v=x", "https://t.co/abc", "https://twitter.com/googleworkspace"]
+
+
+def test_a_guide_post_links_to_the_companys_own_pages_only():
+    import guide_reel
+
+    links = guide_reel._own_links({"url": SLIDES_POST, "links": SLIDES_LINKS})
+    assert links[0] == "https://support.google.com/docs/answer/17111393"  # the feature's help page first
+    assert all("support.google.com" in u for u in links)  # never the blog itself, YouTube, short links, social
+    assert guide_reel._own_links({"url": "https://blog.google/x", "links": ["https://support.google.com/y"]})
+    assert guide_reel._own_links({"url": "https://openai.com/x", "links": ["https://help.openai.com/y"]})
+
+
+def test_a_guide_post_with_no_picture_takes_the_help_pages_screen(monkeypatch, tmp_path):
+    """11-01: the Slides post had no picture, so the 07:30 Reel was lost; its help page shows Slides' own screen
+    (the real 512 px picture). It becomes the proof, the post's text stays the only source of facts."""
+    import guide_reel
+
+    seen = []
+
+    def fake_capture(url, out_dir, min_figure_width=600, **_):
+        seen.append((url, min_figure_width))
+        figs = [{"n": 1, "path": str(FIX / "slides_help_screen_1101.png")}] if "17111393" in url else []
+        return {"url": url, "figures": figs, "videos": [], "cover_path": None, "links": []}
+
+    monkeypatch.setattr(guide_reel, "capture_article", fake_capture)
+    monkeypatch.setattr(guide_reel, "WORK", tmp_path)
+    page = {"url": SLIDES_POST, "cover_path": None, "figures": [], "videos": [], "links": SLIDES_LINKS}
+    assert guide_reel._frames(page, tmp_path / "f") is None  # the post alone has nothing to show
+    linked = guide_reel._linked_figures(page)
+    assert seen == [("https://support.google.com/docs/answer/17111393", guide_reel.LINKED_MIN_WIDTH)]
+    cap = guide_reel._frames({**page, "figures": linked}, tmp_path / "f")
+    assert cap and Path(cap["proof_path"]).exists() and cap["pictures"] == [str(FIX / "slides_help_screen_1101.png")]
+
+
+def test_the_linked_page_is_tried_in_the_morning_flow():
+    import inspect
+
+    import guide_reel
+
+    src = inspect.getsource(guide_reel._make_from)
+    assert src.index("_linked_figures(page)") < src.index("no picture on the company's page")
+
+
+def test_a_bare_title_gets_its_summary_from_the_page(monkeypatch):
+    """11-01: Hugging Face's "nemotron-halloween" reached the ranker with no summary and was dropped ("No summary,
+    only a title"). The page's own sentences are read first; menus and its generic description are not."""
+    import news_fetcher
+
+    class Resp:
+        text = (FIX / "hf_nemotron_halloween_1101.html").read_text(encoding="utf-8")
+
+        def raise_for_status(self):
+            pass
+
+    monkeypatch.setattr(news_fetcher.requests, "get", lambda *a, **k: Resp())
+    s = news_fetcher.page_summary("https://huggingface.co/blog/nvidia/nemotron-halloween")
+    assert s.startswith("TL;DR: MonsterHouse is an interactive projection")
+    assert "Models Datasets Spaces" not in s and "A Blog post by" not in s
+
+
+def test_the_ranker_reads_a_missing_summary_before_judging(monkeypatch):
+    import carousel_writer
+    import content_ranker
+    import news_fetcher
+
+    monkeypatch.setattr(news_fetcher, "page_summary", lambda url: "MonsterHouse answers trick-or-treaters.")
+    prompts = []
+    monkeypatch.setattr(carousel_writer, "_ask", lambda prompt, *a: (prompts.append(prompt), (None, "", ""))[1])
+    cands = [{"title": "nemotron-halloween", "url": "https://huggingface.co/blog/nvidia/nemotron-halloween",
+              "summary": "", "source": "Hugging Face"},
+             {"title": "Other", "url": "https://x/y", "summary": "A long enough summary of another story here, sure.",
+              "source": "X"}]
+    content_ranker.rank(cands, "news_carousel")
+    assert "nemotron-halloween - MonsterHouse answers trick-or-treaters." in prompts[0]
+    assert "A long enough summary of another story" in prompts[0]  # a real summary is kept as it is

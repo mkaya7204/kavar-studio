@@ -31,7 +31,7 @@ MAX_VIDEO_MB = 80
 MAX_TEXT = 14_000
 
 EXTRACT_JS = r"""
-() => {
+(minWidth) => {
   const meta = (k) => (document.querySelector(`meta[property="${k}"], meta[name="${k}"]`) || {}).content || "";
   // main text: the <article> (or <main>) with the most paragraph text
   const roots = [...document.querySelectorAll("article, main, [role=main]")];
@@ -43,7 +43,7 @@ EXTRACT_JS = r"""
   const text = [...new Set(blocks)].join("\n");
   // figures: big images inside the article
   const figs = [...root.querySelectorAll("img, picture img")]
-    .filter((im) => im.naturalWidth >= 600 && im.getBoundingClientRect().width >= 400)
+    .filter((im) => im.naturalWidth >= minWidth && im.getBoundingClientRect().width >= Math.min(400, minWidth))
     .map((im, i) => {
       im.setAttribute("data-cap-fig", String(i));
       const fc = im.closest("figure")?.querySelector("figcaption");
@@ -59,6 +59,7 @@ EXTRACT_JS = r"""
     cover: meta("og:image") || meta("twitter:image"),
     og_video: meta("og:video:secure_url") || meta("og:video") || "",
     text, figs, vids,
+    links: [...new Set([...root.querySelectorAll("a[href^='http']")].map((a) => a.href.split("#")[0]))],
   };
 }
 """
@@ -128,7 +129,7 @@ def _download(url: str, out: Path, max_mb: float) -> Path | None:
         return None
 
 
-def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000) -> dict:
+def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000, min_figure_width: int = 600) -> dict:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     for old in out_dir.glob("*"):
@@ -165,7 +166,7 @@ def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000) -> 
             _clean_page(page)
             page.evaluate(HIDE_OVERLAYS_JS)
             page.screenshot(path=out_dir / "page.png", animations="disabled", timeout=SCREENSHOT_TIMEOUT_MS)
-            info = page.evaluate(EXTRACT_JS)
+            info = page.evaluate(EXTRACT_JS, min_figure_width)
             # many blogs keep their videos as .mp4 links in the page data, not as <video> tags
             for src in re.findall(r"https?://[^\s\"'<>()]+?\.mp4", page.content()):
                 if src not in info["vids"]:
@@ -240,6 +241,7 @@ def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000) -> 
         "page_blank": not informative(out_dir / "page.png"),
         "figures": figures,
         "videos": videos,
+        "links": info.get("links", []),  # D-55: the guide Reel looks for pictures on the company's linked pages
     }
 
 

@@ -5,7 +5,9 @@ same story never runs twice. Order: newest day first, then source priority
 (official company blogs before press), then time.
 """
 
+import html
 import json
+import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -54,6 +56,32 @@ def _items(feed: dict) -> list[dict]:
     for o in out:
         o["source"], o["priority"] = feed["name"], feed.get("priority", 1)
     return [o for o in out if o["title"] and o["url"].startswith("http")]
+
+
+def plain(text: str) -> str:
+    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", text or ""))).strip()
+
+
+def page_summary(url: str) -> str:
+    """D-55: what the page says about itself, for a feed entry with no summary (11-01: Hugging Face's
+    "nemotron-halloween" reached the ranker as a bare title and was dropped: "No summary, only a title").
+    The page's own description first, else its first paragraphs. Empty when the page can't be read."""
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+    except requests.RequestException:
+        return ""
+    page = r.text
+    for key in ("og:description", "description", "twitter:description"):
+        m = (re.search(rf'<meta[^>]+(?:property|name)=["\']{key}["\'][^>]*content=["\']([^"\']+)', page, re.I)
+             or re.search(rf'<meta[^>]+content=["\']([^"\']+)["\'][^>]*(?:property|name)=["\']{key}["\']', page, re.I))
+        if m and len(plain(m.group(1))) >= 40:
+            return plain(m.group(1))[:500]
+    # the post's own sentences, inside <main> when there is one (Hugging Face: its menus are <p> too)
+    body = (re.search(r"<main[^>]*>(.*?)</main>", page, re.S | re.I) or re.search(r"(.*)", page, re.S)).group(1)
+    paragraphs = [p for p in (plain(x) for x in re.findall(r"<p\b[^>]*>(.*?)</p>", body, re.S | re.I))
+                  if len(p) > 60 and re.search(r"[.!?]$", p)]
+    return " ".join(paragraphs)[:500]
 
 
 def load_history() -> list[str]:
