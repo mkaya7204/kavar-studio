@@ -711,5 +711,55 @@
     "shares": 0,
     "saves": 1,
     "avg_watch_sec": 4
+  },
+  {
+    "published": "2026-10-31 11:46",
+    "kind": "reel",
+    "title": "Canva Brush tool Reel (seen 11-01 08:45)",
+    "reach": 170,
+    "views": 182,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 2,
+    "avg_watch_sec": 2
+  },
+  {
+    "published": "2026-10-31 12:30",
+    "kind": "carousel",
+    "title": "IBM Granite Switch 4.1.1 carousel (seen 11-01 08:45)",
+    "reach": 18,
+    "views": 53,
+    "follows": 0,
+    "likes": 3,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-10-31 18:00",
+    "kind": "carousel",
+    "title": "OpenAI teen safety carousel (seen 11-01 08:45)",
+    "reach": 19,
+    "views": 34,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-10-31 20:31",
+    "kind": "reel",
+    "title": "Norah Studio tool Reel (seen 11-01 08:45)",
+    "reach": 140,
+    "views": 159,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 2
   }
 ]
