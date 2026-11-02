@@ -974,5 +974,44 @@
     "duration_sec": 22.1,
     "words": 38,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-02_google",
+    "date": "2026-11-02",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "question",
+    "headline": "Yapay zekâyı oyunla öğret",
+    "spoken_hook": "Çocuğuna yapay zekâyı oyunla öğretmek ister misin?",
+    "cta": "Öğretmen arkadaşına gönder.",
+    "duration_sec": 21.9,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-02_clawsgo-science",
+    "date": "2026-11-02",
+    "kind": "tool",
+    "tool": "ClawsGO Science",
+    "hook_pattern": "result",
+    "headline": "Tek cümleden araştırma taslağı",
+    "spoken_hook": "Tek cümleyle yazdığın konuyu yapay zekâ saatlerce araştırıyor.",
+    "cta": "Araştırma yapan arkadaşına gönder.",
+    "duration_sec": 21.1,
+    "words": 41,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-02_modelpeers",
+    "date": "2026-11-02",
+    "kind": "tool",
+    "tool": "Modelpeers",
+    "hook_pattern": "question",
+    "headline": "Modelin emekli oldu mu?",
+    "spoken_hook": "Kullandığın yapay zekâ modeli emekli oldu mu, biliyor musun?",
+    "cta": "Model seçen ekip arkadaşına at.",
+    "duration_sec": 21.5,
+    "words": 41,
+    "status": "produced"
   }
 ]

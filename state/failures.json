@@ -1423,5 +1423,60 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`...    rank 35 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini editing whole Slides presentations is a concrete AI feature many students)    rank 32 [Google Workspace Updates] An easier way to customize how Gemini wo"
+ },
+ {
+  "date": "2026-11-02",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-02",
+  "stage": "news",
+  "kind": "news",
+  "item": "How we detect frontier model misalignment",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-02",
+  "stage": "news",
+  "kind": "news",
+  "item": "Build and manage Connected Apps in one place",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-02",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "ClawsGO Science",
+  "rendered": true,
+  "host": "clawsgo.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-02",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Modelpeers",
+  "rendered": true,
+  "host": "modelpeers.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

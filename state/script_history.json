@@ -1,27 +1,6 @@
 [
   {
     "tool": "Google",
-    "hook": "Sunum, tablo, PDF sohbette",
-    "pattern": "result",
-    "spoken_hook": "Sunumu, tabloyu, PDF'i sohbette hazırlayabilirsin.",
-    "cta": "Sunum yapan arkadaşına gönder."
-  },
-  {
-    "tool": "Viggle JST-2",
-    "hook": "Tek modelden 3D sahne çıkıyor",
-    "pattern": "result",
-    "spoken_hook": "Tek modelden 3D sahne, karakter ve hareket çıkıyor.",
-    "cta": "3D çalışan arkadaşına gönder."
-  },
-  {
-    "tool": "Suno MCP",
-    "hook": "Sohbetten çıkmadan müzik üret",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ sohbetinden çıkmadan müzik üretebilirsin.",
-    "cta": "Yapay zekâ ajanı kuran arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
     "hook": "Jet motorunun içine bak",
     "pattern": "result",
     "spoken_hook": "Jet motorunun içine telefondan bakabilirsin.",
@@ -68,5 +47,26 @@
     "pattern": "result",
     "spoken_hook": "Uzun mailleri yapay zekâ senin için özetleyebilir.",
     "cta": "Mail kutusu dolu arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Yapay zekâyı oyunla öğret",
+    "pattern": "question",
+    "spoken_hook": "Çocuğuna yapay zekâyı oyunla öğretmek ister misin?",
+    "cta": "Öğretmen arkadaşına gönder."
+  },
+  {
+    "tool": "ClawsGO Science",
+    "hook": "Tek cümleden araştırma raporu",
+    "pattern": "result",
+    "spoken_hook": "Tek cümleyle yazdığın konuyu yapay zekâ saatlerce araştırıyor.",
+    "cta": "Araştırma yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Modelpeers",
+    "hook": "Modelin emekli oldu mu?",
+    "pattern": "question",
+    "spoken_hook": "Kullandığın yapay zekâ modeli emekli oldu mu, biliyor musun?",
+    "cta": "Model seçen ekip arkadaşına at."
   }
 ]
