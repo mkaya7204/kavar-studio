@@ -512,7 +512,13 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         log("   approved in a test run: kept silent for voice.yml (George only for a Reel going out, D-46)")
         failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
         return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True}, True
+    if verdict["verdict"] == "publish":
+        # 11-03: three approved Reels were lost in one day when every ElevenLabs key was out of quota. Keep the
+        # silent Reel's words and pictures first, so voice.yml can voice it later instead of losing it.
+        _keep_for_voice(out)
     if verdict["verdict"] == "publish" and not _voice_approved_reel(out):
+        log(f"   approved Reel kept silent in {_rel(out)}/_voice: voice.yml run_id={os.getenv('GITHUB_RUN_ID', '-')} "
+            f"reel={out.name} voices it once a key has credits")
         # D-49: logged before its status is set (10-24 gerty: update_metrics raised KeyError on an unlogged
         # Reel, which ended every tool Reel of the day)
         log_reel(out.name, script, 0.0, kind=kind)

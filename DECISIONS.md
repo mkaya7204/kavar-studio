@@ -429,4 +429,11 @@ the decisions that are currently locked; this file explains why they exist and h
   passes) refuse captions (caption_problems), Reel hooks / voiceover / cards (reel_rule_problems) and every carousel
   slide / story text (news_problems); the rule rides along NO_PRICE_RULE into every writer and the editor.
 - **Guarded by:** tests/test_d56.py.
-- **Not yet seen in a run.**
+- **Seen in run 41582658229 (11-03, posts for 11-04):** log "=== produce morning === (posts for 2026-11-04)", the
+  archive held output/queue/2026-11-04.json, and unpacking it on the PC left today's 2026-11-03.json unchanged (md5).
+  Result 1/5 (12:30 Grid Protectors carousel): no guide post with a picture, one OpenAI story per day, and the
+  approved tool Reel had no voice (key 3: 222 credits left; key 2 refused, reason not logged).
+- **Follow-up (same day, recorded cause):** an approved Reel whose voicing fails is no longer thrown away: daily.py
+  keeps its silent kit in <reel>/_voice before voicing (`_keep_for_voice`), so voice.yml can voice it later
+  (3 approved Reels were lost on 11-03). src/tts_engine.py logs every refused key's reason. Guarded by
+  tests/test_voice_last.py::test_an_approved_reel_with_no_voice_left_is_kept_for_voice_yml.

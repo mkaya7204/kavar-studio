@@ -114,6 +114,21 @@ def test_a_test_run_never_spends_the_voice_and_keeps_the_reel_for_later(monkeypa
     assert (tmp_path / capture["proof_path"]).read_bytes() == b"png"  # the exact picture, kept with the Reel
 
 
+def test_an_approved_reel_with_no_voice_left_is_kept_for_voice_yml(monkeypatch, reel_sandbox, tmp_path):
+    """11-03: every ElevenLabs key was out of quota; three editor-approved Reels (Google Workspace, Greta.sh,
+    the 11-04 run's tool Reel) were thrown away. Now the silent Reel is kept for voice.yml."""
+    daily, calls = reel_sandbox
+    temp = tmp_path / "output" / "temp"
+    (temp / "capture.json").write_text(json.dumps({"still": False}), encoding="utf-8")
+    monkeypatch.delenv("KAVAR_DRY", raising=False)
+    monkeypatch.setattr(daily, "review_reel", lambda *a: {"verdict": "publish", "problems": []})
+    monkeypatch.setattr(daily, "_voice_approved_reel", lambda out: False)  # quota_exceeded on every key
+    item, rendered = daily._reel_attempt()
+    assert item is None
+    kits = list((tmp_path / "output" / "reels").glob("*/_voice"))
+    assert kits and (kits[0] / "script.json").exists() and (kits[0] / "capture.json").exists()
+
+
 def test_voicing_later_restores_the_kept_reel(monkeypatch, tmp_path):
     import voice_kept
 

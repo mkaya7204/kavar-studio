@@ -252,7 +252,8 @@ def _elevenlabs_sync(text: str, rate_pct: int, audio_path: Path) -> list[dict]:
             break
         detail = resp.text[:300]
         if resp.status_code in (401, 402, 403) and n < len(keys):  # this account's key or quota: next account
-            print(f"[tts] ElevenLabs key {n} refused (HTTP {resp.status_code}); trying key {n + 1}")
+            # 11-03: key 2 spoke in probe.yml but was refused in the run, and only the last key's reason was logged
+            print(f"[tts] ElevenLabs key {n} refused (HTTP {resp.status_code}: {detail[:160]}); trying key {n + 1}")
             continue
         if resp.status_code in (400, 401, 402, 403, 404, 422):  # key / quota / voice problems
             raise _FatalTTSError(f"ElevenLabs HTTP {resp.status_code}: {detail}")
