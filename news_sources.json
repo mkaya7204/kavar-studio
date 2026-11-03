@@ -1,5 +1,5 @@
 {
-  "_help": "RSS feeds for news mode (python carousel.py --news). priority: higher is picked first among fresh items (official company sources over press). Only the companies' own blogs, whose images are their own press assets: no press sites (The Verge, TechCrunch... removed 2026-10-16, user: own visuals only) and never other creators' social posts.",
+  "_help": "RSS feeds for news mode (python carousel.py --news). priority: higher is picked first among fresh items (official company sources over press). Only the companies' own blogs, whose images are their own press assets: no press sites (The Verge, TechCrunch... removed 2026-10-16, user: own visuals only) and never other creators' social posts. D-58 (user 2026-11-03: \"bilindik olması şart değil, önemli ve yerlerde ses getiren yeni AI modelleri de var\"): the official blogs of AI labs beyond the big companies (Mistral AI, Ai2, Apple ML Research, Ollama, Suno); labs with no RSS are not read yet.",
   "max_age_hours": 72,
   "fallback_age_hours": 168,
   "min_fresh": 6,
@@ -78,6 +78,31 @@
       "name": "GitHub",
       "url": "https://github.blog/feed/",
       "priority": 1
+    },
+    {
+      "name": "Mistral AI",
+      "url": "https://mistral.ai/rss.xml",
+      "priority": 3
+    },
+    {
+      "name": "Ai2",
+      "url": "https://allenai.org/rss.xml",
+      "priority": 3
+    },
+    {
+      "name": "Apple Machine Learning Research",
+      "url": "https://machinelearning.apple.com/rss.xml",
+      "priority": 2
+    },
+    {
+      "name": "Ollama",
+      "url": "https://ollama.com/blog/rss.xml",
+      "priority": 2
+    },
+    {
+      "name": "Suno",
+      "url": "https://suno.com/blog/rss.xml",
+      "priority": 2
     }
   ],
   "tr_feeds": [

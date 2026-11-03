@@ -15,7 +15,7 @@ from typing import Literal
 from pydantic import BaseModel, ValidationError, field_validator, model_validator
 
 from carousel_writer import MAX_HASHTAGS, STORY_FRAMES, STORY_WORDS, StoryFrame, _ask, _revision_prompt
-from script_writer import NO_PRICE_RULE, caption_problems, day_words, price_mentions
+from script_writer import NO_PRICE_RULE, caption_problems, day_words, price_mentions, written_name_problems
 from skill_rules import editor_lessons
 
 SLIDES = (6, 10)
@@ -119,6 +119,7 @@ def news_problems(c: NewsScript) -> list[str]:
         out.append(f"page policy, no prices: remove every price / payment mention ({', '.join(bad)})")
     if bad := day_words(*texts[1:]):  # the caption is checked by caption_problems
         out.append(f"the post goes out a day later: remove {', '.join(bad)} and give the date instead (D-56)")
+    out += written_name_problems(*texts)
     return out
 
 

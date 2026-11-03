@@ -437,3 +437,37 @@ the decisions that are currently locked; this file explains why they exist and h
   keeps its silent kit in <reel>/_voice before voicing (`_keep_for_voice`), so voice.yml can voice it later
   (3 approved Reels were lost on 11-03). src/tts_engine.py logs every refused key's reason. Guarded by
   tests/test_voice_last.py::test_an_approved_reel_with_no_voice_left_is_kept_for_voice_yml.
+
+## D-57 · 2026-11-03 · Names: George never meets a foreign word without its pronunciation; texts never show the spoken form
+- **User:** "haberini yaptığın markaların isimlerini yanlış söylüyorsun daha önce de düzeltmeye çalıştık olmamış ...
+  markanın yazılışı farklı okunuşu farklı olmasına rağmen bazen okunuşu yazıldığı gibi yapıyorsun bazen de yazılışını
+  yanlış şekilde okunuşu gibi yazıyorsun bunu sadece bilindik markalar için geçici düzeltmeler yapma keskin kesin net
+  hata yapılmayacak önlemler alarak düzenleme yap" (2026-11-03).
+- **Evidence (code, D-34 as built):** (1) `learn_names` asked Claude to "list every word it would say wrong" and
+  silently used what came back: a name Claude left out was read by Turkish spelling, nothing checked it; (2)
+  `written_words` mapped the timed words back to the script's spelling only when both counts matched, else the WHOLE
+  caption kept the spoken spelling ("Cemini"); (3) no check stopped a writer from putting a spoken form ("Klod") on a
+  card or in a caption. No recorded example was found in the kept files (82 voiceovers, all post texts: 0 spoken
+  forms); the user saw it on the page.
+- **Built:** src/names.py (shared, no heavy imports). `foreign_words` finds every word George would say wrong by its
+  letters (acronyms, CamelCase, q/w/x, th/sh/ch/ee/oo/ou/..., letters with digits, a capitalised mid-sentence word with
+  no Turkish letter) that the lexicon lacks; src/tts_engine.py `ensure_pronunciations` names them to Claude as "MUST
+  answer", tries once more, and if one is still missing George does not speak (the approved Reel stays silent for
+  voice.yml) instead of saying it wrong. "Said right as written" is kept as an answer too. `written_captions` aligns
+  word by word (difflib), then turns any spoken form left back into the written name used in the text.
+  `phonetic_spellings` / script_writer `written_name_problems` refuse a spoken form in any Reel text (hook, voiceover,
+  cards, shots, caption) or carousel text; spoken forms that are Turkish words (kod, oto, slayt) stay allowed.
+- **Checked on the records:** the detector flags 1 of 82 past voiceovers (Hera, 11-03: "Hera", "motion"); the
+  spelling guard flags 0 of all kept post texts and catches "Klod", "Cemini".
+- **Guarded by:** tests/test_names.py.
+- **Not yet seen in a run.**
+
+## D-58 · 2026-11-03 · News also from AI labs beyond the big companies
+- **User:** "ikinci sorunda sadece bilindik isimlerin büyük isimlerin yeni AI haberlerini yapıyorsun" and "bilindik
+  olması şart değil, önemli ve yerlerde ses getiren yeni AI modelleri de var" (2026-11-03).
+- **Evidence:** news_sources.json had 15 feeds, all big companies (6 Google blogs, OpenAI, NVIDIA, Meta, Microsoft,
+  Samsung, GitHub, Hugging Face, Qwen). The 11-04 run had 11 candidates: 6 OpenAI (one per company a day), 5 off-concept.
+- **Built:** the official blogs (RSS checked 11-03, fresh posts) of Mistral AI, Ai2 (priority 3), Apple Machine
+  Learning Research, Ollama, Suno (2). Still within locked rule 9: the companies' own blogs only.
+- **Open (asked the user):** labs with no RSS (Anthropic, xAI, DeepSeek, Moonshot/Kimi, MiniMax, Z.ai, Runway, Black
+  Forest Labs, Perplexity, Luma) are not read; "ses getiren" needs a buzz signal.

@@ -21,7 +21,11 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import names  # noqa: E402  D-57: written vs spoken names, shared with the writers
 
 import aiohttp
 import edge_tts
@@ -53,14 +57,11 @@ SPOKEN_WORD = re.compile(r"^[A-Za-zÇĞİÖŞÜçğıöşüâîû]+$")  # one wo
 
 def _lexicon() -> dict[str, str]:
     """The names George is told how to say: learned ones, overridden by the hand-checked list."""
-    words = {}
-    for path in (LEARNED_PATH, PRONUNCIATION_PATH):
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-        words.update(data.get("words", data) if isinstance(data, dict) else {})
-    return {k: v for k, v in words.items() if not k.startswith("_") and SPOKEN_WORD.match(str(v))}
+    return names.lexicon((LEARNED_PATH, PRONUNCIATION_PATH))
+
+
+class MissingPronunciation(Exception):
+    """D-57: a foreign word George would say by Turkish spelling has no pronunciation: he must not speak."""
 
 
 LEARN_PROMPT = """A Turkish text-to-speech voice reads every word by Turkish spelling rules, so "Gemini" comes out \
@@ -70,7 +71,10 @@ Turkish tech people say as a word. Leave out Turkish words and names already sai
 For each: "written" = the word exactly as it is in the text, without a Turkish suffix after an apostrophe \
 ("Openbroca'yı" -> "Openbroca"); "spoken" = how Turkish tech people say it, written with Turkish letters as \
 ONE word with no spaces, hyphens or digits (join the parts: "SpeechFast" -> "Spiçfest", "OpenAI" -> \
-"Openeyay", "Korinotch" -> "Korinoç"). Already known, leave out: {known}
+"Openeyay", "Korinotch" -> "Korinoç"). Say it the way the company itself says its name.
+You MUST answer every one of these words, even when Turkish spelling already says it right (then "spoken" = \
+"written"): {must}
+Already known, leave out: {known}
 
 Voiceover:
 {text}"""
@@ -90,11 +94,13 @@ def learn_names(text: str) -> dict[str, str]:
     exe = shutil.which("claude") if not os.getenv("SCRIPT_WRITER_NO_CLI") else None
     if not exe:
         return {}
+    must = names.foreign_words(text, known)  # D-57: found by their letters; Claude must answer each one
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
     try:
         proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(LEARN_SCHEMA),
                                "--tools", "", "--no-session-persistence"],
-                              input=LEARN_PROMPT.format(known=", ".join(sorted(known)) or "-", text=text),
+                              input=LEARN_PROMPT.format(known=", ".join(sorted(known)) or "-", text=text,
+                                                        must=", ".join(must) or "-"),
                               capture_output=True, text=True, encoding="utf-8", timeout=180, cwd=ROOT, env=env)
         record_usage("pronunciation", proc.stdout)
         answer = (json.loads(proc.stdout).get("structured_output") or {}).get("words", [])
@@ -104,7 +110,8 @@ def learn_names(text: str) -> dict[str, str]:
     for w in answer:
         written = str(w.get("written", "")).strip()
         spoken = re.sub(r"[\s\-]+", "", str(w.get("spoken", "")))  # "Spiç Fest" -> "SpiçFest": one word for one
-        if (written and written not in known and written != spoken and SPOKEN_WORD.match(spoken)
+        # D-57: "said right as written" is an answer too (kept, so the word is never asked or missed again)
+        if (written and written not in known and SPOKEN_WORD.match(spoken)
                 and re.search(rf"(?<!\w){re.escape(written)}(?!\w)", text)):
             new[written] = spoken
     if new:
@@ -137,13 +144,25 @@ def _clean_word(token: str) -> str:
     return re.sub(r"^[^\w]+|[^\w]+$", "", token)
 
 
-def written_words(words: list[dict], text: str) -> list[dict]:
-    """The spoken words' timings with the script's own spelling (captions show "Gemini", not "Cemini")."""
-    shown = [w for w in (_clean_word(t) for t in text.split()) if w]
-    if len(shown) != len(words):
-        print(f"[tts] {len(words)} timed words for {len(shown)} written ones: captions keep the spoken spelling")
-        return words
-    return [{**w, "word": s} for w, s in zip(words, shown)]
+def written_words(words: list[dict], text: str, said: str | None = None) -> list[dict]:
+    """The spoken words' timings with the script's own spelling (captions show "Gemini", not "Cemini").
+    D-57: aligned word by word, so a count mismatch no longer leaves the whole caption in spoken form."""
+    lex = _lexicon()
+    out = names.written_captions(words, spoken_text(text) if said is None else said, text, lex)
+    if left := names.phonetic_spellings(" ".join(w["word"] for w in out), lex=lex):
+        print(f"[tts] captions still show a spoken form: {left}")
+    return out
+
+
+def ensure_pronunciations(text: str) -> None:
+    """D-57: before George speaks, every foreign word has a pronunciation; one more try for the missing ones,
+    then stop (the approved Reel stays silent for voice.yml) instead of a name said by Turkish spelling."""
+    if not names.foreign_words(text, _lexicon()):
+        return
+    learn_names(text)  # a second, focused try: the prompt lists the missing words as "must answer"
+    if missing := names.foreign_words(text, _lexicon()):
+        raise MissingPronunciation(f"no pronunciation for {', '.join(missing)}: George would say them by "
+                                   "Turkish spelling (add them to rules/pronunciation.json or retry)")
 
 
 def voice_for(language: str) -> str:
@@ -425,6 +444,11 @@ async def synthesize_async(
     out_path.parent.mkdir(parents=True, exist_ok=True)
     errors = []
     said = spoken_text(text, learn=True)  # D-34: names as a Turkish reader says them; the captions keep `text`
+    try:
+        ensure_pronunciations(text)  # D-57: no foreign word goes to George without its pronunciation
+    except MissingPronunciation as exc:
+        raise _FatalTTSError(str(exc)) from exc
+    said = spoken_text(text)
     for provider in providers or available_providers():
         try:
             words, duration, used_rate = await _synthesize_provider(provider, said, out_path, voice,
@@ -439,7 +463,7 @@ async def synthesize_async(
             out_path.with_suffix(".srt").unlink(missing_ok=True)
             raise TTSError(f"voiceover is {duration:.1f}s, over the {max_seconds:.0f}s limit; shorten the script")
         if said != text:
-            words = written_words(words, text)
+            words = written_words(words, text, said)
             out_path.with_suffix(".srt").write_text(_words_to_srt(words), encoding="utf-8")
         words_path = out_path.with_name(out_path.stem + "_words.json")
         words_path.write_text(json.dumps(words, indent=2), encoding="utf-8")

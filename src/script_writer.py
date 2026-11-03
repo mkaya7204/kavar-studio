@@ -75,6 +75,15 @@ NO_DAY_WORDS_RULE = ("Posts go out a day after they are written: never use words
 NO_PRICE_RULE += " " + NO_DAY_WORDS_RULE  # every writer and the editor load NO_PRICE_RULE: the day rule rides along
 
 
+def written_name_problems(*texts: str) -> list[str]:
+    """D-57 (user 2026-11-03): a name on screen / in a caption is written as the company writes it, never as it
+    is said ("Claude", not "Klod"). The spoken forms come from the pronunciation lexicon (src/names.py)."""
+    import names  # src/ is on the path wherever the writers run
+    if bad := names.phonetic_spellings(*texts):
+        return [f"names are written as the company writes them, never as they are said: {', '.join(bad)} (D-57)"]
+    return []
+
+
 def day_words(*texts: str) -> list[str]:
     """Words that tie the text to the day it was written (D-56); empty list = fine."""
     return sorted({m.group(0) for t in texts for m in DAY_WORD_PATTERN.finditer(t or "")})
@@ -160,6 +169,9 @@ def reel_rule_problems(script: "VideoScript") -> list[str]:
     problems = caption_problems(script.caption, script.hashtags)
     if bad := day_words(script.hook, script.voiceover, *(f"{p.title} {p.detail}" for p in script.key_points)):
         problems.append(f"the Reel goes out a day later: remove {', '.join(bad)} (D-56)")
+    problems += written_name_problems(script.hook, script.voiceover, script.caption, script.why_it_matters,
+                                      *(f"{p.title} {p.detail}" for p in script.key_points),
+                                      *(s.on_screen_text for s in script.shots))
     seg = script.voiceover_segments
     spoken = seg.hook if seg else script.voiceover.split(".")[0]
     name = _fold(script.tool_name)
