@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Google",
-    "hook": "Jet motorunun içine bak",
-    "pattern": "result",
-    "spoken_hook": "Jet motorunun içine telefondan bakabilirsin.",
-    "cta": "Öğrenci arkadaşına gönder, işine yarar."
-  },
-  {
-    "tool": "Norah Studio",
-    "hook": "Her şarkıyı parçalarına ayır",
-    "pattern": "result",
-    "spoken_hook": "Herhangi bir şarkıyı vokal, davul ve enstrümantale ayırabilirsin.",
-    "cta": "Müzisyen arkadaşına gönder."
-  },
-  {
     "tool": "Canva Brush",
     "hook": "Tasarımı yapay zekâ düzenliyor",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "question",
     "spoken_hook": "Kullandığın yapay zekâ modeli emekli oldu mu, biliyor musun?",
     "cta": "Model seçen ekip arkadaşına at."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Görselden kendi avatarını yap",
+    "pattern": "result",
+    "spoken_hook": "Bir görselden videoya kendi avatarını yapabilirsin.",
+    "cta": "Video hazırlayan arkadaşına gönder."
+  },
+  {
+    "tool": "Self-Growing Websites by Greta.sh",
+    "hook": "Siten kendi SEO'sunu yapıyor",
+    "pattern": "result",
+    "spoken_hook": "Web siten kendi SEO'sunu kendisi yapabiliyor.",
+    "cta": "Site kuran arkadaşına gönder."
   }
 ]

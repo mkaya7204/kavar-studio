@@ -1013,5 +1013,31 @@
     "duration_sec": 21.5,
     "words": 41,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-03_google-workspace",
+    "date": "2026-11-03",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "Görselden kendi avatarını yap",
+    "spoken_hook": "Bir görselden videoya kendi avatarını yapabilirsin.",
+    "cta": "Video hazırlayan arkadaşına gönder.",
+    "duration_sec": 0.0,
+    "words": 37,
+    "status": "approved draft, but the voiced Reel failed"
+  },
+  {
+    "id": "2026-11-03_self-growing-websites-by-greta-sh",
+    "date": "2026-11-03",
+    "kind": "tool",
+    "tool": "Self-Growing Websites by Greta.sh",
+    "hook_pattern": "result",
+    "headline": "Kendi kendine büyüyen site",
+    "spoken_hook": "Kendi kendine büyüyen site kurabiliyorsun.",
+    "cta": "Site kuran arkadaşına gönder.",
+    "duration_sec": 0.0,
+    "words": 40,
+    "status": "approved draft, but the voiced Reel failed"
   }
 ]

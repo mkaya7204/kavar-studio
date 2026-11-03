@@ -1478,5 +1478,79 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "voice"
+  ],
+  "detail": "no voice / voiced Reel failed"
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "news",
+  "kind": "news",
+  "item": "LifeVal",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "news",
+  "kind": "news",
+  "item": "The latest AI news we announced in October 2026",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Self-Growing Websites by Greta.sh",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "voice"
+  ],
+  "detail": "no voice / voiced Reel failed"
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "riter] Writing with `claude -p`...    rank 34 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini editing whole presentations in Slides is a usable, relatable AI feature f)    rank 32 [Google Workspace Updates] An easier way to customize how Gemini works for you"
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 32 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini can edit whole Google Slides presentations; a Turkish student or worker c)    rank 30 [Google Workspace Updates] An easier way to customize how Gemini wo"
  }
 ]
