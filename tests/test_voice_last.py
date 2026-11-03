@@ -125,7 +125,7 @@ def test_an_approved_reel_with_no_voice_left_is_kept_for_voice_yml(monkeypatch, 
     monkeypatch.setattr(daily, "_voice_approved_reel", lambda out: False)  # quota_exceeded on every key
     item, rendered = daily._reel_attempt()
     assert item is None
-    kits = list((tmp_path / "output" / "reels").glob("*/_voice"))
+    kits = list(daily.REELS_DIR.glob("*/_voice"))
     assert kits and (kits[0] / "script.json").exists() and (kits[0] / "capture.json").exists()
 
 
