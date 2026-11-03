@@ -160,5 +160,50 @@
       "priority": 2
     }
   ],
-  "_guide_help": "Extra sources for the 07:30 guide Reel only (D-41, user 2026-10-22: \"a\"): official pages that announce a feature of a known product and how to use it. Workspace Updates: 22 posts in 14 days (10-22 check), each says who can use it (e.g. personal Google accounts). Not used by the news carousels."
+  "_guide_help": "Extra sources for the 07:30 guide Reel only (D-41, user 2026-10-22: \"a\"): official pages that announce a feature of a known product and how to use it. Workspace Updates: 22 posts in 14 days (10-22 check), each says who can use it (e.g. personal Google accounts). Not used by the news carousels.",
+  "pages": [
+    {
+      "name": "Anthropic",
+      "url": "https://www.anthropic.com/news",
+      "pattern": "/news/[a-z0-9-]+",
+      "priority": 3
+    },
+    {
+      "name": "xAI",
+      "url": "https://x.ai/news",
+      "pattern": "/news/[a-z0-9-]+",
+      "priority": 3
+    },
+    {
+      "name": "DeepSeek",
+      "url": "https://api-docs.deepseek.com/news/news1",
+      "pattern": "/news/news\\d+",
+      "priority": 3
+    },
+    {
+      "name": "MiniMax",
+      "url": "https://www.minimax.io/news",
+      "pattern": "/(news|blog)/[a-z0-9-]+",
+      "priority": 3
+    },
+    {
+      "name": "Kimi (Moonshot AI)",
+      "url": "https://www.kimi.com/blog",
+      "pattern": "/blog/[a-z0-9-]+",
+      "priority": 3
+    },
+    {
+      "name": "Black Forest Labs",
+      "url": "https://bfl.ai/blog",
+      "pattern": "/blog/[a-z0-9-]+",
+      "priority": 3
+    },
+    {
+      "name": "Runway",
+      "url": "https://runwayml.com/news",
+      "pattern": "/news/research/[a-z0-9-]+",
+      "priority": 2
+    }
+  ],
+  "_pages_help": "D-59 (user 2026-11-03, 'onay veriyorum'): AI labs whose own site has no RSS. src/page_sources.py reads the lab's own news page, then each post's own page (title, date, image); pattern = the post links' path. Not readable from outside on 11-03: Perplexity (403), Z.ai (404). Luma left out: its news page is mostly marketing guides."
 }

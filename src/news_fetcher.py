@@ -13,6 +13,9 @@ from pathlib import Path
 
 import requests
 
+import buzz  # noqa: E402  D-59: what is talked about (ranking only)
+import page_sources  # noqa: E402  D-59: labs with no RSS
+
 ROOT = Path(__file__).resolve().parent.parent
 SOURCES_PATH = ROOT / "news_sources.json"
 HISTORY_PATH = ROOT / "state" / "news_history.json"  # state/ is kept in git (the cloud run commits it)
@@ -85,13 +88,22 @@ def fetch_news(limit: int = 5) -> list[dict]:
             items += _items(feed)
         except (requests.RequestException, ET.ParseError) as exc:
             print(f"[news] {feed['name']} skipped: {type(exc).__name__}")
+    for page in config.get("pages", []):  # D-59: labs with no RSS, read from their own news page
+        try:
+            got = page_sources.items(page, used)
+            print(f"[news] {page['name']}: {len(got)} posts from its news page")
+            items += got
+        except requests.RequestException as exc:
+            print(f"[news] {page['name']} skipped: {type(exc).__name__}")
     unused = [i for i in items if i["date"] and i["url"] not in used]
+    recent = [i for i in unused if i["date"] >= now - timedelta(hours=config.get("fallback_age_hours", 168))]
+    buzz.annotate(recent)  # D-59: what is talked about right now goes first (ranking only, never the source)
     fresh = [i for i in unused if i["date"] >= now - timedelta(hours=config.get("max_age_hours", 72))]
-    fresh.sort(key=lambda i: (i["date"].date(), i["priority"], i["date"]), reverse=True)
+    fresh.sort(key=lambda i: (i.get("buzz", 0) > 0, i["date"].date(), i["priority"], i["date"]), reverse=True)
     if len(fresh) < config.get("min_fresh", 6):
         hours = config.get("fallback_age_hours", 168)
         older = [i for i in unused if i not in fresh and i["date"] >= now - timedelta(hours=hours)]
-        older.sort(key=lambda i: (i["date"].date(), i["priority"], i["date"]), reverse=True)
+        older.sort(key=lambda i: (i.get("buzz", 0) > 0, i["date"].date(), i["priority"], i["date"]), reverse=True)
         print(f"[news] {len(fresh)} unused in {config.get('max_age_hours', 72)} h; "
               f"adding {len(older)} unused from the last {hours} h")
         fresh += older

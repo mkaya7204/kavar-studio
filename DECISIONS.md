@@ -471,3 +471,22 @@ the decisions that are currently locked; this file explains why they exist and h
   Learning Research, Ollama, Suno (2). Still within locked rule 9: the companies' own blogs only.
 - **Open (asked the user):** labs with no RSS (Anthropic, xAI, DeepSeek, Moonshot/Kimi, MiniMax, Z.ai, Runway, Black
   Forest Labs, Perplexity, Luma) are not read; "ses getiren" needs a buzz signal.
+
+## D-59 · 2026-11-03 · Labs with no RSS from their own news page; "talked about" puts a story first
+- **User:** "onay veriyorum" (2026-11-03), to: read the news pages of the labs with no RSS, and use Hacker News /
+  Hugging Face trending only to find what is talked about, the story itself still from the company's own page.
+- **Built:** news_sources.json "pages" + src/page_sources.py: Anthropic, xAI, DeepSeek, MiniMax, Kimi (Moonshot AI),
+  Black Forest Labs, Runway. The lab's own news page gives the post links; each post's own page gives title (og:title
+  without the site name), date (article:published_time / datePublished / written date) and summary; read once, kept in
+  state/page_posts.json; at most 8 new post pages per lab and run. src/buzz.py: HN stories of the last 48 h with 80+
+  points and the 40 trending Hugging Face models; a news item counts as talked about only when a story / model names
+  its versioned product ("DeepSeek-V4.1-Flash-1017", "FLUX 3") or a name starting with the company ("Anthropic files
+  S-1"); plain words ("open weights", "Flash") and a company name alone never count, or the big companies would always
+  win. news_fetcher puts talked-about items first and the ranker reads "[Şu an konuşuluyor: ...]" in the summary.
+  Ranking only: text and images still come from the company's own page (rule 9).
+- **Checked live 11-03 (PC):** 29 posts from the 7 pages, Runway "Introducing Solaris" (was "Runway News"), Anthropic's
+  "Announcements" category page dropped; talked about: DeepSeek-V4.1-Flash-1017 (HF trending #3), Anthropic S-1 (HN 236),
+  FLUX 3, MiniMax H3; the false matches seen first (MiniMax Music by "open weights", HN 2911) are gone.
+- **Not readable from outside:** Perplexity (403), Z.ai (404). Luma left out (mostly marketing guides).
+- **Guarded by:** tests/test_d59.py (the 11-03 titles, dates and false matches).
+- **Not yet seen in a run.**
