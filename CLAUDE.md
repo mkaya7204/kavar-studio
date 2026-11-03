@@ -122,6 +122,10 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
 **D-38 order: publish first, analyse after.** On 10-21 four ready posts never went out because the
 session hit its usage limit while still analysing. Steps 1 and 4 come before anything else.
 
+**D-56 (2026-11-03): one day ahead.** A run makes the NEXT day's posts (schedule.json `publish_lag_days: 1`);
+"yükle" schedules what the day before made and keeps the new run for tomorrow. Captions and texts never say
+"bugün" / "dün" (`day_words`).
+
 1. `python daily.py fetch`: git pull, download today's cloud run, unpack. If today's run is
    missing or late, start `gh workflow run produce.yml` and track it with a session cron. Don't
    ask the user "bitti mi". Then go straight to step 4 for everything that is ready.

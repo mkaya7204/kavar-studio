@@ -64,6 +64,22 @@ NO_PRICE_RULE = ("Page policy: never mention prices, costs, amounts, currencies,
                  "or usage limits (without amounts), and why. Talk about what the tool does.")
 
 
+# D-56 (user 2026-11-03): posts go out the day AFTER they are made, so no word may tie the text to the day it
+# was written ("bugün" would be yesterday by the time it is read). Dates ("6 Ekim'de") are fine.
+DAY_WORD_PATTERN = re.compile(
+    r"\b(?:bugün\w*|dün(?:kü|den|e)?|yarın(?:ki|dan|a)?|bu sabah\w*|bu akşam\w*|bu gece\w*|"
+    r"today|yesterday|tomorrow|this morning|tonight)\b", re.I)
+NO_DAY_WORDS_RULE = ("Posts go out a day after they are written: never use words that tie the text to a day "
+                     "('bugün', 'dün', 'yarın', 'bu sabah', 'bu akşam'). Give the date instead ('6 Ekim'de') "
+                     "or say it without a day ('yeni duyurdu', 'kullanıma açtı').")
+NO_PRICE_RULE += " " + NO_DAY_WORDS_RULE  # every writer and the editor load NO_PRICE_RULE: the day rule rides along
+
+
+def day_words(*texts: str) -> list[str]:
+    """Words that tie the text to the day it was written (D-56); empty list = fine."""
+    return sorted({m.group(0) for t in texts for m in DAY_WORD_PATTERN.finditer(t or "")})
+
+
 def price_mentions(*texts: str) -> list[str]:
     """Price / payment words found in the texts (empty list = policy met)."""
     return sorted({m.group(0) for t in texts for m in PRICE_PATTERN.finditer(t or "")})
@@ -81,6 +97,8 @@ def caption_problems(caption: str, hashtags: list[str]) -> list[str]:
         problems.append(f"caption needs real text, not only hashtags (has {len(text)} characters)")
     if "#" in caption:
         problems.append("hashtags go in the hashtags list, not in the caption")
+    if bad := day_words(caption):
+        problems.append(f"the post goes out a day later: remove {', '.join(bad)} from the caption (D-56)")
     return problems
 
 
@@ -140,6 +158,8 @@ def card_voice_mismatch(script: "VideoScript") -> list[int]:
 def reel_rule_problems(script: "VideoScript") -> list[str]:
     """Measurable reel-hook-writer rules a draft breaks (empty list = all met)."""
     problems = caption_problems(script.caption, script.hashtags)
+    if bad := day_words(script.hook, script.voiceover, *(f"{p.title} {p.detail}" for p in script.key_points)):
+        problems.append(f"the Reel goes out a day later: remove {', '.join(bad)} (D-56)")
     seg = script.voiceover_segments
     spoken = seg.hook if seg else script.voiceover.split(".")[0]
     name = _fold(script.tool_name)

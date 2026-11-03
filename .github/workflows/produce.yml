@@ -73,7 +73,7 @@ jobs:
       - name: Guard (scheduled and cron-job.org runs skip a day that is already produced)
         id: guard
         run: |
-          if { [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.auto }}" = "yes" ]; } && python3 -c "import json,datetime,sys; m=json.load(open('state/last_produce.json')); d=m.get('stages',['morning','rest']) if m.get('date')==datetime.date.today().isoformat() else []; sys.exit(0 if {'morning','rest'} <= set(d) else 1)" 2>/dev/null; then
+          if { [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.auto }}" = "yes" ]; } && python3 -c "import json,datetime,sys; m=json.load(open('state/last_produce.json')); lag=json.load(open('schedule.json')).get('publish_lag_days',0); d=m.get('stages',['morning','rest']) if m.get('date')==(datetime.date.today()+datetime.timedelta(days=lag)).isoformat() else []; sys.exit(0 if {'morning','rest'} <= set(d) else 1)" 2>/dev/null; then
             echo "skip=true" >> "$GITHUB_OUTPUT"; echo "today is already produced; nothing to do"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"

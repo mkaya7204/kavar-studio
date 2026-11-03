@@ -413,3 +413,20 @@ the decisions that are currently locked; this file explains why they exist and h
   the first revision prompt); replay-fix.yml on tests/fixtures/replay/ shows how often try 1 now passes.
 - **Seen:** replay-fix run 41179183590 (same 2 cases x 2): 4/4 valid, all 4 on the writer's first revision, no
   retry needed (before, run 41177698135: 1 of 4 on the first try). Not yet seen in a production run.
+
+## D-56 · 2026-11-03 · A run makes the NEXT day's posts; "yükle" schedules what the day before made
+- **User:** "bundan sonra bir sonraki günün paylaşımlarını hazırlayalım ... yarının paylaşımlarını da bugün hazır
+  edelim ben yarın sabah yine yükle deyince sen hazır olanları yüklersin. Sabah çıkmış olanları da bir sonraki gün
+  için tutarsın" and "Sen hazırlığını yap" (2026-11-03). (D-55 is taken by the unmerged branch d55-no-picture-no-summary.)
+- **Evidence:** 11-02 nothing was posted (no "yükle"); 11-03 the run ended 06:37 TRT with 2/5 (no voice: all three
+  ElevenLabs keys quota_exceeded) and the 07:30 Reel went out late again from what 11-02 had made.
+- **Built:** schedule.json `publish_lag_days: 1`. daily.py `publish_lag()` / `queue_day()`: `produce` writes the queue
+  for queue_day() and the marker state/last_produce.json carries that day, so the 11-03 marker never stops the 11-04
+  run; on the PC `load_queue()` / `status` / `publish` stay on today's file. `fetch` brings today's queue if the
+  PC doesn't have it yet (yesterday's run, look-back 20 h + 24 h per lag day), then the newest run's queue for tomorrow,
+  merged slot by slot, and lists what is kept for tomorrow. produce.yml's guard compares the marker with today + lag.
+  Day words: src/script_writer.py `day_words` / DAY_WORD_PATTERN (bugün, dün, yarın, bu sabah, bu akşam ...; "dünya"
+  passes) refuse captions (caption_problems), Reel hooks / voiceover / cards (reel_rule_problems) and every carousel
+  slide / story text (news_problems); the rule rides along NO_PRICE_RULE into every writer and the editor.
+- **Guarded by:** tests/test_d56.py.
+- **Not yet seen in a run.**

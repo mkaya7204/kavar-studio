@@ -1,6 +1,8 @@
 {
   "_help": "Daily autopilot (daily.py). slots: publish times in order. kind: carousel (news) or reel. concept guide = the 07:30 guide Reel (D-31), made first in its own stage and uploaded on its own (D-40). guide_reel: make the guide Reel every morning. tool_reels: Product Hunt tool Reels for the other Reel slots; a tool with no real product screen is skipped (D-38). D-40 (user 2026-10-22): all five slots back; the causes of the rejections are fixed instead of fewer slots.",
   "produce_at": "06:30",
+  "publish_lag_days": 1,
+  "_publish_lag_help": "D-56 (user 2026-11-03): a run makes the NEXT day's posts; the morning yükle schedules what the day before made and keeps the new run for tomorrow. 0 = the old same-day flow.",
   "guide_reel": true,
   "tool_reels": true,
   "slots": [

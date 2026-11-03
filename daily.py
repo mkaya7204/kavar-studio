@@ -65,13 +65,30 @@ def schedule() -> dict:
     return json.loads(SCHEDULE_PATH.read_text(encoding="utf-8"))
 
 
-def queue_path(day: date | None = None) -> Path:
-    return QUEUE_DIR / f"{(day or date.today()).isoformat()}.json"
-
-
-def load_queue() -> list[dict]:
+def publish_lag() -> int:
+    """D-56 (user 2026-11-03): a run makes the NEXT day's posts; the morning "yükle" schedules what the
+    day before made and keeps the new run for tomorrow. schedule.json publish_lag_days (0 = old same-day flow)."""
     try:
-        return json.loads(queue_path().read_text(encoding="utf-8"))
+        return int(schedule().get("publish_lag_days", 0))
+    except (OSError, ValueError, TypeError, AttributeError, json.JSONDecodeError):
+        return 0
+
+
+def queue_day() -> date:
+    """The day a production run's queue is for (D-56: production day + publish_lag_days)."""
+    return date.today() + timedelta(days=publish_lag())
+
+
+_PRODUCING = False  # set by produce(): its queue is the one for queue_day(), not today's posts
+
+
+def queue_path(day: date | None = None) -> Path:
+    return QUEUE_DIR / f"{(day or (queue_day() if _PRODUCING else date.today())).isoformat()}.json"
+
+
+def load_queue(day: date | None = None) -> list[dict]:
+    try:
+        return json.loads(queue_path(day).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return []
 
@@ -81,9 +98,9 @@ def _rel(path: Path) -> str:
     return Path(path).resolve().relative_to(ROOT).as_posix()
 
 
-def save_queue(items: list[dict]) -> None:
+def save_queue(items: list[dict], day: date | None = None) -> None:
     QUEUE_DIR.mkdir(parents=True, exist_ok=True)
-    queue_path().write_text(json.dumps(items, indent=2, ensure_ascii=False), encoding="utf-8")
+    queue_path(day).write_text(json.dumps(items, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 # ---------------------------------------------------------------- produce
@@ -523,19 +540,20 @@ def _marker() -> Path:
 
 
 def stages_done(day: date | None = None) -> list[str]:
-    """Stages already produced today (an old marker without "stages" means the whole day)."""
+    """Stages already produced for the queue day (D-56: the marker's date is the day the posts are for;
+    an old marker without "stages" means the whole day)."""
     try:
         m = json.loads(_marker().read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return []
-    if m.get("date") != (day or date.today()).isoformat():
+    if m.get("date") != (day or queue_day()).isoformat():
         return []
     return m.get("stages", list(STAGES))
 
 
 def _mark_done(stage: str) -> None:
     _marker().parent.mkdir(parents=True, exist_ok=True)
-    _marker().write_text(json.dumps({"date": date.today().isoformat(),
+    _marker().write_text(json.dumps({"date": queue_day().isoformat(),
                                   "stages": sorted(set(stages_done()) | {stage}, key=STAGES.index)}), encoding="utf-8")
 
 
@@ -560,7 +578,9 @@ def produce(only: str = "") -> bool:
     """only: "" (both stages), "next" (the first stage not done today: cron-job.org 06:17 and 08:00),
     "morning" / "rest" (one stage), or "reel" / "news" for test runs (part of "rest").
     Returns whether the rest of the day (the non-morning slots) was made in this run."""
-    log(f"=== produce {only} ===".replace("  ", " "))
+    global _PRODUCING
+    _PRODUCING = True  # D-56: this run's queue is the one for queue_day()
+    log(f"=== produce {only} ===".replace("  ", " ") + (f" (posts for {queue_day().isoformat()})" if publish_lag() else ""))
     forced = bool(os.getenv("KAVAR_FORCE"))
     if only == "next":
         todo = [s for s in STAGES if s not in stages_done()]
@@ -786,28 +806,33 @@ def _merge_queue(old: list[dict], new: list[dict]) -> list[dict]:
     return [q if q.get("status") == "ready" or q["time"] not in by_time else by_time[q["time"]] for q in new]
 
 
-def _unpack_keeping_today(archive: Path) -> None:
+def _unpack_keeping_today(archive: Path, day: date | None = None) -> None:
     """Unpack a cloud archive without losing an earlier run of the same day (10-17: a Reel-only run
     replaced the morning's queue and log, so the carousels showed "empty" and their editor verdicts
-    were gone). Today's queue is merged slot by slot; today's log gets the new run appended."""
-    log_path = LOG_DIR / f"{date.today().isoformat()}.log"
-    old_queue = load_queue()
-    old_log = log_path.read_text(encoding="utf-8") if log_path.exists() else ""
+    were gone). The queue for `day` (default today) is merged slot by slot; the logs of today and of the
+    run's production day get the new run appended."""
+    day = day or date.today()
+    made = day - timedelta(days=publish_lag())
+    logs = {p: (p.read_text(encoding="utf-8") if p.exists() else "")
+            for p in {LOG_DIR / f"{d.isoformat()}.log" for d in (date.today(), made)}}
+    old_queue = load_queue(day)
     subprocess.run(["tar", "-xzf", str(archive), "-C", str(ROOT)], check=True)
     if old_queue:
-        save_queue(_merge_queue(old_queue, load_queue()))
-    new_log = log_path.read_text(encoding="utf-8") if log_path.exists() else ""
-    if old_log and new_log and not new_log.startswith(old_log[:200]):
-        log_path.write_text(old_log + new_log, encoding="utf-8")
+        save_queue(_merge_queue(old_queue, load_queue(day)), day)
+    for log_path, old_log in logs.items():
+        new_log = log_path.read_text(encoding="utf-8") if log_path.exists() else ""
+        if old_log and new_log and not new_log.startswith(old_log[:200]):
+            log_path.write_text(old_log + new_log, encoding="utf-8")
 
 
-def _import_surplus() -> None:
-    """Copy today's surplus (output/reserve/<date>.json) into the reserve, files and all (D-37)."""
-    path = SURPLUS_DIR / f"{date.today().isoformat()}.json"
+def _import_surplus(made: date | None = None) -> None:
+    """Copy a production day's surplus (output/reserve/<date>.json) into the reserve, files and all (D-37)."""
+    made = made or date.today()
+    path = SURPLUS_DIR / f"{made.isoformat()}.json"
     if not path.exists():
         return
     for item in json.loads(path.read_text(encoding="utf-8")):
-        if entry := reserve.add(item, date.today().isoformat()):
+        if entry := reserve.add(item, made.isoformat()):
             log(f"reserve: kept {entry['kind']} {entry['title']}")
 
 
@@ -837,40 +862,54 @@ def fetch() -> None:
         [_gh(), "run", "list", "--workflow", "produce.yml", "--branch", "main", "--limit", "8",
          "--json", "databaseId,status,conclusion,createdAt"],
         cwd=ROOT, capture_output=True, text=True, encoding="utf-8", check=True).stdout)
-    since = datetime.now(timezone.utc) - timedelta(hours=20)  # createdAt is UTC; 06:30 TRT = 03:30 UTC
+    # D-56: today's posts were made by yesterday's run, so look back one more day per day of lag
+    since = datetime.now(timezone.utc) - timedelta(hours=20 + 24 * publish_lag())  # createdAt is UTC
     today = [r for r in runs if datetime.fromisoformat(r["createdAt"].replace("Z", "+00:00")) >= since]
     if not today:
         log("no cloud run today yet")
         return
-    # the newest finished run that actually made today's queue (2026-10-14: a late run that skipped
+    # the newest finished run that actually made the queue (2026-10-14: a late run that skipped
     # the day overwrote the good log); runs still going are reported, never waited on
     for r in today:
         if r["status"] != "completed":
             log(f"cloud run {r['databaseId']} is still {r['status']}")
-    want = f"output/queue/{date.today().isoformat()}.json"
+    # D-56: today's queue, if the "yükle" of yesterday didn't bring it already, then the queue the newest
+    # run made for tomorrow (always: a later run of the same day may have filled more slots)
+    for day in sorted({date.today(), queue_day()}):
+        if day != queue_day() and queue_path(day).exists():
+            continue
+        _fetch_queue(today, day)
+    log("today's posts:")
+    status()
+
+
+def _fetch_queue(runs: list[dict], day: date) -> None:
+    want = f"output/queue/{day.isoformat()}.json"
     tmp = ROOT / "output" / "_download"
     # a finished run's whole day first; else (D-40) the morning guide Reel, uploaded on its own while the
     # rest of the day is still being made
-    tries = [(r, "kavar-output") for r in today if r["status"] == "completed"] + [(r, "kavar-morning") for r in today]
+    tries = [(r, "kavar-output") for r in runs if r["status"] == "completed"] + [(r, "kavar-morning") for r in runs]
     for run, name in tries:
         archive, error = _download_archive(run["databaseId"], name, tmp)
         listing = subprocess.run(["tar", "-tzf", str(archive)], capture_output=True, text=True,
                                  encoding="utf-8", errors="replace").stdout if archive else ""
         if want not in listing.split():
-            log(f"cloud run {run['databaseId']} ({run['conclusion'] or run['status']}) has no {name} for today; "
-                f"skipping it" + ("" if archive else f": {error[:200]}"))
+            log(f"cloud run {run['databaseId']} ({run['conclusion'] or run['status']}) has no {name} for "
+                f"{day.isoformat()}; skipping it" + ("" if archive else f": {error[:200]}"))
             continue
-        log(f"cloud run {run['databaseId']}: {run['conclusion'] or run['status']} ({name})")
-        _unpack_keeping_today(archive)
-        _import_surplus()
+        log(f"cloud run {run['databaseId']}: {run['conclusion'] or run['status']} ({name}): posts for {day.isoformat()}")
+        _unpack_keeping_today(archive, day)
+        _import_surplus(day - timedelta(days=publish_lag()))
         shutil.rmtree(tmp, ignore_errors=True)
         if name == "kavar-morning" and run["status"] != "completed":
-            log("only the morning guide Reel so far; the rest of the day is still being made: fetch again later")
-        log("downloaded; queue:")
-        status()
+            log("only the morning guide Reel so far; the rest is still being made: fetch again later")
+        if day != date.today():
+            log(f"kept for {day.isoformat()} (D-56):")
+            for i, q in enumerate(load_queue(day), 1):
+                log(f"   {i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')}")
         return
     shutil.rmtree(tmp, ignore_errors=True)
-    log("no cloud run with today's queue yet")
+    log(f"no cloud run with the queue for {day.isoformat()} yet")
 
 
 # D-49: where .github/deliver.sh puts an archive whose artifact upload failed (storage quota, 10-24)
