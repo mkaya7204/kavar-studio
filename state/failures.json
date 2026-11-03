@@ -1552,5 +1552,82 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`...    rank 32 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini can edit whole Google Slides presentations; a Turkish student or worker c)    rank 30 [Google Workspace Updates] An easier way to customize how Gemini wo"
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 34 [Google Workspace Updates] An easier way to customize how Gemini works for you (Customizing how Gemini works for you is a directly usable Gemini feature, ideal )    rank 32 [Google Workspace Updates] Edit entire presentations with Gemini in Go"
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing the Grid Protectors Program",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Hera",
+  "rendered": true,
+  "host": "hera.video",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "facts"
+  ],
+  "detail": "Kapaktaki ve ilk saniyelerdeki kanıt görseli sitenin 'Your AI Motion Designer' slogan afişi. Bu bir slogan kartı, ürünün arayüzü ya da çıktısı değil. Vaat 'düzenlenebilir motion tasarımcı', ama görsel bunu göstermiyor. Slogan kanıt sayılmaz.; Afişin içinde oynat düğmesi ve zaman çizelgesi çizimi var"
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Widgeteer",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "voice"
+  ],
+  "detail": "no voice / voiced Reel failed"
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "Writing with `claude -p`...    rank 34 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini can edit whole Slides presentations, an easy relatable school/work AI fea)    rank 32 [Google Workspace Updates] An easier way to customize how Gemini works for you (Custo"
+ },
+ {
+  "date": "2026-11-03",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "Writing with `claude -p`...    rank 32 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini editing whole Slides presentations is a concrete AI feature viewers can t)    rank 30 [Google Workspace Updates] An easier way to customize how Gemini works for you (Custo"
  }
 ]

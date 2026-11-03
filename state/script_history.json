@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Canva Brush",
-    "hook": "Tasarımı yapay zekâ düzenliyor",
-    "pattern": "result",
-    "spoken_hook": "Tasarımını yapay zekâ senin yerine düzenliyor.",
-    "cta": "Tasarım yapan ekip arkadaşına at."
-  },
-  {
-    "tool": "SKI",
-    "hook": "Ajanınla konuşarak kod yaz",
-    "pattern": "result",
-    "spoken_hook": "Kodlama ajanınla artık sesli konuşabilirsin.",
-    "cta": "Kodcu arkadaşına gönder."
-  },
-  {
     "tool": "Mo",
     "hook": "232 görev, tek küçük karakter",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "result",
     "spoken_hook": "Web siten kendi SEO'sunu kendisi yapabiliyor.",
     "cta": "Site kuran arkadaşına gönder."
+  },
+  {
+    "tool": "Hera",
+    "hook": "Düzenlenebilir motion grafik",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ düzenlenebilir hareketli grafikler üretebiliyor.",
+    "cta": "Motion çalışan arkadaşına gönder."
+  },
+  {
+    "tool": "Widgeteer",
+    "hook": "Yaz, widget sitene gelsin",
+    "pattern": "result",
+    "spoken_hook": "Sitene form ya da quiz'i yazarak ekleyebilirsin.",
+    "cta": "Küçük işletmesi olan arkadaşına at."
   }
 ]

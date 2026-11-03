@@ -1039,5 +1039,31 @@
     "duration_sec": 0.0,
     "words": 40,
     "status": "approved draft, but the voiced Reel failed"
+  },
+  {
+    "id": "2026-11-03_hera",
+    "date": "2026-11-03",
+    "kind": "tool",
+    "tool": "Hera",
+    "hook_pattern": "result",
+    "headline": "Yapay zekâ motion tasarımcı",
+    "spoken_hook": "Yapay zekâ motion tasarımcın olabilir.",
+    "cta": "Motion çalışan arkadaşına gönder.",
+    "duration_sec": 21.9,
+    "words": 36,
+    "status": "rejected: Kapaktaki ve ilk saniyelerdeki kanıt görseli sitenin 'Your AI Motion Designer' slogan afişi. Bu bir slogan kartı, ürünün arayüzü ya da çıktısı değil. Vaat 'düzenlenebilir motion tasarımcı', ama görsel bunu göstermiyor. Slogan kanıt sayılmaz.; Afişin içinde oynat düğmesi ve zaman çizelgesi çizimi var. Görsel video gibi görünüyor ama oynamıyor, izleyici kandırılmış hissedebilir.; 10.3 sn karesinde kanıt yine sitenin İngilizce metin kartı ('Editable layers / Stay in control of every pixel'). Bu bir özellik cümlesi, ürün çıktısı ya da arayüzü değil. Kanıt eksik."
+  },
+  {
+    "id": "2026-11-03_widgeteer",
+    "date": "2026-11-03",
+    "kind": "tool",
+    "tool": "Widgeteer",
+    "hook_pattern": "result",
+    "headline": "Yaz, widget sitene gelsin",
+    "spoken_hook": "Sitene form ya da quiz'i yazarak ekleyebilirsin.",
+    "cta": "Küçük işletmesi olan arkadaşına at.",
+    "duration_sec": 0.0,
+    "words": 41,
+    "status": "approved draft, but the voiced Reel failed"
   }
 ]
