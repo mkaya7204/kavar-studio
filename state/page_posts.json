@@ -1,0 +1,155 @@
+{
+ "https://www.anthropic.com/news/announcements": null,
+ "https://www.anthropic.com/news/public-benefit-fund": {
+  "title": "Investing in the public benefit",
+  "date": "2026-10-18T00:00:00+00:00",
+  "summary": "We’re committing a portion of Anthropic’s shares to the Anthropic Public Benefit Fund, a new entity with a structure that increases the stake as the company grows."
+ },
+ "https://www.anthropic.com/news/s1-sec": {
+  "title": "Anthropic files S-1 with the SEC for proposed initial public offering",
+  "date": "2026-10-26T00:00:00+00:00",
+  "summary": "Anthropic is an AI safety and research company that's working to build reliable, interpretable, and steerable AI systems."
+ },
+ "https://www.anthropic.com/news/features": null,
+ "https://www.anthropic.com/news/ai-for-science-expands-foundations-research-institutions": {
+  "title": "AI for Science expands to foundations and institutions",
+  "date": "2026-10-28T00:00:00+00:00",
+  "summary": "We’re highlighting 20 scientific foundations, institutions, and research groups from around the world that we’ve partnered with in an expansion of our AI for Science program."
+ },
+ "https://www.anthropic.com/news/expanding-partnership-gsa": {
+  "title": "Expanding our partnership with GSA to bring Claude to all levels of government",
+  "date": "2026-10-27T00:00:00+00:00",
+  "summary": "Anthropic is an AI safety and research company that's working to build reliable, interpretable, and steerable AI systems."
+ },
+ "https://www.anthropic.com/news/partnerships": null,
+ "https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation": {
+  "title": "Donating Agent Skills to the Agentic AI Foundation",
+  "date": "2026-10-22T00:00:00+00:00",
+  "summary": "Anthropic is an AI safety and research company that's working to build reliable, interpretable, and steerable AI systems."
+ },
+ "https://x.ai/news/grok-voice-3": {
+  "title": "Introducing Grok Voice 3.0",
+  "date": "2026-10-14T00:00:00+00:00",
+  "summary": "The world’s most intelligent voice model."
+ },
+ "https://x.ai/news/data-bot": {
+  "title": "Giving every team a data scientist with Grok Bot",
+  "date": "2026-11-02T00:00:00+00:00",
+  "summary": "Data Bot is a Team Bot in Grok Bot that the data science team teaches, so every team can query the warehouse, run analyses, and get answers the way a data scientist would."
+ },
+ "https://x.ai/news/grok-bot-sales": {
+  "title": "Your next sales teammate should be a Grok Bot",
+  "date": "2026-10-27T00:00:00+00:00",
+  "summary": "The SpaceXSI Sales team built Team Bots for prospecting, quoting, and deal review so every rep works from the same up-to-date expertise."
+ },
+ "https://x.ai/news/partnernetworkannouncement": {
+  "title": "Introducing the SpaceX Super Intelligence Partner Network",
+  "date": "2026-10-22T00:00:00+00:00",
+  "summary": "Our official program for companies building products, solutions, and services with Grok for our joint prospects and customers."
+ },
+ "https://x.ai/news/incident-sweep": {
+  "title": "Using Grok Bot to detect and respond to incidents",
+  "date": "2026-10-20T00:00:00+00:00",
+  "summary": "IncidentWatch spots ticket spikes before internal alerts fire. IncidentSweep clears the related backlog in an approved batch."
+ },
+ "https://x.ai/news/x-subscription": {
+  "title": "Introducing The X Subscription",
+  "date": "2026-10-12T00:00:00+00:00",
+  "summary": "Grok, Grok Bot, Cursor, and X Premium, all on one plan."
+ },
+ "https://x.ai/news/team-bots": {
+  "title": "Team Bots: shared AI teammates that learn as they work",
+  "date": "2026-09-28T00:00:00+00:00",
+  "summary": "Give a Grok Bot the files, apps, and expertise it needs, then share it so your whole team can work from the same context."
+ },
+ "https://x.ai/news/grok-bot-customer-support": {
+  "title": "How SpaceXSI is using Grok Bot to scale customer support",
+  "date": "2026-09-22T00:00:00+00:00",
+  "summary": "We rebuilt the combined SpaceXSI and Cursor support operation around Grok Bot, expanding to a much broader product portfolio without adding headcount."
+ },
+ "https://api-docs.deepseek.com/news/news261017": {
+  "title": "DeepSeek-V4.1-Flash-1017: Wish-Driven Programming Made Real",
+  "date": "2026-10-31T12:00:00+00:00",
+  "summary": "ð DeepSeek-V4.1-Flash-1017 is here!"
+ },
+ "https://www.minimax.io/blog/minimax-m31f": {
+  "title": "MiniMax M3.1 Flash: Redefining Agent Performance and Cost",
+  "date": "2026-10-19T00:00:00+00:00",
+  "summary": "Today, we officially roll out MiniMax M3.1 Flash. As a next-generation Flash model, M3.1 Flash delivers a generational leap in agentic tasks, coding, Computer Use and cybersecurity, while making online inference nearly three times faster and reducing usage costs by 70%."
+ },
+ "https://www.minimax.io/blog/minimax-h3": {
+  "title": "MiniMax H3: An Open Model Breaking the Boundaries Between Tasks and Modalities",
+  "date": "2026-07-31T00:00:00+00:00",
+  "summary": "Today, we're officially launching MiniMax H3, a general-purpose omni-modal generation model. H3 can jointly understand multimodal contexts spanning text, images, video, and audio. It generates video with native stereo audio at up to 2K resolution and 15 seconds in length."
+ },
+ "https://www.minimax.io/news/minimax-speech-28": {
+  "title": "MiniMax Speech 2.8: Breathing life into AI voice",
+  "date": "2026-01-23T00:00:00+00:00",
+  "summary": ""
+ },
+ "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": {
+  "title": "MiniMax Music 3.0: Next-Generation Open-Weights, Production-Ready & Versatile Music Model",
+  "date": "2026-08-13T13:33:59+00:00",
+  "summary": "Today, we are introducing MiniMax Music 3.0, our next-generation music generation model. Given a creative concept and optional lyrics, the model composes, arranges, performs, and produces a complete s"
+ },
+ "https://www.kimi.com/blog/kimi-k3-1-pro": {
+  "title": "Kimi K3.1 Pro Tech Blog: Advancing Open Intelligence",
+  "date": "2026-11-04T12:00:00+00:00",
+  "summary": "Introducing Kimi K3.1 Pro, our most capable 3T-class open-weight model with 1M-token context and major advances in coding, 3D modeling, and financial research."
+ },
+ "https://www.kimi.com/blog/kimi-k3": {
+  "title": "Kimi K3 Tech Blog: Open Frontier Intelligence",
+  "date": "2026-07-27T12:00:00+00:00",
+  "summary": "Kimi K3 is the world's first open 3T-class model — frontier performance across coding, knowledge work, and reasoning, with native multimodality and 1M context."
+ },
+ "https://www.kimi.com/blog/kimi-k2-6": null,
+ "https://www.kimi.com/blog/kimi-k2-5": null,
+ "https://www.kimi.com/blog/perception-bench": null,
+ "https://www.kimi.com/blog/agent-swarm": null,
+ "https://www.kimi.com/blog/worldvqa": null,
+ "https://bfl.ai/blog/flux-3-image-klein": {
+  "title": "FLUX 3 Image Klein: open weights, 5.6B parameters",
+  "date": "2026-10-15T15:00:00+00:00",
+  "summary": "Frontier image quality with the customization and speed of open weights: 5.6B parameters, first in text-to-image, multi-reference generation and editing."
+ },
+ "https://bfl.ai/blog/flux-3-action": {
+  "title": "FLUX 3 Action: A 7B World Action Model for Robot Control",
+  "date": "2026-09-22T00:00:00+00:00",
+  "summary": "7B open weights world action model. Turn FLUX’s visual intelligence into action for your robot, simulator, or game."
+ },
+ "https://bfl.ai/blog/flux-video-upscale": {
+  "title": "FLUX Video Upscale: 2K and 4K",
+  "date": "2026-08-20T17:21:00+00:00",
+  "summary": "FLUX Upscale takes any video and regenerates it at a higher resolution, up to native 4K, now available as its own FLUX Tool and endpoint."
+ },
+ "https://bfl.ai/blog/flux-3-video": {
+  "title": "FLUX 3 Video, Part 1: Generation",
+  "date": "2026-08-04T15:00:00+00:00",
+  "summary": "FLUX 3 Video, Part 1"
+ },
+ "https://bfl.ai/blog/flux-3": {
+  "title": "FLUX 3: Multimodal Video, Image & Audio",
+  "date": "2026-07-23T15:00:00+00:00",
+  "summary": "Meet FLUX 3, Black Forest Labs’ multimodal model for video with native audio, image generation, and action prediction. Explore capabilities and early results."
+ },
+ "https://bfl.ai/blog/flux-3-mimic": {
+  "title": "FLUX 3 x mimic: The Next Generation of Video-Action Models",
+  "date": "2026-07-23T15:00:00+00:00",
+  "summary": "FLUX 3 is running robots. Built with mimic and deployed at Audi, FLUX-mimic shows content creation and physical AI share one foundation: a model that understands the world."
+ },
+ "https://bfl.ai/blog/our-co-founder-and-ceo-urges-g7-leaders-to-back-open-innovation": {
+  "title": "Our co-founder and CEO urges G7 leaders to back open innovation",
+  "date": "2026-06-18T16:55:00+00:00",
+  "summary": "At the G7, our co-founder and CEO, Robin Rombach, joined President Trump, President von der Leyen, President Macron, and other world leaders to advocate for open innovation in AI. With openness under pressure around the world, Robin called on governments and industry to make open and responsible AI development the norm, not the exception. Read his speech below."
+ },
+ "https://bfl.ai/blog/how-envato-built-its-creative-ai-engine-on-flux": {
+  "title": "How Envato Built Its Creative AI Engine on FLUX",
+  "date": "2026-06-17T14:29:00+00:00",
+  "summary": "How one of the world's largest creative platforms turned a careful evaluation into core infrastructure: 51 million+ images, three creative workflows, and a FLUX.2 launch on day zero."
+ },
+ "https://runwayml.com/news/research/introducing-solaris": {
+  "title": "Introducing Solaris",
+  "date": "2026-08-31T21:16:00+00:00",
+  "summary": "Solaris is Runway's first Interface World Model: real-time AI that generates interactive interfaces frame by frame, with no code."
+ }
+}

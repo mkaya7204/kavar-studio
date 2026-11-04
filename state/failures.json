@@ -1629,5 +1629,92 @@
    "off_concept"
   ],
   "detail": "Writing with `claude -p`...    rank 32 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini editing whole Slides presentations is a concrete AI feature viewers can t)    rank 30 [Google Workspace Updates] An easier way to customize how Gemini works for you (Custo"
+ },
+ {
+  "date": "2026-11-04",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Suno",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "voice"
+  ],
+  "detail": "no voice / voiced Reel failed"
+ },
+ {
+  "date": "2026-11-04",
+  "stage": "news",
+  "kind": "news",
+  "item": "Kimi K3.1 Pro Tech Blog: Advancing Open Intelligence",
+  "rendered": false,
+  "host": "kimi.com",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: article has no cover image or too little text"
+ },
+ {
+  "date": "2026-11-04",
+  "stage": "news",
+  "kind": "news",
+  "item": "Accelerating engineering for the physical world",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-04",
+  "stage": "news",
+  "kind": "news",
+  "item": "Arnis turns any place on Earth into a Minecraft world",
+  "rendered": true,
+  "host": "github.blog",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-04",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Teamily AI",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "voice"
+  ],
+  "detail": "no voice / voiced Reel failed"
+ },
+ {
+  "date": "2026-11-04",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 33 [Google Workspace Updates] An easier way to customize how Gemini works for you (Customizing how Gemini works for you is a usable Gemini feature, though details )    rank 32 [Google Workspace Updates] Edit entire presentations with Gemini in Go"
+ },
+ {
+  "date": "2026-11-04",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 34 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini can edit whole Slides presentations, a feature users can try today.)    rank 30 [Google Workspace Updates] An easier way to customize how Gemini works fo"
  }
 ]

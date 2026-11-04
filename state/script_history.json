@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Mo",
-    "hook": "232 görev, tek küçük karakter",
-    "pattern": "result",
-    "spoken_hook": "Tek bir küçük karakter 232 görevi yapabiliyor.",
-    "cta": "Mac kullanan arkadaşına gönder."
-  },
-  {
-    "tool": "BaseTab AI",
-    "hook": "Yeni sekmen çalışma alanı oluyor",
-    "pattern": "result",
-    "spoken_hook": "Yeni sekmen artık yapay zekâlı bir çalışma alanına dönüşüyor.",
-    "cta": "Chrome'da çok sekme açan arkadaşına at."
-  },
-  {
     "tool": "Godwit",
     "hook": "Mailini yapay zekâ özetliyor",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "result",
     "spoken_hook": "Sitene form ya da quiz'i yazarak ekleyebilirsin.",
     "cta": "Küçük işletmesi olan arkadaşına at."
+  },
+  {
+    "tool": "Suno",
+    "hook": "20 parça, hepsi Audio Track",
+    "pattern": "pain",
+    "spoken_hook": "Yirmi parçanın adı hâlâ Audio Track mi?",
+    "cta": "Müzik yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Teamily AI",
+    "hook": "Ekip bir yerde, ajan başka yerde",
+    "pattern": "pain",
+    "spoken_hook": "Ekibin bir yerde, yapay zekân başka yerde mi?",
+    "cta": "Ekip kuran arkadaşına gönder."
   }
 ]

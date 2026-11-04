@@ -1065,5 +1065,31 @@
     "duration_sec": 0.0,
     "words": 41,
     "status": "approved draft, but the voiced Reel failed"
+  },
+  {
+    "id": "2026-11-04_suno",
+    "date": "2026-11-04",
+    "kind": "guide",
+    "tool": "Suno",
+    "hook_pattern": "pain",
+    "headline": "20 parça, hepsi Audio Track",
+    "spoken_hook": "Yirmi parçanın adı hâlâ Audio Track mi?",
+    "cta": "Müzik yapan arkadaşına gönder.",
+    "duration_sec": 0.0,
+    "words": 38,
+    "status": "approved draft, but the voiced Reel failed"
+  },
+  {
+    "id": "2026-11-04_teamily-ai",
+    "date": "2026-11-04",
+    "kind": "tool",
+    "tool": "Teamily AI",
+    "hook_pattern": "pain",
+    "headline": "Ekip bir yerde, ajan başka yerde",
+    "spoken_hook": "Ekibin bir yerde, yapay zekân başka yerde mi?",
+    "cta": "Ekip kuran arkadaşına gönder.",
+    "duration_sec": 0.0,
+    "words": 41,
+    "status": "approved draft, but the voiced Reel failed"
   }
 ]
