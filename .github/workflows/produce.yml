@@ -54,6 +54,7 @@ jobs:
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
       ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}  # second account, same George (D-23)
       ELEVENLABS_API_KEY_3: ${{ secrets.ELEVENLABS_API_KEY_3 }}  # third account, same George (D-46)
+      ELEVENLABS_API_KEY_4: ${{ secrets.ELEVENLABS_API_KEY_4 }}  # fourth account, same George (user 2026-11-04)
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       # a late scheduled run must not redo a day already produced by hand (state/last_produce.json)

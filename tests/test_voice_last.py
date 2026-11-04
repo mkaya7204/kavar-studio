@@ -158,9 +158,10 @@ def test_no_test_workflow_spends_george():
 def test_a_third_voice_account_speaks_george_too():
     import tts_engine
 
-    assert tts_engine.ELEVENLABS_KEYS[-1] == "ELEVENLABS_API_KEY_3"
-    for name in ("produce.yml", "voice.yml", "rerender.yml", "news-test.yml"):
-        assert "secrets.ELEVENLABS_API_KEY_3" in (ROOT / ".github" / "workflows" / name).read_text(encoding="utf-8")
+    assert tts_engine.ELEVENLABS_KEYS[2:] == ("ELEVENLABS_API_KEY_3", "ELEVENLABS_API_KEY_4")  # 4th: user 11-04
+    for name in ("produce.yml", "voice.yml", "rerender.yml", "news-test.yml", "probe.yml"):
+        text = (ROOT / ".github" / "workflows" / name).read_text(encoding="utf-8")
+        assert "secrets.ELEVENLABS_API_KEY_3" in text and "secrets.ELEVENLABS_API_KEY_4" in text
 
 
 def test_a_fixed_draft_the_editor_approves_is_voiced(monkeypatch, reel_sandbox):

@@ -238,7 +238,8 @@ async def _edge(text: str, voice: str, rate_pct: int, audio_path: Path) -> list[
 
 
 # accounts tried in order, all speaking George (D-23 two accounts; D-46 a third, the user 10-23)
-ELEVENLABS_KEYS = ("ELEVENLABS_API_KEY", "ELEVENLABS_API_KEY_2", "ELEVENLABS_API_KEY_3")
+ELEVENLABS_KEYS = ("ELEVENLABS_API_KEY", "ELEVENLABS_API_KEY_2", "ELEVENLABS_API_KEY_3",
+                   "ELEVENLABS_API_KEY_4")  # 4th (user 2026-11-04: a new one, keep the old ones)
 
 
 def _elevenlabs_keys() -> list[str]:

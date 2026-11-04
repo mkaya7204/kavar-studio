@@ -26,6 +26,7 @@ jobs:
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
       ELEVENLABS_API_KEY_2: ${{ secrets.ELEVENLABS_API_KEY_2 }}  # second account, same George (D-23)
       ELEVENLABS_API_KEY_3: ${{ secrets.ELEVENLABS_API_KEY_3 }}  # third account, same George (D-46)
+      ELEVENLABS_API_KEY_4: ${{ secrets.ELEVENLABS_API_KEY_4 }}  # fourth account, same George (user 2026-11-04)
     steps:
       - uses: actions/checkout@v7
       # D-49: the PC hook (.claude/settings.json) calls a Windows path; here it fails and blocks every Bash call

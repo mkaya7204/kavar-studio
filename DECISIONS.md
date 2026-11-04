@@ -490,3 +490,10 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Not readable from outside:** Perplexity (403), Z.ai (404). Luma left out (mostly marketing guides).
 - **Guarded by:** tests/test_d59.py (the 11-03 titles, dates and false matches).
 - **Not yet seen in a run.**
+
+## D-60 · 2026-11-04 · A fourth ElevenLabs key, the old ones kept
+- **User:** "Yeni bir tane olsun eskisinin üzerine niye yazıyoruz" (2026-11-04), after creating new keys (the three
+  keys in GitHub had 1 / 125 / 222 credits left; a Reel needs 259-279).
+- **Built:** `ELEVENLABS_API_KEY_4` in src/tts_engine.py ELEVENLABS_KEYS (tried after 1-3, same George) and in every
+  workflow that voices (produce, voice, rerender, news-test, say, trial-rerender) and probe.yml (shows its credits).
+- **Guarded by:** tests/test_voice_last.py::test_a_third_voice_account_speaks_george_too.
