@@ -811,5 +811,68 @@
     "shares": 2,
     "saves": 3,
     "avg_watch_sec": 4
+  },
+  {
+    "published": "2026-11-03 07:26",
+    "kind": "reel",
+    "title": "Google AI Quests guide Reel (from 11-02 run; seen 11-04 ~07:15)",
+    "reach": 224,
+    "views": 245,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 1,
+    "avg_watch_sec": 3
+  },
+  {
+    "published": "2026-11-03 11:45",
+    "kind": "reel",
+    "title": "Modelpeers tool Reel (from 11-02 run; seen 11-04, <24 h)",
+    "reach": 133,
+    "views": 156,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 3
+  },
+  {
+    "published": "2026-11-03 12:30",
+    "kind": "carousel",
+    "title": "OpenAI LifeVal carousel (seen 11-04, <24 h)",
+    "reach": 13,
+    "views": 33,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-03 18:00",
+    "kind": "carousel",
+    "title": "Google October AI news carousel (seen 11-04, <24 h)",
+    "reach": 15,
+    "views": 33,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-03 20:31",
+    "kind": "reel",
+    "title": "ClawsGO Science tool Reel (from 11-02 run; seen 11-04, <24 h)",
+    "reach": 153,
+    "views": 167,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 2
   }
 ]
