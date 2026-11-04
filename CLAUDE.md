@@ -90,7 +90,7 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    Tests, searches, fixes, agent renders, dry runs (`KAVAR_DRY`), news-test, rerender (default draft=yes)
    never spend it. An approved Reel of a test run stays silent with its parts in `<reel>/_voice`;
    `voice.yml` (run_id, reel) voices it once when it is chosen to be published. Keys: ELEVENLABS_API_KEY,
-   _2, _3 (all George).
+   _2, _3, _4 (all George; _4 added by the user 2026-11-04, D-60).
    **D-34 (2026-10-18):** George says every product / company name the way Turkish tech people say it, also
    new names: `tts_engine.spoken_text` (hand-checked `rules/pronunciation.json` first, then names Claude
    learns before voicing, kept in `state/pronunciations.json`). Captions and screens keep the real spelling.
