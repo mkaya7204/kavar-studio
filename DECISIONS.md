@@ -460,7 +460,9 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Checked on the records:** the detector flags 1 of 82 past voiceovers (Hera, 11-03: "Hera", "motion"); the
   spelling guard flags 0 of all kept post texts and catches "Klod", "Cemini".
 - **Guarded by:** tests/test_names.py.
-- **Not yet seen in a run.**
+- **Seen in run 41960625068 (11-05, posts for 11-06):** before George spoke, state/pronunciations.json gained Images -> İmicis,
+  GIF -> Cif, LiveReacting -> Layvriyekting, Prelulu -> Prelülü, Premier -> Primiyer, Studio -> Stüdyo and Suno -> Suno (a
+  "said as written" answer, kept); no "no pronunciation" stop; 3 Reels voiced (key 4).
 
 ## D-58 · 2026-11-03 · News also from AI labs beyond the big companies
 - **User:** "ikinci sorunda sadece bilindik isimlerin büyük isimlerin yeni AI haberlerini yapıyorsun" and "bilindik
@@ -489,7 +491,9 @@ the decisions that are currently locked; this file explains why they exist and h
   FLUX 3, MiniMax H3; the false matches seen first (MiniMax Music by "open weights", HN 2911) are gone.
 - **Not readable from outside:** Perplexity (403), Z.ai (404). Luma left out (mostly marketing guides).
 - **Guarded by:** tests/test_d59.py (the 11-03 titles, dates and false matches).
-- **Not yet seen in a run.**
+- **Seen in runs 41766155691 (11-04) and 41960625068 (11-05):** all 7 lab pages read (11-05: Anthropic 10, xAI 16, BFL 10
+  posts), DeepSeek-V4.1-Flash marked talked about. Not yet chosen for a carousel: 11-04 Kimi K3.1 Pro (first pick) was lost
+  to a 0-character capture of kimi.com; DeepSeek V4.1 is older than 72 h.
 
 ## D-60 · 2026-11-04 · A fourth ElevenLabs key, the old ones kept
 - **User:** "Yeni bir tane olsun eskisinin üzerine niye yazıyoruz" (2026-11-04), after creating new keys (the three
