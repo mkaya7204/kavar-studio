@@ -865,14 +865,38 @@
   {
     "published": "2026-11-03 20:31",
     "kind": "reel",
-    "title": "ClawsGO Science tool Reel (from 11-02 run; seen 11-04, <24 h)",
-    "reach": 153,
-    "views": 167,
+    "title": "ClawsGO Science tool Reel (from 11-02 run; seen 11-05)",
+    "reach": 157,
+    "views": 172,
     "follows": 0,
     "likes": 1,
     "comments": 0,
     "shares": 0,
     "saves": 0,
     "avg_watch_sec": 2
+  },
+  {
+    "published": "2026-11-04 12:30",
+    "kind": "carousel",
+    "title": "OpenAI Grid Protectors carousel (seen 11-05 15:30)",
+    "reach": 9,
+    "views": 21,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-04 18:00",
+    "kind": "carousel",
+    "title": "Google Connected Apps carousel, from 11-02 run (seen 11-05 15:30)",
+    "reach": 11,
+    "views": 40,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 1
   }
 ]
