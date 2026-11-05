@@ -151,5 +151,83 @@
   "title": "Introducing Solaris",
   "date": "2026-08-31T21:16:00+00:00",
   "summary": "Solaris is Runway's first Interface World Model: real-time AI that generates interactive interfaces frame by frame, with no code."
+ },
+ "https://www.anthropic.com/news/product": null,
+ "https://www.anthropic.com/news/open-call-guest-investigators-life-sciences": {
+  "title": "Open call for guest investigators in the life sciences",
+  "date": "2026-10-22T00:00:00+00:00",
+  "summary": "Today, we’re inviting members of the life sciences community to apply to work with us on special projects."
+ },
+ "https://www.anthropic.com/news/christopher-stubbs-joins-long-term-benefit-trust": {
+  "title": "Physicist Christopher Stubbs joins Anthropic's Long-Term Benefit Trust",
+  "date": "2026-10-21T00:00:00+00:00",
+  "summary": "Dr. Christopher Stubbs, an experimental physicist and former Dean of Science at Harvard University, has joined Anthropic’s Long-Term Benefit Trust. He brings to the Trust decades of scientific expertise across observational cosmology and precision measurement. He has also advised the US government on national security and arms control.  “I am honored to join Anthropic’s Long-Term Benefit Trust and to help the company deliver on its public benefit mission,” said Stubbs. “I use AI tools in my rese"
+ },
+ "https://www.anthropic.com/news/an-update-on-independent-evaluators": {
+  "title": "Anthropic update on independent evaluators",
+  "date": "2026-10-15T00:00:00+00:00",
+  "summary": "Anthropic announces updates to embedding independent evaluators"
+ },
+ "https://www.anthropic.com/news/policy": null,
+ "https://www.anthropic.com/news/2026-us-midterms": {
+  "title": "Preparing for the 2026 US midterms",
+  "date": "2026-10-14T00:00:00+00:00",
+  "summary": "Earlier this year, we shared an update on our election safeguards. Here, we outline how we’ve continued to strengthen these safeguards ahead of this year’s US midterms."
+ },
+ "https://www.anthropic.com/news/safeguards": null,
+ "https://www.anthropic.com/news/singapore-office-opening": {
+  "title": "Singapore office and government MOU",
+  "date": "2026-10-14T00:00:00+00:00",
+  "summary": "Anthropic opens its fifth Asia-Pacific office in Singapore and signs an MOU with the government on AI safety, evaluation, and responsible adoption."
+ },
+ "https://x.ai/news/grok-4-7": {
+  "title": "Introducing Grok 4.7",
+  "date": "2026-09-21T00:00:00+00:00",
+  "summary": "SpaceXSI's most powerful model for coding and knowledge work. Twice as fast, at half the price of comparable models."
+ },
+ "https://x.ai/news/grok-voice-transcribe-2": {
+  "title": "Introducing Grok Voice Transcribe 2.0",
+  "date": "2026-09-18T00:00:00+00:00",
+  "summary": "Announcing SpaceXSI's newest speech-to-text model, with unparalleled accuracy and cost effectiveness."
+ },
+ "https://x.ai/news/grok-build-memory": {
+  "title": "Memory in Grok Build",
+  "date": "2026-09-16T00:00:00+00:00",
+  "summary": "Grok Build now carries conventions, decisions, and project facts from one session to the next. Notes are written in the background as you work and read back when you return to the project."
+ },
+ "https://x.ai/news/grok-bot-procurement": {
+  "title": "Setting Grok Bot loose on procurement",
+  "date": "2026-09-04T00:00:00+00:00",
+  "summary": "We gave Grok Bot access to vendor spend, contracts, and usage data. It found more than $100,000 in direct savings."
+ },
+ "https://x.ai/news/designing-grok-bot": {
+  "title": "Designing Grok Bot for a world of persistent agents",
+  "date": "2026-09-03T00:00:00+00:00",
+  "summary": "How we designed Grok Bot for agents that persist beyond a single session — from a chat history to a Bot roster, presence, a computer of the Bot’s own, and work that starts without a prompt."
+ },
+ "https://x.ai/news/grok-bot-for-enterprise": {
+  "title": "Grok Bot for Enterprise",
+  "date": "2026-09-03T00:00:00+00:00",
+  "summary": "Grok Bot is now available for enterprises. Grok and Cursor Enterprise customers have free usage for the next two weeks, and can invite their whole organization, including people without an existing seat."
+ },
+ "https://x.ai/news/biosafety-at-the-frontier": {
+  "title": "Biosecurity at the frontier",
+  "date": "2026-09-01T00:00:00+00:00",
+  "summary": "LatchBio evaluated Grok's performance on biosecurity monitoring and adversarial biological tasks. They found that Grok 4.6 detects and refuses dangerous queries more reliably than any other frontier system."
+ },
+ "https://x.ai/news/grok-bot-and-x": {
+  "title": "Grok Bot now works with X",
+  "date": "2026-08-29T00:00:00+00:00",
+  "summary": "Grok Bot now has a tighter integration with X."
+ },
+ "https://bfl.ai/blog/flux2-klein-on-device": {
+  "title": "FLUX.2 is now on device: ASUS ProArt laptops now support Klein models",
+  "date": "2026-06-04T00:06:00+00:00",
+  "summary": "For the first time a FLUX model will ship on consumer hardware. In partnership with ASUS and NVIDIA, creators picking up a new ASUS ProArt laptop will find FLUX.2 [klein] optimized for the device."
+ },
+ "https://bfl.ai/blog/martin-scorsese-bfl-advisor": {
+  "title": "Martin Scorsese × Black Forest Labs",
+  "date": "2026-05-29T00:00:00+00:00",
+  "summary": "Martin Scorsese has spent six decades bringing stories to life. Now, he's helping us shape visual intelligence as an advisor at Black Forest Labs."
  }
 }

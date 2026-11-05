@@ -1,26 +1,5 @@
 [
   {
-    "tool": "Godwit",
-    "hook": "Mailini yapay zekâ özetliyor",
-    "pattern": "result",
-    "spoken_hook": "Uzun mailleri yapay zekâ senin için özetleyebilir.",
-    "cta": "Mail kutusu dolu arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
-    "hook": "Yapay zekâyı oyunla öğret",
-    "pattern": "question",
-    "spoken_hook": "Çocuğuna yapay zekâyı oyunla öğretmek ister misin?",
-    "cta": "Öğretmen arkadaşına gönder."
-  },
-  {
-    "tool": "ClawsGO Science",
-    "hook": "Tek cümleden araştırma raporu",
-    "pattern": "result",
-    "spoken_hook": "Tek cümleyle yazdığın konuyu yapay zekâ saatlerce araştırıyor.",
-    "cta": "Araştırma yapan arkadaşına gönder."
-  },
-  {
     "tool": "Modelpeers",
     "hook": "Modelin emekli oldu mu?",
     "pattern": "question",
@@ -68,5 +47,26 @@
     "pattern": "pain",
     "spoken_hook": "Ekibin bir yerde, yapay zekân başka yerde mi?",
     "cta": "Ekip kuran arkadaşına gönder."
+  },
+  {
+    "tool": "OpenAI",
+    "hook": "Ürün fotoğrafın GIF'e dönüşüyor",
+    "pattern": "result",
+    "spoken_hook": "Ürün fotoğrafın hareketli bir GIF'e dönüşebiliyor.",
+    "cta": "Bunu sosyal medya sorumlusuna gönder."
+  },
+  {
+    "tool": "Prelulu",
+    "hook": "Hikâyenin başrolü sen oluyorsun",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ karakterleriyle görüntülü konuşup hikâyenin başrolü olabilirsin.",
+    "cta": "Hikâye seven arkadaşına gönder."
+  },
+  {
+    "tool": "LiveReacting for ChatGPT",
+    "hook": "Canlı yayın 7/24 kendi akıyor",
+    "pattern": "result",
+    "spoken_hook": "Canlı yayının gece gündüz kendi kendine akabilir.",
+    "cta": "Yayıncı arkadaşına bunu at."
   }
 ]

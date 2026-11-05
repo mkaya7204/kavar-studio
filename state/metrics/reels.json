@@ -1091,5 +1091,44 @@
     "duration_sec": 0.0,
     "words": 41,
     "status": "approved draft, but the voiced Reel failed"
+  },
+  {
+    "id": "2026-11-05_openai",
+    "date": "2026-11-05",
+    "kind": "guide",
+    "tool": "OpenAI",
+    "hook_pattern": "result",
+    "headline": "Ürün fotoğrafın GIF'e dönüşüyor",
+    "spoken_hook": "Ürün fotoğrafın hareketli bir GIF'e dönüşebiliyor.",
+    "cta": "Bunu sosyal medya sorumlusuna gönder.",
+    "duration_sec": 21.6,
+    "words": 36,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-05_prelulu",
+    "date": "2026-11-05",
+    "kind": "tool",
+    "tool": "Prelulu",
+    "hook_pattern": "result",
+    "headline": "Hikâyenin başrolü sen oluyorsun",
+    "spoken_hook": "Yapay zekâ karakterleriyle görüntülü konuşup hikâyenin başrolü olabilirsin.",
+    "cta": "Hikâye seven arkadaşına gönder.",
+    "duration_sec": 24.9,
+    "words": 42,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-05_livereacting-for-chatgpt",
+    "date": "2026-11-05",
+    "kind": "tool",
+    "tool": "LiveReacting for ChatGPT",
+    "hook_pattern": "result",
+    "headline": "Kayıtlı videon 7/24 yayında",
+    "spoken_hook": "Kayıtlı videonu 7/24 canlı yayına çevirebilirsin.",
+    "cta": "Yayıncı arkadaşına bunu at.",
+    "duration_sec": 22.2,
+    "words": 39,
+    "status": "produced"
   }
 ]

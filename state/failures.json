@@ -1716,5 +1716,60 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`...    rank 34 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini can edit whole Slides presentations, a feature users can try today.)    rank 30 [Google Workspace Updates] An easier way to customize how Gemini works fo"
+ },
+ {
+  "date": "2026-11-05",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "OpenAI",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-05",
+  "stage": "news",
+  "kind": "news",
+  "item": "Palette: teaching a small model to build decks in your design language",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-05",
+  "stage": "news",
+  "kind": "news",
+  "item": "Start Songs with MIDI",
+  "rendered": true,
+  "host": "suno.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-05",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Prelulu",
+  "rendered": true,
+  "host": "prelulu.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-05",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "LiveReacting for ChatGPT",
+  "rendered": true,
+  "host": "livereacting.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]
