@@ -229,5 +229,81 @@
   "title": "Martin Scorsese × Black Forest Labs",
   "date": "2026-05-29T00:00:00+00:00",
   "summary": "Martin Scorsese has spent six decades bringing stories to life. Now, he's helping us shape visual intelligence as an advisor at Black Forest Labs."
+ },
+ "https://www.anthropic.com/news/distillation-defenses": {
+  "title": "Strengthening our defenses against distillation attacks",
+  "date": "2026-10-12T00:00:00+00:00",
+  "summary": "Illicit distillation allows model developers to copy frontier AI capabilities without creating proportionally robust safeguards. Here, we describe how we’ve reduced the rate of distillation by more than 90%."
+ },
+ "https://www.anthropic.com/news/anthropic-cyber-mission": {
+  "title": "Introducing the Anthropic Cyber Mission",
+  "date": "2026-10-08T00:00:00+00:00",
+  "summary": "Anthropic is an AI safety and research company that's working to build reliable, interpretable, and steerable AI systems."
+ },
+ "https://www.anthropic.com/news/security": null,
+ "https://www.anthropic.com/news/2026-usage-policy-update": {
+  "title": "2026 Usage Policy update",
+  "date": "2026-10-08T00:00:00+00:00",
+  "summary": "We’re publishing a new version of our Usage Policy. In this post, we summarize the changes we’ve made."
+ },
+ "https://www.anthropic.com/news/genesis-mission-commitment": {
+  "title": "Building on our commitment to American scientific discovery",
+  "date": "2026-10-08T00:00:00+00:00",
+  "summary": "Anthropic is committing $150 million over three years to the Genesis Mission, a federal initiative to accelerate scientific and technological discovery through AI."
+ },
+ "https://www.anthropic.com/news/cyber-verification-program": {
+  "title": "Expanding the Cyber Verification Program",
+  "date": "2026-10-06T00:00:00+00:00",
+  "summary": "We’re launching a new, expanded version of our Cyber Verification Program (CVP), which makes advanced cyber capabilities and reduced blocking classifiers available to qualifying security professionals."
+ },
+ "https://www.anthropic.com/news/claude-frontier-academy": {
+  "title": "Claude Frontier Academy: $100M to train 10,000 engineers",
+  "date": "2026-10-02T00:00:00+00:00",
+  "summary": "Claude Frontier Academy trains Frontier Deployed Engineers to the standard of Anthropic’s own — a $100 million commitment to train 10,000 by the end of 2027."
+ },
+ "https://www.anthropic.com/news/barclays-scales-claude": {
+  "title": "Barclays scales Claude to upgrade operations and improve client experience",
+  "date": "2026-10-01T00:00:00+00:00",
+  "summary": "Barclays, the British universal bank, is expanding its strategic collaboration with Anthropic to integrate secure, enterprise-grade AI systems across its global operations."
+ },
+ "https://x.ai/news/grok-4-6-microsoft-foundry": {
+  "title": "Grok 4.6 on Microsoft Foundry",
+  "date": "2026-08-26T00:00:00+00:00",
+  "summary": "Grok 4.6 is now available via Microsoft Foundry."
+ },
+ "https://x.ai/news/grok-bot-more-plans": {
+  "title": "Grok Bot is now included with more plans",
+  "date": "2026-08-26T00:00:00+00:00",
+  "summary": "Grok Bot is now available for SuperGrok, Cursor Pro, and all Cursor Teams plans."
+ },
+ "https://x.ai/news/grok-4-6-vertex-ai": {
+  "title": "Grok 4.6 on Gemini Enterprise Agent Platform",
+  "date": "2026-08-21T00:00:00+00:00",
+  "summary": "Grok 4.6 is now available via Gemini Enterprise Agent Platform."
+ },
+ "https://x.ai/news/grok-4-6-amazon-bedrock": {
+  "title": "Grok 4.6 on Amazon Bedrock",
+  "date": "2026-08-19T00:00:00+00:00",
+  "summary": "Grok 4.6 is now available via Amazon Bedrock."
+ },
+ "https://x.ai/news/grok-build-for-everyone": {
+  "title": "Grok Build on web and mobile",
+  "date": "2026-08-19T00:00:00+00:00",
+  "summary": "Grok Build is now available on every plan, on the web and on mobile."
+ },
+ "https://x.ai/news/grok-4-6-github-copilot": {
+  "title": "Grok 4.6 in GitHub Copilot",
+  "date": "2026-08-14T00:00:00+00:00",
+  "summary": "Grok 4.6, our latest coding model, is now available in GitHub Copilot."
+ },
+ "https://x.ai/news/grok-4-6": {
+  "title": "Introducing Grok 4.6",
+  "date": "2026-08-12T00:00:00+00:00",
+  "summary": "Grok 4.6 builds on Grok 4.5 with a particular focus on long-running agents and more ambitious interactive and visual work."
+ },
+ "https://x.ai/news/introducing-grok-bot": {
+  "title": "Introducing Grok Bot",
+  "date": "2026-08-11T00:00:00+00:00",
+  "summary": "Grok Bot is your team of always-on agents. They have their own computer, work inside tools and apps like you do, and keep working 24/7."
  }
 }

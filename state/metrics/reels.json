@@ -1130,5 +1130,57 @@
     "duration_sec": 22.2,
     "words": 39,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-06_gemini",
+    "date": "2026-11-06",
+    "kind": "guide",
+    "tool": "Gemini",
+    "hook_pattern": "result",
+    "headline": "Çizimin uygulamaya dönüşüyor",
+    "spoken_hook": "Kâğıttaki çizimin çalışan bir uygulamaya dönüşebiliyor.",
+    "cta": "Fikri olan arkadaşına gönder.",
+    "duration_sec": 22.6,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-06_bridge",
+    "date": "2026-11-06",
+    "kind": "tool",
+    "tool": "Bridge",
+    "hook_pattern": "pain",
+    "headline": "Ekip ve ajanlar burada buluşuyor",
+    "spoken_hook": "Toplantıya yapay zekâ ajanı katılsa?",
+    "cta": "Toplantısı bitmeyen arkadaşına at.",
+    "duration_sec": 19.9,
+    "words": 40,
+    "status": "rejected: Üçlü kanca tutmuyor: ekrandaki başlık \"Ekip ve ajanlar burada buluşuyor\", ilk söylenen cümle \"Toplantıya yapay zekâ ajanı katılsa?\". İki farklı vaat. Seçilen kanca (\"Ekip ve ajanlar burada buluşuyor\") adaylar arasında da yok.; Başlığın altındaki kanıt sitenin İngilizce sloganı (\"Where teams and agents meet.\"). Arayüz, çıktı ya da iş akışı göstermiyor; sloganlar kanıt sayılmaz.; 5. sn karesi de İngilizce bir slogan kartı (\"The only place to host, capture, and centralize every conversation.\"). Ürünün çalıştığını göstermiyor, sözle (\"eski araçların yerini alıyor\") ilgisi zayıf."
+  },
+  {
+    "id": "2026-11-06_stitch-ai",
+    "date": "2026-11-06",
+    "kind": "tool",
+    "tool": "Stitch.ai",
+    "hook_pattern": "pain",
+    "headline": "Sekmeler arasında kayboluyorsun",
+    "spoken_hook": "Mail, takvim, notlar derken sekmeler arasında kayboluyorsun.",
+    "cta": "Dağınık çalışan arkadaşına gönder.",
+    "duration_sec": 22.4,
+    "words": 40,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-06_rerun",
+    "date": "2026-11-06",
+    "kind": "tool",
+    "tool": "Rerun",
+    "hook_pattern": "question",
+    "headline": "Çalışanın yapay zekâ olsa?",
+    "spoken_hook": "Satış ve destek işini yapay zekâ çalışana versen?",
+    "cta": "Satış yapan arkadaşına gönder.",
+    "duration_sec": 21.2,
+    "words": 42,
+    "status": "produced"
   }
 ]

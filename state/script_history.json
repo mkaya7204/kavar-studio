@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Modelpeers",
-    "hook": "Modelin emekli oldu mu?",
-    "pattern": "question",
-    "spoken_hook": "Kullandığın yapay zekâ modeli emekli oldu mu, biliyor musun?",
-    "cta": "Model seçen ekip arkadaşına at."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Görselden kendi avatarını yap",
-    "pattern": "result",
-    "spoken_hook": "Bir görselden videoya kendi avatarını yapabilirsin.",
-    "cta": "Video hazırlayan arkadaşına gönder."
-  },
-  {
-    "tool": "Self-Growing Websites by Greta.sh",
-    "hook": "Siten kendi SEO'sunu yapıyor",
-    "pattern": "result",
-    "spoken_hook": "Web siten kendi SEO'sunu kendisi yapabiliyor.",
-    "cta": "Site kuran arkadaşına gönder."
-  },
-  {
-    "tool": "Hera",
-    "hook": "Düzenlenebilir motion grafik",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ düzenlenebilir hareketli grafikler üretebiliyor.",
-    "cta": "Motion çalışan arkadaşına gönder."
-  },
-  {
     "tool": "Widgeteer",
     "hook": "Yaz, widget sitene gelsin",
     "pattern": "result",
@@ -68,5 +40,33 @@
     "pattern": "result",
     "spoken_hook": "Canlı yayının gece gündüz kendi kendine akabilir.",
     "cta": "Yayıncı arkadaşına bunu at."
+  },
+  {
+    "tool": "Gemini",
+    "hook": "Çizimin uygulamaya dönüşüyor",
+    "pattern": "result",
+    "spoken_hook": "Kâğıttaki çizimin çalışan bir uygulamaya dönüşebiliyor.",
+    "cta": "Fikri olan arkadaşına gönder."
+  },
+  {
+    "tool": "Bridge",
+    "hook": "Toplantı araçların dağınık mı?",
+    "pattern": "pain",
+    "spoken_hook": "Toplantı için hâlâ ayrı ayrı araçlar mı kullanıyorsun?",
+    "cta": "Toplantısı bitmeyen arkadaşına at."
+  },
+  {
+    "tool": "Stitch.ai",
+    "hook": "Sekmeler arasında kayboluyorsun",
+    "pattern": "pain",
+    "spoken_hook": "Mail, takvim, notlar derken sekmeler arasında kayboluyorsun.",
+    "cta": "Dağınık çalışan arkadaşına gönder."
+  },
+  {
+    "tool": "Rerun",
+    "hook": "Çalışanın yapay zekâ olsa?",
+    "pattern": "question",
+    "spoken_hook": "Satış ve destek işini yapay zekâ çalışana versen?",
+    "cta": "Satış yapan arkadaşına gönder."
   }
 ]

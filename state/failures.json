@@ -1771,5 +1771,73 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-06",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Gemini",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-06",
+  "stage": "news",
+  "kind": "news",
+  "item": "Gemini Omni 1.2 Flash: Fast and cost-effective with longer clips",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-06",
+  "stage": "news",
+  "kind": "news",
+  "item": "Give Your Muse a Voice",
+  "rendered": true,
+  "host": "about.fb.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-06",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Bridge",
+  "rendered": true,
+  "host": "meetonbridge.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Üçlü kanca tutmuyor: ekrandaki başlık \"Ekip ve ajanlar burada buluşuyor\", ilk söylenen cümle \"Toplantıya yapay zekâ ajanı katılsa?\". İki farklı vaat. Seçilen kanca (\"Ekip ve ajanlar burada buluşuyor\") adaylar arasında da yok.; Başlığın altındaki kanıt sitenin İngilizce sloganı (\"Where teams and agen"
+ },
+ {
+  "date": "2026-11-06",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Stitch.ai",
+  "rendered": true,
+  "host": "stitch.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-06",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Rerun",
+  "rendered": true,
+  "host": "rerun.build",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]
