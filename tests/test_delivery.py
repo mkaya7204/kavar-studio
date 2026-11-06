@@ -35,8 +35,12 @@ def test_every_workflow_with_claude_drops_the_pc_hook_before_running_anything():
 
 
 def test_the_pc_keeps_its_hook():
-    """The cloud removes the hook on the runner only; the repo's file (the PC's guard) stays."""
-    settings = (ROOT / ".claude" / "settings.json").read_text(encoding="utf-8")
+    """The cloud removes the hook on the runner only; the repo's file (the PC's guard) stays.
+    Read from git, not the disk: the runner deletes its copy before the tests, so reading the disk made this
+    red on every cloud run (11-06) and the run's red mark said nothing."""
+    import subprocess
+    settings = subprocess.run(["git", "show", "HEAD:.claude/settings.json"], cwd=ROOT, capture_output=True,
+                              text=True, encoding="utf-8", check=True).stdout
     assert "block_heavy.py" in settings and '"onFailure": "block"' in settings
 
 
@@ -137,3 +141,21 @@ def test_apt_retry_switches_the_runner_mirror_list_too():
     script = (WORKFLOWS.parent / "apt_install.sh").read_text(encoding="utf-8")
     sed = next(line for line in script.splitlines() if "sed -i" in line and "azure" in line)
     assert "/etc/apt/apt-mirrors.txt" in sed
+
+
+def test_a_setup_failure_starts_the_next_try_at_once():
+    """11-06: two runs died installing system packages; the backup crons come ~7 h late, so nothing retried.
+    Every setup step is watched, the retry keeps the guard (auto=yes), stops after 3 tries and never runs for a
+    test run or a content failure."""
+    flow = yaml.safe_load((WORKFLOWS / "produce.yml").read_text(encoding="utf-8"))
+    assert flow[True]["workflow_dispatch"]["inputs"]["attempt"]["default"] == "1"
+    steps = _steps("produce.yml")
+    setup_ids = [steps[_index(steps, name)].get("id") for name in
+                 ("System packages", "Python packages", "Claude Code CLI", "Fonts (Inter")]
+    assert all(setup_ids), setup_ids
+    retry = steps[_index(steps, "Start the next try")]
+    assert retry is steps[-1]
+    cond = retry["if"]
+    assert cond.startswith("failure()") and "dry != 'yes'" in cond
+    assert all(f"steps.{i}.outcome == 'failure'" in cond for i in setup_ids)
+    assert "-f auto=yes" in retry["run"] and "--ref main" in retry["run"] and '-gt 3' in retry["run"]

@@ -501,3 +501,18 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Built:** `ELEVENLABS_API_KEY_4` in src/tts_engine.py ELEVENLABS_KEYS (tried after 1-3, same George) and in every
   workflow that voices (produce, voice, rerender, news-test, say, trial-rerender) and probe.yml (shows its credits).
 - **Guarded by:** tests/test_voice_last.py::test_a_third_voice_account_speaks_george_too.
+
+## D-61 · 2026-11-06 · A setup failure retries at once; the apt retry really leaves the hung mirror
+- **User:** "Bunun kesin ve kalıcı hale getirmek için sistemi düzenlemen veya herhangi birşey var yapman için"
+  (2026-11-06), after the 06:17 run 42155604768 and the hand-started 42160927527 both died installing system packages
+  and nothing was made for 11-07 until a third run at 07:49 TRT.
+- **Cause (from the logs):** GitHub's Ubuntu 24 runners take their mirror from /etc/apt/apt-mirrors.txt; the retry in
+  .github/apt_install.sh only rewrote the sources, so all 3 tries of both runs went to the same hung Azure mirror. The
+  backup crons (07:47 / 09:17) arrive ~7 h late (11-05: 13:54 / 15:45 / 17:45 TRT), so nothing retried.
+- **Built:** apt_install.sh switches apt-mirrors.txt too (e0ec3e6, run 42164747954 green; its apt passed on the first
+  try, so the switch itself is not seen yet). produce.yml: the setup steps have ids; a last step "Start the next try"
+  dispatches produce.yml (main, auto=yes, attempt+1) when a setup step failed, at most 3 tries a day, never for a
+  dry run or a content failure. tests/test_delivery.py::test_the_pc_keeps_its_hook reads the file from git, since the
+  runner deletes its copy before the tests (it was red on every cloud run, so a red run meant nothing).
+- **Guarded by:** tests/test_delivery.py::test_apt_retry_switches_the_runner_mirror_list_too,
+  ::test_a_setup_failure_starts_the_next_try_at_once.

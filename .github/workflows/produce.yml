@@ -33,6 +33,9 @@ on:
       guide_url:
         description: "remake the guide Reel from this company post (use with only=morning dry=yes)"
         default: ""
+      attempt:
+        description: "set by the run itself: which try of the day this is (a setup failure starts the next one)"
+        default: "1"
 
 permissions:
   contents: write
@@ -100,18 +103,21 @@ jobs:
           node-version: "22"
 
       - name: System packages (ffmpeg)
+        id: setup_apt
         if: steps.guard.outputs.skip != 'true'
         # 10-23: apt hung 25 min on a mirror and held the 20:30 Reel; a try is cut off and repeated (D-48)
         timeout-minutes: 20
         run: bash .github/apt_install.sh ffmpeg && command -v ffmpeg
 
       - name: Python packages and Chromium
+        id: setup_py
         if: steps.guard.outputs.skip != 'true'
         run: |
           pip install -q -r requirements.txt
           python -m playwright install --with-deps chromium
 
       - name: Claude Code CLI and HyperFrames
+        id: setup_cli
         if: steps.guard.outputs.skip != 'true'
         run: |
           for i in 1 2 3; do
@@ -122,6 +128,7 @@ jobs:
           npx --yes hyperframes@0.8.145 --version || true
 
       - name: Fonts (Inter, OFL - stands in for Windows-only Segoe UI under the template's file names)
+        id: setup_fonts
         if: steps.guard.outputs.skip != 'true'
         run: |
           curl -sSL -o /tmp/inter.zip https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip
@@ -216,3 +223,20 @@ jobs:
         run: |
           echo "::error::today's output was not delivered (artifact: ${{ steps.up_day.outcome }}, release: ${{ steps.rel_day.outcome }})"
           exit 1
+
+      # 11-06: apt hung on the runner's mirror in the 06:17 run, nothing was made, and the backup crons came
+      # ~7 h late (11-05: 13:54 / 15:45 / 17:45 TRT), so the day waited for Claude's morning session. A setup
+      # failure (not a content failure: that would only repeat the same day's Claude and voice spend) starts
+      # the next try at once on a fresh runner, at most 3 a day; auto=yes keeps the guard, so a day that
+      # another run produced meanwhile is skipped in seconds.
+      - name: Start the next try (setup failed)
+        if: >-
+          failure() && github.event.inputs.dry != 'yes'
+          && (github.event_name == 'schedule' || github.event.inputs.only == '' || github.event.inputs.only == 'all')
+          && (steps.setup_apt.outcome == 'failure' || steps.setup_py.outcome == 'failure'
+              || steps.setup_cli.outcome == 'failure' || steps.setup_fonts.outcome == 'failure')
+        run: |
+          N=$(( ${{ github.event.inputs.attempt || '1' }} + 1 ))
+          if [ "$N" -gt 3 ]; then echo "::error::setup failed on all 3 tries today"; exit 1; fi
+          gh workflow run produce.yml --ref main -f auto=yes -f attempt=$N
+          echo "::warning::setup failed; started try $N"
