@@ -129,3 +129,11 @@ def test_every_workflow_checks_out_the_repo_before_using_its_scripts():
 def test_release_tags_do_not_start_the_checks():
     flow = yaml.safe_load((WORKFLOWS / "checks.yml").read_text(encoding="utf-8"))
     assert flow[True]["push"]["branches"] == ["**"]  # yaml reads `on:` as True
+
+
+def test_apt_retry_switches_the_runner_mirror_list_too():
+    """11-06 run 42155604768: the runner reads its mirror from /etc/apt/apt-mirrors.txt; the retry changed only the
+    sources, so all 3 tries hit the same hung Azure mirror, the system packages never installed and the day was lost."""
+    script = (WORKFLOWS.parent / "apt_install.sh").read_text(encoding="utf-8")
+    sed = next(line for line in script.splitlines() if "sed -i" in line and "azure" in line)
+    assert "/etc/apt/apt-mirrors.txt" in sed

@@ -9,7 +9,9 @@ sudo rm -f /var/lib/man-db/auto-update 2>/dev/null || true
 echo "man-db man-db/auto-update boolean false" | sudo debconf-set-selections 2>/dev/null || true
 for i in 1 2 3; do
   if [ "$i" -ge 2 ]; then
-    sudo sed -i 's#http://azure\.archive\.ubuntu\.com#http://archive.ubuntu.com#g' \
+    # 11-06: GitHub's Ubuntu 24 runners name the mirror in /etc/apt/apt-mirrors.txt (the sources say
+    # "mirror+file:/etc/apt/apt-mirrors.txt"); switching only the sources left all 3 tries on the hung Azure mirror
+    sudo sed -i 's#http://azure\.archive\.ubuntu\.com#http://archive.ubuntu.com#g' /etc/apt/apt-mirrors.txt \
       /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list 2>/dev/null || true
   fi
   if timeout 120 sudo apt-get update -qq -o Acquire::Retries=2 -o Acquire::http::Timeout=20 \
