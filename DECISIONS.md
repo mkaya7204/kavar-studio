@@ -516,3 +516,14 @@ the decisions that are currently locked; this file explains why they exist and h
   runner deletes its copy before the tests (it was red on every cloud run, so a red run meant nothing).
 - **Guarded by:** tests/test_delivery.py::test_apt_retry_switches_the_runner_mirror_list_too,
   ::test_a_setup_failure_starts_the_next_try_at_once.
+
+## D-62 · 2026-11-07 · A source title with a price word stays out of the caption
+- **The user:** "farkettiğin hatayı düzelt" (11-07 "yükle").
+- **Cause (from the files):** the 11-08 Google Vids carousel caption ended "Kaynak haber: Generate longer AI videos with
+  Omni 1.2 Flash in Google Vids at no cost. — <url>". carousel.py copied the source title into the caption with no
+  price check, and PRICE_PATTERN had no "cost" at all (the editor caught "at no cost" only on slide 2's picture).
+  Fixed by hand in that caption.txt before scheduling.
+- **Built:** script_writer.PRICE_PATTERN also catches "cost(s)", "costly", "no charge"; script_writer.source_line()
+  leaves a title with a price / free word out and keeps only the link; carousel._caption_txt uses it.
+- **Guarded by:** tests/test_policy.py::test_source_title_with_a_price_word_stays_out_of_the_caption (the real
+  11-07 title), ::test_caption_uses_the_checked_source_line, and the new PRICES / SAFE words.

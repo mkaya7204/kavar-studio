@@ -7,9 +7,10 @@ from script_writer import NO_PRICE_RULE, price_mentions
 PRICES = ["₺100", "$5", "20 €", "£3", "5 dolar", "Türk lirası", "ÜCRETSİZ", "Ücretli", "bedava", "FİYAT",
           "Fiyatlandırma", "Ödeme", "İndirim", "free", "pricing", "100 TL", "20 USD", "50 EUR",
           "Sıcak Simit 50 Kr", "50 kuruş", "20 GBP", "TRY 50", "50 TRY", "₹20", "¥300", "freemium", "paralı",
-          "satın alın", "deneme sürümü", "tek seferlik", "5 milyon TL", "100 bin TL", "1.5 TL", "#ücretsiz"]
+          "satın alın", "deneme sürümü", "tek seferlik", "5 milyon TL", "100 bin TL", "1.5 TL", "#ücretsiz", "at no cost", "cost-effective",
+          "no charge"]
 SAFE = ["freedom", "token", "GPT-4 Turbo", "Kral", "TLS bağlantısı", "Krita", "Kraken", "kuru", "15 Ekim'de",
-        "1024 × 1024", "2 saniyede", "Galata Köprüsü",
+        "1024 × 1024", "2 saniyede", "Galata Köprüsü", "costume", "Costa Rica",
         # D-32 (2026-10-18): plans, beta / limited access and credit use without amounts are allowed
         "Pro planında", "Plus abonelerine açıldı", "Premium sürüm", "abonelik gerekiyor", "subscribers",
         "beta olarak sınırlı kullanıcıda", "her üretim kredi harcıyor", "kullanım hakkından düşüyor"]
@@ -23,6 +24,24 @@ def test_prices_are_caught(text):
 @pytest.mark.parametrize("text", SAFE)
 def test_plain_words_pass(text):
     assert not price_mentions(text), f"false price hit: {text!r} -> {price_mentions(text)}"
+
+
+def test_source_title_with_a_price_word_stays_out_of_the_caption():
+    """11-07 real case: the Vids carousel caption carried the blog title "... at no cost."."""
+    from script_writer import source_line
+
+    url = "https://blog.google/products-and-platforms/products/workspace/omni-1-2-flash-google-vids/"
+    line = source_line("Generate longer AI videos with Omni 1.2 Flash in Google Vids at no cost.", url)
+    assert line == f"Kaynak haber: {url}" and not price_mentions(line)
+    plain = source_line("WhatsApp Events Brings People Together Beyond the Group Chat", "https://about.fb.com/x")
+    assert plain == "Kaynak haber: WhatsApp Events Brings People Together Beyond the Group Chat — https://about.fb.com/x"
+
+
+def test_caption_uses_the_checked_source_line():
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "carousel.py").read_text(encoding="utf-8")
+    assert "source_line(script[\"title\"]" in src and "Kaynak haber: {script['title']}" not in src
 
 
 def test_rule_is_in_every_writer_and_the_editor():

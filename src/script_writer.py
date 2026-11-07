@@ -54,7 +54,9 @@ PRICE_PATTERN = re.compile(
     r"\b(?:dolar\w*|euro\w*|lira\w*|kuruş\w*|fiyat\w*|ücret\w*|ödeme\w*|bedava|indirim\w*|"
     r"paralı|satın al\w*|deneme sürüm\w*|tek seferlik|price\w*|pricing|free|freemium|"
     # 10-17 audit: English payment words and credit amounts the list missed
-    r"trial\w*|paid|discount\w*)\b|\b\d[\d.,]*\s*(?:kredi\w*|credits?)\b",
+    r"trial\w*|paid|discount\w*|"
+    # 11-07: "... in Google Vids at no cost." reached a caption through the source title
+    r"costs?|costly|no charge)\b|\b\d[\d.,]*\s*(?:kredi\w*|credits?)\b",
     re.I,
 )
 NO_PRICE_RULE = ("Page policy: never mention prices, costs, amounts, currencies, free vs paid, trials or "
@@ -92,6 +94,12 @@ def day_words(*texts: str) -> list[str]:
 def price_mentions(*texts: str) -> list[str]:
     """Price / payment words found in the texts (empty list = policy met)."""
     return sorted({m.group(0) for t in texts for m in PRICE_PATTERN.finditer(t or "")})
+
+
+def source_line(title: str, url: str) -> str:
+    """The caption's "Kaynak haber:" line. The source's own title is copied as it is, so a title with a price or
+    free/paid word is left out and only the link stays (11-07: "... Google Vids at no cost." reached a caption)."""
+    return f"Kaynak haber: {url}" if price_mentions(title) else f"Kaynak haber: {title} — {url}"
 
 
 HASHTAG = re.compile(r"^#[^\W_]\w*$")  # one word: "#İ#nvida" went live on 2026-10-15

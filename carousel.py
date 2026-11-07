@@ -41,6 +41,7 @@ from model_trial import run_trial  # noqa: E402
 from news_fetcher import feed_item, fetch_news, mark_used  # noqa: E402
 from news_writer import NewsScript, generate_news, revise_news  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
+from script_writer import source_line  # noqa: E402
 
 TEMP_DIR = ROOT / "output" / "temp"
 OUT_ROOT = ROOT / "output" / "carousel"
@@ -68,7 +69,7 @@ def _caption_txt(script: dict, brand: dict) -> str:
                                                                              script["website_url"])
     lines = [script["caption"], "", " ".join(script["hashtags"]), ""]
     if news:
-        lines += [f"Kaynak haber: {script['title']} — {script['website_url']}", ""]
+        lines += [source_line(script["title"], script["website_url"]), ""]
     lines += ["-" * 40, "ALT METİNLER (Gelişmiş ayarlar > Erişilebilirlik, slayt slayt):"]
     lines += [f"{i:02d}. {s['alt_text']}" for i, s in enumerate(script["slides"], 1)]
     lines += ["", "-" * 40, "STORY (sırayla paylaş):"]
