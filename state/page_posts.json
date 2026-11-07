@@ -305,5 +305,55 @@
   "title": "Introducing Grok Bot",
   "date": "2026-08-11T00:00:00+00:00",
   "summary": "Grok Bot is your team of always-on agents. They have their own computer, work inside tools and apps like you do, and keep working 24/7."
+ },
+ "https://www.anthropic.com/news/accenture-embedded-evaluation": {
+  "title": "Partnering with Accenture on embedded evaluation",
+  "date": "2026-09-18T00:00:00+00:00",
+  "summary": "We’re partnering with Accenture on independent evaluation of frontier AI—part of our recent commitment to embed evaluators at Anthropic. Both we and Accenture expect to invest at least $1 billion to build capacity in this area over the next five years."
+ },
+ "https://www.anthropic.com/news/life-sciences-verification-program": {
+  "title": "Introducing the Life Sciences Verification Program",
+  "date": "2026-09-17T00:00:00+00:00",
+  "summary": "Anthropic is an AI safety and research company that's working to build reliable, interpretable, and steerable AI systems."
+ },
+ "https://x.ai/news/grok-imagine-image-2": {
+  "title": "Imagine Image 2.0",
+  "date": "2026-08-07T00:00:00+00:00",
+  "summary": "Precise image generation and editing, built for real creative work."
+ },
+ "https://x.ai/news/grok-imagine-video-1-5-references": {
+  "title": "Imagine Video 1.5 with References",
+  "date": "2026-07-31T00:00:00+00:00",
+  "summary": "Our best video model, now with text, image, and voice references — generating up to 1080p."
+ },
+ "https://x.ai/news/grok-voice-think-fast-2": {
+  "title": "Introducing Grok Voice 2.0",
+  "date": "2026-07-29T00:00:00+00:00",
+  "summary": "Introducing our most capable speech-to-speech voice model."
+ },
+ "https://x.ai/news/grok-build-mode": {
+  "title": "Introducing Build Mode",
+  "date": "2026-07-28T00:00:00+00:00",
+  "summary": "Create and share websites, apps, games, and interactive dashboards. Now in Early Beta for SuperGrok Heavy subscribers on grok.com, iOS, and Android."
+ },
+ "https://x.ai/news/grok-github-copilot": {
+  "title": "Grok 4.5 in GitHub Copilot",
+  "date": "2026-07-28T00:00:00+00:00",
+  "summary": "Grok 4.5, our smartest coding model, is now available in GitHub Copilot."
+ },
+ "https://x.ai/news/introducing-google-workspace-addon": {
+  "title": "Grok in Google Workspace",
+  "date": "2026-07-24T00:00:00+00:00",
+  "summary": "Use the Grok add-on for Google Workspace to work directly in Sheets, Slides, and Docs."
+ },
+ "https://x.ai/news/workflows": {
+  "title": "Workflows in Grok Build",
+  "date": "2026-07-23T00:00:00+00:00",
+  "summary": "Grok Build can now write and run workflows: orchestration scripts that fan a task out across hundreds of parallel agents, verify the results, and report back in one background run."
+ },
+ "https://x.ai/news/grok-4-5-everywhere": {
+  "title": "Bringing Grok 4.5 to iOS, Android, Web, and X",
+  "date": "2026-07-22T00:00:00+00:00",
+  "summary": "Grok 4.5, our most intelligent model yet, is now on grok.com, X, iOS, and Android."
  }
 }

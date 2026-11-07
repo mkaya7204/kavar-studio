@@ -1182,5 +1182,44 @@
     "duration_sec": 21.2,
     "words": 42,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-07_google-workspace",
+    "date": "2026-11-07",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "Form yanıtları kendini özetliyor",
+    "spoken_hook": "Form yanıtlarını artık yapay zekâ senin için analiz ediyor.",
+    "cta": "Anket yapan arkadaşına gönder.",
+    "duration_sec": 22.3,
+    "words": 40,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-07_chalk",
+    "date": "2026-11-07",
+    "kind": "tool",
+    "tool": "chalk",
+    "hook_pattern": "result",
+    "headline": "Sor, yapay zekâ tahtaya çizsin",
+    "spoken_hook": "Merak ettiğin konuyu sor, yapay zekâ tahtaya çizsin.",
+    "cta": "Sınava çalışan arkadaşına gönder.",
+    "duration_sec": 22.4,
+    "words": 41,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-07_any-video-to-text",
+    "date": "2026-11-07",
+    "kind": "tool",
+    "tool": "Any Video to Text",
+    "hook_pattern": "result",
+    "headline": "Videonun yazısı linkten çıkıyor",
+    "spoken_hook": "Videonun yazısı sadece linkten çıkıyor.",
+    "cta": "Kısa video üreten arkadaşına gönder.",
+    "duration_sec": 24.0,
+    "words": 41,
+    "status": "produced"
   }
 ]

@@ -1,26 +1,5 @@
 [
   {
-    "tool": "Widgeteer",
-    "hook": "Yaz, widget sitene gelsin",
-    "pattern": "result",
-    "spoken_hook": "Sitene form ya da quiz'i yazarak ekleyebilirsin.",
-    "cta": "Küçük işletmesi olan arkadaşına at."
-  },
-  {
-    "tool": "Suno",
-    "hook": "20 parça, hepsi Audio Track",
-    "pattern": "pain",
-    "spoken_hook": "Yirmi parçanın adı hâlâ Audio Track mi?",
-    "cta": "Müzik yapan arkadaşına gönder."
-  },
-  {
-    "tool": "Teamily AI",
-    "hook": "Ekip bir yerde, ajan başka yerde",
-    "pattern": "pain",
-    "spoken_hook": "Ekibin bir yerde, yapay zekân başka yerde mi?",
-    "cta": "Ekip kuran arkadaşına gönder."
-  },
-  {
     "tool": "OpenAI",
     "hook": "Ürün fotoğrafın GIF'e dönüşüyor",
     "pattern": "result",
@@ -68,5 +47,26 @@
     "pattern": "question",
     "spoken_hook": "Satış ve destek işini yapay zekâ çalışana versen?",
     "cta": "Satış yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Form yanıtları kendini özetliyor",
+    "pattern": "result",
+    "spoken_hook": "Form yanıtlarını artık yapay zekâ senin için analiz ediyor.",
+    "cta": "Anket yapan arkadaşına gönder."
+  },
+  {
+    "tool": "chalk",
+    "hook": "Yapay zekâ tahtada anlatıyor",
+    "pattern": "result",
+    "spoken_hook": "Merak ettiğin konuyu yapay zekâ tahtada anlatıyor.",
+    "cta": "Sınava çalışan arkadaşına gönder."
+  },
+  {
+    "tool": "Any Video to Text",
+    "hook": "Videoyu elle mi yazıyorsun?",
+    "pattern": "question",
+    "spoken_hook": "Videodaki konuşmayı hâlâ elle mi yazıyorsun?",
+    "cta": "Kısa video üreten arkadaşına gönder."
   }
 ]
