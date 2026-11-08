@@ -355,5 +355,45 @@
   "title": "Bringing Grok 4.5 to iOS, Android, Web, and X",
   "date": "2026-07-22T00:00:00+00:00",
   "summary": "Grok 4.5, our most intelligent model yet, is now on grok.com, X, iOS, and Android."
+ },
+ "https://x.ai/news/introducing-outlook-addin": {
+  "title": "Introducing Grok for Outlook",
+  "date": "2026-07-21T00:00:00+00:00",
+  "summary": "Use the Grok add-in for Microsoft Outlook to summarize long email threads, draft replies in your voice, and keep your inbox organized."
+ },
+ "https://x.ai/news/introducing-excel-addin": {
+  "title": "Introducing Grok for Excel",
+  "date": "2026-07-20T00:00:00+00:00",
+  "summary": "Use the Grok add-in for Microsoft Excel to ask questions in plain English, write formulas, and run scenarios without leaving the workbook."
+ },
+ "https://x.ai/news/grok-4-5": {
+  "title": "Introducing Grok 4.5",
+  "date": "2026-07-16T00:00:00+00:00",
+  "summary": "Grok 4.5 is SpaceXSI's smartest model built for coding, agentic tasks, and knowledge work."
+ },
+ "https://x.ai/news/grok-automations": {
+  "title": "Automations in Grok",
+  "date": "2026-07-16T00:00:00+00:00",
+  "summary": "Describe a job once and Grok runs it on a schedule or when an email arrives, then reports back."
+ },
+ "https://x.ai/news/grok-build-open-source": {
+  "title": "Grok Build is Now Open Source",
+  "date": "2026-07-15T00:00:00+00:00",
+  "summary": "Explore the harness behind our coding agent and TUI."
+ },
+ "https://x.ai/news/new-flagship-voices": {
+  "title": "21 New Flagship Grok Voices",
+  "date": "2026-07-06T00:00:00+00:00",
+  "summary": "New multilingual voices for Grok Voice, plus improved naturalness for the original five."
+ },
+ "https://x.ai/news/grok-voice-agent-builder": {
+  "title": "Introducing the Voice Agent Builder",
+  "date": "2026-07-01T00:00:00+00:00",
+  "summary": "Create a personalized voice agent in under 2 minutes without a single line of code."
+ },
+ "https://x.ai/news/introducing-goal": {
+  "title": "Introducing /goal",
+  "date": "2026-06-22T00:00:00+00:00",
+  "summary": "Use /goal for long-running autonomous task execution in Grok Build."
  }
 }

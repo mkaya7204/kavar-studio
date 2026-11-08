@@ -1,33 +1,5 @@
 [
   {
-    "tool": "OpenAI",
-    "hook": "Ürün fotoğrafın GIF'e dönüşüyor",
-    "pattern": "result",
-    "spoken_hook": "Ürün fotoğrafın hareketli bir GIF'e dönüşebiliyor.",
-    "cta": "Bunu sosyal medya sorumlusuna gönder."
-  },
-  {
-    "tool": "Prelulu",
-    "hook": "Hikâyenin başrolü sen oluyorsun",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ karakterleriyle görüntülü konuşup hikâyenin başrolü olabilirsin.",
-    "cta": "Hikâye seven arkadaşına gönder."
-  },
-  {
-    "tool": "LiveReacting for ChatGPT",
-    "hook": "Canlı yayın 7/24 kendi akıyor",
-    "pattern": "result",
-    "spoken_hook": "Canlı yayının gece gündüz kendi kendine akabilir.",
-    "cta": "Yayıncı arkadaşına bunu at."
-  },
-  {
-    "tool": "Gemini",
-    "hook": "Çizimin uygulamaya dönüşüyor",
-    "pattern": "result",
-    "spoken_hook": "Kâğıttaki çizimin çalışan bir uygulamaya dönüşebiliyor.",
-    "cta": "Fikri olan arkadaşına gönder."
-  },
-  {
     "tool": "Bridge",
     "hook": "Toplantı araçların dağınık mı?",
     "pattern": "pain",
@@ -68,5 +40,33 @@
     "pattern": "question",
     "spoken_hook": "Videodaki konuşmayı hâlâ elle mi yazıyorsun?",
     "cta": "Kısa video üreten arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "15 saniyelik yapay zekâ video",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâyla 15 saniyeye kadar video üretebilirsin.",
+    "cta": "Videocu arkadaşına gönder."
+  },
+  {
+    "tool": "Google DeepMind",
+    "hook": "Arka planı tek mesajla değiştir",
+    "pattern": "curiosity",
+    "spoken_hook": "Videonun arka planını tek mesajla değiştirebiliyorsun.",
+    "cta": "Reklamcı arkadaşına at."
+  },
+  {
+    "tool": "Sequence Tool",
+    "hook": "Podcast'i yazıyla kurgula",
+    "pattern": "result",
+    "spoken_hook": "Uzun röportajı metin düzenler gibi kurgulayabilirsin.",
+    "cta": "Podcast yapan arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Ödevde cevap yok, rehber var",
+    "pattern": "result",
+    "spoken_hook": "Öğretmenler ödeve cevap değil rehber ekleyebiliyor.",
+    "cta": "Bunu öğretmen arkadaşına gönder."
   }
 ]

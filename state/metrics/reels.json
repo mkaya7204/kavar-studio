@@ -1221,5 +1221,57 @@
     "duration_sec": 24.0,
     "words": 41,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-08_google-workspace",
+    "date": "2026-11-08",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "15 saniyelik yapay zekâ video",
+    "spoken_hook": "Yapay zekâyla 15 saniyeye kadar video üretebilirsin.",
+    "cta": "Videocu arkadaşına gönder.",
+    "duration_sec": 21.4,
+    "words": 38,
+    "status": "rejected: Sesli anlatım (point3) ve kart 3 'karakter ve ürün aynı kalıyor / aynı görünüyor' diyor. Kaynak sadece 'daha iyi tutarlılık' diyor, 'aynı kalıyor' demiyor. Kaynağın fiilinden daha güçlü bir ifade.; Sesli anlatımdaki 'Google'ın ofis paketi' açıklaması kaynak metinde yok. Ekrandaki 'GOOGLE'IN OFİS' etiketi de aynı eksik.; Kaynak 'Rapid/Scheduled Release' ve 1-3 günlük görünürlük diyor. 'Kademeli geliyor' kabul edilebilir. Ancak hangi planlarda olduğu hiç söylenmiyor, bu da kimin kullanabileceğini belirsiz bırakıyor (SHOULD)."
+  },
+  {
+    "id": "2026-11-08_google-deepmind",
+    "date": "2026-11-08",
+    "kind": "guide",
+    "tool": "Google DeepMind",
+    "hook_pattern": "curiosity",
+    "headline": "Ürün fotoğrafından deneme klibi",
+    "spoken_hook": "Birkaç fotoğrafı yükle, kıyafet deneme videosu çıksın.",
+    "cta": "Modacı arkadaşına at.",
+    "duration_sec": 22.6,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-08_sequence-tool",
+    "date": "2026-11-08",
+    "kind": "tool",
+    "tool": "Sequence Tool",
+    "hook_pattern": "result",
+    "headline": "Podcast'i yazıyla kurgula",
+    "spoken_hook": "Podcast kurgusunu metin üzerinden yapabilirsin.",
+    "cta": "Podcast yapan arkadaşına gönder.",
+    "duration_sec": 19.2,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-08_google-workspace-2",
+    "date": "2026-11-08",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "result",
+    "headline": "Ödevde cevap yok, rehber var",
+    "spoken_hook": "Öğretmenler ödeve cevap değil rehber ekleyebiliyor.",
+    "cta": "Bunu öğretmen arkadaşına gönder.",
+    "duration_sec": 22.0,
+    "words": 37,
+    "status": "produced"
   }
 ]

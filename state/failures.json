@@ -1894,5 +1894,87 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-08",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "facts"
+  ],
+  "detail": "Sesli anlatım (point3) ve kart 3 'karakter ve ürün aynı kalıyor / aynı görünüyor' diyor. Kaynak sadece 'daha iyi tutarlılık' diyor, 'aynı kalıyor' demiyor. Kaynağın fiilinden daha güçlü bir ifade.; Sesli anlatımdaki 'Google'ın ofis paketi' açıklaması kaynak metinde yok. Ekrandaki 'GOOGLE'IN OFİS' et"
+ },
+ {
+  "date": "2026-11-08",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google DeepMind",
+  "rendered": true,
+  "host": "deepmind.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-08",
+  "stage": "news",
+  "kind": "news",
+  "item": "Australian universities are creating AI-native graduates",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-08",
+  "stage": "news",
+  "kind": "news",
+  "item": "Design the Muse App, Just for You",
+  "rendered": true,
+  "host": "about.fb.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-08",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Sequence Tool",
+  "rendered": true,
+  "host": "sequencetool.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-08",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "source_refused",
+   "off_concept"
+  ],
+  "detail": "S/AI tools...    ✖ Quest — https://www.producthunt.com/products/quest-d8e9c4e8-cc0d-4b07-baee-e3dbf712c279    ✖ Instagram Edits for Desktop — https://www.producthunt.com/products/instagram [carousel_writer] Writing with `claude -p`... ✔ [1/5] Fetching latest SaaS/AI tools done (267.5s) ▶ [2/5] Check"
+ },
+ {
+  "date": "2026-11-08",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]
