@@ -527,3 +527,10 @@ the decisions that are currently locked; this file explains why they exist and h
   leaves a title with a price / free word out and keeps only the link; carousel._caption_txt uses it.
 - **Guarded by:** tests/test_policy.py::test_source_title_with_a_price_word_stays_out_of_the_caption (the real
   11-07 title), ::test_caption_uses_the_checked_source_line, and the new PRICES / SAFE words.
+
+## D-63 · 2026-11-08 · The probe shows when each ElevenLabs key refills
+- **The user:** "aylık yenileniyordu anahtarlar" ... "ekle" (11-08), after probe 42454664316 showed key 1 at 1 credit,
+  key 3 at ~198 and keys 2 / 4 without user_read (credits unseen); a Reel's voice took 285-326 credits that morning.
+- **Built:** probe.yml prints, per key with user_read, the next monthly refill (`next_character_count_reset_unix`,
+  UTC) next to the credits used. Keys without user_read still show "missing_permissions".
+- **Guarded by:** nothing offline (a manual workflow); checked by the next probe run's log.
