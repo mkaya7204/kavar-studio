@@ -534,3 +534,20 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Built:** probe.yml prints, per key with user_read, the next monthly refill (`next_character_count_reset_unix`,
   UTC) next to the credits used. Keys without user_read still show "missing_permissions".
 - **Guarded by:** nothing offline (a manual workflow); checked by the next probe run's log.
+
+## D-64 · 2026-11-08 · Titles shrink to fit their box, whatever css they get
+- **The user:** "ikiisnide düzelt sırayla" (11-08, after the run's problems were listed).
+- **Cause (from the files):** the 07:30 Google Vids guide Reel (run 42442068688) was lost: the agent's plan.json css
+  `#hook-title{white-space:nowrap;font-size:46px}` put the headline on one line; the css font-size did nothing (the
+  template sets each title's size on the element), so frame 0 read "15 SANİYELİK YAPAY ZE" and the agent gave up
+  after 3 renders. reel_qa.cut_frames measures pictures, not text, so it reported no cut.
+- **Built:** templates/hyperframes_news/index.html `fitTitles`: #hook-title and the three card titles shrink (2 px
+  steps, not below 36 px) until their width fits their box and the frame minus 60 px a side, before the timeline
+  reads their size, and again once the fonts are in. knowledge/playbook.md A2 has the lesson for the agent.
+- **Seen on the real example (Chrome, the 11-08 headline + that css):** old template 1398 px in a 920 px box; new
+  template 50 px font, 920 px. Not yet seen in a production render.
+- **Guarded by:** tests/test_voice_last.py::test_titles_shrink_to_fit_whatever_css_they_get.
+- **Also looked at, no code change:** Sequence Tool (11-09 20:30) passed as an AI tool; its listing says "edit
+  with words" (text-based editing = transcription), which the tool_reel concept counts as AI. A keyword rule would
+  also drop chalk and Norah Studio. The user posted it ("Yine de paylaş"). GPT-6 Cyber's 403 lost nothing: the
+  ranker had it OFF (not open to viewers).

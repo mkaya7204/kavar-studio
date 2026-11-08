@@ -52,6 +52,10 @@ companies' own pictures (§1.9); the outro keeps @thekavar.ai + "+ TAKİP ET" (�
   frames in a row = cut. D-50: only sharp edges count (a glow or blur at the edge is not a cut; the shot frame's
   glow read as one on 10-24); clean 0.43-0.79, cut 1.86-6.5 on the real frames. Also look at the hook box
   edges at 0, 1 and 2.5 s.
+- **11-08 (D-64):** plan.json css `#hook-title{white-space:nowrap;font-size:46px}` cut the headline in frame 0
+  ("15 SANİYELİK YAPAY ZE") and the Reel was lost. The template sets every title's font size on the element,
+  so a css font-size does nothing; the template now shrinks the headline and card titles to fit their box.
+  Don't force a title onto one line with css; if a break looks wrong, rewrite the headline.
 
 ### A3. Text over text / overlapping elements (6 rejected Reels)
 - **Looks like:** a caption pill on the site's own text (Kai, Pancake, Salience), the shrinking headline

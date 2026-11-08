@@ -789,6 +789,23 @@
       fitDomains();
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitDomains);
 
+      // D-64: 11-08 the agent's css forced #hook-title onto one line (white-space:nowrap); its font-size had no
+      // effect (the size above is set on the element) and frame 0 read "15 SANİYELİK YAPAY ZE", so the Reel was
+      // lost. A headline or card title never runs past its box or the frame (60 px a side): it shrinks to fit,
+      // whatever css or long word it gets. Measured again once the fonts are in.
+      const fitTitles = () => ["hook-title", "card1-title", "card2-title", "card3-title"].forEach((id) => {
+        const el = $(id);
+        if (!el) return;
+        let size = parseFloat(getComputedStyle(el).fontSize);
+        const room = () => Math.min(el.clientWidth || 960, 1080 - 120);
+        while (size > 36 && el.scrollWidth > room() + 1) {
+          size -= 2;
+          el.style.fontSize = size + "px";
+        }
+      });
+      fitTitles();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitles);
+
       // Full-page pan distance: fullpage.png is 1080px wide, fullpage_height tall.
       const panY = -Math.max(0, Math.min(Number(v.fullpage_height) || 1920, 1920 * 3) - 1920);
 

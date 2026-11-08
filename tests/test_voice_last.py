@@ -406,6 +406,19 @@ def test_captions_step_aside_while_a_site_picture_is_shown():
     assert 'tl.to("#captions", { autoAlpha: 0' in shots and 'tl.to("#captions", { autoAlpha: 1' in shots
 
 
+def test_titles_shrink_to_fit_whatever_css_they_get():
+    """D-64: 11-08 the agent's css `#hook-title{white-space:nowrap;font-size:46px}` cut the Google Vids headline in
+    frame 0 ("15 SANİYELİK YAPAY ZE") and the guide Reel was lost. The headline and the card titles shrink until
+    they fit their box (at most the frame minus 60 px a side), before the timeline reads their size."""
+    html = (ROOT / "templates" / "hyperframes_news" / "index.html").read_text(encoding="utf-8")
+    fit = html[html.index("const fitTitles"):html.index("fitTitles();")]
+    for el in ("hook-title", "card1-title", "card2-title", "card3-title"):
+        assert f'"{el}"' in fit
+    assert "el.scrollWidth > room() + 1" in fit and "1080 - 120" in fit
+    assert "document.fonts.ready.then(fitTitles)" in html
+    assert html.index("fitTitles();") < html.index('tl.to("#hook-title", { y: -40')
+
+
 def test_the_fixer_sees_the_whole_page_of_a_tool(tmp_path, monkeypatch):
     """10-18: the fixer saw one picture of Inbox Zero's site and gave up; a tall page gives many windows."""
     import reel_fixer
