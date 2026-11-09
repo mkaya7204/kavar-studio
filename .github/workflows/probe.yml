@@ -1,6 +1,11 @@
 # Manual network check from GitHub's machines: which content sources answer the cloud run.
 name: probe
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      voice:
+        description: "yes = George says 'Merhaba.' once per key (~8 credits each). D-65: default no, tests never spend voice"
+        default: "no"
 jobs:
   probe:
     runs-on: ubuntu-24.04
@@ -10,7 +15,10 @@ jobs:
           UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36"
           for u in https://www.producthunt.com/feed https://hnrss.org/show https://openai.com/news/rss.xml \
                    https://www.theverge.com/rss/ai-artificial-intelligence/index.xml https://techcrunch.com/category/artificial-intelligence/feed/ \
-                   https://api.elevenlabs.io/v1/models; do
+                   https://api.elevenlabs.io/v1/models \
+                   https://workspaceupdates.googleblog.com/feeds/posts/default https://elevenlabs.io/blog/rss.xml \
+                   https://blog.google/rss/ https://www.figma.com/blog/feed/atom.xml \
+                   https://www.apple.com/newsroom/rss-feed.rss https://cursor.com/changelog/rss.xml; do
             code=$(curl -s -o /tmp/body -w "%{http_code}" -A "$UA" -L --max-time 20 "$u")
             echo "$code $(wc -c < /tmp/body) bytes  $u"
           done
@@ -19,8 +27,9 @@ jobs:
             echo "redirect $r -> $(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -A "$UA" --max-time 20 "$r")"
             echo "followed -> $(curl -s -o /dev/null -L -w '%{http_code} %{url_effective}' -A "$UA" --max-time 20 "$r")"
           done
-      - name: ElevenLabs accounts (George says one word per key, ~8 credits; credits left)
+      - name: ElevenLabs accounts (credits left and refill date; George speaks only with voice=yes)
         env:
+          SPEAK: ${{ inputs.voice }}
           K1: ${{ secrets.ELEVENLABS_API_KEY }}
           K2: ${{ secrets.ELEVENLABS_API_KEY_2 }}
           K3: ${{ secrets.ELEVENLABS_API_KEY_3 }}
@@ -31,7 +40,9 @@ jobs:
             [ -n "$K" ] || { echo "key $n: not set"; continue; }
             s=$(curl -s -H "xi-api-key: $K" https://api.elevenlabs.io/v1/user/subscription)
             v=$(curl -s -o /dev/null -w "%{http_code}" -H "xi-api-key: $K" https://api.elevenlabs.io/v1/voices/JBFqnCBsd6RMkjVDRZzb)
-            t=$(curl -s -o /tmp/tts.json -w "%{http_code}" -X POST -H "xi-api-key: $K" -H "Content-Type: application/json"                  -d '{"text":"Merhaba.","model_id":"eleven_multilingual_v2"}'                  "https://api.elevenlabs.io/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb/with-timestamps")
-            echo "key $n: George speaks 'Merhaba.' -> HTTP $t $( [ "$t" = 200 ] || head -c 200 /tmp/tts.json)"
+            if [ "$SPEAK" = yes ]; then
+              t=$(curl -s -o /tmp/tts.json -w "%{http_code}" -X POST -H "xi-api-key: $K" -H "Content-Type: application/json"                  -d '{"text":"Merhaba.","model_id":"eleven_multilingual_v2"}'                  "https://api.elevenlabs.io/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb/with-timestamps")
+              echo "key $n: George speaks 'Merhaba.' -> HTTP $t $( [ "$t" = 200 ] || head -c 200 /tmp/tts.json)"
+            fi
             echo "key $n: $(echo "$s" | python3 -c 'import json,sys; d=json.load(sys.stdin); import datetime as t; r=d.get("next_character_count_reset_unix"); print(d.get("tier"), "used", d.get("character_count"), "of", d.get("character_limit"), "| refills", t.datetime.fromtimestamp(r, t.timezone.utc).strftime("%Y-%m-%d %H:%M UTC") if r else "?") if "tier" in d else print("error", str(d)[:200])')  | George voice HTTP $v"
           done

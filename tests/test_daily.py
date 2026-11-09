@@ -304,6 +304,33 @@ def test_guide_only_sources_feed_the_guide_reel_and_not_the_news(monkeypatch, tm
     assert not any(i["url"].startswith("https://w/") for i in news_fetcher.fetch_news(50))  # never a news carousel
 
 
+def test_guide_sources_d65_more_company_blogs_each_post_once(tmp_path, monkeypatch):
+    """D-65 (11-09): 07:30 was empty, 55 posts gave one guide candidate. The companies' own product blogs are
+    guide-only sources (never news), and a post the general Google feed shares with the Gemini feed counts once."""
+    import json as _json
+    import sys
+    from datetime import datetime, timezone
+    sys.path.insert(0, str(daily.ROOT / "src"))
+    import guide_reel
+
+    real = _json.loads((daily.ROOT / "news_sources.json").read_text(encoding="utf-8"))
+    guide = {f["name"] for f in real["guide_feeds"]}
+    assert {"Google Workspace Updates", "ElevenLabs", "Google Blog", "Figma", "Apple Newsroom", "Cursor"} <= guide
+    assert not guide & {f["name"] for f in real["feeds"]}  # guide-only: the news carousels never read them
+    assert guide_reel.POOL >= 100
+
+    now = datetime.now(timezone.utc)
+    post = {"title": "Transform a quick drawing into a live app with Gemini.",
+            "url": "https://blog.google/products/gemini/drawing-to-app/", "date": now, "summary": "", "priority": 3}
+    sources = tmp_path / "news_sources.json"
+    sources.write_text('{"max_age_hours": 72, "feeds": [{"name": "Gemini", "url": "g"}], '
+                       '"guide_feeds": [{"name": "Google Blog", "url": "all"}]}', encoding="utf-8")
+    monkeypatch.setattr(guide_reel, "SOURCES_PATH", sources)
+    monkeypatch.setattr(guide_reel, "_items", lambda feed: [dict(post, source=feed["name"])])
+    monkeypatch.setattr(guide_reel, "load_history", lambda: [])
+    assert [i["url"] for i in guide_reel.fetch_guide()] == [post["url"]]
+
+
 def test_guide_pictures_are_the_features_own_never_the_page(tmp_path):
     """10-18 dry runs: the shrunk page top was unreadable twice and an abstract cover proved nothing. The
     article's figures come first, the cover last, and the page screenshot is never a shot."""

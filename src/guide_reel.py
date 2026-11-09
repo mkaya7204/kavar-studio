@@ -43,7 +43,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TEMP_DIR = ROOT / "output" / "temp"
 WORK = ROOT / "output" / "guide"
 GUIDE_DAYS = 14  # a feature stays worth explaining for weeks, unlike a news story
-POOL = 60  # candidates sent to the ranker
+POOL = 100  # candidates sent to the ranker (D-65: six guide-only sources; at 60 the newest posts pushed them out)
 PER_FEED = 5
 GUIDE_FEED_POSTS = 15  # D-41: posts per guide-only source
 TRIES = 6  # pages tried per morning: OpenAI refuses the cloud reader at times, Samsung times out (10-18 dry run)
@@ -82,7 +82,9 @@ def fetch_guide(limit: int = POOL) -> list[dict]:
             items += _items(feed)
         except Exception as exc:  # noqa: BLE001  one dead feed never stops the morning
             print(f"[guide] {feed['name']} skipped: {type(exc).__name__}")
+    seen: set[str] = set()  # D-65: "Google Blog" carries the same posts as the Gemini / Workspace / Android feeds
     fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used
+             and not (i["url"] in seen or seen.add(i["url"]))
              and not re.search(r"weekly recap", i["title"], re.I)]  # Workspace's weekly lists are no single feature
     fresh.sort(key=lambda i: i["date"], reverse=True)
     # at most PER_FEED posts per blog: OpenAI's customer stories and NVIDIA filled the whole pool, and the

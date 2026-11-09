@@ -551,3 +551,21 @@ the decisions that are currently locked; this file explains why they exist and h
   with words" (text-based editing = transcription), which the tool_reel concept counts as AI. A keyword rule would
   also drop chalk and Norah Studio. The user posted it ("Yine de paylaş"). GPT-6 Cyber's 403 lost nothing: the
   ranker had it OFF (not open to viewers).
+
+## D-65 · 2026-11-09 · More company blogs for the guide Reel; the probe spends no voice
+- **The user:** "boş kalsın kaynak ekleyelim başka kaynaklarımızda olsun böylelikle hem çeşitlilik artar ... boş
+  yayın sorunumuzun büyük bir kısmını ... testleri ve reelleri ses kredisini kullanmadan yapmaya çalış çünkü
+  onaydan geçenleri sadece sesle oluşturuyoruz" (11-09, about the empty 07:30 of 11-10).
+- **Cause (from the log of run 42555544560):** 55 company posts gave one guide candidate (Gemini edits whole
+  Slides presentations, Workspace Updates); its page had no picture, so the 07:30 guide slot stayed empty twice.
+  The 07:30 of 11-10 stays empty (the user).
+- **Built:** news_sources.json `guide_feeds` adds the companies' own product blogs (14-day counts checked 11-09):
+  ElevenLabs 28, Google Blog (all products) 20, Figma 9, Apple Newsroom 7, Cursor 2. Guide-only: the news carousels
+  never read them. src/guide_reel.py: POOL 60 -> 100 (the new sources must reach the ranker) and a post that two
+  feeds carry (Google Blog and Gemini) counts once. probe.yml checks the new feeds from GitHub's machines and makes
+  George speak only with `voice=yes` (default no); credits and refill dates are still read (free).
+  Voice for tests was already off (D-30/D-46: drafts, dry runs, news-test, rerender silent; only an approved Reel
+  that goes out is voiced).
+- **Guarded by:** tests/test_daily.py::test_guide_sources_d65_more_company_blogs_each_post_once,
+  tests/test_probe_no_voice.py.
+- **Not yet seen in a run:** the probe (cloud reach of the feeds) and the next morning's guide ranking.
