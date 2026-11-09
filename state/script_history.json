@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Bridge",
-    "hook": "Toplantı araçların dağınık mı?",
-    "pattern": "pain",
-    "spoken_hook": "Toplantı için hâlâ ayrı ayrı araçlar mı kullanıyorsun?",
-    "cta": "Toplantısı bitmeyen arkadaşına at."
-  },
-  {
-    "tool": "Stitch.ai",
-    "hook": "Sekmeler arasında kayboluyorsun",
-    "pattern": "pain",
-    "spoken_hook": "Mail, takvim, notlar derken sekmeler arasında kayboluyorsun.",
-    "cta": "Dağınık çalışan arkadaşına gönder."
-  },
-  {
     "tool": "Rerun",
     "hook": "Çalışanın yapay zekâ olsa?",
     "pattern": "question",
@@ -68,5 +54,19 @@
     "pattern": "result",
     "spoken_hook": "Öğretmenler ödeve cevap değil rehber ekleyebiliyor.",
     "cta": "Bunu öğretmen arkadaşına gönder."
+  },
+  {
+    "tool": "Agent Clan",
+    "hook": "Ajanları jestlerle yönetiyorsun",
+    "pattern": "result",
+    "spoken_hook": "Kod yazan yapay zekâ ajanlarını jestlerle yönetebilirsin.",
+    "cta": "Kod yazan arkadaşına gönder."
+  },
+  {
+    "tool": "AXL",
+    "hook": "Siteni sohbetle kurabiliyorsun",
+    "pattern": "curiosity",
+    "spoken_hook": "Web sitesini bir sohbetle kurabildiğini biliyor muydun?",
+    "cta": "Kendi ürününü satan arkadaşına gönder."
   }
 ]

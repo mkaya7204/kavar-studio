@@ -395,5 +395,45 @@
   "title": "Introducing /goal",
   "date": "2026-06-22T00:00:00+00:00",
   "summary": "Use /goal for long-running autonomous task execution in Grok Build."
+ },
+ "https://x.ai/news/grok-databricks": {
+  "title": "Grok on Databricks",
+  "date": "2026-06-18T00:00:00+00:00",
+  "summary": "Grok models are now available on Databricks Agent Bricks."
+ },
+ "https://x.ai/news/introducing-word-addin": {
+  "title": "Introducing Grok for Word",
+  "date": "2026-06-18T00:00:00+00:00",
+  "summary": "Use the Grok add-in for Microsoft Word to turn notes into documents, style and format your work, or bring research from the web into Word."
+ },
+ "https://x.ai/news/grok-amazon-bedrock": {
+  "title": "Grok on Amazon Bedrock",
+  "date": "2026-06-17T00:00:00+00:00",
+  "summary": "Grok models are now available via Amazon Bedrock."
+ },
+ "https://x.ai/news/grok-imagine-video-1-5": {
+  "title": "Grok Imagine Video 1.5",
+  "date": "2026-06-16T00:00:00+00:00",
+  "summary": "Improved quality at even faster speeds."
+ },
+ "https://x.ai/news/introducing-powerpoint-addin": {
+  "title": "Introducing Grok for PowerPoint",
+  "date": "2026-06-16T00:00:00+00:00",
+  "summary": "Grok now works inside Microsoft PowerPoint — turn outlines into slides, expand the deck, and tighten the narrative without leaving the app."
+ },
+ "https://x.ai/news/agent-dashboard": {
+  "title": "Agent Dashboard in Grok Build",
+  "date": "2026-06-15T00:00:00+00:00",
+  "summary": "Manage many coding sessions at once. See what each is doing, reply to the ones that need you, and dispatch new work."
+ },
+ "https://x.ai/news/grok-warp": {
+  "title": "Use Grok in Warp",
+  "date": "2026-06-15T00:00:00+00:00",
+  "summary": "Use your Grok and X Premium subscription inside Warp."
+ },
+ "https://x.ai/news/grok-plugin-marketplace": {
+  "title": "Grok Build Plugin Marketplace",
+  "date": "2026-06-11T00:00:00+00:00",
+  "summary": "Launching the built-in plugin marketplace for Grok Build."
  }
 }

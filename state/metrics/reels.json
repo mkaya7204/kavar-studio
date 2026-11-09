@@ -1273,5 +1273,31 @@
     "duration_sec": 22.0,
     "words": 37,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-09_agent-clan",
+    "date": "2026-11-09",
+    "kind": "tool",
+    "tool": "Agent Clan",
+    "hook_pattern": "result",
+    "headline": "Ajanları jestlerle yönetiyorsun",
+    "spoken_hook": "Kod yazan yapay zekâ ajanlarını jestlerle yönetebilirsin.",
+    "cta": "Kod yazan arkadaşına gönder.",
+    "duration_sec": 22.9,
+    "words": 41,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-09_axl",
+    "date": "2026-11-09",
+    "kind": "tool",
+    "tool": "AXL",
+    "hook_pattern": "curiosity",
+    "headline": "Siteni sohbetle kurabiliyorsun",
+    "spoken_hook": "Web sitesini bir sohbetle kurabildiğini biliyor muydun?",
+    "cta": "Kendi ürününü satan arkadaşına gönder.",
+    "duration_sec": 23.0,
+    "words": 40,
+    "status": "produced"
   }
 ]
