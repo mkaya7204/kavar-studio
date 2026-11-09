@@ -56,7 +56,11 @@ MAX_NEWS_TRIES = 6
 def log(msg: str) -> None:
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     line = f"[{datetime.now():%H:%M:%S}] {msg}"
-    print(line, flush=True)
+    try:
+        print(line, flush=True)
+    except UnicodeEncodeError:  # 11-09: Windows cp1254 console vs "GPT‑6" (U+2011) stopped fetch half way
+        enc = getattr(sys.stdout, "encoding", None) or "ascii"
+        print(line.encode(enc, "replace").decode(enc), flush=True)
     with open(LOG_DIR / f"{date.today().isoformat()}.log", "a", encoding="utf-8") as f:
         f.write(line + "\n")
 
