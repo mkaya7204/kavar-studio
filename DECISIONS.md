@@ -568,4 +568,5 @@ the decisions that are currently locked; this file explains why they exist and h
   that goes out is voiced).
 - **Guarded by:** tests/test_daily.py::test_guide_sources_d65_more_company_blogs_each_post_once,
   tests/test_probe_no_voice.py.
-- **Not yet seen in a run:** the probe (cloud reach of the feeds) and the next morning's guide ranking.
+- **Seen:** probe 42682123138 (voice=no): all six guide feeds HTTP 200 from GitHub's machines, no key spoke;
+  checks 42682090345: 286 passed, 1 skipped. **Not yet seen:** the next morning's guide ranking.
