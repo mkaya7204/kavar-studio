@@ -1137,5 +1137,30 @@
     "shares": 0,
     "saves": 0,
     "avg_watch_sec": 2
+  },
+  {
+    "published": "2026-11-09 18:00",
+    "kind": "carousel",
+    "title": "Meta Muse spaces carousel (seen 11-10)",
+    "reach": 13,
+    "views": 42,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-09 20:30",
+    "kind": "reel",
+    "title": "Sequence Tool Reel (seen 11-10)",
+    "reach": 216,
+    "views": 243,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 1,
+    "saves": 3,
+    "avg_watch_sec": 2
   }
 ]
