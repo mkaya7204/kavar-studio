@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Rerun",
-    "hook": "Çalışanın yapay zekâ olsa?",
-    "pattern": "question",
-    "spoken_hook": "Satış ve destek işini yapay zekâ çalışana versen?",
-    "cta": "Satış yapan arkadaşına gönder."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Form yanıtları kendini özetliyor",
-    "pattern": "result",
-    "spoken_hook": "Form yanıtlarını artık yapay zekâ senin için analiz ediyor.",
-    "cta": "Anket yapan arkadaşına gönder."
-  },
-  {
     "tool": "chalk",
     "hook": "Yapay zekâ tahtada anlatıyor",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "curiosity",
     "spoken_hook": "Web sitesini bir sohbetle kurabildiğini biliyor muydun?",
     "cta": "Kendi ürününü satan arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Ödevde cevap değil yol gösterir",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ ödevde cevap yerine yol gösteriyor.",
+    "cta": "Bunu öğretmen arkadaşına gönder."
+  },
+  {
+    "tool": "Cardboard AI",
+    "hook": "Video yazdığın gibi kurgulanıyor",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâ videonu yazdığın gibi kurguluyor.",
+    "cta": "Bunu içerik üreten arkadaşına at."
   }
 ]

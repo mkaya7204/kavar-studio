@@ -1299,5 +1299,44 @@
     "duration_sec": 23.0,
     "words": 40,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-10_google",
+    "date": "2026-11-10",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Ödevde cevap değil yol gösterir",
+    "spoken_hook": "Yapay zekâ ödevde cevap yerine yol gösteriyor.",
+    "cta": "Bunu öğretmen arkadaşına gönder.",
+    "duration_sec": 21.1,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-10_cardboard-ai",
+    "date": "2026-11-10",
+    "kind": "tool",
+    "tool": "Cardboard AI",
+    "hook_pattern": "result",
+    "headline": "Video yazdığın gibi kurgulanıyor",
+    "spoken_hook": "Yapay zekâ videonu yazdığın gibi kurguluyor.",
+    "cta": "Bunu içerik üreten arkadaşına at.",
+    "duration_sec": 21.8,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-10_mcp1",
+    "date": "2026-11-10",
+    "kind": "tool",
+    "tool": "MCP1",
+    "hook_pattern": "",
+    "headline": "Bu araç saatlerini geri veriyor",
+    "spoken_hook": "Hâlâ bu işi elle mi yapıyorsun?",
+    "cta": "Kaydet, lazım olur.",
+    "duration_sec": 19.2,
+    "words": 40,
+    "status": "rejected: editor gave no verdict (success, is_error=True: You've hit your session limit · resets 11:30am (Europe/Istanbul))"
   }
 ]

@@ -2046,5 +2046,103 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`...    rank 34 [Google Workspace Updates] Edit entire presentations with Gemini in Google Slides (Gemini editing whole Slides presentations is a usable AI feature for school and ) ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-10",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-10",
+  "stage": "news",
+  "kind": "news",
+  "item": "Expanding Teen Account Protections to Teens Around the World",
+  "rendered": true,
+  "host": "about.fb.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-10",
+  "stage": "news",
+  "kind": "news",
+  "item": "Control Room: A central system to track and stop model workloads across our research infrastructure",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-10",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Cardboard AI",
+  "rendered": true,
+  "host": "cardboard.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-10",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "MCP1",
+  "rendered": false,
+  "host": "mcp1.com",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty"
+  ],
+  "detail": "editor gave no verdict (success, is_error=True: You've hit your session limit · resets 11:30am (Europe/Istanbul))"
+ },
+ {
+  "date": "2026-11-10",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "ucts/agent-powered-geo-by-dageno    ✖ GitHub New PR Overview — https://www.producthunt.com/products/github    ✖ ClipsPal — https://www.producthunt.com/products/clipspal    ✖ ProtoMap — https://www.producthunt.com/products/hounddog-ai-static-code-scanner-2    ✖ Egoist AI Passport — https://www.produc"
+ },
+ {
+  "date": "2026-11-10",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "de -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your session limit · resets 11:30am (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit yo"
+ },
+ {
+  "date": "2026-11-10",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "de -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your session limit · resets 11:30am (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit yo"
  }
 ]

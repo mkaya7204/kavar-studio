@@ -435,5 +435,45 @@
   "title": "Grok Build Plugin Marketplace",
   "date": "2026-06-11T00:00:00+00:00",
   "summary": "Launching the built-in plugin marketplace for Grok Build."
+ },
+ "https://x.ai/news/grok-imagine-1-5": {
+  "title": "Grok Imagine 1.5 Preview",
+  "date": "2026-06-03T00:00:00+00:00",
+  "summary": "grok-imagine-video-1.5-preview, our latest image-to-video model, is now available via the xAI API in preview."
+ },
+ "https://x.ai/news/composer-2-5": {
+  "title": "Composer 2.5",
+  "date": "2026-06-01T00:00:00+00:00",
+  "summary": "Composer 2.5 is now available in Grok Build. Try it from the /models menu."
+ },
+ "https://x.ai/news/grok-build-0-1": {
+  "title": "Grok Build 0.1 on API",
+  "date": "2026-05-29T00:00:00+00:00",
+  "summary": "Grok Build 0.1, our fastest coding model, is now available via the xAI API in public beta."
+ },
+ "https://x.ai/news/grok-kilocode": {
+  "title": "Use Grok in Kilo Code",
+  "date": "2026-05-27T00:00:00+00:00",
+  "summary": "Use your SuperGrok or X Premium+ subscription inside Kilo Code, the open-source agentic coding platform."
+ },
+ "https://x.ai/news/grok-build-cli": {
+  "title": "Introducing Grok Build",
+  "date": "2026-05-25T00:00:00+00:00",
+  "summary": "Now in early beta for all SuperGrok and X Premium Plus subscribers — Grok Build is a new coding agent that runs right from your terminal."
+ },
+ "https://x.ai/news/grok-opencode": {
+  "title": "Use Grok in OpenCode",
+  "date": "2026-05-21T00:00:00+00:00",
+  "summary": "Use your SuperGrok or X Premium subscription inside OpenCode."
+ },
+ "https://x.ai/news/grok-openclaw": {
+  "title": "Use Grok in OpenClaw",
+  "date": "2026-05-19T00:00:00+00:00",
+  "summary": "Use your SuperGrok or X Premium subscription inside OpenClaw, an open-source, local-first agent and personal assistant."
+ },
+ "https://x.ai/news/grok-skills": {
+  "title": "Skills in web, iOS, and Android",
+  "date": "2026-05-18T00:00:00+00:00",
+  "summary": "Persistent expertise for Grok. Generate documents, decks, and spreadsheets. Automate workflows. Build and share your own skills."
  }
 }
