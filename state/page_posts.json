@@ -475,5 +475,55 @@
   "title": "Skills in web, iOS, and Android",
   "date": "2026-05-18T00:00:00+00:00",
   "summary": "Persistent expertise for Grok. Generate documents, decks, and spreadsheets. Automate workflows. Build and share your own skills."
+ },
+ "https://www.anthropic.com/news/roadshow-launch": {
+  "title": "Anthropic launches roadshow for proposed initial public offering",
+  "date": "2026-11-10T00:00:00+00:00",
+  "summary": "Today Anthropic, PBC launched the roadshow for its proposed initial public offering of its Class A common stock."
+ },
+ "https://x.ai/news/grok-hermes": {
+  "title": "Connect Grok to Hermes Agent",
+  "date": "2026-05-15T00:00:00+00:00",
+  "summary": "Use your Grok account and subscription inside Nous Research’s open-source, self-improving Hermes agent."
+ },
+ "https://x.ai/news/anthropic-compute-partnership": {
+  "title": "New Compute Partnership with Anthropic",
+  "date": "2026-05-06T00:00:00+00:00",
+  "summary": "SpaceXSI has signed an agreement with Anthropic to provide access to Colossus 1."
+ },
+ "https://x.ai/news/grok-connectors": {
+  "title": "Connectors in web, iOS, and Android",
+  "date": "2026-05-06T00:00:00+00:00",
+  "summary": "Deep integrations that bring the apps you use every day directly into Grok."
+ },
+ "https://x.ai/news/grok-imagine-quality-mode": {
+  "title": "Grok Imagine Quality Mode API",
+  "date": "2026-05-06T00:00:00+00:00",
+  "summary": "Higher realism. Stronger text rendering. Better creative control."
+ },
+ "https://x.ai/news/grok-custom-voices": {
+  "title": "Custom Voices",
+  "date": "2026-04-30T00:00:00+00:00",
+  "summary": "Your voice. Your brand. Clone a voice from a short recording and use it across Grok Text to Speech and Speech to Speech APIs."
+ },
+ "https://x.ai/news/grok-voice-think-fast-1": {
+  "title": "Grok Voice 1.0",
+  "date": "2026-04-23T00:00:00+00:00",
+  "summary": "Our most capable voice agent is now available via API."
+ },
+ "https://x.ai/news/grok-stt-and-tts-apis": {
+  "title": "Grok Speech to Text and Text to Speech APIs",
+  "date": "2026-04-17T00:00:00+00:00",
+  "summary": "Fast and accurate. Natural, expressive voices. Simple pricing. Multilingual support."
+ },
+ "https://x.ai/news/xai-joins-spacex": {
+  "title": "xAI joins SpaceX",
+  "date": "2026-02-02T00:00:00+00:00",
+  "summary": "SpaceX announced today that it has acquired xAI."
+ },
+ "https://www.minimax.io/blog/minimax-h3-image": {
+  "title": "MiniMax H3-Image: Bringing 4K Image Generation into the 10-Second Era",
+  "date": "2026-11-10T16:23:20+00:00",
+  "summary": "Today, we're releasing MiniMax H3-Image, an open-weight image generation model built on H3. It supports text-to-image generation, reference-based generation, and image editing."
  }
 }

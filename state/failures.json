@@ -2144,5 +2144,145 @@
    "off_concept"
   ],
   "detail": "de -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your session limit · resets 11:30am (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit yo"
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "news",
+  "kind": "news",
+  "item": "Gemini 4 Carbon is now available",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "news",
+  "kind": "news",
+  "item": "MiniMax H3-Image: Bringing 4K Image Generation into the 10-Second Era",
+  "rendered": true,
+  "host": "minimax.io",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "trial",
+  "item": "MiniMax H3-Image",
+  "rendered": true,
+  "host": "minimax.io",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Operum",
+  "rendered": true,
+  "host": "operum.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kapaktaki ve 0-2.5 sn'deki kanıt kutusu sitenin İngilizce sloganı ('Your team. Your agents. One operating system.'). Bu bir slogan, ürünün çıktısı ya da arayüzü değil. Kural gereği slogan kanıt sayılmaz ve 'Tarif et, ajanlar kursun' vaadini göstermiyor.; 10.2 ve 11.2 sn karelerindeki kart 'WHY OPERU"
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Maxma",
+  "rendered": true,
+  "host": "maxma.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kapak ve açılıştaki kanıt kutusu sitenin İngilizce slogan başlığı (\"Hire the AI marketer. Automate the paid ads busywork.\"). Slogan ürünün çalıştığını göstermiyor, kanıt sayılmaz.; Kanıt görseli alt kenarda kesik: \"Move fast toward\" cümlesi yarım kalıyor (kapakta da, 0-2.5 s karelerinde de). Kesik b"
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Latch.ai",
+  "rendered": true,
+  "host": "latch.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "facts"
+  ],
+  "detail": "Kart 1 başlığı 'Görevi gösteriyorsun, o öğreniyor' kaynakta yok. Kaynak yalnızca 'Show Latch a task the way you…' diyor ve cümle yarım kesilmiş. 'Öğreniyor' çıkarım, iddia olarak desteksiz.; Araç verisi çok ince: yalnızca slogan ('Automate complex accounting work without a single prompt') ve yarım k"
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kapaktaki kanıt görseli genel 'Pixel Drop' başlık afişi. Rambler'ı veya sesle yazmayı göstermiyor, 'Konuşman temiz yazıya dönüyor' vaadini kanıtlamıyor.; 11.3 sn'deki ekran görüntüsü 'Describe your widget' widget oluşturma ekranı. Rambler/sesle yazma değil. Sesteki 'dolgu kelimeleri siliyor' ile gör"
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "facts"
+  ],
+  "detail": "Kanıt görseli, blog yazısının kapak fotoğrafı: dizüstü bilgisayarlı bir kız ve Adobe logosu. Kanıt, Drive/Gmail'deki 'Edit with' girişini ya da PDF düzenlemeyi göstermiyor. Hook'un vaadini kanıtlamıyor, stok fotoğraf gibi duruyor.; Aynı fotoğraf 0-2.5 s, 10.4 s ve 11.4 s karelerinde de duruyor. Gemi"
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Figma",
+  "rendered": true,
+  "host": "figma.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "facts"
+  ],
+  "detail": "Kanıt görseli vaadi göstermiyor: başlık toplantı notunun tasarıma işlendiğini söylüyor, ama kutuda 'World Peas' sayfasında mantar fotoğrafını değiştiren bir istem görünüyor (\"Change this to a closeup image of some mushrooms\"). Transkript ve not ekleme yok. Görsel makalenin başka bir bölümünden (görs"
+ },
+ {
+  "date": "2026-11-11",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "l and w)    rank 29 [Google DeepMind] Gemini 4 Carbon is now available (New Gemini 4 model, possibly in the Gemini app, big name; show how to use it.)    rank 22 [Google Workspace Updates] Expanding Gemini in Gmail to more Google Workspace users (Gemini in Gmail reaching more Workspace users; usable"
  }
 ]
