@@ -1162,5 +1162,30 @@
     "shares": 1,
     "saves": 3,
     "avg_watch_sec": 2
+  },
+  {
+    "published": "2026-11-10 18:00",
+    "kind": "carousel",
+    "title": "GitHub agentic engineering carousel (seen 11-11)",
+    "reach": 19,
+    "views": 47,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-10 20:31",
+    "kind": "reel",
+    "title": "Agent Clan Reel (seen 11-11)",
+    "reach": 146,
+    "views": 166,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 1,
+    "saves": 2,
+    "avg_watch_sec": 4
   }
 ]
