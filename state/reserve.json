@@ -6,5 +6,35 @@
     "folder": "reserve/2026-10-21_haber-openai-acquires-orchestra-bio",
     "made": "2026-10-21",
     "editor": "publish"
+  },
+  {
+    "kind": "reel",
+    "concept": "tool",
+    "title": "Mister Blocks",
+    "folder": "reserve/2026-11-11_mister-blocks",
+    "made": "2026-11-11",
+    "editor": "publish",
+    "needs_voice": true,
+    "voice": {
+      "run_id": "43067744223",
+      "reel": "2026-11-11_mister-blocks",
+      "artifact": "kavar-dryrun",
+      "artifact_expires": "2026-11-13"
+    }
+  },
+  {
+    "kind": "reel",
+    "concept": "guide",
+    "title": "Google Gemini (CarPlay)",
+    "folder": "reserve/2026-11-11_google-gemini",
+    "made": "2026-11-11",
+    "editor": "publish",
+    "needs_voice": true,
+    "voice": {
+      "run_id": "43067744223",
+      "reel": "2026-11-11_google-gemini",
+      "artifact": "kavar-dryrun",
+      "artifact_expires": "2026-11-13"
+    }
   }
 ]
