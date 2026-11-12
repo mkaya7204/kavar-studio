@@ -1,7 +1,6 @@
 # Risks and mitigations
 
-Last full review: 2026-10-16. The night audit covered the daily run end to end, plus an
-invariant-test design. Keep this file current: when a new failure mode appears, add it here
+Last full review: 2026-11-12 (D-67, the user asked for a full check; the one before: 2026-10-16). Keep this file current: when a new failure mode appears, add it here
 with its mitigation and the test that covers it. Status: ✅ mitigated and tested, 🟡 mitigated
 but not covered by a test, 🔴 open.
 
@@ -23,9 +22,13 @@ but not covered by a test, 🔴 open.
 | A run marks the day produced when nothing was delivered, so the later tries skip it | D-49: Save state's condition requires a delivered archive | ✅ test_delivery |
 | The cloud `claude -p` agent loads the PC hook (.claude/settings.json, Windows path): the call fails on Linux and `onFailure: block` refuses every Bash call (10-23, 10-24: the agent never rendered) | D-49: every workflow with Claude Code removes the file on the runner before running anything and puts it back before Save state's rebase; the repo's file (the PC's guard) is unchanged | ✅ test_delivery |
 | An approved Reel is lost after voicing: update_metrics before log_reel raised KeyError and ended all tool Reels (10-24 gerty); a cut on the voiced Reel dropped it after George was spent | D-49: log_reel first; one broken attempt goes on to the next; a voiced cut is rebuilt still on the kept George audio (voice_final KEPT_VOICE, KAVAR_REUSE_VOICE), never voiced twice | ✅ test_voice_last |
-| The editor can't answer (Claude usage limit): "no verdict" becomes reject, and the carousel's story was already marked used before the editor (carousel.py mark_used), so a good story is used up | Logged with its reason; empty day exits 1 | 🔴 open: don't mark used on "no verdict" |
-| The cron-job.org token expires: only GitHub's crons are left (hours late, D-25), so 07:30 and 11:45 are lost | none | 🔴 open: the user should note the token's expiry date; `fetch` could warn when today's run came from `schedule` |
-| ElevenLabs keys run out (10-24: keys 1-2 refused, only key 3 spoke) | 3 keys, all George; no voice = no Reel, logged | 🟡 watch probe.yml |
+| The editor can't answer (Claude usage limit): "no verdict" becomes reject, and the carousel's story was already marked used before the editor (carousel.py mark_used), so a good story is used up | D-67: a story the editor never answered is unmarked (`news_fetcher.unmark`) and recorded as not rendered, so the next run can take it; a real rejection stays used | ✅ test_d67_audit (not yet seen in a run) |
+| The cron-job.org token expires: only GitHub's crons are left (hours late, D-25), so 07:30 and 11:45 are lost | D-67: `daily.py fetch` warns when the newest production morning has no workflow_dispatch run in the 03:00 UTC hour (`morning_start_warning`); the user still has to renew the token on cron-job.org | ✅ test_d67_audit (warning only) |
+| ElevenLabs keys run out (10-24: keys 1-2 refused, only key 3 spoke) | 4 keys, all George; no voice = no Reel, logged | 🟡 watch probe.yml |
+| A new release of an unpinned Python package (playwright, moviepy, Pillow, pydantic, gradio_client ...) changes behaviour on a production morning; requirements.txt had no versions (audit 11-12) | D-67: constraints.txt holds the exact versions the cloud ran on 11-12; every workflow installs with `-c constraints.txt`. Raise a version only on a branch with green checks and a dry run | ✅ test_d67_audit |
+| The cloud and Claude's morning session share one Claude subscription: when its limit is hit, writers and the editor answer nothing (10-22: 0/5; 11-10: 43 unanswered calls, 11:45 lost) | Reasons logged; empty day exits 1; few test runs late in the week. `tool_site_search` is 38 % of the cloud's Claude spend (11-05..11-12, state/claude_usage.jsonl) | 🔴 open: needs the user's decision (cheaper tool search, or a second token) |
+| Posting depends on one 4 GB PC, Chrome and a Claude session each day (11-02: no "yükle", nothing posted; tabs freeze, 300-650 MB free RAM) | D-56 makes posts a day ahead, so one missed morning can be caught up; Business Suite scheduling by hand in Chrome | 🔴 open: the Instagram API token (phone verification blocked at Meta) is the only real fix; src/ig_publisher.py has never run |
+| The feedback loop is thin: Business Suite's Published list shows only the newest 5-6 posts, so 98 of ~140 posts have numbers; state/metrics/posts.json and reels.json share no id, so a hook pattern can't be joined to its result | Numbers copied by hand each morning | 🔴 open: needs the API (insights) or a stable id typed with each row |
 
 ## B. Something against page policy goes out
 

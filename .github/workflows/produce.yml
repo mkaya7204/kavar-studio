@@ -113,7 +113,7 @@ jobs:
         id: setup_py
         if: steps.guard.outputs.skip != 'true'
         run: |
-          pip install -q -r requirements.txt
+          pip install -q -r requirements.txt -c constraints.txt
           python -m playwright install --with-deps chromium
 
       - name: Claude Code CLI and HyperFrames
@@ -141,7 +141,7 @@ jobs:
       - name: Invariant tests (a red result is logged; production still runs, the editor still gates)
         if: steps.guard.outputs.skip != 'true'
         continue-on-error: true
-        run: pip install -q pytest pyyaml && python -m pytest -q tests
+        run: pip install -q pytest pyyaml -c constraints.txt && python -m pytest -q tests
 
       # D-40: a whole day runs as two steps. The morning guide Reel is packed and uploaded on its own
       # (artifact kavar-morning), so the 07:30 slot no longer waits for the whole job (10-21: ready at

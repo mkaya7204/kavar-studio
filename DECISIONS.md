@@ -588,3 +588,37 @@ the decisions that are currently locked; this file explains why they exist and h
   test runs 43158736030 / 43158731682; their URLs and tools were recorded.
 - **Guarded by:** tests/test_d66_repeats.py.
 - **Not yet seen:** a production run skipping a second blog's copy; voice.yml committing a tool.
+
+## D-67 · 2026-11-12 · Full check of the system: two open risks closed, cloud packages pinned
+- **The user:** "mevcut çalışmamızı kontrol etmeni istiyorum eksik yanlarını tespit etmeni doğrusunu yapmanı ...
+  bu sistemi kalıcı hale getirmek için doğru alt yapı ... varsayım yapmadan yüzeysel olmasın" (11-12).
+- **Read (records only):** the last 100 cloud runs, state/failures.json (194 outcomes), state/metrics/posts.json
+  (98 posts), state/claude_usage.jsonl (1454 calls), state/agent_log.jsonl (39 sessions), every workflow,
+  RISKS.md, the queues since 10-12.
+- **Found, in numbers:**
+  - Production: 42 of 46 produce runs succeeded; the 4 failures were all the runner's package mirror (apt).
+    Slots ready per day since 11-08: 5, 5, 4, 4, 4, 5.
+  - Editor pass rate per week (42..46): tool Reels 24 / 42 / 55 / 60 / 45 %, guide Reels - / 44 / 50 / 38 / 27 %,
+    news carousels - / 100 / 75 / 94 / 100 %. Most frequent rejections: tool no_proof 34, tool cut_text 19,
+    guide off_concept 18.
+  - Results: 52 Reels: mean reach 144 (min 56, max 224), mean views 166, mean watch 3.1 s (every Reel 1-5 s).
+    44 carousels: mean reach 36; per week 54, 48, 21, 17, 16. All 98 posts together: 4 follows, 199 likes,
+    45 saves, 16 shares, 10 comments. Reach does not differ by slot, kind or topic.
+  - Claude spend in the cloud 11-05..11-12 (API-price equivalent 33.9): tool_site_search 38 %, carousel writer
+    25 %, editor 16 %, agent 8 %. 11-10: 43 calls unanswered (shared usage limit).
+  - The fixing agent: 30 of 39 sessions fixed the Reel.
+  - 4.0 GB of old output (2,370 + 2,727 files) sits in the OneDrive folder of the 4 GB PC.
+- **Built (each removes a risk recorded in RISKS.md):**
+  - daily.py `produce_news_items`: a story whose editor gave no answer is unmarked (`news_fetcher.unmark`) and
+    recorded as not rendered; a real rejection stays used.
+  - daily.py `morning_start_warning`, called by `fetch`: a warning when the newest production morning has no
+    workflow_dispatch run in the 03:00 UTC hour (cron-job.org stopped or its token expired).
+  - constraints.txt: the 59 exact package versions of checks run 43187902047; all 8 installing workflows use
+    `-c constraints.txt`. requirements.txt had no versions at all.
+  - RISKS.md reviewed: two rows closed, four added (unpinned packages, the shared Claude limit, posting from one
+    PC, the thin feedback loop).
+- **Not changed (locked decisions, the user decides):** slots, concepts, voice, schedule. The numbers above say
+  the factory works and the page does not grow; that needs the user's decision, not more hardening.
+- **Guarded by:** tests/test_d67_audit.py.
+- **Not yet seen:** a production run on the pinned packages; an unanswered editor in production; the warning on
+  a real late morning.

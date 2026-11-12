@@ -20,7 +20,7 @@ jobs:
           python-version: "3.13"
           cache: pip
       - name: Python packages
-        run: pip install -q -r requirements.txt pytest pyyaml
+        run: pip install -q -r requirements.txt -c constraints.txt pytest pyyaml
       - name: Installed versions (the source of constraints.txt, D-67)
         run: pip freeze
       - name: Invariant tests

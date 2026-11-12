@@ -53,7 +53,7 @@ jobs:
       - name: Python packages, Chromium and Claude Code CLI
         run: |
           bash .github/apt_install.sh ffmpeg
-          pip install -q -r requirements.txt
+          pip install -q -r requirements.txt -c constraints.txt
           python -m playwright install --with-deps chromium
           for i in 1 2 3; do
             npm install -g @anthropic-ai/claude-code@2.1.301 && claude --version && break

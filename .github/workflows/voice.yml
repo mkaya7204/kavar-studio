@@ -46,7 +46,7 @@ jobs:
         run: bash .github/apt_install.sh ffmpeg && command -v ffmpeg
       - name: Python packages and Chromium
         run: |
-          pip install -q -r requirements.txt
+          pip install -q -r requirements.txt -c constraints.txt
           python -m playwright install --with-deps chromium
       - name: HyperFrames
         run: npx --yes hyperframes@0.8.145 --version || true
