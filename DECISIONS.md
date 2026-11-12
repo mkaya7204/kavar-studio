@@ -651,7 +651,9 @@ the decisions that are currently locked; this file explains why they exist and h
   Reel's plan (all producers use the builder) and a pop + ding to the soundtrack. Length checks 14-26 s ->
   14-27.6 s (daily.py, src/agent_tools.py, src/voice_kept.py); the editor's rules and the fixing agent's prompt say
   the sign-off is the page's signature and never a reason to reject.
-- **The crow drawing is a placeholder** (a silhouette drawn in code): the user found code-drawn marks artificial
+- **The crow is the drawing the user saw** (idea 3 of the logo page: sand disc, black crow, blue shiny thing; the
+  first render used a different silhouette and the user said "bana göstermiş olduğun karga böyle değildi").
+  It is still code-drawn, a placeholder: the user found code-drawn marks artificial
   and asked for outside help. An illustrator's crow replaces assets/karga.svg (same name and viewBox) and every Reel
   follows.
 - **Shown to the user before it goes out** (new format, CLAUDE.md §1.10): branch d69-karga, a silent rerender of a
