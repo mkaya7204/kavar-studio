@@ -580,7 +580,8 @@ the decisions that are currently locked; this file explains why they exist and h
   state), so used_tools.json never had it. 11:45 was Mister Blocks, which sat in state/reserve.json.
 - **Built:** src/news_fetcher.py: `mark_used(url, title)` also keeps the title key (lower case, no punctuation)
   in state/news_titles.json (seeded with the 75 titles of past carousels); `fetch_news` skips a used title and the
-  same title twice in one fetch. All callers pass the title (carousel.py, daily.py, src/guide_reel.py).
+  same title twice in one fetch. The made posts pass the title (carousel.py, src/guide_reel.py); a story that
+  failed (daily.py) keeps its URL only.
   src/script_writer.py: `used_tools()` also counts the reserve's Reels; `remember_tool(name)`. voice.yml: after
   George voices a test-run Reel for publishing, its tool goes into state/used_tools.json and is pushed.
   By hand: 12:30 / 20:30 of 13 Nov replaced by Gemini Decisions API (carousel) and ScroogeFrog AI (voiced) from the
