@@ -1187,5 +1187,68 @@
     "shares": 1,
     "saves": 2,
     "avg_watch_sec": 4
+  },
+  {
+    "published": "2026-11-11 07:31",
+    "kind": "reel",
+    "title": "Google Guided Learning Classroom",
+    "reach": 157,
+    "views": 177,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 2,
+    "saves": 1,
+    "avg_watch_sec": 3
+  },
+  {
+    "published": "2026-11-11 11:46",
+    "kind": "reel",
+    "title": "LotusQ",
+    "reach": 117,
+    "views": 134,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 1,
+    "avg_watch_sec": 2
+  },
+  {
+    "published": "2026-11-11 12:30",
+    "kind": "carousel",
+    "title": "Expanding Teen Account Protections",
+    "reach": 14,
+    "views": 34,
+    "follows": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-11 18:00",
+    "kind": "carousel",
+    "title": "Control Room (OpenAI)",
+    "reach": 16,
+    "views": 33,
+    "follows": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-11 20:31",
+    "kind": "reel",
+    "title": "Cardboard AI",
+    "reach": 121,
+    "views": 122,
+    "follows": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 3
   }
 ]
