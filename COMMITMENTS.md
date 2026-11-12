@@ -17,7 +17,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 4 | D-68: a tool's site is searched once (cache) | KODDA | fewer `tool_site_search` rows in state/claude_usage.jsonl after 11-13 |
 | 5 | D-68: voice.yml learns a new name instead of stopping | KODDA | the next voice.yml run with a new name |
 | 6 | D-68: every metrics row carries its post's folder | YAPILIYOR | from the 11-13 "yükle" on, by hand each morning |
-| 7 | D-69: the crow's sign-off at the end of every Reel (the crow the user saw on the logo page) | CEVAP BEKLİYOR | branch d69-karga; test render 43286044454; merge on the user's OK |
+| 7 | D-69: the crow's sign-off at the end of every Reel (the crow the user saw on the logo page) | CEVAP BEKLİYOR | branch d69-karga; render 43286044454 last frame = the logo page's crow, inside the frame, sent to the user 11-12; editor notes nothing on it; merge on the user's OK |
 | 8 | C: 1 of 3 daily Reels is a 10-12 s single-point Reel, marked "KISA", named in every report, compared after a week | BAŞLAMADI | user approved 11-12 |
 | 9 | D: 18:00 = a saveable guide carousel (a known AI product's feature, step by step), not news | BAŞLAMADI | user approved 11-12 (D-31's never-built guide carousel) |
 | 10 | Plan 1: the writer gets the page text + what the proof picture shows + a required "angle" | BAŞLAMADI | plan https://claude.ai/artifact/8nuzgbgVwnEzCJ1t1cTnMN |
