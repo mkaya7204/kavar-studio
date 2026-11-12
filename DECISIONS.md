@@ -639,6 +639,26 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Guarded by:** tests/test_d68.py.
 - **Not yet seen:** fewer tool_site_search calls in state/claude_usage.jsonl; voice.yml learning a name in a run.
 
+## D-69 · 2026-11-12 · The crow's sign-off at the end of every Reel
+- **The user:** "Karga iyi benzetme felsefesinde unutma hani karga hergün yeni şeyler getirir ... reel de sonda
+  takip etmeyi yada şuna gönder vs varya ondan sonrasına birde bu karga ve düşünce yapısını ekleyelim doğru
+  şekilde" (11-12, after the logo ideas; the crow idea from the D-68 logo page: KAVAR's crow brings the new shiny
+  thing of AI every day).
+- **Built:** templates/hyperframes_news: a `signoff` scene after the outro (1.6 s): a moon rises, the crow
+  (assets/karga.svg) lands with a shiny thing at its beak, the thing glints, "YARIN YENİSİNİ GETİRİRİM." and
+  @thekavar.ai + TAKİP ET come up and hold (the last frame is what loops). The outro (send / follow line, handle,
+  follow pill, §1.8) is unchanged and comes first. src/hyperframes_builder.py `with_signoff` adds the scene to every
+  Reel's plan (all producers use the builder) and a pop + ding to the soundtrack. Length checks 14-26 s ->
+  14-27.6 s (daily.py, src/agent_tools.py, src/voice_kept.py); the editor's rules and the fixing agent's prompt say
+  the sign-off is the page's signature and never a reason to reject.
+- **The crow drawing is a placeholder** (a silhouette drawn in code): the user found code-drawn marks artificial
+  and asked for outside help. An illustrator's crow replaces assets/karga.svg (same name and viewBox) and every Reel
+  follows.
+- **Shown to the user before it goes out** (new format, CLAUDE.md §1.10): branch d69-karga, a silent rerender of a
+  past Reel, its last frame and the editor's verdict.
+- **Guarded by:** tests/test_d69_karga.py, tests/test_decisions.py (outro pill).
+- **Not yet seen:** a production Reel with the sign-off.
+
 ## D-70 · 2026-11-12 · The user's decisions of 11-12, and the promise list made binding
 - **The user:** after the audit and the plan (https://claude.ai/artifact/8nuzgbgVwnEzCJ1t1cTnMN): "C olsun onay
   veriyorum bunuda takip et yeni hangi reel olduğunu bil takip etmesi kolay olsun bakalım tutacak mı", "D onay

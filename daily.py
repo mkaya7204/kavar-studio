@@ -247,7 +247,7 @@ REEL_FIX_ROUNDS = 1
 AGENT_SESSIONS_PER_RUN = 2
 _agent_sessions = 0
 GUIDE_EXTRA = 2  # D-42: guide Reel drafts the rest stage may make for a Reel slot that is still empty
-REEL_SECONDS = (14.0, 26.0)  # the editor's length rule (reel-retention-editor), checked again on the voiced Reel
+REEL_SECONDS = (14.0, 27.6)  # the editor's 14-26 s rule + the crow's 1.6 s sign-off (D-69), checked again on the voiced Reel
 
 
 JOB_BUDGET = 105 * 60  # produce.yml gives the job 120 min; stop starting Reel renders after this

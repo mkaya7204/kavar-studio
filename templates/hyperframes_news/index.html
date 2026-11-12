@@ -516,6 +516,70 @@
         color: var(--ink);
       }
 
+      /* ---------- the crow's sign-off (D-69, after the outro, ~1.6 s) ----------
+         KAVAR's crow brings a new shiny thing every day. Everything stays well inside the frame
+         (reel_qa reads detail at the edges as a cut picture), and the last frame keeps the follow pill. */
+      #signoff {
+        align-items: center;
+        text-align: center;
+      }
+      #signoff-stage {
+        position: relative;
+        width: 460px;
+        height: 400px;
+      }
+      #signoff-moon {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 360px;
+        height: 360px;
+        margin: -180px 0 0 -180px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 42% 38%, #ffffff 0%, #e9f1ff 55%, #b9cdf0 100%);
+        box-shadow: 0 0 80px rgba(233, 241, 255, 0.35);
+      }
+      #signoff-crow {
+        position: absolute;
+        left: 10px;
+        top: 6px;
+        width: 420px;
+        height: 400px;
+      }
+      #signoff-glint {
+        position: absolute;
+        left: 382px;
+        top: 112px;
+        width: 34px;
+        height: 34px;
+        background: var(--neon);
+        clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+        filter: drop-shadow(0 0 14px var(--neon));
+      }
+      #signoff-line {
+        margin-top: 44px;
+        font-size: 78px;
+        line-height: 1.08;
+        letter-spacing: -0.015em;
+      }
+      #signoff-line .accent {
+        color: var(--neon);
+      }
+      #signoff-follow {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-top: 30px;
+        padding: 14px 32px;
+        border: 3px solid var(--neon);
+        border-radius: 999px;
+        font-size: 40px;
+        color: var(--ink);
+      }
+      #signoff-follow b {
+        color: var(--neon);
+      }
+
       /* ---------- word-synced captions ---------- */
       #captions {
         position: absolute;
@@ -681,6 +745,17 @@
         <div id="outro-follow" class="black"><span id="outro-handle">@thekavar.ai</span><b id="outro-follow-label">+ TAKİP ET</b></div>
       </section>
 
+      <!-- D-69 (user 2026-11-12): after the send / follow close, the crow that brings a new shiny thing every day -->
+      <section id="signoff" class="scene clip" data-start="30" data-duration="1.6" data-track-index="1">
+        <div id="signoff-stage">
+          <div id="signoff-moon"></div>
+          <img id="signoff-crow" src="assets/karga.svg" alt="" />
+          <i id="signoff-glint"></i>
+        </div>
+        <h2 id="signoff-line" class="black">YARIN <span class="accent">YENİSİNİ</span> GETİRİRİM.</h2>
+        <div id="signoff-follow" class="black"><span id="signoff-handle">@thekavar.ai</span><b id="signoff-follow-label">+ TAKİP ET</b></div>
+      </section>
+
       <!-- persistent chrome (0-30) -->
       <div id="chrome" class="layer clip" data-start="0" data-duration="30" data-track-index="2">
         <div id="progress-track"><i id="progress-fill"></i></div>
@@ -810,7 +885,7 @@
       const panY = -Math.max(0, Math.min(Number(v.fullpage_height) || 1920, 1920 * 3) - 1920);
 
       // Scene slots [start, duration]; the builder aligns them to the voiceover.
-      const DEFAULT_PLAN = { hook: [0, 3], card1: [3, 4], shot1: [7, 2.5], card2: [9.5, 4], shot2: [13.5, 2.5], card3: [16, 4], why: [20, 7], outro: [27, 3] };
+      const DEFAULT_PLAN = { hook: [0, 3], card1: [3, 4], shot1: [7, 2.5], card2: [9.5, 4], shot2: [13.5, 2.5], card3: [16, 4], why: [20, 7], outro: [27, 3], signoff: [30, 1.6] };
       const parse = (s, fallback) => {
         try {
           return JSON.parse(s);
@@ -953,6 +1028,19 @@
       tl.set("#page-mark", { opacity: 0 }, 0);
       tl.fromTo("#page-mark", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, hookEnd);
       tl.to("#page-mark", { opacity: 0, duration: 0.25, ease: "none" }, ot);
+
+      // D-69 sign-off: the moon rises, the crow lands with its shiny thing, the thing glints, the promise
+      // and the follow pill come up. Complete by ~0.9 s and held: the last frame is what loops.
+      const so = S("signoff");
+      $("signoff-handle").textContent = v.brand_handle || "";
+      $("signoff-follow-label").textContent = "+ " + up(v.follow_label);
+      tl.fromTo("#signoff-moon", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, so);
+      tl.fromTo("#signoff-crow", { opacity: 0, y: -90, rotation: -8 }, { opacity: 1, y: 0, rotation: 0, duration: 0.4, ease: "power3.out" }, so + 0.1);
+      tl.fromTo("#signoff-crow", { scaleY: 1 }, { scaleY: 0.94, duration: 0.08, ease: "power1.in", yoyo: true, repeat: 1, transformOrigin: "50% 100%", immediateRender: false }, so + 0.5);
+      tl.fromTo("#signoff-glint", { opacity: 0, scale: 0.2, rotation: 0 }, { opacity: 1, scale: 1.25, rotation: 45, duration: 0.25, ease: "back.out(3)" }, so + 0.55);
+      tl.to("#signoff-glint", { scale: 1, duration: 0.3, ease: "power2.out" }, so + 0.8);
+      tl.fromTo("#signoff-line", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, so + 0.5);
+      tl.fromTo("#signoff-follow", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, so + 0.65);
 
       // captions: each line pops in, the spoken word lights up neon (karaoke)
       capGroups.forEach(({ g, cap, els }) => {

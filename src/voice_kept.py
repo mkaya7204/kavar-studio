@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 TEMP_DIR = ROOT / "output" / "temp"
-REEL_SECONDS = (14.0, 26.0)
+REEL_SECONDS = (14.0, 27.6)  # 14-26 s + the crow's 1.6 s sign-off (D-69)
 
 
 def restore(folder: Path) -> None:
