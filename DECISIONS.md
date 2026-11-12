@@ -638,3 +638,31 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Still the user's:** the Instagram API token (Meta phone verification), the cron-job.org token's expiry date.
 - **Guarded by:** tests/test_d68.py.
 - **Not yet seen:** fewer tool_site_search calls in state/claude_usage.jsonl; voice.yml learning a name in a run.
+
+## D-70 · 2026-11-12 · The user's decisions of 11-12, and the promise list made binding
+- **The user:** after the audit and the plan (https://claude.ai/artifact/8nuzgbgVwnEzCJ1t1cTnMN): "C olsun onay
+  veriyorum bunuda takip et yeni hangi reel olduğunu bil takip etmesi kolay olsun bakalım tutacak mı", "D onay
+  veriyorum olsun", "A için evet"; then "bütün burda söylediklerini yapman için garantiye al" and "bütün bu
+  oturumda aldığımız kararlar ... gerçekten yapılacak mı başka oturumda bunu hiç dikkat etmeden ... kendi kafasına
+  göre yanlış yapmışsın".
+- **Decided (not built yet; each is a line in COMMITMENTS.md):**
+  - C: one of the three daily Reels is a 10-12 s single-point Reel, marked "KISA" in the queue, post.json and the
+    metrics row, named in every "yükle" report, compared with the long ones after a week.
+  - D: the 18:00 carousel becomes a saveable guide carousel (a known AI product's feature, step by step; D-31's
+    18:00 guide carousel, never built), not news.
+  - A: a tool with a free, open demo (no sign-up; free routes only, §1.5) is really tried in the cloud, our own
+    output is shown and the Reel may say "denedik" (extends "Biz denedik", §1.4). Other tools keep today's Reel.
+  - The plan's five fixes (writer material + angle, new hook types, an "interest" score in the editor, results
+    feeding the writer and ranker, ranking before the site search) are promised; none touches a locked decision.
+- **Corrected:** "try the tools the ranker put OFF last" (D-42) was Claude's own reaction to "reel neden yok", not
+  the user's decision; Claude had presented it as the user's. It stays only because the records are mixed
+  (ranker-OFF PulseDev and Yardlet did above average); the user may change it at any time.
+- **The user rejected (don't propose again):** two rounds of post looks and four logo ideas drawn in code ("hiç
+  güzel veya özgün değil, çok sıradan ve yapay"). The user asked for outside help: the crow mascot is to be drawn
+  by a human illustrator (Claude writes the brief); the post look is decided together with that drawing.
+- **Built:** COMMITMENTS.md is the promise list (20 lines, status + evidence); CLAUDE.md §0 makes it binding; a
+  SessionStart hook script (.claude/hooks/show_commitments.py)
+  prints it; switching it on in .claude/settings.json was refused to Claude (a settings change needs the user's OK),
+  so it is OFF until the user approves.
+- **Guarded by:** tests/test_d70_commitments.py: dropping one of the 11-12 decisions from the list, an unknown
+  status, or removing the hook / rule turns checks red.
