@@ -21,5 +21,7 @@ jobs:
           cache: pip
       - name: Python packages
         run: pip install -q -r requirements.txt pytest pyyaml
+      - name: Installed versions (the source of constraints.txt, D-67)
+        run: pip freeze
       - name: Invariant tests
         run: python -m pytest -q tests

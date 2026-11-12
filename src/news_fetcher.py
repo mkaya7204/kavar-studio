@@ -89,6 +89,14 @@ def mark_used(url: str, title: str = "") -> None:
         TITLES_PATH.write_text(json.dumps(keys, indent=1, ensure_ascii=False), encoding="utf-8")
 
 
+def unmark(url: str, title: str = "") -> None:
+    """D-67: a story whose carousel was made but never judged (the editor gave no answer) is not used up."""
+    HISTORY_PATH.write_text(json.dumps([u for u in load_history() if u != url], indent=1), encoding="utf-8")
+    if key := title_key(title):
+        TITLES_PATH.write_text(json.dumps([k for k in load_titles() if k != key], indent=1, ensure_ascii=False),
+                               encoding="utf-8")
+
+
 def fetch_news(limit: int = 5) -> list[dict]:
     """Fresh, unused news items, best first: [{title, url, date, source, summary}].
 

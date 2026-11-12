@@ -34,7 +34,7 @@ from carousel_renderer import RenderError  # noqa: E402
 from content_ranker import rank  # noqa: E402
 from editor_review import review_carousel, review_reel  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
-from news_fetcher import fetch_news, mark_used  # noqa: E402
+from news_fetcher import fetch_news, mark_used, unmark  # noqa: E402
 from model_trial import testable_first  # noqa: E402
 from news_writer import NewsScript, revise_for_editor  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
@@ -219,8 +219,15 @@ def produce_news_items(count: int) -> list[dict]:
             chosen_titles.append(item["title"])
             chosen_companies.add(company)
         else:
-            log(f"   rejected, not queued: {folder.name}")
-            failures.record("news", "news", item["title"], "; ".join(problems), item["url"])
+            # D-67 (RISKS.md, open since 10-24): the story is marked used when its carousel is rendered, before
+            # the editor. With no answer from the editor (Claude usage limit, 11-10) a good story was used up.
+            unanswered = any("gave no verdict" in p for p in problems)
+            if unanswered:
+                unmark(item["url"], item.get("title", ""))
+                log(f"   the editor gave no answer, not queued; the story stays unused for the next run: {folder.name}")
+            else:
+                log(f"   rejected, not queued: {folder.name}")
+            failures.record("news", "news", item["title"], "; ".join(problems), item["url"], rendered=not unanswered)
     # a carousel with our own test takes the day's first carousel slot
     return sorted(items, key=lambda i: not i["tested"])
 
@@ -863,15 +870,30 @@ def reserve_cli(args: list[str]) -> None:
               f"{r['title']} -> {r['folder']}")
 
 
+def morning_start_warning(runs: list[dict], now: datetime | None = None) -> str:
+    """D-67 (RISKS.md, open since 10-24): cron-job.org starts the day at 03:17 UTC with its own GitHub token
+    (D-25). When that token expires nothing fails: GitHub's own crons start the day ~7 h late (11-05: 13:54 TRT)
+    and the morning slots are lost. So the newest production morning must show a workflow_dispatch run started
+    in the 03:00 UTC hour; if it doesn't, `fetch` says so."""
+    now = now or datetime.now(timezone.utc)
+    day = (now if now.hour >= 4 else now - timedelta(days=1)).strftime("%Y-%m-%d")
+    if any(r.get("event") == "workflow_dispatch" and r["createdAt"].startswith(f"{day}T03:") for r in runs):
+        return ""
+    return (f"WARNING: no run was started by cron-job.org at 03:17 UTC on {day}. Its GitHub token may have "
+            f"expired or the job is off: the day then starts hours late. Tell the user to check cron-job.org.")
+
+
 def fetch() -> None:
     """Bring today's cloud production (GitHub Actions, .github/workflows/produce.yml) to this PC:
     pull the state commits, download the run's archive and unpack it into output/."""
     log("=== fetch (cloud production) ===")
     subprocess.run(["git", "pull", "--rebase", "--autostash", "-q"], cwd=ROOT, check=False)
     runs = json.loads(subprocess.run(
-        [_gh(), "run", "list", "--workflow", "produce.yml", "--branch", "main", "--limit", "8",
-         "--json", "databaseId,status,conclusion,createdAt"],
+        [_gh(), "run", "list", "--workflow", "produce.yml", "--branch", "main", "--limit", "12",
+         "--json", "databaseId,status,conclusion,createdAt,event"],
         cwd=ROOT, capture_output=True, text=True, encoding="utf-8", check=True).stdout)
+    if warning := morning_start_warning(runs):
+        log(warning)
     # D-56: today's posts were made by yesterday's run, so look back one more day per day of lag
     since = datetime.now(timezone.utc) - timedelta(hours=20 + 24 * publish_lag())  # createdAt is UTC
     today = [r for r in runs if datetime.fromisoformat(r["createdAt"].replace("Z", "+00:00")) >= since]
