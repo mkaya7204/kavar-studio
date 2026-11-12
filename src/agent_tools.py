@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 WORK = ROOT / "output" / "temp" / "agent"
 MAX_RENDERS = 3  # D-47: Claude usage and the morning's time are limited
-REEL_SECONDS = (14.0, 26.0)
+REEL_SECONDS = (14.0, 27.6)  # 14-26 s + the crow's 1.6 s sign-off (D-69)
 
 
 def digest(path: Path) -> str:

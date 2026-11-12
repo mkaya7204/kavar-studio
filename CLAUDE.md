@@ -110,6 +110,8 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    what reaches more people inside the slot's concept; the concepts don't change.
 8. **Reel outro** shows the handle @thekavar.ai with a small "+ TAKİP ET" pill (11dcfdc). It
    was once removed without asking; never again.
+   **D-69 (2026-11-12, the user):** after the outro every Reel ends with the crow's 1.6 s sign-off (KAVAR's crow
+   brings a new shiny thing every day: "YARIN YENİSİNİ GETİRİRİM.", handle + follow pill). Never remove it.
 9. **Brand:** handle @thekavar.ai (brand.json). Never use other creators' content. No press-site photos
    (2026-10-16, the user: "kendi görselimiz"): news comes only from the companies' own blogs
    (news_sources.json), whose images are their own press assets, or our own test outputs.

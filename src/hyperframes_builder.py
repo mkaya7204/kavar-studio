@@ -53,6 +53,11 @@ DEFAULT_PLAN = {"hook": [0, 3], "card1": [3, 4], "shot1": [7, 2.5], "card2": [9.
                 "shot2": [13.5, 2.5], "card3": [16, 4], "why": [20, 7], "outro": [27, 3]}
 SEGMENT_MIN = [1.8, 3.6, 3.6, 2.4, 2.6]  # hook, point1, point2, point3, why (seconds on screen)
 OUTRO_MIN = 2.0  # the closing card: long enough to read the send line, short enough not to lose viewers
+# D-69 (user 2026-11-12: "karga her gün yeni şeyler getirir ... reelde sonda takip etmeyi ya da şuna gönder ...
+# ondan sonrasına bu karga ve düşünce yapısını ekleyelim"): the crow's sign-off after the outro, every Reel.
+# It adds this many seconds; the editor's 14-26 s rule is for the Reel before it (MAX_SECONDS).
+SIGNOFF = 1.6
+MAX_SECONDS = 26.0 + SIGNOFF
 VOICE_TAIL = 0.5  # silence kept after the last word
 LEAD = 0.25  # a scene appears this long before its part is spoken
 EXTRA_PAUSE = 0.12  # breathing room added per scene cut (no padding towards a fixed length)
@@ -215,6 +220,12 @@ def caption_groups(words: list[dict], owner: list[int], pauses: list[float], ski
     return out
 
 
+def with_signoff(plan: dict, total: float) -> tuple[dict, float]:
+    """D-69: the crow's sign-off scene right after the outro; the Reel is SIGNOFF seconds longer."""
+    plan = {**plan, "signoff": [round(total, 3), SIGNOFF]}
+    return plan, round(total + SIGNOFF, 3)
+
+
 def sfx_events(plan: dict) -> list[tuple[float, str]]:
     events = [(0.0, "impact")]
     for name in SCENES[1:]:
@@ -223,6 +234,8 @@ def sfx_events(plan: dict) -> list[tuple[float, str]]:
         events.append((plan[name][0] + 0.22, "pop"))
     events += [(plan["why"][0] + 0.08, "pop"), (plan["outro"][0] + 0.05, "impact"),
                (plan["outro"][0] + 0.62, "ding")]
+    if "signoff" in plan:  # D-69: the crow lands, its shiny thing glints
+        events += [(plan["signoff"][0] + 0.5, "pop"), (plan["signoff"][0] + 0.58, "ding")]
     return events
 
 
@@ -512,6 +525,7 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
     timing = plan_timeline(segments, words)
     plan = timing["plan"] if timing else DEFAULT_PLAN
     total = timing["total"] if timing else TOTAL
+    plan, total = with_signoff(plan, total)  # D-69
     captions = caption_groups(words, timing["owner"], timing["pauses"]) if timing else []
     _apply_plan_to_html(build_dir / "index.html", plan, total)
     try:

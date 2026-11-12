@@ -24,7 +24,10 @@ MUST
   (its interface, output or workflow). It need not show the whole transformation: the Reel is made
   from website captures, not screen recordings.
 - No first-person experience claims ("denedim", "çevirdim", "kullandım"): the page didn't use it.
-- Length 14-26 s; no dead air longer than ~0.6 s; the closing card is short (≈2 s).
+- Length 14-26 s, plus KAVAR's own 1.6 s crow sign-off at the very end (moon, crow with a shiny thing,
+  "YARIN YENİSİNİ GETİRİRİM.", @thekavar.ai + TAKİP ET; D-69, the user's decision): it is in every Reel, it is
+  the page's signature (not an experience claim), and never a reason to reject. No dead air longer than ~0.6 s;
+  the closing card is short (≈2 s).
 - Text never sits in the top ~270 px band or the bottom ~35 %, never cut off or overlapping.
 - Facts only from the tool data / source; page policy: no prices, payment models, free/paid,
   trials or discounts anywhere (screen, voice, caption).
