@@ -32,8 +32,13 @@ jobs:
       ELEVENLABS_API_KEY_3: ${{ secrets.ELEVENLABS_API_KEY_3 }}  # third account, same George (D-46)
       ELEVENLABS_API_KEY_4: ${{ secrets.ELEVENLABS_API_KEY_4 }}  # fourth account, same George (user 2026-11-04)
       GH_TOKEN: ${{ github.token }}
+      # D-68 (user 11-12): George learns a new name here too (tts_engine asks Claude); before, a name missing from
+      # rules/pronunciation.json stopped the run (42859526056, 43164086698)
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
     steps:
       - uses: actions/checkout@v7
+      - name: Cloud runner (drop the PC-only hook, D-49)
+        run: rm -f .claude/settings.json
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
@@ -48,8 +53,13 @@ jobs:
         run: |
           pip install -q -r requirements.txt -c constraints.txt
           python -m playwright install --with-deps chromium
-      - name: HyperFrames
-        run: npx --yes hyperframes@0.8.145 --version || true
+      - name: Claude Code CLI and HyperFrames
+        run: |
+          for i in 1 2 3; do
+            npm install -g @anthropic-ai/claude-code@2.1.301 && claude --version && break
+            npm uninstall -g @anthropic-ai/claude-code || true
+          done
+          npx --yes hyperframes@0.8.145 --version || true
       - name: Fonts
         run: |
           curl -sSL -o /tmp/inter.zip https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip
@@ -90,5 +100,6 @@ jobs:
           python -c "import json,sys; sys.path.insert(0,'src'); import script_writer as s; s.remember_tool(json.load(open(sys.argv[1], encoding='utf-8')).get('tool_name',''))" "output/reels/${{ github.event.inputs.reel }}/post.json"
           git config user.name "kavar-bot"
           git config user.email "kavar-bot@users.noreply.github.com"
-          git add state/used_tools.json
+          git checkout -- .claude/settings.json
+          git add state/used_tools.json state/pronunciations.json state/claude_usage.jsonl
           git diff --cached --quiet || (git commit -q -m "state: used tool from voice.yml (${{ github.event.inputs.reel }})" && git pull --rebase --autostash -q && git push -q)

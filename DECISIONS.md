@@ -622,3 +622,19 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Guarded by:** tests/test_d67_audit.py.
 - **Not yet seen:** a production run on the pinned packages; an unanswered editor in production; the warning on
   a real late morning.
+
+## D-68 · 2026-11-12 · The audit's open points the user approved
+- **The user:** "Onayımı istediklerini onaylıyorum" (11-12, after the D-67 report's eight points).
+- **Built:**
+  - src/fetcher.py `_find_site`: a product's site found by the Claude web search is kept in
+    state/tool_sites.json (30 days; a miss is asked again after 3 days). Before, every run searched every
+    Product Hunt product again: 212 searches 11-05..11-12, 38 % of the cloud's Claude spend.
+  - voice.yml: CLAUDE_CODE_OAUTH_TOKEN + the Claude Code CLI, the PC's hook dropped on the runner (D-49), a learned
+    name committed (state/pronunciations.json). Before, a name missing from rules/pronunciation.json stopped the
+    run (42859526056, 43164086698).
+  - Metrics rows carry `folder` (CLAUDE.md §2.3), so a Reel's numbers join state/metrics/reels.json (hook pattern).
+  - Deleted with the user's approval: 26 remote branches already merged into main (left: d55-no-picture-no-summary,
+    hook-research, both not merged), and the 118 output folders made before 2026-10-29 on the PC.
+- **Still the user's:** the Instagram API token (Meta phone verification), the cron-job.org token's expiry date.
+- **Guarded by:** tests/test_d68.py.
+- **Not yet seen:** fewer tool_site_search calls in state/claude_usage.jsonl; voice.yml learning a name in a run.

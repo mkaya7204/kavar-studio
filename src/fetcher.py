@@ -7,6 +7,8 @@ returned so the rest of the pipeline can still run.
 
 import html
 import json
+from datetime import date
+from pathlib import Path
 from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
 import os
 import re
@@ -135,6 +137,32 @@ def _fold(text: str) -> str:
     return re.sub(r"[^a-z0-9]", "", "".join(c for c in text if not unicodedata.combining(c)).lower())
 
 
+SITES_PATH = Path(__file__).resolve().parent.parent / "state" / "tool_sites.json"
+SITE_MISS_DAYS = 3  # a product whose site was not found is looked up again after this many days
+SITE_KEEP_DAYS = 30
+
+
+def _find_site(name: str, tag_line: str) -> tuple[str, str | None] | None:
+    """D-68 (user 11-12: approved "araç aramasını ucuzlat"): the Product Hunt feed lists a product for days and
+    every run looked every product up again with a Claude web search (212 searches in 8 days, 38 % of the
+    cloud's Claude spend). A found site is kept in state/tool_sites.json; a miss is asked again after 3 days."""
+    today, key = date.today(), _fold(name)
+    try:
+        sites = json.loads(SITES_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        sites = {}
+    hit = sites.get(key)
+    if hit and (today - date.fromisoformat(hit["date"])).days < (SITE_KEEP_DAYS if hit["url"] else SITE_MISS_DAYS):
+        return (hit["url"], hit.get("description")) if hit["url"] else None
+    found = _find_site_with_claude(name, tag_line)
+    sites[key] = {"url": found[0] if found else "", "description": found[1] if found else None,
+                  "date": today.isoformat()}
+    sites = {k: v for k, v in sites.items() if (today - date.fromisoformat(v["date"])).days < SITE_KEEP_DAYS}
+    SITES_PATH.parent.mkdir(parents=True, exist_ok=True)
+    SITES_PATH.write_text(json.dumps(sites, indent=1, ensure_ascii=False), encoding="utf-8")
+    return found
+
+
 def _find_site_with_claude(name: str, tag_line: str) -> tuple[str, str | None] | None:
     """Product Hunt answers 403 to cloud machines (GitHub Actions), so its /r/p/ redirect can't be
     followed there. Ask Claude Code (web search only) for the product's official site, then accept it
@@ -193,7 +221,7 @@ def _parse_entry(entry: ET.Element) -> tuple[Tool | None, str]:
             website_url, description = _resolve_site(redirect.group(1))
         except requests.RequestException:
             # blocked (cloud IPs get 403): look the site up instead; else keep the Product Hunt page
-            if found := _find_site_with_claude(name, tag_line):
+            if found := _find_site(name, tag_line):
                 website_url, description = found
 
     # Re-check with the site's own description, which often reveals what it is.
