@@ -34,6 +34,11 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
   say "kodda, henüz koşuda görülmedi". Every production run must deliver its archive (artifact, else release
   `out-<run id>`); a red "Delivery check" means the day did not reach the PC.
 
+- **Every promise goes into `COMMITMENTS.md` (user 2026-11-12: "söylediklerini yapman için garantiye al").** When
+  Claude tells the user it will do something, the line is added in the same turn. Every "yükle" report starts with
+  what changed in that list. A line is DONE only with a run's evidence; nothing is removed without the user's OK.
+  Start every working session from it, before new work.
+
 - **Log every decision in `DECISIONS.md`** (user, 2026-10-16): date, the user's words, what was
   built, where it lives, what test guards it. Same commit as the change. Never delete an entry.
 
