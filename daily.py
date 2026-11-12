@@ -207,7 +207,7 @@ def produce_news_items(count: int) -> list[dict]:
             if re.search(r"HTTP (401|403|429)\b", str(exc)):
                 blocked.add(host)
                 tries -= 1  # a refusal costs seconds, not a real try
-            mark_used(item["url"])
+            mark_used(item["url"], item.get("title", ""))
             failures.record("news", "news", item["title"], f"{type(exc).__name__}: {exc}", item["url"],
                             rendered=False)
             continue

@@ -570,3 +570,20 @@ the decisions that are currently locked; this file explains why they exist and h
   tests/test_probe_no_voice.py.
 - **Seen:** probe 42682123138 (voice=no): all six guide feeds HTTP 200 from GitHub's machines, no key spoke;
   checks 42682090345: 286 passed, 1 skipped. **Not yet seen:** the next morning's guide ranking.
+
+## D-66 · 2026-11-12 · The same news on a second blog, and a test-run or reserve tool, count as used
+- **The user:** "Herşey hazirmi" (11-12 morning), and the standing rule that empty or wrong slots are fixed
+  without asking (CLAUDE.md §2, D-37).
+- **Cause (from run 43147166408, posts for 13 Nov):** 12:30 was "Gemini 4 Carbon is now available" from
+  deepmind.google; the same announcement from blog.google was the 18:00 carousel of 12 Nov. state/news_history.json
+  held URLs only. 20:30 was Kippy AI, the 11:45 Reel of 12 Nov: it was made in a test run (dry=yes commits no
+  state), so used_tools.json never had it. 11:45 was Mister Blocks, which sat in state/reserve.json.
+- **Built:** src/news_fetcher.py: `mark_used(url, title)` also keeps the title key (lower case, no punctuation)
+  in state/news_titles.json (seeded with the 75 titles of past carousels); `fetch_news` skips a used title and the
+  same title twice in one fetch. All callers pass the title (carousel.py, daily.py, src/guide_reel.py).
+  src/script_writer.py: `used_tools()` also counts the reserve's Reels; `remember_tool(name)`. voice.yml: after
+  George voices a test-run Reel for publishing, its tool goes into state/used_tools.json and is pushed.
+  By hand: 12:30 / 20:30 of 13 Nov replaced by Gemini Decisions API (carousel) and ScroogeFrog AI (voiced) from the
+  test runs 43158736030 / 43158731682; their URLs and tools were recorded.
+- **Guarded by:** tests/test_d66_repeats.py.
+- **Not yet seen:** a production run skipping a second blog's copy; voice.yml committing a tool.

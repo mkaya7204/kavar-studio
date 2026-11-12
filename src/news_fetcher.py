@@ -6,6 +6,7 @@ same story never runs twice. Order: newest day first, then source priority
 """
 
 import json
+import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -19,6 +20,7 @@ import page_sources  # noqa: E402  D-59: labs with no RSS
 ROOT = Path(__file__).resolve().parent.parent
 SOURCES_PATH = ROOT / "news_sources.json"
 HISTORY_PATH = ROOT / "state" / "news_history.json"  # state/ is kept in git (the cloud run commits it)
+TITLES_PATH = ROOT / "state" / "news_titles.json"  # D-66: titles of used news, so a second blog's copy is skipped
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                          "(KHTML, like Gecko) Chrome/140.0 Safari/537.36"}
 ATOM = "{http://www.w3.org/2005/Atom}"
@@ -66,10 +68,25 @@ def load_history() -> list[str]:
         return []
 
 
-def mark_used(url: str) -> None:
+def title_key(title: str) -> str:
+    """The title without case, punctuation or spacing: one announcement posted on two blogs has the same key."""
+    return " ".join(re.sub(r"[^\w]+", " ", (title or "").lower()).split())
+
+
+def load_titles() -> list[str]:
+    try:
+        return json.loads(TITLES_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+
+
+def mark_used(url: str, title: str = "") -> None:
     urls = (load_history() + [url])[-300:]
     HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
     HISTORY_PATH.write_text(json.dumps(urls, indent=1), encoding="utf-8")
+    if title_key(title):  # D-66: the same news on another blog (blog.google + deepmind.google) is used too
+        keys = (load_titles() + [title_key(title)])[-300:]
+        TITLES_PATH.write_text(json.dumps(keys, indent=1, ensure_ascii=False), encoding="utf-8")
 
 
 def fetch_news(limit: int = 5) -> list[dict]:
@@ -95,7 +112,12 @@ def fetch_news(limit: int = 5) -> list[dict]:
             items += got
         except requests.RequestException as exc:
             print(f"[news] {page['name']} skipped: {type(exc).__name__}")
-    unused = [i for i in items if i["date"] and i["url"] not in used]
+    used_titles, unused = set(load_titles()), []
+    for i in items:  # D-66: a used title, or the same title twice in one fetch, is the same news
+        key = title_key(i.get("title", ""))
+        if i["date"] and i["url"] not in used and not (key and key in used_titles):
+            unused.append(i)
+            used_titles.add(key)
     recent = [i for i in unused if i["date"] >= now - timedelta(hours=config.get("fallback_age_hours", 168))]
     buzz.annotate(recent)  # D-59: what is talked about right now goes first (ranking only, never the source)
     fresh = [i for i in unused if i["date"] >= now - timedelta(hours=config.get("max_age_hours", 72))]

@@ -1,40 +1,48 @@
 [
-  {
-    "kind": "carousel",
-    "concept": "news",
-    "title": "OpenAI acquires Orchestra Bio",
-    "folder": "reserve/2026-10-21_haber-openai-acquires-orchestra-bio",
-    "made": "2026-10-21",
-    "editor": "publish"
-  },
-  {
-    "kind": "reel",
-    "concept": "tool",
-    "title": "Mister Blocks",
-    "folder": "reserve/2026-11-11_mister-blocks",
-    "made": "2026-11-11",
-    "editor": "publish",
-    "needs_voice": true,
-    "voice": {
-      "run_id": "43067744223",
-      "reel": "2026-11-11_mister-blocks",
-      "artifact": "kavar-dryrun",
-      "artifact_expires": "2026-11-13"
-    }
-  },
-  {
-    "kind": "reel",
-    "concept": "guide",
-    "title": "Google Gemini (CarPlay)",
-    "folder": "reserve/2026-11-11_google-gemini",
-    "made": "2026-11-11",
-    "editor": "publish",
-    "needs_voice": true,
-    "voice": {
-      "run_id": "43067744223",
-      "reel": "2026-11-11_google-gemini",
-      "artifact": "kavar-dryrun",
-      "artifact_expires": "2026-11-13"
-    }
+ {
+  "kind": "carousel",
+  "concept": "news",
+  "title": "OpenAI acquires Orchestra Bio",
+  "folder": "reserve/2026-10-21_haber-openai-acquires-orchestra-bio",
+  "made": "2026-10-21",
+  "editor": "publish"
+ },
+ {
+  "kind": "reel",
+  "concept": "tool",
+  "title": "Skillbox",
+  "folder": "reserve/2026-11-12_skillbox",
+  "made": "2026-11-12",
+  "editor": "publish",
+  "needs_voice": true,
+  "voice": {
+   "run_id": "43158731682",
+   "reel": "2026-11-12_skillbox",
+   "artifact": "kavar-dryrun",
+   "artifact_expires": "2026-11-14"
   }
+ },
+ {
+  "kind": "reel",
+  "concept": "guide",
+  "title": "ElevenLabs",
+  "folder": "reserve/2026-11-12_elevenlabs",
+  "made": "2026-11-12",
+  "editor": "publish",
+  "needs_voice": true,
+  "voice": {
+   "run_id": "43158731682",
+   "reel": "2026-11-12_elevenlabs",
+   "artifact": "kavar-dryrun",
+   "artifact_expires": "2026-11-14"
+  }
+ },
+ {
+  "kind": "carousel",
+  "concept": "news",
+  "title": "BotPsy: On-Device Personal Assistant with a Sub-Billion-Parameter Agentic Language Model",
+  "folder": "reserve/2026-11-12_haber-botpsy-on-device-personal-assistant-with",
+  "made": "2026-11-12",
+  "editor": "publish"
+ }
 ]

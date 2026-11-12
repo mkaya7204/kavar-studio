@@ -84,3 +84,11 @@ jobs:
         run: |
           tar -czf voiced-${{ github.event.inputs.reel }}.tgz output/reels/${{ github.event.inputs.reel }}/upload.mp4 output/reels/${{ github.event.inputs.reel }}/final_video.mp4 output/reels/${{ github.event.inputs.reel }}/cover.jpg output/reels/${{ github.event.inputs.reel }}/post.json
           bash .github/deliver.sh voiced-*.tgz
+      # D-66: test runs commit no state, so a test Reel voiced for publishing records its tool here
+      - name: Remember the tool (production never makes it again)
+        run: |
+          python -c "import json,sys; sys.path.insert(0,'src'); import script_writer as s; s.remember_tool(json.load(open(sys.argv[1], encoding='utf-8')).get('tool_name',''))" "output/reels/${{ github.event.inputs.reel }}/post.json"
+          git config user.name "kavar-bot"
+          git config user.email "kavar-bot@users.noreply.github.com"
+          git add state/used_tools.json
+          git diff --cached --quiet || (git commit -q -m "state: used tool from voice.yml (${{ github.event.inputs.reel }})" && git pull --rebase --autostash -q && git push -q)

@@ -483,7 +483,32 @@ def used_tools() -> list[str]:
         names = json.loads(USED_TOOLS_PATH.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         names = []
-    return list(dict.fromkeys(names + [h["tool"] for h in _load_history() if h.get("tool")]))
+    return list(dict.fromkeys(names + [h["tool"] for h in _load_history() if h.get("tool")] + _reserve_tools()))
+
+
+RESERVE_PATH = ROOT / "state" / "reserve.json"
+
+
+def _reserve_tools() -> list[str]:
+    """D-66 (11-12: Mister Blocks was in the reserve and was made again): a kept Reel's tool is used too."""
+    try:
+        kept = json.loads(RESERVE_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    return [k["title"] for k in kept if isinstance(k, dict) and k.get("kind") == "reel" and k.get("title")]
+
+
+def remember_tool(name: str) -> None:
+    """D-66 (11-12: Kippy AI, made in a test run and posted, was made again by production): a Reel voiced
+    for publishing (voice.yml) records its tool, because test runs commit no state."""
+    if name and name not in used_tools():
+        USED_TOOLS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            names = json.loads(USED_TOOLS_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            names = []
+        USED_TOOLS_PATH.write_text(json.dumps((names + [name])[-USED_TOOLS_SIZE:], indent=1, ensure_ascii=False),
+                                   encoding="utf-8")
 
 
 def _save_history(script: VideoScript) -> None:

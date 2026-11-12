@@ -175,7 +175,7 @@ def produce_news(item: dict) -> Path:
     print(f"   source={script['source']}, {len(script['slides'])} slides, headline: \"{script['slides'][0]['title']}\"")
     script, result = _render_with_revisions(script, article, out, brand,
                                             lambda sc, probs: revise_news(sc, probs, article))
-    mark_used(item["url"])
+    mark_used(item["url"], item.get("title", ""))
     return _finish_run(out, script, result, brand, article["publisher"] + ": " + item["title"], t0)
 
 

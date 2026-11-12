@@ -229,7 +229,7 @@ def _make_from(candidates: list[dict]) -> int:
         video = build_video_hyperframes(script, capture, voice["audio_path"], FINAL_PATH)
         print(f"   {video['duration_sec']}s, {video['scenes']}")
         _save_history(VideoScript.model_validate(script))
-        mark_used(c["url"])  # the news carousels never take the same post
+        mark_used(c["url"], c.get("title", ""))  # the news carousels never take the same post
         post = build_post(script, video)
         (FINAL_PATH.parent / "post.json").write_text(json.dumps(post, indent=2, ensure_ascii=False), encoding="utf-8")
         print(f"✅ Reel: {FINAL_PATH}")
