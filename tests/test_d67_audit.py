@@ -74,8 +74,8 @@ def test_fetch_warns_when_cron_job_org_did_not_start_the_day():
 
 
 def test_every_workflow_installs_the_pinned_packages():
-    pins = [line.split("==") for line in (ROOT / "constraints.txt").read_text(encoding="utf-8").split()
-            if line and not line.startswith("#")]
+    pins = [line.strip().split("==") for line in (ROOT / "constraints.txt").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.startswith("#")]
     assert len(pins) > 20 and all(len(p) == 2 and p[1] for p in pins)  # exact versions only
     names = {p[0].lower().replace("_", "-") for p in pins}
     for need in (ROOT / "requirements.txt").read_text(encoding="utf-8").split():
