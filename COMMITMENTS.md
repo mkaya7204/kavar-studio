@@ -25,7 +25,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 12 | Plan 3: editor gives a "would it stop the scroll" score; low score goes back to fixing | BAŞLAMADI | same plan |
 | 13 | Plan 4: results feed the writer and the ranker (D-39 parts 3-4); closing line rotates save / send / comment | BAŞLAMADI | same plan |
 | 14 | Plan 5: rank tools before the site search (only the top 3 are searched); usage labels fixed | BAŞLAMADI | same plan |
-| 15 | A: tools with a free open demo are really tried in the cloud and the Reel says "denedik" | CEVAP BEKLİYOR | explained to the user 11-12; yes / no |
+| 15 | A: tools with a free open demo are really tried in the cloud and the Reel says "denedik" | BAŞLAMADI | user approved 11-12: "A için evet". Free routes only (§1.5), no sign-ups; tools that need an account keep today's Reel |
 | 16 | A brief for an illustrator to draw the crow (story, 5-8 poses, small-size version, vector files, rights) | BAŞLAMADI | Claude writes it; the drawing itself is KULLANICIDA |
 | 17 | New post look, decided together with the crow drawing | KULLANICIDA | waits for the drawing |
 | 18 | Instagram API token (posting and metrics without this PC) | KULLANICIDA | Meta phone verification |
