@@ -28,7 +28,7 @@ def test_the_sign_off_comes_after_the_outro_and_keeps_the_follow_pill():
 
 def test_the_crow_is_its_own_file_an_illustrator_can_replace():
     svg = (TEMPLATE / "assets" / "karga.svg").read_text(encoding="utf-8")
-    assert 'viewBox="0 0 420 400"' in svg
+    assert 'viewBox="0 0 100 100"' in svg and "#F3EAD7" in svg and "#2B4BFF" in svg  # the logo page's crow
 
 
 def test_every_reel_gets_the_sign_off_and_is_that_much_longer(tmp_path):

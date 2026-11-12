@@ -1,22 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 400" width="420" height="400">
-  <!-- D-69 (user 2026-11-12): KAVAR's crow, who brings a new shiny thing every day. Silhouette, perched,
-       facing right; the shiny thing sits at its beak (drawn by the template so it can glint).
-       A placeholder until an illustrator draws the mascot: replace this file, keep the name and the
-       viewBox, and every Reel's sign-off changes with it. -->
-  <g fill="#05070d">
-    <!-- head, back, tail, belly, chest, throat, beak -->
-    <path d="M372 118 C346 104 320 95 298 92 C281 75 248 70 226 85 C196 104 170 134 150 164
-             C128 196 110 226 92 262 L30 340 C42 356 58 362 72 356 L134 292
-             C162 302 196 305 226 297 C262 285 292 253 304 215 C312 187 311 158 305 139
-             C326 131 350 125 372 118 Z"/>
-    <!-- wing over the body: a few feather tips break the outline -->
-    <path d="M262 150 C232 150 196 170 170 206 C150 234 138 262 132 290 L148 280 L150 296 L166 284
-             L170 298 L186 286 C214 270 246 236 262 196 C270 176 270 160 262 150 Z" fill="#0d1220"/>
-    <!-- legs and toes -->
-    <path d="M214 296 L208 352 M236 292 L242 352 M196 354 L222 352 M230 354 L256 352"
-          stroke="#05070d" stroke-width="7" stroke-linecap="round" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="400" height="400">
+  <!-- D-69 (user 2026-11-12): KAVAR's crow, the same drawing as idea 3 ("Karga") on the logo page the user saw
+       (https://claude.ai/artifact/KRuVkdg5fBYC3FE1aLPGfd): sand disc, black crow, the shiny thing in its beak.
+       Replace this file (same name, same viewBox) when an illustrator draws the mascot; every Reel follows. -->
+  <defs><clipPath id="disc"><circle cx="50" cy="50" r="50"/></clipPath></defs>
+  <g clip-path="url(#disc)">
+    <rect width="100" height="100" fill="#F3EAD7"/>
+    <ellipse cx="36" cy="96" rx="33" ry="40" fill="#131313"/>
+    <circle cx="42" cy="43" r="23" fill="#131313"/>
+    <path d="M60 35 L88 46 L62 53 Z" fill="#131313" stroke="#131313" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M85 35 L95 46 L85 57 L75 46 Z" fill="#2B4BFF"/>
+    <circle cx="49" cy="38" r="4.6" fill="#F3EAD7"/>
   </g>
-  <!-- eye -->
-  <circle cx="281" cy="106" r="7" fill="#f4f8ff"/>
-  <circle cx="283" cy="106" r="3.2" fill="#05070d"/>
 </svg>
