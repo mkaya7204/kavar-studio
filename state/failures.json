@@ -2284,5 +2284,75 @@
    "off_concept"
   ],
   "detail": "l and w)    rank 29 [Google DeepMind] Gemini 4 Carbon is now available (New Gemini 4 model, possibly in the Gemini app, big name; show how to use it.)    rank 22 [Google Workspace Updates] Expanding Gemini in Gmail to more Google Workspace users (Gemini in Gmail reaching more Workspace users; usable"
+ },
+ {
+  "date": "2026-11-12",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-12",
+  "stage": "news",
+  "kind": "news",
+  "item": "Gemini 4 Carbon is now available",
+  "rendered": true,
+  "host": "deepmind.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-12",
+  "stage": "news",
+  "kind": "news",
+  "item": "Try Tabletop: Customizable, collaborative spaces for groups to plan, play and do more together.",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-12",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Kippy AI",
+  "rendered": true,
+  "host": "kippy.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-12",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Relay",
+  "rendered": true,
+  "host": "relayto.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "price"
+  ],
+  "detail": "Kapaktaki ve ilk karelerdeki kanıt kutusu, sitenin İngilizce slogan kartı ('Your AI writes the doc. Their AI reads it first.'). Ürünün arayüzü, çıktısı veya sonucu yok. Slogan kanıt sayılmaz.; Kanıt kutusundaki metin yarım kesilmiş: 'Relay gives their agent' cümlesi bitmeden duruyor. Kesik blok kabu"
+ },
+ {
+  "date": "2026-11-12",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Mister Blocks",
+  "rendered": true,
+  "host": "misterblocks.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

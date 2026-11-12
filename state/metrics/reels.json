@@ -1442,5 +1442,57 @@
     "duration_sec": 21.4,
     "words": 37,
     "status": "rejected: Kanıt görseli vaadi göstermiyor: başlık toplantı notunun tasarıma işlendiğini söylüyor, ama kutuda 'World Peas' sayfasında mantar fotoğrafını değiştiren bir istem görünüyor (\"Change this to a closeup image of some mushrooms\"). Transkript ve not ekleme yok. Görsel makalenin başka bir bölümünden (görsel düzenleme).; Kanca abartılı: 'kendiliğinden işleniyor' / 'tasarıma işleniyor' makalede yok. Makalede kullanıcı Connectors ile notu bağlayıp ajana istemle not eklettiriyor. Kapak, ses, altyazı ve açıklamada ajanın kendi kendine yaptığı izlenimi veriliyor.; Kapak ve kanca ile ekrandaki görsel uyuşmuyor: izleyici toplantı notu beklerken mantar görseli görüyor, bu yanıltıcı."
+  },
+  {
+    "id": "2026-11-12_google",
+    "date": "2026-11-12",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "news",
+    "headline": "Arabada yapay zekâ sohbeti",
+    "spoken_hook": "Google yapay zekâ asistanını arabaya getirdi.",
+    "cta": "iPhone'lu arkadaşına gönder.",
+    "duration_sec": 22.4,
+    "words": 36,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-12_kippy-ai",
+    "date": "2026-11-12",
+    "kind": "tool",
+    "tool": "Kippy AI",
+    "hook_pattern": "pain",
+    "headline": "Konuşmaya gelince donuyorsun",
+    "spoken_hook": "Kelimeleri biliyorsun ama konuşurken donup kalıyorsun.",
+    "cta": "Dil öğrenen arkadaşına gönder.",
+    "duration_sec": 22.5,
+    "words": 41,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-12_relay",
+    "date": "2026-11-12",
+    "kind": "tool",
+    "tool": "Relay",
+    "hook_pattern": "pain",
+    "headline": "Belgeni önce karşının ajanı okur",
+    "spoken_hook": "Belgeni önce karşıdaki kişinin ajanı okuyor.",
+    "cta": "Belge gönderen arkadaşına at.",
+    "duration_sec": 21.5,
+    "words": 38,
+    "status": "rejected: Kapaktaki ve ilk karelerdeki kanıt kutusu, sitenin İngilizce slogan kartı ('Your AI writes the doc. Their AI reads it first.'). Ürünün arayüzü, çıktısı veya sonucu yok. Slogan kanıt sayılmaz.; Kanıt kutusundaki metin yarım kesilmiş: 'Relay gives their agent' cümlesi bitmeden duruyor. Kesik blok kabul edilmez.; Kanıt metninde 'why this price' ifadesi geçiyor. Fiyat tutarı yok ama sayfa politikası açısından riskli."
+  },
+  {
+    "id": "2026-11-12_mister-blocks",
+    "date": "2026-11-12",
+    "kind": "tool",
+    "tool": "Mister Blocks",
+    "hook_pattern": "result",
+    "headline": "Elindeki legolardan yapı çıkıyor",
+    "spoken_hook": "Dağınık legolarını çek, yapay zekâ yapı önersin.",
+    "cta": "Lego seven arkadaşına gönder.",
+    "duration_sec": 20.3,
+    "words": 40,
+    "status": "produced"
   }
 ]

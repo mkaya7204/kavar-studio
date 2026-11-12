@@ -525,5 +525,45 @@
   "title": "MiniMax H3-Image: Bringing 4K Image Generation into the 10-Second Era",
   "date": "2026-11-10T16:23:20+00:00",
   "summary": "Today, we're releasing MiniMax H3-Image, an open-weight image generation model built on H3. It supports text-to-image generation, reference-based generation, and image editing."
+ },
+ "https://x.ai/news/grok-bot-1-0": {
+  "title": "Introducing Grok Bot 1.0",
+  "date": "2026-11-02T00:00:00+00:00",
+  "summary": "Bots now work with your whole team, take on work without being asked, and get more done, faster."
+ },
+ "https://x.ai/news/grok-imagine-api": {
+  "title": "Grok Imagine API",
+  "date": "2026-01-28T00:00:00+00:00",
+  "summary": "State-of-the-art video generation across quality, cost, and latency."
+ },
+ "https://x.ai/news/series-e": {
+  "title": "xAI Raises $20B Series E",
+  "date": "2026-01-06T00:00:00+00:00",
+  "summary": "xAI is rapidly accelerating its progress in building advanced AI."
+ },
+ "https://x.ai/news/grok-business": {
+  "title": "Introducing Grok Business and Grok Enterprise",
+  "date": "2025-12-30T00:00:00+00:00",
+  "summary": "The best assistant in the world is now Enterprise ready."
+ },
+ "https://x.ai/news/grok-collections-api": {
+  "title": "Grok Collections API",
+  "date": "2025-12-22T00:00:00+00:00",
+  "summary": "State-of-the-art RAG system built directly into our API."
+ },
+ "https://x.ai/news/us-gov-dept-of-war": {
+  "title": "Supporting the DOW's mission with AI",
+  "date": "2025-12-22T00:00:00+00:00",
+  "summary": "xAI is proud to be selected by the US Department of War to deliver Frontier AI"
+ },
+ "https://x.ai/news/grok-voice-agent-api": {
+  "title": "Grok Voice Agent API",
+  "date": "2025-12-17T00:00:00+00:00",
+  "summary": "Bringing the power of Grok Voice to all developers."
+ },
+ "https://x.ai/news/el-salvador-partnership": {
+  "title": "xAI and El Salvador Pioneer the World's First Nationwide AI Education Program",
+  "date": "2025-12-11T00:00:00+00:00",
+  "summary": "Announcing Our Transformative Partnership with the Government of El Salvador."
  }
 }

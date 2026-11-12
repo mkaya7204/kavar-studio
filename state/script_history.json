@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Google",
-    "hook": "Ödevde cevap değil yol gösterir",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ ödevde cevap yerine yol gösteriyor.",
-    "cta": "Bunu öğretmen arkadaşına gönder."
-  },
-  {
-    "tool": "Cardboard AI",
-    "hook": "Video yazdığın gibi kurgulanıyor",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ videonu yazdığın gibi kurguluyor.",
-    "cta": "Bunu içerik üreten arkadaşına at."
-  },
-  {
-    "tool": "Google",
-    "hook": "Widget'ı artık tarif ediyorsun",
-    "pattern": "result",
-    "spoken_hook": "Widget'ı artık tarif ederek yapıyorsun.",
-    "cta": "Android'li arkadaşına gönder."
-  },
-  {
-    "tool": "MiniMax H3-Image",
-    "hook": "Yapay zekâ simit çizebilir mi?",
-    "pattern": "question",
-    "spoken_hook": "Yapay zekâ gerçek bir simitçi çizebilir mi?",
-    "cta": "Tasarımcı arkadaşına at."
-  },
-  {
     "tool": "Operum",
     "hook": "Tarif et, ajanlar kursun",
     "pattern": "result",
@@ -68,5 +40,33 @@
     "pattern": "result",
     "spoken_hook": "Toplantı notların tasarımın yanına kendiliğinden işleniyor.",
     "cta": "Tasarımcı arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Arabada yapay zekâ sohbeti",
+    "pattern": "news",
+    "spoken_hook": "Google yapay zekâ asistanını arabaya getirdi.",
+    "cta": "iPhone'lu arkadaşına gönder."
+  },
+  {
+    "tool": "Kippy AI",
+    "hook": "Konuşmaya gelince donuyorsun",
+    "pattern": "pain",
+    "spoken_hook": "Kelimeleri biliyorsun ama konuşurken donup kalıyorsun.",
+    "cta": "Dil öğrenen arkadaşına gönder."
+  },
+  {
+    "tool": "Relay",
+    "hook": "Belgeden sonra soru yağıyor",
+    "pattern": "pain",
+    "spoken_hook": "Belgeyi gönderiyorsun, arkasından soru yağıyor.",
+    "cta": "Belge gönderen arkadaşına at."
+  },
+  {
+    "tool": "Mister Blocks",
+    "hook": "Elindeki legolardan yapı çıkıyor",
+    "pattern": "result",
+    "spoken_hook": "Dağınık legolarını çek, yapay zekâ yapı önersin.",
+    "cta": "Lego seven arkadaşına gönder."
   }
 ]
