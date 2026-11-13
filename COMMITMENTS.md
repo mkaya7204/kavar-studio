@@ -13,8 +13,8 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 |---|---|---|---|
 | 1 | D-66: the same news from a second blog and test-run / reserve tools never come back | KODDA | 11-13 production log: no repeat of a used title or tool |
 | 2 | D-67: a story the editor never answered stays unused; `fetch` warns when cron-job.org didn't start the day | KODDA | first unanswered editor / first late morning in a log |
-| 3 | D-67: cloud packages pinned (constraints.txt) | KODDA | checks 43188366172 installed them; 11-13 production run must install the same |
-| 4 | D-68: a tool's site is searched once (cache) | KODDA | fewer `tool_site_search` rows in state/claude_usage.jsonl after 11-13 |
+| 3 | D-67: cloud packages pinned (constraints.txt) | DONE | 11-13 production run 43357936647 installed on the pins and succeeded |
+| 4 | D-68: a tool's site is searched once (cache) | DONE | site searches 34 (11-12) -> 16 (11-13 run 43357936647) in state/claude_usage.jsonl; fewer `tool_site_search` rows in state/claude_usage.jsonl after 11-13 |
 | 5 | D-68: voice.yml learns a new name instead of stopping | KODDA | the next voice.yml run with a new name |
 | 6 | D-68: every metrics row carries its post's folder | YAPILIYOR | from the 11-13 "yükle" on, by hand each morning |
 | 7 | D-69: the crow's sign-off at the end of every Reel (the crow the user saw on the logo page) | CEVAP BEKLİYOR | branch d69-karga; render 43286044454 last frame = the logo page's crow, inside the frame, sent to the user 11-12; editor notes nothing on it; merge on the user's OK |
