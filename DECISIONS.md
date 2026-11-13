@@ -658,6 +658,8 @@ the decisions that are currently locked; this file explains why they exist and h
   follows.
 - **Shown to the user before it goes out** (new format, CLAUDE.md §1.10): branch d69-karga, a silent rerender of a
   past Reel, its last frame and the editor's verdict.
+- **Approved 2026-11-13** (the user, after the last frame of render 43286044454: "Hepsine izin veriyorum") ->
+  merged to main.
 - **Guarded by:** tests/test_d69_karga.py, tests/test_decisions.py (outro pill).
 - **Not yet seen:** a production Reel with the sign-off.
 
