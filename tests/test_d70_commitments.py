@@ -36,6 +36,9 @@ def test_every_session_starts_with_the_list_and_the_rule():
     # the SessionStart hook in .claude/settings.json needs the user's OK to switch on (a settings change);
     # until then the hook script must exist and print the list
     assert (ROOT / ".claude" / "hooks" / "show_commitments.py").exists()
+    # switched on 2026-11-13 with the user's OK ("Hepsine izin veriyorum")
+    settings = (ROOT / ".claude" / "settings.json").read_text(encoding="utf-8")
+    assert "SessionStart" in settings and "show_commitments.py" in settings
     claude = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
     assert "Every promise goes into `COMMITMENTS.md`" in claude
     decisions = (ROOT / "DECISIONS.md").read_text(encoding="utf-8")

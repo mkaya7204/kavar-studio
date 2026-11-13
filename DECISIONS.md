@@ -663,6 +663,7 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Built:** COMMITMENTS.md is the promise list (20 lines, status + evidence); CLAUDE.md §0 makes it binding; a
   SessionStart hook script (.claude/hooks/show_commitments.py)
   prints it; switching it on in .claude/settings.json was refused to Claude (a settings change needs the user's OK),
-  so it is OFF until the user approves.
+  so it was OFF until the user approved. **2026-11-13 the user: "Hepsine izin veriyorum" -> ON** (SessionStart in
+  .claude/settings.json).
 - **Guarded by:** tests/test_d70_commitments.py: dropping one of the 11-12 decisions from the list, an unknown
   status, or removing the hook / rule turns checks red.
