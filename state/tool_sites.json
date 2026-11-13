@@ -1,0 +1,82 @@
+{
+ "youartdesktopapp": {
+  "url": "https://youart.ai/",
+  "description": "Generate AI images and videos free on YouArt — Free Mode runs select models at zero credits. Unlimited models, templates and workflows, plus a path to monetize.",
+  "date": "2026-11-13"
+ },
+ "l": {
+  "url": "https://letter.dev/commandl",
+  "description": "Press ⌘L on your own site. Type over the words, circle what’s wrong or talk it through. Then, Letter opens the pull request.",
+  "date": "2026-11-13"
+ },
+ "yogurt": {
+  "url": "https://www.yogurt.so/",
+  "description": "Yogurt takes meeting notes with AI that runs locally on Mac, Windows and Linux. No bot joins the call. Free and open source.",
+  "date": "2026-11-13"
+ },
+ "hoyformac": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-13"
+ },
+ "neurahq": {
+  "url": "https://neurahq.ai/",
+  "description": "An AI agent for consumer brands that recommends, sells and supports, remembers every shopper, and sounds like your brand on every channel.",
+  "date": "2026-11-13"
+ },
+ "insight7voiceaiagents": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-13"
+ },
+ "threedev": {
+  "url": "https://three.dev/",
+  "description": "Before your users tell you. three.dev scores your live traffic and lists what fails.",
+  "date": "2026-11-13"
+ },
+ "harnessmemory": {
+  "url": "https://harnessrouter.ai/harness-memory",
+  "description": "Agents that remember: long-term memory built into HarnessRouter, recalled in any later session and shared by agents on different harnesses.",
+  "date": "2026-11-13"
+ },
+ "pluraisimulation": {
+  "url": "https://www.plurai.ai/",
+  "description": "Agentic world simulation and model post-training that continuously optimize intelligence and cost.",
+  "date": "2026-11-13"
+ },
+ "cloudwaysvelocity": {
+  "url": "https://www.cloudways.com/en/velocity.php",
+  "description": "With Cloudways Managed Node.js hosting, deploy production-ready Node.js apps in minutes on managed infrastructure. Enterprise CDN, DDoS protection, malware protection, and flat pricing from $20.",
+  "date": "2026-11-13"
+ },
+ "crossfade": {
+  "url": "https://crossfade.company/",
+  "description": "Crossfade is a plugin for Figma design that connects your coding agent, such as Claude Code, to the file you have open. Real layers, on your own machine, with no MCP limits.",
+  "date": "2026-11-13"
+ },
+ "klang": {
+  "url": "https://klang.ai/",
+  "description": "Klang captures, transcribes, and analyzes conversations that matter. European AI for teams that need searchable insights, traceability, and data control.",
+  "date": "2026-11-13"
+ },
+ "leasewire": {
+  "url": "https://www.getleasewire.com/",
+  "description": "Your own Excel model, filled in. Every value cited to its page and checked before delivery.",
+  "date": "2026-11-13"
+ },
+ "marqly70": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-13"
+ },
+ "jot20": {
+  "url": "https://sayjot.xyz/",
+  "description": "Jot is a local-first notes inbox for your Mac. Capture anything in a keystroke and it lands as a plain markdown file in a folder you own. One-time, from $9 launch for 1 Mac ($29), $24 for 3 ($87), $69 for 10 ($290). 7-day refund.",
+  "date": "2026-11-13"
+ },
+ "spacefastbyautomattic": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-13"
+ }
+}

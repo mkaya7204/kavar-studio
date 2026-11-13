@@ -2354,5 +2354,73 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-13",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-13",
+  "stage": "news",
+  "kind": "news",
+  "item": "Gemini 4 Hydrogen: everyday coding and agentic workflows for developers",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-13",
+  "stage": "news",
+  "kind": "news",
+  "item": "Microsoft Research Focus – Edition #98",
+  "rendered": true,
+  "host": "microsoft.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "Haber çok ince: kaynak, podcast/bülten sayfası; sadece 5 başlık ve bir kısa tanıtım var, hiçbir sonuç, yöntem veya sayı yok.; Kapak ve hikâye 'matematik atılımı / problem çözüldü' diyor ama kaynak yalnızca bağlantı başlığında 'Solving a 31-year-old grand challenge' diyor; ayrıntı yok. Slayt 4 bunu k"
+ },
+ {
+  "date": "2026-11-13",
+  "stage": "news",
+  "kind": "news",
+  "item": "LLMON: An LLM-Native Markup Language, now in Granite 4.1 3B and 8B",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-13",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "YouArt Desktop App",
+  "rendered": true,
+  "host": "youart.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-13",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Yogurt",
+  "rendered": true,
+  "host": "yogurt.so",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

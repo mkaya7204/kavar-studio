@@ -1,26 +1,5 @@
 [
   {
-    "tool": "Operum",
-    "hook": "Tarif et, ajanlar kursun",
-    "pattern": "result",
-    "spoken_hook": "Ne istediğini yaz, yapay zekâ ajanları kursun.",
-    "cta": "Fikri olan arkadaşına gönder."
-  },
-  {
-    "tool": "Maxma",
-    "hook": "Reklam ekibin yapay zekâ olsa",
-    "pattern": "curiosity",
-    "spoken_hook": "Reklam ekibin tek bir yapay zekâ olsa?",
-    "cta": "Reklam yöneten arkadaşına gönder."
-  },
-  {
-    "tool": "Latch.ai",
-    "hook": "Göster, muhasebeyi o yapsın",
-    "pattern": "result",
-    "spoken_hook": "Muhasebe işini göster, yapay zekâ senin yerine yapsın.",
-    "cta": "Muhasebecine gönder, işine yarar."
-  },
-  {
     "tool": "Google",
     "hook": "Konuşman temiz yazıya dönüyor",
     "pattern": "result",
@@ -68,5 +47,26 @@
     "pattern": "result",
     "spoken_hook": "Dağınık legolarını çek, yapay zekâ yapı önersin.",
     "cta": "Lego seven arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Karışık soru, tek cümle",
+    "pattern": "result",
+    "spoken_hook": "Karışık soruyu Google'a tek cümlede sorabilirsin.",
+    "cta": "Bunu çok araştıran arkadaşına gönder."
+  },
+  {
+    "tool": "YouArt Desktop App",
+    "hook": "Görsel ve video tek yerden",
+    "pattern": "result",
+    "spoken_hook": "Yapay zekâyla görsel ve video tek yerden çıkıyor.",
+    "cta": "Kreatif ekibine gönder."
+  },
+  {
+    "tool": "Yogurt",
+    "hook": "Toplantıya bot girmesin",
+    "pattern": "pain",
+    "spoken_hook": "Toplantıya giren not botundan hâlâ rahatsız mısın?",
+    "cta": "Çok toplantıya giren arkadaşına gönder."
   }
 ]

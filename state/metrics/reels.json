@@ -1494,5 +1494,44 @@
     "duration_sec": 20.3,
     "words": 40,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-13_google",
+    "date": "2026-11-13",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Karışık soru, tek cümle",
+    "spoken_hook": "Karışık soruyu Google'a tek cümlede sorabilirsin.",
+    "cta": "Bunu çok araştıran arkadaşına gönder.",
+    "duration_sec": 20.4,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-13_youart-desktop-app",
+    "date": "2026-11-13",
+    "kind": "tool",
+    "tool": "YouArt Desktop App",
+    "hook_pattern": "result",
+    "headline": "Görsel ve video tek yerden",
+    "spoken_hook": "Yapay zekâyla görsel ve video tek yerden çıkıyor.",
+    "cta": "Kreatif ekibine gönder.",
+    "duration_sec": 22.9,
+    "words": 43,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-13_yogurt",
+    "date": "2026-11-13",
+    "kind": "tool",
+    "tool": "Yogurt",
+    "hook_pattern": "pain",
+    "headline": "Toplantıya bot girmesin",
+    "spoken_hook": "Toplantıya giren not botundan hâlâ rahatsız mısın?",
+    "cta": "Çok toplantıya giren arkadaşına gönder.",
+    "duration_sec": 23.3,
+    "words": 40,
+    "status": "produced"
   }
 ]

@@ -565,5 +565,45 @@
   "title": "xAI and El Salvador Pioneer the World's First Nationwide AI Education Program",
   "date": "2025-12-11T00:00:00+00:00",
   "summary": "Announcing Our Transformative Partnership with the Government of El Salvador."
+ },
+ "https://x.ai/news/grok-4-1-fast": {
+  "title": "Grok 4.1 Fast and Agent Tools API",
+  "date": "2025-11-19T00:00:00+00:00",
+  "summary": "Bringing the next generation of tool-calling agents to the xAI API"
+ },
+ "https://x.ai/news/grok-goes-global": {
+  "title": "Grok goes Global with KSA",
+  "date": "2025-11-19T00:00:00+00:00",
+  "summary": "Announcing Our Landmark Partnership with Saudi Arabia and HUMAIN"
+ },
+ "https://x.ai/news/grok-4-1": {
+  "title": "Grok 4.1",
+  "date": "2025-11-17T00:00:00+00:00",
+  "summary": "Grok 4.1 is now available to all users on grok.com, 𝕏, and the iOS and Android apps. It is rolling out immediately in Auto mode and can be selected explicitly as “Grok 4.1” in the model picker."
+ },
+ "https://x.ai/news/onegov": {
+  "title": "Expanding xAI for Government with GSA OneGov",
+  "date": "2025-09-25T00:00:00+00:00",
+  "summary": "Expanding ‘xAI For Government’ with more accessible AI tools for the Federal Government"
+ },
+ "https://x.ai/news/grok-4-fast": {
+  "title": "Grok 4 Fast",
+  "date": "2025-09-19T00:00:00+00:00",
+  "summary": "Pushing the Frontier of Cost-Efficient Intelligence"
+ },
+ "https://x.ai/news/grok-code-fast-1": {
+  "title": "Grok Code Fast 1",
+  "date": "2025-08-28T00:00:00+00:00",
+  "summary": "We're thrilled to introduce grok-code-fast-1, a speedy and economical reasoning model that excels at agentic coding."
+ },
+ "https://x.ai/news/government": {
+  "title": "Announcing xAI for Government",
+  "date": "2025-07-14T00:00:00+00:00",
+  "summary": "We are excited to announce xAI For Government – a suite of frontier AI products available first to United States Government customers."
+ },
+ "https://x.ai/news/grok-4": {
+  "title": "Grok 4",
+  "date": "2025-07-09T00:00:00+00:00",
+  "summary": "Grok 4 is the most intelligent model in the world. It includes native tool use and real-time search integration, and is available now to SuperGrok and Premium+ subscribers, as well as through the xAI API. We are also introducing a new SuperGrok Heavy tier with access to Grok 4 Heavy - the most powerful version of Grok 4."
  }
 }
