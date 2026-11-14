@@ -760,3 +760,19 @@ the decisions that are currently locked; this file explains why they exist and h
   one story per brand family a day. New company feeds (checked live): news Microsoft 365, Windows, Character.AI,
   Opera; guide Grammarly, Duolingo, Dropbox, Mozilla.
 - **Guarded by:** tests/test_d75_cesitlilik.py.
+
+## D-76 · 2026-11-14 · Many news channels find the stories; the company's own page tells them
+- **The user:** "deneme ne zaman, bir de senden kaynak çoğalt dediğim yine sadece bilindik isimleri takibe almışsın,
+  bunun neresi çoklu kaynak" (D-75 had added only big companies' blogs), then, on the proposal: "Tamam da işte bir
+  çok haber kanalı takip edilecek, ilgili haberin kaynağına gidip o şirketin kendi sayfasından, görsel olarak da
+  uygun bulunmazsa da ilgili şirketin herhangi görselleri alınarak haber yapılacak".
+- **Built:** news_sources.json "discovery_feeds": 15 channels checked live 11-14 (Techmeme, The Verge AI, TechCrunch AI,
+  VentureBeat AI, Ars Technica AI, MIT Technology Review AI, Wired AI, Engadget, The Decoder, MarkTechPost, Google
+  News AI, Reddit r/artificial, Webtekno, ShiftDelete, DonanımHaber). src/discovery.py discover(): their AI stories of
+  the last 48 h, unused, one per story (counted by how many channels ran it). They are ranked with the companies' own
+  blogs; before a found story is made, company_page() (Claude WebSearch + WebFetch, at most 4 a run) finds the
+  company's own announcement page and checked_page() refuses news sites and pages that don't carry the story. The
+  carousel is written ONLY from that page (§1.9 stays: no press-site photos). No own page = skipped. If the page has
+  no picture, article_capture.company_cover() takes the same company's own share image from its home page, else the
+  screenshot of its own page.
+- **Guarded by:** tests/test_d76_kanallar.py; tests/conftest.py keeps every test offline (no channel, no Show HN).

@@ -34,7 +34,8 @@ from carousel_renderer import RenderError  # noqa: E402
 from content_ranker import rank  # noqa: E402
 from editor_review import review_carousel, review_reel  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
-from news_fetcher import fetch_news, mark_used, unmark  # noqa: E402
+from news_fetcher import fetch_news, load_history, mark_used, unmark  # noqa: E402
+from discovery import company_page, discover  # noqa: E402
 from model_trial import testable_first  # noqa: E402
 from news_writer import NewsScript, revise_for_editor  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
@@ -169,11 +170,17 @@ FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (on
 
 
 def produce_news_items(count: int) -> list[dict]:
-    items, chosen_titles, chosen_companies, tries = [], [], set(), 0
+    items, chosen_titles, chosen_companies, tries, lookups = [], [], set(), 0, 0
     blocked = set(failures.blocked_hosts())  # D-39: hosts that kept failing are skipped for 7 days
     # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first; then the stories
     # that reach more people (D-29, src/content_ranker.py)
-    candidates = rank(testable_first(fetch_news(20)), "news_carousel")  # 20: more sources since D-29
+    # D-76: stories the news channels ran, also of companies we don't follow; written only from the company's page
+    try:
+        found = discover(20)
+    except Exception as exc:  # noqa: BLE001  the channels are extra; the companies' own blogs still work
+        log(f"discovery failed: {type(exc).__name__}: {str(exc)[:200]}")
+        found = []
+    candidates = rank(testable_first(fetch_news(20)) + found, "news_carousel")  # 20: more sources since D-29
     log(f"news: {len(candidates)} fresh candidates")
     for c in candidates:
         if r := c.get("rank"):
@@ -200,6 +207,20 @@ def produce_news_items(count: int) -> list[dict]:
         if any(_same_story(item["title"], t) for t in chosen_titles):
             log(f"   skip (same story): {item['title']}")
             continue
+        if item.get("discovered"):  # D-76: to the company's own page, or not at all
+            if lookups >= DISCOVERY_LOOKUPS:
+                continue
+            lookups += 1
+            page = company_page(item)
+            mark_used(item["url"])  # the channel's article is never looked up twice
+            if not page or page["url"] in load_history():
+                log(f"   skip (no own page of the company, found on {item['source']}): {item['title']}")
+                continue
+            log(f"   found on {item['source']} ({item['mentions']} channels); the company's own page: {page['url']}")
+            item = {**item, "url": page["url"], "found_via": item["source"], "source": page["company"] or item["source"]}
+            host = urlsplit(item["url"]).hostname or ""
+            if host in blocked:
+                continue
         log(f"news: {item['source']} - {item['title']}")
         tries += 1
         try:
@@ -272,6 +293,8 @@ def produce_guide_carousel() -> dict | None:
         failures.record("news", "guide_carousel", item["title"], "; ".join(problems), item["url"])
     return None
 
+
+DISCOVERY_LOOKUPS = 4  # D-76: company-page searches per run for stories found on the news channels
 
 REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool

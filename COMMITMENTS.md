@@ -33,6 +33,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 20 | Reserve Skillbox + ElevenLabs Reels can be voiced only until 2026-11-14 | KODDA | artifact of run 43158731682 expires |
 | 21 | A, more sources (user 11-14 "başka kaynaklardan da baksan"): tool candidates also from Hacker News Show HN with their discussion | YAPILIYOR | D-74 on branch deneyenler (tests pass); next: dry run after the 11-14 production, show the user |
 | 22 | More sources for every slot, no story twice (any blog, any wording), not always the same brand (user 11-14 "hep Gemini olması") | YAPILIYOR | D-75 on branch deneyenler (tests pass); next: dry run after the 11-14 production, then a week of queues showing the brand mix |
+| 23 | Many news channels (press, Turkish sites, Reddit, Google News) find stories; text and pictures from the company's own page, else the same company's own pictures (user 11-14 "bir çok haber kanalı takip edilecek") | YAPILIYOR | D-76 on branch deneyenler (tests pass); next: full dry run after the 11-14 production, show the user |
 
 What Claude cannot promise: reach, follows or any result on Instagram. Claude can promise that each line above is
 built, tested in the cloud, shown to the user and reported honestly, and that a usage limit only pauses the list.
