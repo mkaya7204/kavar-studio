@@ -72,3 +72,11 @@ def test_more_companies_feed_the_slots():
     assert len(google) / len(c["feeds"]) < 0.35
     daily = (ROOT / "daily.py").read_text(encoding="utf-8")
     assert "recent_posts.record(queue, queue_day())" in daily and 'r.get("brand") or r.get("company")' in daily
+
+
+def test_morning_reel_alone_does_not_finish_the_rest():
+    """11-14 production: only the 07:30 guide Reel was ready (usage limit), yet the rest was marked done, so no
+    later run refilled the 4 empty slots."""
+    d = (ROOT / "daily.py").read_text(encoding="utf-8")
+    i = d.index('_mark_done("rest")')
+    assert 'q.get("concept") == "guide" and q["kind"] == "reel"' in d[i - 400:i]

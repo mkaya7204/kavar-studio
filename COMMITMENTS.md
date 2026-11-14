@@ -17,7 +17,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 4 | D-68: a tool's site is searched once (cache) | DONE | site searches 34 (11-12) -> 16 (11-13 run 43357936647) in state/claude_usage.jsonl; fewer `tool_site_search` rows in state/claude_usage.jsonl after 11-13 |
 | 5 | D-68: voice.yml learns a new name instead of stopping | KODDA | the next voice.yml run with a new name |
 | 6 | D-68: every metrics row carries its post's folder | YAPILIYOR | from the 11-13 "yükle" on, by hand each morning |
-| 7 | D-69: the crow's sign-off at the end of every Reel (the crow the user saw on the logo page) | KODDA | user approved 11-13 ("Hepsine izin veriyorum"), merged; done when the first production Reel ends with the crow |
+| 7 | D-69: the crow's sign-off at the end of every Reel (the crow the user saw on the logo page) | DONE | production run 43550831577 (11-14): the 07:30 guide Reel's review sheet ends with the crow, "YARIN YENİSİNİ GETİRİRİM." |
 | 8 | C: 1 of 3 daily Reels is a 10-12 s single-point Reel, marked "KISA", named in every report, compared after a week | YAPILIYOR | D-71 dry run 43534664742: KISA Reel Expo Simulators 11.9 s, editor publish; 43537245307: KISA Burnstate approved. Waits for the user's OK to merge |
 | 9 | D: 18:00 = a saveable guide carousel (a known AI product's feature, step by step), not news | YAPILIYOR | D-72 dry run 43536406394: guide carousel (Workspace skills, 9 slides, steps, Kaydet) editor publish, queued 18:00; first page (Gemini in Chrome) rejected for invented steps. Waits for the user's OK |
 | 10 | Plan 1: the writer gets the page text + what the proof picture shows + a required "angle" | BAŞLAMADI | plan https://claude.ai/artifact/8nuzgbgVwnEzCJ1t1cTnMN |
@@ -34,6 +34,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 21 | A, more sources (user 11-14 "başka kaynaklardan da baksan"): tool candidates also from Hacker News Show HN with their discussion | YAPILIYOR | D-74 on branch deneyenler (tests pass); next: dry run after the 11-14 production, show the user |
 | 22 | More sources for every slot, no story twice (any blog, any wording), not always the same brand (user 11-14 "hep Gemini olması") | YAPILIYOR | D-75 on branch deneyenler (tests pass); next: dry run after the 11-14 production, then a week of queues showing the brand mix |
 | 23 | Many news channels (press, Turkish sites, Reddit, Google News) find stories; text and pictures from the company's own page, else the same company's own pictures (user 11-14 "bir çok haber kanalı takip edilecek") | YAPILIYOR | D-76 on branch deneyenler (tests pass); next: full dry run after the 11-14 production, show the user |
+| 24 | Test runs never take the Claude usage that production needs (11-14: three night dry runs + this session hit the limit at 06:30 TRT, the 11-15 day got 1 of 5 posts); the morning guide Reel alone no longer marks the rest done | YAPILIYOR | marker fix on branch deneyenler; production rest re-run 43568521370; rule: no dry run between 00:00 UTC and the end of production |
 
 What Claude cannot promise: reach, follows or any result on Instagram. Claude can promise that each line above is
 built, tested in the cloud, shown to the user and reported honestly, and that a usage limit only pauses the list.

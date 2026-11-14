@@ -768,7 +768,9 @@ def _produce_rest(slots: list[dict], only: str) -> None:
         log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]" + (" KISA" if q.get("variant") else ""))
     # the rest counts as done only when something is ready: a crashed or empty run leaves room for
     # the later runs (08:00 cron-job.org, produce.yml backups) to try again
-    if only in ("", "rest") and any(q["status"] == "ready" for q in queue):
+    # 11-14: the morning guide Reel alone made the rest look done, so no later run refilled 4 empty slots
+    if only in ("", "rest") and any(q["status"] == "ready" and q is not morning
+                                    and not (q.get("concept") == "guide" and q["kind"] == "reel") for q in queue):
         _mark_done("rest")
 
 
