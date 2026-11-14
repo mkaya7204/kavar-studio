@@ -30,7 +30,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 17 | New post look, decided together with the crow drawing | KULLANICIDA | waits for the drawing |
 | 18 | Instagram API token (posting and metrics without this PC) | KULLANICIDA | Meta phone verification |
 | 19 | cron-job.org token expiry date | KULLANICIDA | the user looks it up |
-| 20 | Reserve Skillbox + ElevenLabs Reels can be voiced only until 2026-11-14 | KODDA | artifact of run 43158731682 expires |
+| 20 | Reserve Skillbox + ElevenLabs Reels can be voiced only until 2026-11-14 | KAÇTI | 11-14 07:30 UTC: run 43158731682 has 0 artifacts and no release; they can no longer be voiced. Empty Reel slots of 11-15 go to the dry run 43571295790's approved Reels, with the user's OK |
 | 21 | A, more sources (user 11-14 "başka kaynaklardan da baksan"): tool candidates also from Hacker News Show HN with their discussion | YAPILIYOR | D-74 on branch deneyenler (tests pass); next: dry run after the 11-14 production, show the user |
 | 22 | More sources for every slot, no story twice (any blog, any wording), not always the same brand (user 11-14 "hep Gemini olması") | YAPILIYOR | D-75 on branch deneyenler (tests pass); next: dry run after the 11-14 production, then a week of queues showing the brand mix |
 | 23 | Many news channels (press, Turkish sites, Reddit, Google News) find stories; text and pictures from the company's own page, else the same company's own pictures (user 11-14 "bir çok haber kanalı takip edilecek") | YAPILIYOR | D-76 on branch deneyenler (tests pass); next: full dry run after the 11-14 production, show the user |
