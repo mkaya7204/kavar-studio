@@ -20,6 +20,12 @@ permissions:
   contents: write  # D-49: deliver.sh
   actions: read
 
+# 11-14: two voice runs at once collided on their final state push (HiringNow's used tool was lost);
+# they now wait for each other
+concurrency:
+  group: voice
+  cancel-in-progress: false
+
 jobs:
   voice:
     runs-on: ubuntu-24.04

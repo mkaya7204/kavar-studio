@@ -296,3 +296,12 @@ def test_a_testable_repeat_is_skipped_too():
     """11-14 dry run: Gemini 4 Hydrogen was marked repeat but written first because it was testable."""
     d = (Path(__file__).resolve().parents[1] / "daily.py").read_text(encoding="utf-8")
     assert 'if r and (r["repeat"] or (not r["fits"] and not item.get("testable"))):' in d
+
+
+def test_test_runs_never_take_the_production_nights_usage_and_voice_runs_queue():
+    """11-14: night dry runs emptied the Claude limit before production; two voice runs collided on their push."""
+    wf = Path(__file__).resolve().parents[1] / ".github" / "workflows"
+    produce = (wf / "produce.yml").read_text(encoding="utf-8")
+    assert "dry runs are refused 00:00-07:00 UTC" in produce
+    voice = (wf / "voice.yml").read_text(encoding="utf-8")
+    assert "concurrency:\n  group: voice" in voice
