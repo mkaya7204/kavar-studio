@@ -31,7 +31,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 18 | Instagram API token (posting and metrics without this PC) | KULLANICIDA | Meta phone verification |
 | 19 | cron-job.org token expiry date | KULLANICIDA | the user looks it up |
 | 20 | Reserve Skillbox + ElevenLabs Reels can be voiced only until 2026-11-14 | KODDA | artifact of run 43158731682 expires |
-| 25 | D-77: the product's name + its company's logo as the LAST RESORT for a Reel's picture: screens first, the fixer edits weak pictures, the next tool, only then name / logo (user 11-14 "en son çare") | YAPILIYOR | branch logo-yeter b6e2f51; Reel dry run 43593954177; merge to main only with the user's OK |
+| 25 | D-77: the product's name + its company's logo as the LAST RESORT for a Reel's picture: screens first, the fixer edits weak pictures, the next tool, only then name / logo (user 11-14 "en son çare") | KODDA | user "Tamam" 11-14, merged to main 9493c45; Reel dry run 43594460668: HiringNow (fixed by the agent) and Antelog approved with real product screens, the last resort was not needed; done when a production log shows the order working |
 | 26 | Tool Reels also fed by the news channels (new AI agents / assistants, launches) and GitHub (new AI projects), not only Product Hunt / Show HN (user 11-14 "bütün o haber kaynaklarından beslensek") | BAŞLAMADI | plan shown with the D-77 Reel dry run 43594460668 result; built after the user decides |
 
 What Claude cannot promise: reach, follows or any result on Instagram. Claude can promise that each line above is
