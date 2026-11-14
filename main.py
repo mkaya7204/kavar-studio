@@ -24,6 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 
+from brand_picture import brand_picture  # noqa: E402  D-77
 from distribution import build_post  # noqa: E402
 from fetcher import fetch_latest_tools  # noqa: E402
 from hyperframes_builder import BuildError as HFBuildError  # noqa: E402
@@ -103,17 +104,21 @@ def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyper
         # D-36: the product's own screens (images further down the page, feature pages, GitHub README)
         capture["product_images"] = collect_product_images(capture.get("page_media"), TEMP_DIR / "product")
         print(f"   product screens: {len(capture['product_images'])}")
-        # D-38: a live tool with no real product screen is skipped (a hand-written --script is a person's call)
-        if not capture["product_images"] and script is None:
-            raise CaptureError("no product screens on the site (only marketing pages)")
-
-        # The hook's proof image must come from this site, without prices / logos / badges (the
-        # editor rejects those). No clean crop = skip the tool before spending a script or a voice.
-        proof = best_proof_crop(Path(capture.get("fullpage_path") or capture["screenshot_path"]),
-                                TEMP_DIR / "proof.png", f"{tool['tool_name']}: {tool.get('tag_line', '')}",
-                                extra=capture["product_images"])
+        # The hook's picture comes from this site: a product screen when there is a clean one, else (D-77, the
+        # user 2026-11-14: "önemli olan ürünün ismi bir de ... logosu") the product's own name / logo picture.
+        # D-38's skip of tools without product screens is lifted by that decision.
+        proof = None
+        if capture["product_images"]:
+            proof = best_proof_crop(Path(capture.get("fullpage_path") or capture["screenshot_path"]),
+                                    TEMP_DIR / "proof.png", f"{tool['tool_name']}: {tool.get('tag_line', '')}",
+                                    extra=capture["product_images"])
         if proof is None:
-            raise CaptureError("no clean proof image on the site (prices, logos or badges everywhere)")
+            proof = brand_picture(tool["website_url"], TEMP_DIR / "brand", capture.get("logo_path"),
+                                  capture.get("screenshot_path"))
+            tool = {**tool, "proof_kind": "brand"}
+            print(f"   D-77: no clean product screen, the picture is the product's own name / logo: {proof}")
+        if proof is None:
+            raise CaptureError("no picture of the product's own (no screen, share image, logo or home page)")
         capture["proof_path"] = str(proof)
 
     # the tool data, so the editor review (daily.py) can check the script's facts against it

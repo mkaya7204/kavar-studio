@@ -691,3 +691,9 @@ the decisions that are currently locked; this file explains why they exist and h
   .claude/settings.json).
 - **Guarded by:** tests/test_d70_commitments.py: dropping one of the 11-12 decisions from the list, an unknown
   status, or removing the hook / rule turns checks red.
+
+## D-77 (2026-11-14): the product's name and its company's logo are enough for the picture
+- **The user:** "Önemli olan ürünün ismi bir de haberi yapılacak şirketin veya firmanın işte logosu gerisi zaten haber içeriği ve video bilgine kalması" (after asking why the 11-15 Reel slots were empty).
+- **Why:** on 11-14 the 11:45 / 20:30 Reels were lost to "no product screens" (GAtrends) and to pictures that "did not prove the promise" (Pocket Studio, Gemini skills); the dry run 43571295790 lost all three KISA Reels the same way. It is the most common rejection in state/failures.json (no_proof).
+- **Built:** main.py: a tool without a clean product screen uses src/brand_picture.py (the product's own og:image / twitter:image, else its logo, else its home page); tool.json gets "proof_kind": "brand". D-38's skip is lifted. Editor rule (.claude/skills/reel-retention-editor/SKILL.md) and rules/editor_lessons.md: a name / logo / own share image is a valid picture, never rejected for not showing the promise; still rejected when it is another company's, shows prices, is broken or shows another product. CLAUDE.md §1.7 updated.
+- **Guarded by:** tests/test_product_images.py (no screen -> brand picture, none -> CaptureError; share image parsing; the editor rule text).

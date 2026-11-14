@@ -100,8 +100,9 @@ agreed decisions too often, so **this file is binding**. Follow it instead of im
    new names: `tts_engine.spoken_text` (hand-checked `rules/pronunciation.json` first, then names Claude
    learns before voicing, kept in `state/pronunciations.json`). Captions and screens keep the real spelling.
 7. **Schedule** (schedule.json). **D-40 (2026-10-22): all five slots** (D-38's two-slot day was reversed by
-   the user the same day). Tool Reels are on again; a tool with no real product screen is skipped before
-   any script (main.py, D-38). The morning guide Reel is made and uploaded as its own artifact
+   the user the same day). Tool Reels are on again. **D-77 (2026-11-14, the user: "önemli olan ürünün ismi bir de ... şirketin
+   logosu, gerisi haber içeriği ve video bilgisi"):** a tool with no product screen is no longer skipped; its own
+   name / logo picture is used (src/brand_picture.py), and the editor never rejects a picture for not showing the promise. The morning guide Reel is made and uploaded as its own artifact
    (`kavar-morning`) before the rest of the day, so `daily.py fetch` can take it while the run goes on.
    D-41: the guide Reel also reads news_sources.json `guide_feeds` (Google Workspace Updates), never the news.
    07:30 Reel, 11:45 Reel, 12:30 carousel, 18:00 carousel, 20:30
