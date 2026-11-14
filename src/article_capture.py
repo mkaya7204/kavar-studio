@@ -128,6 +128,38 @@ def _download(url: str, out: Path, max_mb: float) -> Path | None:
         return None
 
 
+def company_cover(url: str, out_dir: Path | str, page_png: str | None = None) -> str | None:
+    """D-76 (user 2026-11-14: "görsel olarak da uygun bulunmazsa ilgili şirketin herhangi görselleri alınarak"):
+    when the company's page has no picture, one of the SAME company's own: its home page's share image, else the
+    screenshot of its own page if it shows something. Never a news site's photo (§1.9)."""
+    out_dir = Path(out_dir)
+    parts = urlsplit(url)
+    for page in (f"{parts.scheme}://{parts.hostname}/",):
+        try:
+            r = requests.get(page, headers=HEADERS, timeout=20)
+            r.raise_for_status()
+        except requests.RequestException:
+            continue
+        m = re.search(r'<meta[^>]+(?:property|name)=["\'](?:og:image|twitter:image)["\'][^>]+content=["\']([^"\']+)',
+                      r.text, re.I) or re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)='
+                                                 r'["\'](?:og:image|twitter:image)["\']', r.text, re.I)
+        if m and (raw := _download(urljoin(page, m.group(1)), out_dir / "cover_raw", 15)):
+            try:
+                with Image.open(raw) as im:
+                    if im.width >= 600:
+                        im.convert("RGB").save(out_dir / "cover.jpg", quality=94)
+                        return str(out_dir / "cover.jpg")
+            except OSError:
+                pass
+            finally:
+                raw.unlink(missing_ok=True)
+    if page_png and Path(page_png).exists() and informative(Path(page_png)):
+        with Image.open(page_png) as im:
+            im.convert("RGB").save(out_dir / "cover.jpg", quality=94)
+        return str(out_dir / "cover.jpg")
+    return None
+
+
 def capture_article(url: str, out_dir: Path | str, timeout_ms: int = 45_000) -> dict:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

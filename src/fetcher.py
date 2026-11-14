@@ -279,6 +279,8 @@ def _show_hn_tool(hit: dict) -> Tool | None:
 
 def fetch_show_hn(limit: int = HN_TOOLS, skip: set[str] | None = None, now: float | None = None) -> list[Tool]:
     """Show HN AI tools of the last HN_DAYS with real attention (points and a comment thread), most discussed first."""
+    if limit <= 0:
+        return []
     since = int((now or time.time()) - HN_DAYS * 86400)
     params = {"tags": "show_hn", "hitsPerPage": 100,
               "numericFilters": f"created_at_i>{since},points>={HN_MIN_POINTS},num_comments>={HN_MIN_COMMENTS}"}

@@ -31,6 +31,15 @@ def _ledger_in_tmp(monkeypatch, tmp_path):
     import claude_usage  # D-48: nor the real usage log
 
     monkeypatch.setattr(claude_usage, "LOG", tmp_path / "_ledger" / "claude_usage.jsonl")
+    # D-74/D-75/D-76: no news channel or Show HN request, and no write to the real record of recent posts
+    import discovery
+    import fetcher
+    import recent_posts
+
+    monkeypatch.setattr(discovery, "channels", lambda: [])
+    monkeypatch.setattr(fetcher, "HN_TOOLS", 0)
+    monkeypatch.setattr(recent_posts, "PATH", tmp_path / "_ledger" / "recent_posts.json")
+    monkeypatch.setattr(recent_posts, "QUEUE_DIR", tmp_path / "_ledger" / "queue")
 
 
 @pytest.fixture

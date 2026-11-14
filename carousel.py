@@ -35,7 +35,7 @@ from carousel_renderer import RenderError, load_brand, render  # noqa: E402
 from carousel_writer import CarouselScript, generate_carousel, revise_carousel  # noqa: E402
 from distribution import build_affiliate_link  # noqa: E402
 from fetcher import fetch_latest_tools  # noqa: E402
-from article_capture import capture_article  # noqa: E402
+from article_capture import capture_article, company_cover  # noqa: E402
 from media_capturer import CaptureError, capture_site  # noqa: E402
 from model_trial import run_trial  # noqa: E402
 from news_fetcher import feed_item, fetch_news, mark_used  # noqa: E402
@@ -146,6 +146,10 @@ def produce_news(item: dict) -> Path:
     article["published"] = feed_published(item, article["published"])
     print(f"   {article['publisher']}, {len(article['text'])} chars, {len(article['figures'])} images, "
           f"{len(article['videos'])} videos, cover={'yes' if article['cover_path'] else 'no'}")
+    if not article["cover_path"]:  # D-76: the same company's own picture, never a news site's
+        if cover := company_cover(item["url"], out / "article", article.get("page_path")):
+            article["cover_path"] = cover
+            print(f"   no picture on the page: the company's own picture is the cover ({cover})")
     if not article["cover_path"] or len(article["text"]) < 600:
         raise CaptureError("article has no cover image or too little text")
     guide = item.get("concept") == "guide"  # D-72: the 18:00 guide carousel teaches a feature, no model trial
