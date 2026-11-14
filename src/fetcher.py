@@ -32,6 +32,8 @@ class Tool(BaseModel):
     tag_line: str
     website_url: HttpUrl
     description: str
+    # D-73: what real users / reviewers found when they tried it (src/experiences.py), source named
+    experiences: list[dict] = []
 
 
 SAMPLE_TOOLS = [

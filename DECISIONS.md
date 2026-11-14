@@ -709,3 +709,15 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Found (queues 11-05..11-14):** times are fixed (schedule.json); only 07:30 has its own concept; 11:45 / 20:30 get Reels by rank (best at 20:30), 12:30 / 18:00 get news carousels by rank with the same concept; the ranker never considers the hour. Real repeat: "Gemini 4 Carbon" at 18:00 on 11-12 and 12:30 on 11-13.
 - **Means:** D-75's repeat check goes to main (COMMITMENTS #22). _fill_empty_reel_slots and the other empty-slot fills stay. After the Monday numbers page, each slot gets its own concept with the user (#30).
 
+## D-73 · 2026-11-14 · A: what real people found when they tried the tool
+- **The user (11-12):** "A için evet"; **11-14:** "A da bizim gerçekten deneme şansımız yok ama denenmiş olunmuş
+  hallerini bulabilirmişiz, kullanıcı deneyimleri veya bunları denenmiş kurumlar veya platformlar".
+- **Built:** src/experiences.py find_experiences(): before a tool Reel's script, Claude searches the web (WebSearch +
+  WebFetch) for first-hand reports of trying THIS product (Product Hunt reviews / comments, Reddit, Hacker News, G2,
+  app stores, independent reviewers); up to 3 findings, each with source, url, one Turkish sentence, tone. clean()
+  drops the maker's own site, findings with prices (§1.1) and anything without a source. The tool Reel pipeline puts
+  them in the tool data (fetcher.Tool.experiences, tool.json); the writer may lead with the most concrete one, always
+  attributed ("Product Hunt'ta deneyenler ... diyor"), source in the caption, never "denedik" (we didn't try it); the
+  editor checks attributed claims against them. Words only, never their images or videos (§1.9). Usage label
+  "tool_experiences".
+- **Guarded by:** tests/test_d73_deneyenler.py.
