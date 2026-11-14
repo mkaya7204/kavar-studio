@@ -219,7 +219,9 @@ def test_the_two_step_day_never_makes_a_stage_twice(monkeypatch, tmp_path):
     made = []
     monkeypatch.setattr(daily, "produce_guide_reel", lambda: made.append("guide") or
                         {"kind": "reel", "folder": "g", "title": "G", "concept": "guide"})
-    monkeypatch.setattr(daily, "produce_news_items", lambda n: made.append("news") or [])
+    # 11-14: the rest is done only when it made something (a carousel here), not by the morning Reel alone
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: made.append("news") or
+                        [{"kind": "carousel", "folder": "c", "title": "C"}])
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
     assert daily.produce("morning") is False  # the morning step: no exit 1 even before the carousels exist
     assert daily.produce("rest") is True
