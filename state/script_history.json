@@ -1,20 +1,6 @@
 [
   {
     "tool": "Google",
-    "hook": "PDF için hâlâ sekme mi?",
-    "pattern": "question",
-    "spoken_hook": "PDF düzenlemek için hâlâ sekme mi değiştiriyorsun?",
-    "cta": "PDF'le boğuşan arkadaşına gönder."
-  },
-  {
-    "tool": "Figma",
-    "hook": "Toplantı notu tasarıma işleniyor",
-    "pattern": "result",
-    "spoken_hook": "Toplantı notların tasarımın yanına kendiliğinden işleniyor.",
-    "cta": "Tasarımcı arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
     "hook": "Arabada yapay zekâ sohbeti",
     "pattern": "news",
     "spoken_hook": "Google yapay zekâ asistanını arabaya getirdi.",
@@ -68,5 +54,19 @@
     "pattern": "result",
     "spoken_hook": "Sayfadan çıkmadan her sitede cevap alabilirsin.",
     "cta": "Sekmeden bunalan arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Tek çekim, birden çok açı",
+    "pattern": "result",
+    "spoken_hook": "Telefon videondan birden çok kamera açısı çıkıyor.",
+    "cta": "Video çeken arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Gemini'ye bir kez anlat",
+    "pattern": "curiosity",
+    "spoken_hook": "Gemini'ye bir kez anlat, hep aynı yazsın.",
+    "cta": "Pazarlama ekibine gönder."
   }
 ]

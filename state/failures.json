@@ -2552,5 +2552,82 @@
    "off_concept"
   ],
   "detail": "g with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your session limit · resets 7am (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You'v"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing Gemini 4 Hydrogen",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "news",
+  "kind": "news",
+  "item": "Supporting research on AI and children’s safety",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "off_concept"
+  ],
+  "detail": "ttps://www.producthunt.com/products/galaxy    ✖ Kairos — https://www.producthunt.com/products/kairos-18    ✖ Replicate — https://www.producthunt.com/products/replicate-10    ✖ qorqbot — https://www.producthunt.com/products/qorqbot    ✖ Aven App Agent — https://www.producthunt.com/products/aven-app-a"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanıt görseli Pocket Studio çıktısı değil: kapakta ve tüm Reel boyunca makalenin genel kapak görseli (renkli film simgeli rozet kolajı) var. Vaat 'tek çekim, birden çok açı', ama ekranda ne telefon çekimi ne çok açılı sekans var; kapak yanıltıcı ve vaadi kanıtlamıyor.; Aynı rozet görseli 0-12 s boyu"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "facts"
+  ],
+  "detail": "Kapak ve 0-5 sn kanıt görseli: boş bir 'Untitled document' Google Docs ekranı. Beceriler (skills) özelliğini hiç göstermiyor, vaadi kanıtlamıyor; ayrıca küçük ve telefonda okunmuyor.; 11.4 sn karesinde kanıt görseli yine aynı boş Docs sayfası gri zeminde; 12.4 sn karesinde kutu boş görünüyor ('ŞİMDİ"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 30 [Google Workspace Updates] Expanding Gemini in Gmail to more Google Workspace users (Gemini in Gmail reaching more users is an AI feature in an app people use, and a) ✖ no company post fit for a guide Reel this morning"
  }
 ]

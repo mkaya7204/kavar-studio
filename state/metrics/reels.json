@@ -1540,11 +1540,24 @@
     "kind": "guide",
     "tool": "Google",
     "hook_pattern": "result",
-    "headline": "Sayfadan çıkmadan cevap al",
-    "spoken_hook": "Sayfadan çıkmadan her sitede cevap alabilirsin.",
-    "cta": "Sekmeden bunalan arkadaşına gönder.",
-    "duration_sec": 23.6,
+    "headline": "Tek çekim, birden çok açı",
+    "spoken_hook": "Telefon videondan birden çok kamera açısı çıkıyor.",
+    "cta": "Video çeken arkadaşına gönder.",
+    "duration_sec": 22.1,
     "words": 38,
-    "status": "produced"
+    "status": "rejected: Kanıt görseli Pocket Studio çıktısı değil: kapakta ve tüm Reel boyunca makalenin genel kapak görseli (renkli film simgeli rozet kolajı) var. Vaat 'tek çekim, birden çok açı', ama ekranda ne telefon çekimi ne çok açılı sekans var; kapak yanıltıcı ve vaadi kanıtlamıyor.; Aynı rozet görseli 0-12 s boyunca tekrar ediyor; ürüne özgü bir arayüz, çıktı ya da iş akışı yok. Makalede Pocket Studio'ya ait ayrı bir görsel yakalanamamış.; Kart ve altyazı akışı uyumsuz: 5 s karede '01' kartının altında 'STUDIO, GOOGLE' parçası, sonrasında soluk 'İYİLEŞTİRİYOR.' yazısı görünüyor. Metinler sesle ve kartlarla düzgün eşleşmiyor."
+  },
+  {
+    "id": "2026-11-14_google-workspace",
+    "date": "2026-11-14",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "curiosity",
+    "headline": "Gemini'ye bir kez anlat",
+    "spoken_hook": "Gemini'ye bir kez anlat, hep aynı yazsın.",
+    "cta": "Pazarlama ekibine gönder.",
+    "duration_sec": 22.9,
+    "words": 37,
+    "status": "rejected: Kapak ve 0-5 sn kanıt görseli: boş bir 'Untitled document' Google Docs ekranı. Beceriler (skills) özelliğini hiç göstermiyor, vaadi kanıtlamıyor; ayrıca küçük ve telefonda okunmuyor.; 11.4 sn karesinde kanıt görseli yine aynı boş Docs sayfası gri zeminde; 12.4 sn karesinde kutu boş görünüyor ('ŞİMDİLİK SADECE' altında içerik yok). Anlatılan İngilizce sınırı ve kademeli açılış ekranda yok, görsel ses/kartla uyuşmuyor.; Kanıt yok: sayfada @ ile çağırma, beceri oluşturma ya da çıktı gösteren okunabilir bir görsel yok. Kaynak sayfa kırpması başlık alanı değil boş bir ekran görüntüsü."
   }
 ]

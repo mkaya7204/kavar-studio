@@ -128,5 +128,10 @@
   "url": "",
   "description": null,
   "date": "2026-11-14"
+ },
+ "gatrends": {
+  "url": "https://gatrends.com/",
+  "description": "Tell GAtrends which keywords matter to you. It spots unusual spikes across news, search and communities, pings you in Telegram, and lets you ask Claude or ChatGPT what is rising and why. An AI-friendly platform that connects in minutes.",
+  "date": "2026-11-14"
  }
 }
