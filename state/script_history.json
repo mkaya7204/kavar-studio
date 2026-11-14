@@ -1,13 +1,6 @@
 [
   {
     "tool": "Google",
-    "hook": "Konuşman temiz yazıya dönüyor",
-    "pattern": "result",
-    "spoken_hook": "Konuştuğun şey, temiz bir mesaja dönüşüyor.",
-    "cta": "Sesle yazan arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
     "hook": "PDF için hâlâ sekme mi?",
     "pattern": "question",
     "spoken_hook": "PDF düzenlemek için hâlâ sekme mi değiştiriyorsun?",
@@ -68,5 +61,12 @@
     "pattern": "pain",
     "spoken_hook": "Toplantıya giren not botundan hâlâ rahatsız mısın?",
     "cta": "Çok toplantıya giren arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Sayfadan çıkmadan cevap al",
+    "pattern": "result",
+    "spoken_hook": "Sayfadan çıkmadan her sitede cevap alabilirsin.",
+    "cta": "Sekmeden bunalan arkadaşına gönder."
   }
 ]

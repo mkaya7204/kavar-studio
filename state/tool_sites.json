@@ -78,5 +78,55 @@
   "url": "",
   "description": null,
   "date": "2026-11-13"
+ },
+ "templifyai": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "burnstate": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "trainnmcp": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "whoophumans": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "kairos": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "filamentbygalaxy": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "qorqbot": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "avenappagent": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "replicate": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
+ },
+ "pocketstudioforsupabase": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-14"
  }
 }

@@ -605,5 +605,46 @@
   "title": "Grok 4",
   "date": "2025-07-09T00:00:00+00:00",
   "summary": "Grok 4 is the most intelligent model in the world. It includes native tool use and real-time search integration, and is available now to SuperGrok and Premium+ subscribers, as well as through the xAI API. We are also introducing a new SuperGrok Heavy tier with access to Grok 4 Heavy - the most powerful version of Grok 4."
- }
+ },
+ "https://x.ai/news/grok-3": {
+  "title": "Grok 3 Beta — The Age of Reasoning Agents",
+  "date": "2025-02-19T00:00:00+00:00",
+  "summary": "We are thrilled to unveil an early preview of Grok 3, our most advanced model yet, blending superior reasoning with extensive pretraining knowledge."
+ },
+ "https://x.ai/news/series-c": {
+  "title": "xAI raises $6B Series C",
+  "date": "2024-12-23T00:00:00+00:00",
+  "summary": "We are partnering with A16Z, Blackrock, Fidelity Management & Research Company, Kingdom Holdings, Lightspeed, MGX, Morgan Stanley, OIA, QIA, Sequoia Capital, Valor Equity Partners and Vy Capital, amongst others."
+ },
+ "https://x.ai/news/grok-1212": {
+  "title": "Bringing Grok to Everyone",
+  "date": "2024-12-12T00:00:00+00:00",
+  "summary": "Grok is now faster, sharper, and has improved multilingual support. It is available to everyone on the 𝕏 platform."
+ },
+ "https://x.ai/news/grok-image-generation-release": {
+  "title": "Grok Image Generation Release",
+  "date": "2024-12-09T00:00:00+00:00",
+  "summary": "We are updating Grok's capabilities with a new autoregressive image generation model, code-named Aurora, available on the 𝕏 platform."
+ },
+ "https://x.ai/news/api": {
+  "title": "API Public Beta",
+  "date": "2024-11-04T00:00:00+00:00",
+  "summary": "Starting today, developers can build on our Grok foundation models using our newly released API. We will run a public beta program until the end of 2024 during which everyone will get $25 of free API credits per month."
+ },
+ "https://x.ai/news/grok-2": {
+  "title": "Grok-2 Beta Release",
+  "date": "2024-08-13T00:00:00+00:00",
+  "summary": "We announce our new Grok-2 and Grok-2 mini models."
+ },
+ "https://x.ai/news/series-b": {
+  "title": "Series B funding round",
+  "date": "2024-05-26T00:00:00+00:00",
+  "summary": "xAI is pleased to announce our series B funding round of $6 billion."
+ },
+ "https://x.ai/news/grok-os": {
+  "title": "Open Release of Grok-1",
+  "date": "2024-03-17T00:00:00+00:00",
+  "summary": "We are releasing the weights and architecture of our 314 billion parameter Mixture-of-Experts model Grok-1."
+ },
+ "https://api-docs.deepseek.com/news/news261113": null
 }

@@ -2422,5 +2422,135 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing Gemini 4 Hydrogen",
+  "rendered": false,
+  "host": "deepmind.google",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing ChatGPT Wallet",
+  "rendered": false,
+  "host": "openai.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "news",
+  "kind": "news",
+  "item": "Connect Google Wallet to Gemini for personal finance insights",
+  "rendered": false,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "news",
+  "kind": "news",
+  "item": "llama.cpp v1.0.0 : A stronger foundation for the local AI ecosystem",
+  "rendered": false,
+  "host": "huggingface.co",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "news",
+  "kind": "news",
+  "item": "Suno Bridge: Your DAW, Suno-powered.",
+  "rendered": false,
+  "host": "suno.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "news",
+  "kind": "news",
+  "item": "How AI Is Helping Care Teams Get Patients the Right Care, Sooner",
+  "rendered": false,
+  "host": "blogs.nvidia.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "tps://www.producthunt.com/products/trainn    ✖ Kairos — https://www.producthunt.com/products/kairos-18    ✖ Filament by Galaxy — https://www.producthunt.com/products/galaxy    ✖ qorqbot — https://www.producthunt.com/products/qorqbot    ✖ Aven App Agent — https://www.producthunt.com/products/aven-app"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "g with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your session limit · resets 7am (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You'v"
+ },
+ {
+  "date": "2026-11-14",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "g with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your session limit · resets 7am (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You'v"
  }
 ]

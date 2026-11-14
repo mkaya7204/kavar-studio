@@ -1533,5 +1533,18 @@
     "duration_sec": 23.3,
     "words": 40,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-14_google",
+    "date": "2026-11-14",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Sayfadan çıkmadan cevap al",
+    "spoken_hook": "Sayfadan çıkmadan her sitede cevap alabilirsin.",
+    "cta": "Sekmeden bunalan arkadaşına gönder.",
+    "duration_sec": 23.6,
+    "words": 38,
+    "status": "produced"
   }
 ]
