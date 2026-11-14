@@ -7,6 +7,7 @@ returned so the rest of the pipeline can still run.
 
 import html
 import json
+import time
 from datetime import date
 from pathlib import Path
 from claude_usage import record as record_usage  # noqa: E402  D-48: Claude usage per step
@@ -34,6 +35,8 @@ class Tool(BaseModel):
     description: str
     # D-73: what real users / reviewers found when they tried it (src/experiences.py), source named
     experiences: list[dict] = []
+    source: str = "Product Hunt"  # D-74: where the tool was found
+    discussion_url: str = ""  # D-74: a page where people who tried it comment (Hacker News thread)
 
 
 SAMPLE_TOOLS = [
@@ -247,6 +250,56 @@ def already_used(title: str, used_folded: set[str]) -> bool:
     return bool(t) and any(t == u or (min(len(t), len(u)) >= 5 and (u in t or t in u)) for u in used_folded)
 
 
+# D-74 (user 2026-11-14: "başka kaynaklardan da baksan, tek bir kaynakta sürekli olmayabilir veya başka kaynaklarda
+# daha iyi kaliteli içerik yakalarsın"): Product Hunt lists this week's launches, which nobody has tried yet (D-73
+# found no reports for them). Hacker News "Show HN" posts that people voted up over the last weeks come with a comment
+# thread of people who tried the tool: a second source, and the place the experiences search starts.
+HN_SEARCH = "https://hn.algolia.com/api/v1/search"
+HN_DAYS = 45
+HN_MIN_POINTS = 40
+HN_MIN_COMMENTS = 10
+HN_TOOLS = 4  # Show HN candidates added next to Product Hunt's
+AI_WORDS = re.compile(r"\b(ai|llms?|gpt\w*|claude|gemini|agents?|agentic|chatbot|copilot|assistant|transcri\w*|"
+                      r"voice|speech|image gen\w*|video gen\w*|diffusion|rag|ml|model|summari\w*)\b", re.I)
+
+
+def _show_hn_tool(hit: dict) -> Tool | None:
+    title = re.sub(r"^\s*Show HN:\s*", "", hit.get("title") or "", flags=re.I).strip()
+    url = hit.get("url") or ""
+    if not title or not url.startswith("http") or not AI_WORDS.search(title):
+        return None
+    parts = re.split(r"\s+[–—-]\s+|:\s+", title, maxsplit=1)  # "Name – what it does"
+    name, tag = parts[0].strip(), (parts[1] if len(parts) > 1 else title).strip()
+    is_software, _ = classify_tool(name, tag)
+    if not is_software or len(name) > 40 or re.match(r"(i|we|made|built|my|a|an)\b", name, re.I):
+        return None
+    return Tool(tool_name=name, tag_line=tag, website_url=_clean_url(url), description=tag, source="Hacker News",
+                discussion_url=f"https://news.ycombinator.com/item?id={hit.get('objectID')}")
+
+
+def fetch_show_hn(limit: int = HN_TOOLS, skip: set[str] | None = None, now: float | None = None) -> list[Tool]:
+    """Show HN AI tools of the last HN_DAYS with real attention (points and a comment thread), most discussed first."""
+    since = int((now or time.time()) - HN_DAYS * 86400)
+    params = {"tags": "show_hn", "hitsPerPage": 100,
+              "numericFilters": f"created_at_i>{since},points>={HN_MIN_POINTS},num_comments>={HN_MIN_COMMENTS}"}
+    try:
+        resp = requests.get(HN_SEARCH, params=params, headers=HEADERS, timeout=TIMEOUT)
+        resp.raise_for_status()
+        hits = resp.json().get("hits", [])
+    except (requests.RequestException, ValueError) as exc:
+        print(f"[fetcher] Hacker News search failed ({exc}); Product Hunt only.")
+        return []
+    out = []
+    for hit in sorted(hits, key=lambda h: h.get("num_comments") or 0, reverse=True):
+        tool = _show_hn_tool(hit)
+        if tool and not already_used(tool.tool_name, skip or set()) and \
+                all(_fold(t.tool_name) != _fold(tool.tool_name) for t in out):
+            out.append(tool)
+        if len(out) >= limit:
+            break
+    return out
+
+
 def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool = False,
                        exclude: set[str] | None = None) -> list[dict]:
     """Return up to `limit` recent SaaS / AI tools as JSON-serialisable dicts.
@@ -275,6 +328,8 @@ def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool =
                     break
         except (requests.RequestException, ET.ParseError) as exc:
             print(f"[fetcher] Product Hunt feed failed ({exc}); using sample data.")
+        # D-74: a second source with people who tried the tool
+        tools += fetch_show_hn(HN_TOOLS, {_fold(n) for n in exclude or ()} | {_fold(t.tool_name) for t in tools})
 
     if len(tools) < limit:
         if not use_sample:

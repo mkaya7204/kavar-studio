@@ -72,7 +72,7 @@ def ai_tools_first(tools: list[dict]) -> list[dict]:
     from content_ranker import rank
 
     listing = [{"title": f"{t['tool_name']}: {t.get('tag_line', '')}", "summary": t.get("description", ""),
-                "source": "Product Hunt", "tool": t} for t in tools]
+                "source": t.get("source") or "Product Hunt", "tool": t} for t in tools]  # D-74: or Hacker News
     ranked = rank(listing, "tool_reel", kind_prefix="reel")
     fits, fallback = [], []
     for c in ranked:

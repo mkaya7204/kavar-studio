@@ -733,3 +733,14 @@ the decisions that are currently locked; this file explains why they exist and h
   editor checks attributed claims against them. Words only, never their images or videos (§1.9). Usage label
   "tool_experiences".
 - **Guarded by:** tests/test_d73_deneyenler.py.
+
+## D-74 · 2026-11-14 · A second source for tools: Hacker News Show HN
+- **The user:** "A için konuşuyorum, başka kaynaklardan da baksan, tek bir kaynakta sürekli olmayabilir veya başka
+  kaynaklarda daha iyi kaliteli içerik yakalarsın".
+- **Why:** Product Hunt lists this week's launches; the D-73 dry run found no reports of people trying them.
+- **Built:** src/fetcher.py fetch_show_hn(): Hacker News Show HN posts of the last 45 days with AI in the title, at
+  least 40 points and 10 comments (people voted it up and talked about it), most discussed first, up to 4 next to
+  Product Hunt's; Tool.source / Tool.discussion_url. The ranker sees the source; the experiences search starts from
+  the Show HN thread (the maker's own comments are not experiences). Honest limit: Show HN is developer-heavy, so the
+  ranker drops many of them as off-concept for our viewers.
+- **Guarded by:** tests/test_d74_kaynaklar.py.
