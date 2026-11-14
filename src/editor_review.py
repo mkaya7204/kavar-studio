@@ -180,6 +180,10 @@ def review_reel(video: Path, script: dict, tool: dict) -> dict:
               "product's own site' rule is met by them), and 'denedik / yazdırdık / sorduk' about these tests "
               "is true. Judge every result claim against tool_data_source.kavar_test, the rest against "
               "tool_data_source.article." if tool.get("kavar_test") else "")
+           + ("\ntool_data_source.experiences are real users' / reviewers' reports of trying the tool, found on the "
+              "web with their source (D-73, the page owner's decision). A claim attributed to them (\"deneyenler ... "
+              "diyor\", \"bir incelemeye göre\") is allowed when it matches one of them; presented as the page's own "
+              "experience it is not." if tool.get("experiences") else "")
            + ("\nThis is a KISA Reel (script.variant \"kisa\", D-71: a test format the page owner approved): it is "
               "10-12 s on purpose, plus the 1.6 s crow sign-off, with ONE point: hook, one card, one product shot, "
               "the closing card. Judge its length against 9.5-13.6 s and never reject it for being short or for "

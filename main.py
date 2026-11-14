@@ -32,6 +32,7 @@ from media_capturer import CaptureError, capture_site  # noqa: E402
 from product_images import collect as collect_product_images  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
 from script_writer import VideoScript, generate_script, used_tools  # noqa: E402
+from experiences import find_experiences  # noqa: E402  D-73
 from tts_engine import TTSError, reel_voice, voice_for  # noqa: E402
 from video_builder import FINAL_PATH, build_video  # noqa: E402
 from voice_final import save_capture  # noqa: E402
@@ -116,6 +117,10 @@ def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyper
             raise CaptureError("no clean proof image on the site (prices, logos or badges everywhere)")
         capture["proof_path"] = str(proof)
 
+    if script is None:  # D-73: what real users / reviewers found when they tried it, before the script
+        tool = {**tool, "experiences": find_experiences(tool)}
+        print(f"   experiences of people who tried it: {len(tool['experiences'])}"
+              + "".join(f"\n     - [{e['tone']}] {e['source']}: {e['finding']}" for e in tool["experiences"]))
     # the tool data, so the editor review (daily.py) can check the script's facts against it
     (TEMP_DIR / "tool.json").write_text(json.dumps(tool, indent=2, ensure_ascii=False, default=str),
                                         encoding="utf-8")

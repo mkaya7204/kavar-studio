@@ -379,6 +379,12 @@ Fields:
 
 Only state facts present in the tool data; if something isn't given, keep it general rather than inventing features, prices or numbers.
 
+People who tried it (D-73): when the tool data has "experiences" (what real users or independent reviewers reported \
+after trying the tool, each with its source), use the most concrete one: it is stronger than the maker's own claims. \
+Attribute it every time it is said ("Product Hunt'ta deneyenler ... diyor", "Bir inceleme sitesine göre ..."), retell \
+it in your own words, keep a negative or mixed finding honest (it is content too), and name the source in the caption \
+("Kullanıcı yorumu: <source>"). Never present it as our own experience: no "denedik / denedim / kullandık".
+
 """ + NO_PRICE_RULE
 if _lessons := editor_lessons():  # rules/editor_lessons.md: hand-fixed rejections
     SYSTEM_PROMPT += "\n\n" + _lessons
