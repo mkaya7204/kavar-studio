@@ -11,6 +11,7 @@ from urllib.parse import urljoin, urlsplit
 import requests
 from PIL import Image
 
+BRAND_ENV = "KAVAR_BRAND_OK"  # set only for the day's last Reel attempt: the name / logo is the last resort
 HEADERS = {"User-Agent": "Mozilla/5.0 (KAVAR brand picture)"}
 MIN_WIDTH = 400
 META = (r'<meta[^>]+(?:property|name)=["\'](?:og:image|twitter:image)(?::src)?["\'][^>]+content=["\']([^"\']+)',
