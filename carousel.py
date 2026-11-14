@@ -39,7 +39,7 @@ from article_capture import capture_article  # noqa: E402
 from media_capturer import CaptureError, capture_site  # noqa: E402
 from model_trial import run_trial  # noqa: E402
 from news_fetcher import feed_item, fetch_news, mark_used  # noqa: E402
-from news_writer import NewsScript, generate_news, revise_news  # noqa: E402
+from news_writer import GUIDE_NOTE, NewsScript, generate_news, revise_news  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
 from script_writer import source_line  # noqa: E402
 
@@ -137,7 +137,8 @@ def feed_published(item: dict, page_date: str) -> str:
 def produce_news(item: dict) -> Path:
     """News mode: article -> capture -> Claude news carousel -> render."""
     t0 = time.perf_counter()
-    out = OUT_ROOT / f"{date.today().isoformat()}_haber-{_slug(item['title'])[:40]}"
+    kind = "rehber" if item.get("concept") == "guide" else "haber"  # D-72
+    out = OUT_ROOT / f"{date.today().isoformat()}_{kind}-{_slug(item['title'])[:40]}"
     out.mkdir(parents=True, exist_ok=True)
     brand = load_brand()
     print(f"\n▶ Capturing article: {item['title']}\n   {item['url']}", flush=True)
@@ -147,8 +148,12 @@ def produce_news(item: dict) -> Path:
           f"{len(article['videos'])} videos, cover={'yes' if article['cover_path'] else 'no'}")
     if not article["cover_path"] or len(article["text"]) < 600:
         raise CaptureError("article has no cover image or too little text")
-    print("▶ Can we run the new model ourselves? (Biz denedik)", flush=True)
-    if trial := run_trial(article, out / "article" / "trial"):
+    guide = item.get("concept") == "guide"  # D-72: the 18:00 guide carousel teaches a feature, no model trial
+    if guide:
+        article["guide_note"] = GUIDE_NOTE
+    else:
+        print("▶ Can we run the new model ourselves? (Biz denedik)", flush=True)
+    if not guide and (trial := run_trial(article, out / "article" / "trial")):
         for f in trial["figures"]:  # our outputs become the last figures, credited "KAVAR denemesi"
             article["figures"].append({**f, "n": len(article["figures"]) + 1})
         article["trial_note"], article["trial_model"] = trial["note"], trial["model_name"]

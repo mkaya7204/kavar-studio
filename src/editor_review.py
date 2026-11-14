@@ -140,6 +140,12 @@ def review_carousel(folder: Path) -> dict:
            f"- The source: {source} (field 'text' is the article; field 'trial_note', when present, "
            f"is our own test of the model: the 'Biz denedik' slides must match it, and the figures "
            f"credited 'KAVAR denemesi' are its real outputs)\n")
+    if (folder / "article" / "article.json").exists() and \
+            json.loads((folder / "article" / "article.json").read_text(encoding="utf-8")).get("guide_note"):
+        msg += ("- This is KAVAR's 18:00 GUIDE carousel (D-72, the page owner's decision), not news: a step-by-step "
+                "guide to a feature, made to be saved. Judge it by article.json 'guide_note': steps and modes only "
+                "from the company's page, a how-to cover, a save line at the end. Never reject it for not being "
+                "news or for having no event date.\n")
     return _ask(folder, msg)
 
 
