@@ -121,13 +121,32 @@ def test_the_fixer_sees_the_product_screens_first(monkeypatch, tmp_path):
         assert img.getpixel((5, 5)) == (0, 200, 0)
 
 
-def test_a_tool_without_product_screens_uses_its_own_name_and_logo(monkeypatch, tmp_path):
-    """D-77 (user 2026-11-14: "önemli olan ürünün ismi bir de ... logosu"): no product screen no longer skips the
-    tool (D-38 lifted); the picture is the product's own share image / logo, and tool.json says so."""
+def test_a_live_tool_without_product_screens_is_skipped_before_any_script(monkeypatch, tmp_path):
+    """D-38: 18 of 23 rejected Reels had no proof of the promise; tool sites showed slogans, mascots and
+    sign-up buttons. No product screen = no Reel, before a script, a proof pick or a voice is spent (D-77: except
+    on the day's last attempt)."""
     import pytest
 
     import main
 
+    monkeypatch.delenv("KAVAR_BRAND_OK", raising=False)
+    monkeypatch.setattr(main, "capture_site", lambda url, scroll_seconds=None: {
+        "title": "t", "cookie_accept_clicked": False, "overlays_hidden": 0, "logo_path": None, "page_media": {}})
+    monkeypatch.setattr(main, "collect_product_images", lambda media, out: [])
+    monkeypatch.setattr(main, "best_proof_crop", lambda *a, **k: pytest.fail("no proof pick without screens"))
+    monkeypatch.setattr(main, "brand_picture", lambda *a: pytest.fail("the name / logo is the last resort only"))
+    with pytest.raises(main.CaptureError, match="no product screens"):
+        main.produce_video({"tool_name": "T", "website_url": "https://t.example"})
+
+
+def test_the_last_attempt_may_use_the_products_own_name_and_logo(monkeypatch, tmp_path):
+    """D-77 (user 2026-11-14: "en son çare olarak ... ürünün ismi bir de logosu"): only with KAVAR_BRAND_OK (the
+    day's last Reel attempt) a tool without a usable screen gets its own name / logo picture, marked in tool.json."""
+    import pytest
+
+    import main
+
+    monkeypatch.setenv("KAVAR_BRAND_OK", "1")
     monkeypatch.setattr(main, "TEMP_DIR", tmp_path)
     monkeypatch.setattr(main, "capture_site", lambda url, scroll_seconds=None: {
         "title": "t", "cookie_accept_clicked": False, "overlays_hidden": 0, "logo_path": None, "page_media": {},
@@ -145,9 +164,18 @@ def test_a_tool_without_product_screens_uses_its_own_name_and_logo(monkeypatch, 
     with pytest.raises(Stop) as got:
         main.produce_video({"tool_name": "T", "website_url": "https://t.example"})
     assert got.value.args[0]["proof_kind"] == "brand"
-    monkeypatch.setattr(main, "brand_picture", lambda *a: None)
-    with pytest.raises(main.CaptureError, match="no picture of the product's own"):
-        main.produce_video({"tool_name": "T", "website_url": "https://t.example"})
+
+
+def test_only_the_last_reel_attempt_allows_the_name_and_logo(monkeypatch):
+    import os
+
+    import daily
+
+    seen = []
+    monkeypatch.setattr(daily, "_time_for_a_reel", lambda: True)
+    monkeypatch.setattr(daily, "_reel_attempt", lambda *a, **k: seen.append(os.getenv("KAVAR_BRAND_OK")) or (None, True))
+    assert daily.produce_reel() is None
+    assert seen == [None] * (daily.REEL_ATTEMPTS - 1) + ["1"] and os.getenv("KAVAR_BRAND_OK") is None
 
 
 def test_the_share_image_is_read_from_the_products_own_page():
@@ -159,6 +187,6 @@ def test_the_share_image_is_read_from_the_products_own_page():
 
 def test_the_editor_never_rejects_a_name_and_logo_picture():
     root = Path(__file__).resolve().parents[1]
-    assert "NEVER reject because the picture does not show" in (
+    assert "LAST RESORT (D-77" in (
         root / ".claude" / "skills" / "reel-retention-editor" / "SKILL.md").read_text(encoding="utf-8")
     assert "D-77" in (root / "rules" / "editor_lessons.md").read_text(encoding="utf-8")

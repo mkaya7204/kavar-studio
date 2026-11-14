@@ -29,6 +29,7 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 
+from brand_picture import BRAND_ENV  # noqa: E402  D-77
 from carousel import produce_news  # noqa: E402
 from carousel_renderer import RenderError  # noqa: E402
 from content_ranker import rank  # noqa: E402
@@ -263,12 +264,19 @@ def produce_reel() -> dict | None:
         if not _time_for_a_reel():
             log("reel: no time left in the job for another render")
             return None
-        log(f"reel: running the video pipeline (attempt {attempt}/{REEL_ATTEMPTS})")
+        # D-77 (user 11-14): the product's name + logo picture only as the last resort, on the last attempt
+        last = attempt == REEL_ATTEMPTS
+        log(f"reel: running the video pipeline (attempt {attempt}/{REEL_ATTEMPTS})"
+            + (" [last resort: name / logo picture allowed]" if last else ""))
+        if last:
+            os.environ[BRAND_ENV] = "1"
         try:
             item, rendered = _reel_attempt()
         except Exception as exc:  # noqa: BLE001  D-49: one broken attempt never ends the day's tool Reels
             log(f"   reel attempt failed: {type(exc).__name__}: {str(exc)[:300]}")
             continue
+        finally:
+            os.environ.pop(BRAND_ENV, None)
         if item or not rendered:  # queued, or the pipeline found nothing to film
             return item
     return None
