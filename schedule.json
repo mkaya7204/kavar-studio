@@ -5,6 +5,7 @@
   "_publish_lag_help": "D-56 (user 2026-11-03): a run makes the NEXT day's posts; the morning yükle schedules what the day before made and keeps the new run for tomorrow. 0 = the old same-day flow.",
   "guide_reel": true,
   "tool_reels": true,
+  "short_reel": true,
   "slots": [
     {
       "time": "07:30",

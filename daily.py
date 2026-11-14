@@ -44,6 +44,7 @@ import claude_usage  # noqa: E402
 import failures  # noqa: E402
 import reserve  # noqa: E402
 from tts_engine import DRAFT_ENV  # noqa: E402
+from script_writer import SHORT_ENV, reel_seconds  # noqa: E402
 
 SCHEDULE_PATH = ROOT / "schedule.json"
 QUEUE_DIR = ROOT / "output" / "queue"
@@ -248,6 +249,7 @@ AGENT_SESSIONS_PER_RUN = 2
 _agent_sessions = 0
 GUIDE_EXTRA = 2  # D-42: guide Reel drafts the rest stage may make for a Reel slot that is still empty
 REEL_SECONDS = (14.0, 27.6)  # the editor's 14-26 s rule + the crow's 1.6 s sign-off (D-69), checked again on the voiced Reel
+# D-71: the KISA Reel has its own length (script_writer.reel_seconds); it is the second tool Reel, the 11:45 one
 
 
 JOB_BUDGET = 105 * 60  # produce.yml gives the job 120 min; stop starting Reel renders after this
@@ -258,14 +260,15 @@ def _time_for_a_reel() -> bool:
     return time.monotonic() - _STARTED + REEL_TIMEOUT <= JOB_BUDGET + 15 * 60
 
 
-def produce_reel() -> dict | None:
+def produce_reel(short: bool = False) -> dict | None:
+    """short: a KISA Reel (D-71), 10-12 s with one point, marked variant \"kisa\" in the queue."""
     for attempt in range(1, REEL_ATTEMPTS + 1):
         if not _time_for_a_reel():
             log("reel: no time left in the job for another render")
             return None
-        log(f"reel: running the video pipeline (attempt {attempt}/{REEL_ATTEMPTS})")
+        log(f"reel: running the video pipeline (attempt {attempt}/{REEL_ATTEMPTS})" + (" [KISA]" if short else ""))
         try:
-            item, rendered = _reel_attempt()
+            item, rendered = _reel_attempt(short=short)
         except Exception as exc:  # noqa: BLE001  D-49: one broken attempt never ends the day's tool Reels
             log(f"   reel attempt failed: {type(exc).__name__}: {str(exc)[:300]}")
             continue
@@ -312,7 +315,8 @@ def _voice_approved_reel(out: Path) -> bool:
             shutil.copy(final / name, out / name)
     make_cover(out / "final_video.mp4", out)
     first, dur = first_frame_report(out / "final_video.mp4", out), pacing_report(out / "final_video.mp4")["duration_sec"]
-    if not first["ok"] or not REEL_SECONDS[0] <= dur <= REEL_SECONDS[1]:
+    low, high = reel_seconds(_script_variant(out))
+    if not first["ok"] or not low <= dur <= high:
         log(f"   voiced Reel failed the measured checks: first frame ok={first['ok']}, {dur:.1f}s")
         return False
     if cut := cut_frames(out / "final_video.mp4", out):
@@ -324,6 +328,13 @@ def _voice_approved_reel(out: Path) -> bool:
             return False
     log(f"   voiced with George: {dur:.1f}s")
     return True
+
+
+def _script_variant(out: Path) -> str:
+    try:
+        return json.loads((out / "script.json").read_text(encoding="utf-8")).get("variant", "")
+    except (OSError, json.JSONDecodeError):
+        return ""
 
 
 def _voiced_still_rebuild(out: Path) -> list[float]:
@@ -473,7 +484,7 @@ def _new_reel_folder(tool_name: str) -> Path:
     return out
 
 
-def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
+def _reel_attempt(cmd: list[str] | None = None, short: bool = False) -> tuple[dict | None, bool]:
     """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
     A rejected tool is in the script history, so the next run moves on to another tool.
     The run uses the silent draft voice (D-30); only an approved Reel is voiced. Every outcome goes to the
@@ -483,7 +494,8 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     try:
         proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True,
                               text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
-                              env={**os.environ, DRAFT_ENV: "1"})
+                              env={**{k: v for k, v in os.environ.items() if k != SHORT_ENV}, DRAFT_ENV: "1",
+                                   **({SHORT_ENV: "1"} if short else {})})
     except subprocess.TimeoutExpired:
         log(f"   video pipeline timed out after {REEL_TIMEOUT}s")
         return None, False
@@ -522,7 +534,8 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         _keep_for_voice(out)
         log("   approved in a test run: kept silent for voice.yml (George only for a Reel going out, D-46)")
         failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
-        return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True}, True
+        return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True,
+                **_variant(script)}, True
     if verdict["verdict"] == "publish":
         # 11-03: three approved Reels were lost in one day when every ElevenLabs key was out of quota. Keep the
         # silent Reel's words and pictures first, so voice.yml can voice it later instead of losing it.
@@ -546,7 +559,12 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
                         script.get("website_url", ""), rendered="no verdict" not in " ".join(verdict["problems"]))
         return None, True
     failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
-    return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"]}, True
+    return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], **_variant(script)}, True
+
+
+def _variant(script: dict) -> dict:
+    """D-71: a KISA Reel is marked in the queue, so every report and metrics row can name it."""
+    return {"variant": script["variant"]} if script.get("variant") else {}
 
 
 STAGES = ("morning", "rest")  # D-29/D-31: the 07:30 guide Reel first, the rest after it is scheduled
@@ -656,8 +674,10 @@ def _produce_rest(slots: list[dict], only: str) -> None:
         if trial := produce_trial_reel(news):
             reels.append(trial)
         while len(reels) < wanted and schedule().get("tool_reels", True) and not failures.paused("tool"):
+            # D-71: the Reel for the noon slot (reels fill the slots from the last one back) is the KISA one
+            short = wanted >= 2 and len(reels) == wanted - 1 and schedule().get("short_reel", True)
             try:
-                tool_reel = produce_reel()
+                tool_reel = produce_reel(short=short)
             except Exception as exc:
                 log(f"reel production failed: {type(exc).__name__}: {str(exc)[:300]}")
                 break
@@ -672,7 +692,7 @@ def _produce_rest(slots: list[dict], only: str) -> None:
     queued = {q.get("folder") for q in queue}
     _save_surplus([i for i in news + reels + ([morning] if morning else []) if i.get("folder") not in queued])
     for q in queue:
-        log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
+        log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]" + (" KISA" if q.get("variant") else ""))
     # the rest counts as done only when something is ready: a crashed or empty run leaves room for
     # the later runs (08:00 cron-job.org, produce.yml backups) to try again
     if only in ("", "rest") and any(q["status"] == "ready" for q in queue):
@@ -938,7 +958,7 @@ def _fetch_queue(runs: list[dict], day: date) -> None:
         if day != date.today():
             log(f"kept for {day.isoformat()} (D-56):")
             for i, q in enumerate(load_queue(day), 1):
-                log(f"   {i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')}")
+                log(f"   {i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')}" + (" [KISA]" if q.get("variant") else ""))
         return
     shutil.rmtree(tmp, ignore_errors=True)
     log(f"no cloud run with the queue for {day.isoformat()} yet")
@@ -986,7 +1006,8 @@ def status() -> None:
     if not queue:
         print("Nothing queued today.")
     for i, q in enumerate(queue, 1):
-        print(f"{i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')} {q.get('permalink', '')}")
+        print(f"{i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')} {q.get('permalink', '')}"
+              + (" [KISA]" if q.get("variant") else ""))
 
 
 def check() -> None:

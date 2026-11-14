@@ -40,6 +40,31 @@ TARGET_WORDS = (50, 62)  # asked of Claude: leaves headroom for slower-reading c
 # Measured 2026-10-16 (George): 50 words = 26.8 s of voice, 38 words = 18.7 s; Reels over 26 s are
 # rejected (two on 10-16), so at most 42 words.
 TARGET_WORDS_BY_LANGUAGE = {"tr": (34, 42)}
+# D-71 (user 2026-11-12: "C olsun onay veriyorum ... yeni hangi reel olduğunu bil, takip etmesi kolay olsun, bakalım
+# tutacak mı"): 1 of the day's Reels is a KISA Reel, 10-12 s with ONE point. daily.py sets SHORT_ENV for it; the
+# script carries variant "kisa" so the builder, the length checks, the editor and the metrics know it.
+SHORT_ENV = "KAVAR_SHORT"
+SHORT_VARIANT = "kisa"
+SHORT_WORDS = (14, 18)  # George reads ~2.1 Turkish words/s: ~7-8 s of voice, + pauses and the ~2 s closing card
+REEL_SECONDS = (14.0, 27.6)  # 14-26 s + the crow's 1.6 s sign-off (D-69)
+SHORT_SECONDS = (9.5, 13.6)  # 10-12 s + the crow's 1.6 s sign-off
+
+
+def reel_seconds(variant: str = "") -> tuple[float, float]:
+    """The measured length a finished Reel must have (crow sign-off included)."""
+    return SHORT_SECONDS if variant == SHORT_VARIANT else REEL_SECONDS
+
+
+SHORT_RULES = """This is a KISA Reel (a short test format the page owner approved): 10-12 seconds, ONE point. \
+These rules override the field rules above where they differ:
+- voiceover: {low}-{high} words in total.
+- voiceover_segments: hook (the winning spoken hook, 5-7 words); point1 (names the tool, says plainly what kind of \
+product it is and the ONE most useful thing it does, 7-10 words); point2, point3 and why are empty strings ""; cta \
+(2-4 words, a send or save line).
+- key_points: exactly 1 (the card shown while point1 is spoken, saying the same thing).
+- why_it_matters: "".
+- shots: 2-3 consecutive shots.
+One sharp, concrete point beats a list: pick the thing a stranger would send to a friend."""
 CLI_TIMEOUT = 300  # seconds per `claude -p` call
 HISTORY_PATH = ROOT / "state" / "script_history.json"  # recent hooks / CTAs, so videos don't repeat
 HISTORY_SIZE = 10
@@ -167,7 +192,7 @@ def card_voice_mismatch(script: "VideoScript") -> list[int]:
     for i, kp in enumerate(script.key_points):
         card = _stems(f"{kp.title} {kp.detail}", name)
         score = [len(card & s) for s in spoken]
-        if score[i] == 0 or score[i] < max(score[j] for j in range(3) if j != i):
+        if score[i] == 0 or score[i] < max(score[j] for j in range(len(spoken)) if j != i):
             bad.append(i + 1)
     return bad
 
@@ -195,7 +220,8 @@ def reel_rule_problems(script: "VideoScript") -> list[str]:
         problems.append(f"headline has {len(script.hook)} characters; max 32 so it fits 2 lines (shorter words)")
     if len(spoken.split()) > 9:
         problems.append(f"spoken hook has {len(spoken.split())} words; max 9")
-    high = TARGET_WORDS_BY_LANGUAGE.get(_load_language(), TARGET_WORDS)[1]
+    high = SHORT_WORDS[1] if script.variant == SHORT_VARIANT \
+        else TARGET_WORDS_BY_LANGUAGE.get(_load_language(), TARGET_WORDS)[1]
     if (words := len(script.voiceover.split())) > high + 2:  # 55 Turkish words rendered a 29.9 s Reel (max 26)
         problems.append(f"voiceover has {words} words; max {high} - cut a sentence")
     if len(script.hook_candidates) < 3:
@@ -266,12 +292,17 @@ class VideoScript(ScriptDraft):
     model: str | None = None
     voiceover_words: int = 0
     est_duration_sec: float = 0.0
+    variant: str = ""  # "kisa" = the 10-12 s one-point Reel (D-71)
 
     @model_validator(mode="before")
     @classmethod
     def _fill_story_fields(cls, data):
-        """Scripts written before key_points / why_it_matters existed: derive them from the shots."""
-        if not isinstance(data, dict) or (data.get("key_points") and data.get("why_it_matters")):
+        """Scripts written before key_points / why_it_matters existed: derive them from the shots.
+        A script written while SHORT_ENV is set is a KISA Reel (D-71)."""
+        if isinstance(data, dict) and "variant" not in data and os.getenv(SHORT_ENV):
+            data = {**data, "variant": SHORT_VARIANT}
+        if not isinstance(data, dict) or (data.get("key_points") and data.get("why_it_matters")) \
+                or data.get("variant") == SHORT_VARIANT:
             return data
         data = dict(data)
         texts = [s.get("on_screen_text", "") if isinstance(s, dict) else s.on_screen_text
@@ -283,12 +314,16 @@ class VideoScript(ScriptDraft):
             data["why_it_matters"] = data.get("caption", "")
         return data
 
-    @field_validator("key_points")
-    @classmethod
-    def _three_points(cls, points: list[KeyPoint]) -> list[KeyPoint]:
-        if len(points) != 3:
-            raise ValueError(f"expected exactly 3 key_points, got {len(points)}")
-        return points
+    @model_validator(mode="after")
+    def _three_points(self) -> "VideoScript":
+        want = 1 if self.variant == SHORT_VARIANT else 3
+        if len(self.key_points) != want:
+            raise ValueError(f"expected exactly {want} key_points, got {len(self.key_points)}")
+        if self.variant == SHORT_VARIANT and self.voiceover_segments:
+            seg = self.voiceover_segments
+            if seg.point2.strip() or seg.point3.strip() or seg.why.strip():
+                raise ValueError('a KISA Reel has one point: point2, point3 and why must be ""')
+        return self
 
     @field_validator("hashtags")
     @classmethod
@@ -523,12 +558,14 @@ def _save_history(script: VideoScript) -> None:
 
 
 def _user_message(tool: Tool, language: str) -> str:
-    low, high = TARGET_WORDS_BY_LANGUAGE.get(language, TARGET_WORDS)
+    short = bool(os.getenv(SHORT_ENV))
+    low, high = SHORT_WORDS if short else TARGET_WORDS_BY_LANGUAGE.get(language, TARGET_WORDS)
     msg = (
         f"Write the video script in language code '{language}'. All on-screen text (hook, "
         f"key_points, why_it_matters) and the voiceover are in that language; the voiceover "
         f"should be {low}-{high} words.\n\n"
-        f"Tool data:\n{tool.model_dump_json(indent=2)}"
+        + (SHORT_RULES.format(low=low, high=high) + "\n\n" if short else "")
+        + f"Tool data:\n{tool.model_dump_json(indent=2)}"
     )
     if history := _load_history():
         lines = "\n".join(f'- [{h.get("pattern") or "?"}] hook: "{h["hook"]}" / spoken: "{h["spoken_hook"]}" / cta: "{h["cta"]}"'

@@ -173,5 +173,9 @@ def review_reel(video: Path, script: dict, tool: dict) -> dict:
               "unedited test outputs of the model (they replace the site images, so the 'proof from the "
               "product's own site' rule is met by them), and 'denedik / yazdırdık / sorduk' about these tests "
               "is true. Judge every result claim against tool_data_source.kavar_test, the rest against "
-              "tool_data_source.article." if tool.get("kavar_test") else ""))
+              "tool_data_source.article." if tool.get("kavar_test") else "")
+           + ("\nThis is a KISA Reel (script.variant \"kisa\", D-71: a test format the page owner approved): it is "
+              "10-12 s on purpose, plus the 1.6 s crow sign-off, with ONE point: hook, one card, one product shot, "
+              "the closing card. Judge its length against 9.5-13.6 s and never reject it for being short or for "
+              "having only one point; every other rule applies." if script.get("variant") == "kisa" else ""))
     return _ask(folder, msg)

@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "src"))
 WORK = ROOT / "output" / "temp" / "agent"
 MAX_RENDERS = 3  # D-47: Claude usage and the morning's time are limited
 REEL_SECONDS = (14.0, 27.6)  # 14-26 s + the crow's 1.6 s sign-off (D-69)
+from script_writer import reel_seconds  # noqa: E402  D-71: per-variant length
 
 
 def digest(path: Path) -> str:
@@ -70,7 +71,8 @@ def render() -> int:
     contact_sheet(video_frames(draft, WORK, times), WORK / "frames.jpg", cols=8, w=240)
     (WORK / "last_capture.json").write_text(json.dumps(capture, indent=2, ensure_ascii=False, default=str),
                                             encoding="utf-8")
-    report = {"ok": not cut and first["ok"] and REEL_SECONDS[0] <= dur <= REEL_SECONDS[1],
+    low, high = reel_seconds(script.get("variant", ""))  # D-71: a KISA Reel is 10-12 s + the crow
+    report = {"ok": not cut and first["ok"] and low <= dur <= high,
               "render": done + 1, "renders_left": MAX_RENDERS - done - 1,
               "cut_at_seconds": cut[:10], "first_frame_ok": first["ok"], "duration_sec": dur,
               "longest_static_sec": pace["longest_static_sec"],

@@ -191,6 +191,40 @@ def plan_timeline(segments: list[str] | None, words: list[dict], max_total: floa
     return {"plan": plan, "total": total, "cuts": cuts, "pauses": pauses, "owner": owner}
 
 
+SHORT_SCENES = ("hook", "card1", "shot1", "outro")  # D-71: the KISA Reel's scenes, the others stay unseen
+HIDDEN_AFTER = 5.0  # unused scenes of a KISA Reel start this long after its end, so they never show or sound
+
+
+def plan_short(segments: list[str] | None, words: list[dict]) -> dict | None:
+    """D-71 KISA Reel (10-12 s, one point): hook, card1 + shot1 while point1 is spoken, the closing card.
+    Same shape as plan_timeline's result; owner indexes the 3 spoken parts (hook, point1, cta)."""
+    if not segments or len(segments) != 6 or not words:
+        return None
+    parts = [segments[0], segments[1], segments[5]]
+    if any(not p.strip() for p in parts) or any(s.strip() for s in segments[2:5]):
+        return None
+    owner = _assign_words(parts, words)
+    if owner is None:
+        return None
+    starts = [next(w["start"] for w, o in zip(words, owner) if o == i) for i in range(3)]
+    ends = [max(w["end"] for w, o in zip(words, owner) if o == i) for i in range(3)]
+    cuts = [(ends[i] + starts[i + 1]) / 2 for i in range(2)]
+    bounds0 = [max(cuts[i], starts[i + 1] - LEAD) for i in range(2)]
+    natural = [bounds0[0], bounds0[1] - bounds0[0]]
+    pauses = [max(0.0, m - d) + EXTRA_PAUSE for m, d in zip(SEGMENT_MIN[:2], natural)]
+    b = [bounds0[0] + pauses[0], bounds0[1] + pauses[0] + pauses[1]]
+    total = max(ends[-1] + sum(pauses) + VOICE_TAIL, b[1] + OUTRO_MIN)
+    total = math.ceil(total * 10) / 10
+    dur = b[1] - b[0]
+    shot = min(2.4, max(1.4, dur * 0.4))
+    plan = {"hook": [0.0, b[0]], "card1": [b[0], dur - shot], "shot1": [b[0] + dur - shot, shot],
+            "outro": [b[1], total - b[1]]}
+    hidden = total + SIGNOFF + HIDDEN_AFTER
+    plan.update({name: [hidden, 0.5] for name in SCENES if name not in plan})
+    plan = {k: [round(plan[k][0], 3), round(plan[k][1], 3)] for k in SCENES}
+    return {"plan": plan, "total": total, "cuts": cuts, "pauses": pauses, "owner": owner}
+
+
 def caption_groups(words: list[dict], owner: list[int], pauses: list[float], skip_segments=(0, 5)) -> list[dict]:
     """Re-timed words grouped into short caption lines: {"s", "e", "w": [[text, start], ...]}.
 
@@ -227,13 +261,15 @@ def with_signoff(plan: dict, total: float) -> tuple[dict, float]:
 
 
 def sfx_events(plan: dict) -> list[tuple[float, str]]:
+    end = plan["signoff"][0] if "signoff" in plan else plan["outro"][0] + plan["outro"][1]
+    seen = [n for n in SCENES if plan[n][0] < end]  # D-71: a KISA Reel's unused scenes make no sound
     events = [(0.0, "impact")]
-    for name in SCENES[1:]:
+    for name in seen[1:]:
         events.append((max(0.0, plan[name][0] - 0.22), "whoosh"))
-    for name in ("card1", "card2", "card3"):
-        events.append((plan[name][0] + 0.22, "pop"))
-    events += [(plan["why"][0] + 0.08, "pop"), (plan["outro"][0] + 0.05, "impact"),
-               (plan["outro"][0] + 0.62, "ding")]
+    for name in ("card1", "card2", "card3", "why"):
+        if name in seen:
+            events.append((plan[name][0] + (0.08 if name == "why" else 0.22), "pop"))
+    events += [(plan["outro"][0] + 0.05, "impact"), (plan["outro"][0] + 0.62, "ding")]
     if "signoff" in plan:  # D-69: the crow lands, its shiny thing glints
         events += [(plan["signoff"][0] + 0.5, "pop"), (plan["signoff"][0] + 0.58, "ding")]
     return events
@@ -522,11 +558,15 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
     seg = script.get("voiceover_segments")
     segments = [seg[k] for k in ("hook", "point1", "point2", "point3", "why", "cta")] if seg \
         else _segments_from_sentences(script.get("voiceover", ""))
-    timing = plan_timeline(segments, words)
+    short = script.get("variant") == "kisa"  # D-71
+    timing = plan_short(segments, words) if short else plan_timeline(segments, words)
+    if short and timing is None:
+        raise BuildError("KISA Reel: its voice can't be split into hook / point1 / cta (no fixed fallback)")
     plan = timing["plan"] if timing else DEFAULT_PLAN
     total = timing["total"] if timing else TOTAL
     plan, total = with_signoff(plan, total)  # D-69
-    captions = caption_groups(words, timing["owner"], timing["pauses"]) if timing else []
+    captions = caption_groups(words, timing["owner"], timing["pauses"], (0, 2) if short else (0, 5)) \
+        if timing else []
     _apply_plan_to_html(build_dir / "index.html", plan, total)
     try:
         sound = build_soundtrack(audio, assets / "soundtrack.mp3", total,
