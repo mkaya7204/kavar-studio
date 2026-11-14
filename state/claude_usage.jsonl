@@ -1573,3 +1573,4 @@
 {"at": "2026-11-14T10:06:33", "stage": "editor", "seconds": 10.1, "turns": 5, "tokens": 37095, "output_tokens": 1248, "cost_usd": 0.0783, "ok": true, "test": false}
 {"at": "2026-11-14T10:06:44", "stage": "agent", "seconds": 9.6, "turns": 9, "tokens": 137434, "output_tokens": 1279, "cost_usd": 0.0839, "ok": true, "test": false}
 {"at": "2026-11-14T10:07:36", "stage": "ask/carousel_writer", "seconds": 45.9, "turns": 2, "tokens": 26738, "output_tokens": 9113, "cost_usd": 0.1571, "ok": true, "test": false}
+{"at": "2026-11-14T16:26:07", "stage": "pronunciation", "seconds": 1.7, "turns": 2, "tokens": 10672, "output_tokens": 73, "cost_usd": 0.0431, "ok": true, "test": false}
