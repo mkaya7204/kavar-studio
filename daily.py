@@ -190,7 +190,9 @@ def produce_news_items(count: int) -> list[dict]:
         if len(items) >= count or tries >= MAX_NEWS_TRIES:
             break
         r = item.get("rank") or {}
-        if r and not item.get("testable") and (not r["fits"] or r["repeat"]):
+        # 11-14 dry run: a testable model the ranker marked as a repeat (Gemini 4 Hydrogen, already queued for
+        # 11-15) was still written first; a tested model may be off-concept, never a repeat
+        if r and (r["repeat"] or (not r["fits"] and not item.get("testable"))):
             # 10-17 dry run: a gaming promotion (DLSS on GeForce NOW) reached 18:00 because off-concept
             # stories were only moved down; now they are never used
             log(f"   skip ({'repeat' if r['repeat'] else 'off-concept'}): {item['title']}")

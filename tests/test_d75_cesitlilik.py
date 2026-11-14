@@ -80,3 +80,9 @@ def test_morning_reel_alone_does_not_finish_the_rest():
     d = (ROOT / "daily.py").read_text(encoding="utf-8")
     i = d.index('_mark_done("rest")')
     assert 'q.get("concept") == "guide" and q["kind"] == "reel"' in d[i - 400:i]
+
+
+def test_a_testable_repeat_is_skipped_too():
+    """11-14 dry run: Gemini 4 Hydrogen was marked repeat but written first because it was testable."""
+    d = (ROOT / "daily.py").read_text(encoding="utf-8")
+    assert 'if r and (r["repeat"] or (not r["fits"] and not item.get("testable"))):' in d
