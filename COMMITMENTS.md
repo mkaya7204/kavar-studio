@@ -19,7 +19,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 6 | D-68: every metrics row carries its post's folder | YAPILIYOR | from the 11-13 "yükle" on, by hand each morning |
 | 7 | D-69: the crow's sign-off at the end of every Reel (the crow the user saw on the logo page) | KODDA | user approved 11-13 ("Hepsine izin veriyorum"), merged; done when the first production Reel ends with the crow |
 | 8 | C: 1 of 3 daily Reels is a 10-12 s single-point Reel, marked "KISA", named in every report, compared after a week | YAPILIYOR | D-71 on branch kisa-reel (tests pass); next: cloud dry run, show the user, merge |
-| 9 | D: 18:00 = a saveable guide carousel (a known AI product's feature, step by step), not news | BAŞLAMADI | user approved 11-12 (D-31's never-built guide carousel) |
+| 9 | D: 18:00 = a saveable guide carousel (a known AI product's feature, step by step), not news | YAPILIYOR | D-72 on branch rehber-karusel (tests pass); next: cloud dry run, show the user, merge |
 | 10 | Plan 1: the writer gets the page text + what the proof picture shows + a required "angle" | BAŞLAMADI | plan https://claude.ai/artifact/8nuzgbgVwnEzCJ1t1cTnMN |
 | 11 | Plan 2: new hook types (risk, counter-view, comparison, number); judge scores surprise first | BAŞLAMADI | same plan |
 | 12 | Plan 3: editor gives a "would it stop the scroll" score; low score goes back to fixing | BAŞLAMADI | same plan |

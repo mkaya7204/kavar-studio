@@ -193,6 +193,23 @@ if _lessons := editor_lessons():  # rules/editor_lessons.md: hand-fixed rejectio
     SYSTEM_PROMPT += "\n\n" + _lessons
 
 
+# D-72 (user 2026-11-12: "D onay veriyorum olsun"): the 18:00 carousel is a saveable GUIDE, not news
+GUIDE_NOTE = """GUIDE CAROUSEL (this overrides the news rules where they differ): this post is KAVAR's 18:00 GUIDE \
+carousel, made to be SAVED and used later, not news. The article is the company's own page about a feature of a \
+known AI product. Teach the reader to use that feature right:
+- cover: the reader's goal or the feature as a how-to, 3-6 words ("Gemini'de ... nasıl yapılır", "ChatGPT'de ... \
+modu"), never "duyurdu" / "tanıttı".
+- slide 2: what the feature is for, in which product, who can use it (countries, plan, beta: say it briefly, D-32; \
+never amounts or free / paid). No event date needed; give it only if it tells the reader when it arrived.
+- then 3-6 step or tip slides, one each, titled "1. ...", "2. ..." for steps (where to tap, what to write, which \
+mode to choose for which job, a sample prompt in quotes), taken ONLY from the page: never invent menus, buttons or \
+steps it doesn't state. If the page gives no steps, explain the modes / uses it does describe instead.
+- why: when to use it and when not (limits the page states).
+- cta: a SAVE line, e.g. "Kaydet, lazım olunca aç", body "" or one line.
+- caption: the goal in one line, 1-2 lines of context, a save / send reason, "Kaynak: <publisher>".
+- story: the hook, 1-2 steps, the link frame."""
+
+
 def _user_message(article: dict) -> str:
     figs = "\n".join(f"  figure {f['n']}: {f['size'][0]}x{f['size'][1]}, alt: {f['alt'] or '-'}, "
                      f"caption: {f['caption'] or '-'}" for f in article["figures"]) or "  none"
@@ -202,7 +219,8 @@ def _user_message(article: dict) -> str:
             f"Original title: {article['title']}\n"
             f"Images you can show:\n{figs}\nVideos you can show: {len(article['videos'])}\n{page}\n"
             f"Article text:\n{article['text']}"
-            + (f"\n\n{article['trial_note']}" if article.get("trial_note") else ""))
+            + (f"\n\n{article['trial_note']}" if article.get("trial_note") else "")
+            + (f"\n\n{article['guide_note']}" if article.get("guide_note") else ""))
 
 
 def _finish(draft: dict, article: dict, source: str, model: str | None) -> NewsScript:

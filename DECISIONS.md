@@ -709,3 +709,14 @@ the decisions that are currently locked; this file explains why they exist and h
   may carry what real users / reviewers found when they tried the tool, in our own words, with the source named,
   never their images or videos (§1.9) and never "denedik" (we didn't).
 - **Guarded by:** tests/test_d71_kisa.py.
+
+## D-72 · 2026-11-14 · The 18:00 guide carousel (D)
+- **The user (11-12):** "D onay veriyorum olsun" (18:00 = a saveable guide carousel instead of news; D-31's guide
+  carousel, never built until now).
+- **Built:** schedule.json 18:00 slot `"concept": "guide"`. daily.py produce_guide_carousel(): the guide Reel's
+  sources (guide_reel.fetch_guide: the companies' own pages, D-31/D-41), ranked by content_ranker "guide_carousel"
+  (what a viewer would SAVE), at most 2 pages tried; the carousel builder's produce_news with concept guide writes it
+  with news_writer.GUIDE_NOTE (a how-to cover, steps only from the company page, a "Kaydet" line, no model trial)
+  into a `rehber-` folder; the editor is told it is a guide, not news. _carousel_for puts it on the 18:00 slot; if
+  none is made, a news carousel fills 18:00 (never empty). The morning guide Reel is only ever a Reel (kind checked).
+- **Guarded by:** tests/test_d72_rehber.py.

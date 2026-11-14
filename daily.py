@@ -233,6 +233,44 @@ def produce_news_items(count: int) -> list[dict]:
     return sorted(items, key=lambda i: not i["tested"])
 
 
+GUIDE_CAROUSEL_TRIES = 2  # D-72: company pages tried for the 18:00 guide carousel
+
+
+def produce_guide_carousel() -> dict | None:
+    """D-72 (user 2026-11-12: "D onay veriyorum olsun"): the 18:00 carousel is a saveable guide to an AI feature of
+    a known product, from the company's own page (the guide Reel's sources, D-31/D-41), ranked for saving."""
+    from guide_reel import fetch_guide
+    candidates = rank(fetch_guide(), "guide_carousel")
+    log(f"guide carousel: {len(candidates)} company posts")
+    tries = 0
+    for item in candidates:
+        if tries >= GUIDE_CAROUSEL_TRIES:
+            break
+        r = item.get("rank") or {}
+        if r and (not r["fits"] or r["repeat"]):
+            continue
+        tries += 1
+        log(f"guide carousel: {item['source']} - {item['title']}")
+        try:
+            folder = produce_news({**item, "concept": "guide"})
+            ok, problems = _reviewed_news(folder)
+        except Exception as exc:  # noqa: BLE001  one bad page never stops the day
+            log(f"   failed: {type(exc).__name__}: {str(exc)[:300]}")
+            mark_used(item["url"])
+            failures.record("news", "guide_carousel", item["title"], f"{type(exc).__name__}: {exc}", item["url"],
+                            rendered=False)
+            continue
+        if ok:
+            failures.ok("news", "guide_carousel", item["title"], item["url"])
+            return {"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": False,
+                    "concept": "guide", "category": r.get("category", "")}
+        if any("gave no verdict" in p for p in problems):
+            unmark(item["url"], item.get("title", ""))
+        log(f"   rejected, not queued: {folder.name}")
+        failures.record("news", "guide_carousel", item["title"], "; ".join(problems), item["url"])
+    return None
+
+
 REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
 GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no voice, D-30); the rest waits for it
@@ -641,7 +679,7 @@ def produce(only: str = "") -> bool:
     for line in failures.react():  # D-39: the last 7 days' failures change today's run by fixed rules
         log("self-correct: " + line)
     if only in ("", "morning"):
-        wants_guide = cfg.get("guide_reel") or any(s.get("concept") == "guide" for s in slots)
+        wants_guide = cfg.get("guide_reel") or any(_guide_reel_slot(s) for s in slots)
         morning = produce_guide_reel() if wants_guide else None
         save_queue(_build_queue(slots, [], [], morning))
         log(f"guide Reel: {morning['title'] if morning else '-'} [{'ready' if morning else 'none'}]")
@@ -661,12 +699,21 @@ def _produce_rest(slots: list[dict], only: str) -> None:
         log(f"token refresh skipped: {exc}")
     news = []
     if only != "reel":
+        carousels = [s for s in slots if s["kind"] == "carousel"]
+        guide_slots = sum(s.get("concept") == "guide" for s in carousels)
+        for _ in range(guide_slots):  # D-72: the 18:00 guide carousel; if none is made, news fills its slot
+            try:
+                if guide := produce_guide_carousel():
+                    news.append(guide)
+            except Exception as exc:
+                log(f"guide carousel failed: {type(exc).__name__}: {str(exc)[:300]}")
         try:
-            news = produce_news_items(sum(s["kind"] == "carousel" for s in slots))
+            news = produce_news_items(len(carousels) - len(news)) + news
         except Exception as exc:
             log(f"news production failed: {type(exc).__name__}: {str(exc)[:300]}")
     # the morning stage's guide Reel stays in its slot when the rest is made in the same run
-    morning = next((q for q in load_queue() if q.get("concept") == "guide" and q["status"] == "ready"), None)
+    morning = next((q for q in load_queue() if q.get("concept") == "guide" and q["kind"] == "reel"
+                    and q["status"] == "ready"), None)
     save_queue(_build_queue(slots, list(news), [], morning))  # approved carousels survive a Reel crash or timeout
     reels: list[dict] = []  # best first: the "Biz denedik" Reel, then tool Reels
     wanted = sum(s["kind"] == "reel" and s.get("concept") != "guide" for s in slots)
@@ -705,7 +752,7 @@ def _fill_empty_reel_slots(slots: list[dict], news: list[dict], reels: list[dict
     made for it: first for an empty 07:30 guide slot (it goes out later that morning), then for the other
     Reel slots. `reels` grows in place; returns the guide slot's Reel."""
     cfg = schedule()
-    has_guide_slot = any(s.get("concept") == "guide" for s in slots)
+    has_guide_slot = any(_guide_reel_slot(s) for s in slots)
     if not (cfg.get("guide_reel") or has_guide_slot):
         return morning
     open_slots = sum(s["kind"] == "reel" and s.get("concept") != "guide" for s in slots) - len(reels) \
@@ -748,18 +795,32 @@ def _save_surplus(items: list[dict]) -> None:
         log(f"reserve: {i['kind']} {i.get('title', '-')} (approved, no slot today)")
 
 
+def _guide_reel_slot(slot: dict) -> bool:
+    return slot["kind"] == "reel" and slot.get("concept") == "guide"
+
+
+def _carousel_for(slot: dict, news: list[dict]) -> dict | None:
+    """D-72: the guide carousel goes to the carousel slot with concept guide (18:00), news to the others; a slot
+    whose own kind is missing takes the other kind rather than stay empty. Takes the item out of `news`."""
+    want = slot.get("concept") == "guide"
+    pick = next((n for n in news if (n.get("concept") == "guide") == want), None) or (news[0] if news else None)
+    if pick is not None:
+        news.remove(pick)
+    return pick
+
+
 def _build_queue(slots: list[dict], news: list[dict], reels: list[dict], morning: dict | None = None) -> list[dict]:
     """Carousels fill their slots in order. Reels (best first) fill the reel slots from the LAST one
     back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16).
     A slot with concept "guide" (D-31) takes only the guide Reel, and the guide Reel only that slot. Without
     such a slot (D-38) the guide Reel is the last choice for the Reel slots, after "Biz denedik" and tool Reels."""
     reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel" and s.get("concept") != "guide"]
-    has_guide_slot = any(s.get("concept") == "guide" for s in slots)
+    has_guide_slot = any(_guide_reel_slot(s) for s in slots)
     by_slot = dict(zip(reversed(reel_slots), reels + ([morning] if morning and not has_guide_slot else [])))
-    by_slot.update({i: morning for i, s in enumerate(slots) if s.get("concept") == "guide" and morning})
+    by_slot.update({i: morning for i, s in enumerate(slots) if _guide_reel_slot(s) and morning})
     queue = []
     for i, s in enumerate(slots):
-        item = news.pop(0) if s["kind"] == "carousel" and news else by_slot.get(i)
+        item = _carousel_for(s, news) if s["kind"] == "carousel" else by_slot.get(i)
         if item:
             queue.append({**item, "time": s["time"], "status": "ready"})
         else:
