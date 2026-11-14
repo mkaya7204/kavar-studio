@@ -128,7 +128,13 @@ def rank(candidates: list[dict], concept: str, kind_prefix: str = "carousel") ->
 
     if len(candidates) < 2:
         return candidates
-    recent = recent_titles()
+    from news_fetcher import same_story
+    from recent_posts import brand_counts, brand_of, brand_penalty, recent as recent_posts
+
+    # D-75: the queued days too (D-56 makes posts a day ahead; metrics come a day after publishing), so a story
+    # queued yesterday is known as recent today
+    recent = list(dict.fromkeys(recent_titles() + [r["title"] for r in recent_posts()]))
+    brands = brand_counts()
     listing = "\n".join(f"{i}. [{c.get('source', '')}] {c['title']} - {str(c.get('summary', ''))[:300]}"
                         for i, c in enumerate(candidates))
     prompt = (f"Slot concept: {CONCEPTS[concept]}\n\nThe page's posts of the last 3 days:\n"
@@ -147,8 +153,12 @@ def rank(candidates: list[dict], concept: str, kind_prefix: str = "carousel") ->
     for i, c in enumerate(candidates):
         it = by_index.get(i)
         if it:
-            c = {**c, "rank": {"score": score(it, bonus), "category": it["category"], "company": it["company"],
-                               "reason": it["reason"], "fits": it["fits_concept"], "repeat": it["repeats_recent"]}}
+            brand = brand_of(c["title"], it["company"])
+            off = brand_penalty(brand, brands)  # D-75: the same brand family again loses points
+            repeat = it["repeats_recent"] or any(same_story(c["title"], t) for t in recent)
+            c = {**c, "rank": {"score": score(it, bonus) - off, "category": it["category"], "company": it["company"],
+                               "reason": it["reason"], "fits": it["fits_concept"], "repeat": repeat,
+                               "brand": brand, "brand_penalty": off}}
         out.append(c)
 
     def key(c):

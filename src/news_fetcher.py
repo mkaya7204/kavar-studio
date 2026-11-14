@@ -73,6 +73,38 @@ def title_key(title: str) -> str:
     return " ".join(re.sub(r"[^\w]+", " ", (title or "").lower()).split())
 
 
+# D-75 (user 2026-11-14: "aynı haberin onaydan geçmesi veya aynı haberin başka yerde de bulup yayına onay çıkması
+# konusunda da önlem al"): 11-14 "Introducing Gemini 4 Hydrogen" (Gemini blog) passed after "Gemini 4 Hydrogen:
+# everyday coding ..." (developers blog) was already queued, because D-66 only caught identical titles. Two titles are
+# the same story when they share a DISTINCTIVE word (not a brand or a filler word) and most of the shorter one.
+COMMON_WORDS = set("""introducing introduces announcing announces launch launches launching meet new now today
+available update updates updated more with from your what into using across about their this that over how help
+helps make makes made built build first next latest model models google gemini deepmind openai chatgpt anthropic
+claude microsoft copilot meta apple nvidia samsung amazon youtube android workspace chrome gmail search blog news
+coming rolling expanding expands bring brings tool tools feature features plus pro ultra flash lite mini team
+teams people users developers everyone""".split())
+
+
+def story_words(title: str) -> set[str]:
+    return {w for w in title_key(title).split() if len(w) > 3 and w not in COMMON_WORDS}
+
+
+def same_story(a: str, b: str) -> bool:
+    wa, wb = story_words(a), story_words(b)
+    if not wa or not wb:
+        return title_key(a) == title_key(b) != ""
+    shared = wa & wb
+    return bool(shared) and len(shared) / min(len(wa), len(wb)) >= 0.5
+
+
+def seen_story(title: str, keys: list[str] | None = None) -> str:
+    """The used / queued title this one repeats, or ""."""
+    for k in (load_titles() if keys is None else keys)[-150:]:
+        if same_story(title, k):
+            return k
+    return ""
+
+
 def load_titles() -> list[str]:
     try:
         return json.loads(TITLES_PATH.read_text(encoding="utf-8"))
@@ -120,12 +152,12 @@ def fetch_news(limit: int = 5) -> list[dict]:
             items += got
         except requests.RequestException as exc:
             print(f"[news] {page['name']} skipped: {type(exc).__name__}")
-    used_titles, unused = set(load_titles()), []
-    for i in items:  # D-66: a used title, or the same title twice in one fetch, is the same news
+    used_titles, unused = load_titles()[-150:], []
+    for i in items:  # D-66/D-75: a used story (any wording, any blog), or one story twice in one fetch, is skipped
         key = title_key(i.get("title", ""))
-        if i["date"] and i["url"] not in used and not (key and key in used_titles):
+        if i["date"] and i["url"] not in used and not (key and seen_story(key, used_titles)):
             unused.append(i)
-            used_titles.add(key)
+            used_titles.append(key)
     recent = [i for i in unused if i["date"] >= now - timedelta(hours=config.get("fallback_age_hours", 168))]
     buzz.annotate(recent)  # D-59: what is talked about right now goes first (ranking only, never the source)
     fresh = [i for i in unused if i["date"] >= now - timedelta(hours=config.get("max_age_hours", 72))]

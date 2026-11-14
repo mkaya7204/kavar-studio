@@ -744,3 +744,19 @@ the decisions that are currently locked; this file explains why they exist and h
   the Show HN thread (the maker's own comments are not experiences). Honest limit: Show HN is developer-heavy, so the
   ranker drops many of them as off-concept for our viewers.
 - **Guarded by:** tests/test_d74_kaynaklar.py.
+
+## D-75 · 2026-11-14 · More sources, no repeated story, not always the same brand
+- **The user:** "diğer paylaşım saatleri içinde başka kaynaklardan da faydalan, bir de aynı haberin onaydan geçmesi
+  veya aynı haberin başka yerde de bulup yayına onay çıkması konusunda da önlem al ... kaynak çoğalınca hep aynı
+  isimlerin haberlerini yapmayalım ... Gemini benim için sorun değil ... hep Gemini olması kendimizi tekrara ve aynı
+  şeyleri yayınlıyoruz gibi oluyor".
+- **Cause found:** D-66 caught only identical titles: "Introducing Gemini 4 Hydrogen" passed (D-72 dry run) after
+  "Gemini 4 Hydrogen: everyday coding ..." was queued. The ranker's "recent posts" came only from recorded metrics,
+  so a story queued a day ahead (D-56) was invisible. 7 of 20 news feeds were Google's.
+- **Built:** news_fetcher.same_story / seen_story (shared distinctive word, brands and filler words ignored), used by
+  fetch_news and the guide sources; src/recent_posts.py keeps each publish day's ready posts with their brand family
+  in state/recent_posts.json (daily.py records the queue) and reads this run's queue files; content_ranker counts
+  them as recent (repeat check) and takes 3 points off per post of the same brand family in the last 3 days (max 9);
+  one story per brand family a day. New company feeds (checked live): news Microsoft 365, Windows, Character.AI,
+  Opera; guide Grammarly, Duolingo, Dropbox, Mozilla.
+- **Guarded by:** tests/test_d75_cesitlilik.py.

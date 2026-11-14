@@ -42,6 +42,7 @@ from reel_metrics import update as update_metrics  # noqa: E402
 from reel_qa import cut_frames, first_frame_report, make_cover, pacing_report  # noqa: E402
 import claude_usage  # noqa: E402
 import failures  # noqa: E402
+import recent_posts  # noqa: E402
 import reserve  # noqa: E402
 from tts_engine import DRAFT_ENV  # noqa: E402
 from script_writer import SHORT_ENV, reel_seconds  # noqa: E402
@@ -187,7 +188,8 @@ def produce_news_items(count: int) -> list[dict]:
             # stories were only moved down; now they are never used
             log(f"   skip ({'repeat' if r['repeat'] else 'off-concept'}): {item['title']}")
             continue
-        company = (r.get("company") or "").strip().lower()
+        # D-75: one story per brand family a day (Gemini, YouTube, Android ... are all Google)
+        company = (r.get("brand") or r.get("company") or "").strip().lower()
         if company and company in chosen_companies:  # one story per company a day (3 of 4 were NVIDIA, 10-16)
             log(f"   skip (already a {company} story today): {item['title']}")
             continue
@@ -736,6 +738,7 @@ def _produce_rest(slots: list[dict], only: str) -> None:
         morning = _fill_empty_reel_slots(slots, news, reels, morning)
     queue = _build_queue(slots, list(news), reels, morning)
     save_queue(queue)
+    recent_posts.record(queue, queue_day())  # D-75: the next runs know what this day carries (stories, brands)
     queued = {q.get("folder") for q in queue}
     _save_surplus([i for i in news + reels + ([morning] if morning else []) if i.get("folder") not in queued])
     for q in queue:
