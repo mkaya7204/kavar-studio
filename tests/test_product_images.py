@@ -1,5 +1,6 @@
 """D-36 (2026-10-19): a tool Reel's proof can be the product's own screens, not only the top of its home page."""
 import inspect
+from pathlib import Path
 from io import BytesIO
 from types import SimpleNamespace
 
@@ -120,16 +121,44 @@ def test_the_fixer_sees_the_product_screens_first(monkeypatch, tmp_path):
         assert img.getpixel((5, 5)) == (0, 200, 0)
 
 
-def test_a_live_tool_without_product_screens_is_skipped_before_any_script(monkeypatch, tmp_path):
-    """D-38: 18 of 23 rejected Reels had no proof of the promise; tool sites showed slogans, mascots and
-    sign-up buttons. No product screen = no Reel, before a script, a proof pick or a voice is spent."""
+def test_a_tool_without_product_screens_uses_its_own_name_and_logo(monkeypatch, tmp_path):
+    """D-77 (user 2026-11-14: "önemli olan ürünün ismi bir de ... logosu"): no product screen no longer skips the
+    tool (D-38 lifted); the picture is the product's own share image / logo, and tool.json says so."""
     import pytest
 
     import main
 
+    monkeypatch.setattr(main, "TEMP_DIR", tmp_path)
     monkeypatch.setattr(main, "capture_site", lambda url, scroll_seconds=None: {
-        "title": "t", "cookie_accept_clicked": False, "overlays_hidden": 0, "logo_path": None, "page_media": {}})
+        "title": "t", "cookie_accept_clicked": False, "overlays_hidden": 0, "logo_path": None, "page_media": {},
+        "screenshot_path": str(tmp_path / "home.png")})
     monkeypatch.setattr(main, "collect_product_images", lambda media, out: [])
-    monkeypatch.setattr(main, "best_proof_crop", lambda *a, **k: pytest.fail("no proof pick without screens"))
-    with pytest.raises(main.CaptureError, match="no product screens"):
+    monkeypatch.setattr(main, "best_proof_crop", lambda *a, **k: pytest.fail("no screen pick without screens"))
+    monkeypatch.setattr(main, "brand_picture", lambda url, out, logo, page: str(tmp_path / "brand.png"))
+
+    class Stop(Exception):
+        pass
+
+    def stop(tool):
+        raise Stop(tool)
+    monkeypatch.setattr(main, "generate_script", stop)
+    with pytest.raises(Stop) as got:
         main.produce_video({"tool_name": "T", "website_url": "https://t.example"})
+    assert got.value.args[0]["proof_kind"] == "brand"
+    monkeypatch.setattr(main, "brand_picture", lambda *a: None)
+    with pytest.raises(main.CaptureError, match="no picture of the product's own"):
+        main.produce_video({"tool_name": "T", "website_url": "https://t.example"})
+
+
+def test_the_share_image_is_read_from_the_products_own_page():
+    from brand_picture import share_image_url
+    html = '<head><meta property="og:image" content="/img/hob-card.png?a=1&amp;b=2"></head>'
+    assert share_image_url(html, "https://hob.app/") == "https://hob.app/img/hob-card.png?a=1&b=2"
+    assert share_image_url("<head></head>", "https://hob.app/") is None
+
+
+def test_the_editor_never_rejects_a_name_and_logo_picture():
+    root = Path(__file__).resolve().parents[1]
+    assert "NEVER reject because the picture does not show" in (
+        root / ".claude" / "skills" / "reel-retention-editor" / "SKILL.md").read_text(encoding="utf-8")
+    assert "D-77" in (root / "rules" / "editor_lessons.md").read_text(encoding="utf-8")

@@ -15,14 +15,18 @@ REEL RETENTION REVIEW (reject anything that fails a MUST)
 MUST
 - Frame 0 (and the cover) is fully composed: the headline readable, a proof image visible.
   A blank, blurred, single-colour or half-revealed frame 0 = reject.
-- No ad look in the first 3 seconds: no tool logo / tool-name pill at the top, no "YENİ ARAÇ" /
+- No ad look in the first 3 seconds: no tool logo / tool-name pill pasted at the top (the logo INSIDE the
+  picture box is fine, D-77), no "YENİ ARAÇ" /
   "NEW" badge, no CTA button shape, no prices. The tool name is not in the headline or the first
   spoken sentence (famous-brand news is the exception).
 - Triple hook: the on-screen headline and the first spoken sentence say the same thing (same
   promise; small wording differences are fine).
-- The proof image under the headline is from this product's own site and relates to the promise
-  (its interface, output or workflow). It need not show the whole transformation: the Reel is made
-  from website captures, not screen recordings.
+- The picture under the headline is the product's / company's OWN (its site, its blog, its share image).
+  D-77 (the user 2026-11-14: "önemli olan ürünün ismi bir de ... şirketin veya firmanın logosu, gerisi zaten haber
+  içeriği ve video bilgisi"): the product's name and its company's logo ARE enough. A share image, logo, the
+  company's own article cover or home page is a valid picture; NEVER reject because the picture does not show the
+  interface, the output or the promise. The words and cards carry the information. Reject the picture only when it
+  is another company's, shows prices, is cut / broken / unreadable, or shows a different product than the Reel names.
 - No first-person experience claims ("denedim", "çevirdim", "kullandım"): the page didn't use it.
 - Length 14-26 s (a KISA Reel, script variant "kisa", D-71: 10-12 s with one point, on purpose), plus KAVAR's own 1.6 s crow sign-off at the very end (sand disc, black crow with a blue shiny thing,
   "YARIN YENİSİNİ GETİRİRİM.", @thekavar.ai + TAKİP ET; D-69, the user's decision): it is in every Reel, it is
