@@ -23,7 +23,8 @@ def test_schedule_slots():
     slots = cfg["slots"]
     assert [(s["time"], s["kind"]) for s in slots] == [("07:30", "reel"), ("11:45", "reel"), ("12:30", "carousel"),
                                                           ("18:00", "carousel"), ("20:30", "reel")]
-    assert slots[0].get("concept") == "guide" and all(s.get("concept") != "guide" for s in slots[1:])
+    # D-72 (user 2026-11-12/13, "D" approved): 18:00 is the guide carousel too; the other three slots are not guide
+    assert [s.get("concept") == "guide" for s in slots] == [True, False, False, True, False]
     assert cfg["guide_reel"] is True and cfg["tool_reels"] is True
 
 
