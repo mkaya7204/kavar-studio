@@ -33,7 +33,7 @@ from content_ranker import rank  # noqa: E402
 from distribution import build_post  # noqa: E402
 from hyperframes_builder import FINAL_PATH, SHOT_NAMES, _fit_whole, _shot_frame, build_video_hyperframes  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
-from news_fetcher import SOURCES_PATH, _items, load_history, mark_used  # noqa: E402
+from news_fetcher import SOURCES_PATH, _items, load_history, load_titles, mark_used, seen_story  # noqa: E402
 from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
                            _load_language, _save_history, _script_price_mentions, judge_hooks, reel_rule_problems)
 from tts_engine import reel_voice, voice_for  # noqa: E402
@@ -76,6 +76,7 @@ def fetch_guide(limit: int = POOL) -> list[dict]:
     guide_only = {f["name"] for f in config.get("guide_feeds", [])}
     since = datetime.now(timezone.utc) - timedelta(days=GUIDE_DAYS)
     used = set(load_history())
+    used_titles = load_titles()  # D-75: the same story told on another blog, in other words, is used too
     items = []
     for feed in feeds:
         try:
@@ -84,6 +85,7 @@ def fetch_guide(limit: int = POOL) -> list[dict]:
             print(f"[guide] {feed['name']} skipped: {type(exc).__name__}")
     seen: set[str] = set()  # D-65: "Google Blog" carries the same posts as the Gemini / Workspace / Android feeds
     fresh = [i for i in items if i["date"] and i["date"] >= since and i["url"] not in used
+             and not seen_story(i["title"], used_titles)
              and not (i["url"] in seen or seen.add(i["url"]))
              and not re.search(r"weekly recap", i["title"], re.I)]  # Workspace's weekly lists are no single feature
     fresh.sort(key=lambda i: i["date"], reverse=True)
