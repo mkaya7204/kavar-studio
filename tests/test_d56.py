@@ -41,7 +41,7 @@ def test_the_cloud_guard_checks_the_day_the_posts_are_for():
 def test_a_run_writes_tomorrows_queue_and_marker(monkeypatch, lagged):
     monkeypatch.setattr(daily, "produce_news_items", lambda n: [{"kind": "carousel", "folder": "c", "title": "C"}])
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
-    monkeypatch.setattr(daily, "produce_reel", lambda: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: None)
     monkeypatch.setattr(daily, "produce_guide_reel", lambda: None)
     daily.produce("rest")
     assert (lagged / "queue" / f"{TOMORROW.isoformat()}.json").exists()
