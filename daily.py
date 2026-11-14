@@ -182,7 +182,9 @@ def produce_news_items(count: int) -> list[dict]:
         if len(items) >= count or tries >= MAX_NEWS_TRIES:
             break
         r = item.get("rank") or {}
-        if r and not item.get("testable") and (not r["fits"] or r["repeat"]):
+        # 11-14 dry run: a testable model the ranker marked as a repeat (Gemini 4 Hydrogen, already queued for
+        # 11-15) was still written first; a tested model may be off-concept, never a repeat
+        if r and (r["repeat"] or (not r["fits"] and not item.get("testable"))):
             # 10-17 dry run: a gaming promotion (DLSS on GeForce NOW) reached 18:00 because off-concept
             # stories were only moved down; now they are never used
             log(f"   skip ({'repeat' if r['repeat'] else 'off-concept'}): {item['title']}")
@@ -683,7 +685,10 @@ def _produce_rest(slots: list[dict], only: str) -> None:
         log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
     # the rest counts as done only when something is ready: a crashed or empty run leaves room for
     # the later runs (08:00 cron-job.org, produce.yml backups) to try again
-    if only in ("", "rest") and any(q["status"] == "ready" for q in queue):
+    # 11-14: the 07:30 guide Reel alone made the rest look done, so no later run refilled 4 empty slots; only a
+    # post of the rest's own slots counts
+    morning_times = {s["time"] for s in slots if s.get("concept") == "guide" and s["kind"] == "reel"}
+    if only in ("", "rest") and any(q["status"] == "ready" and q["time"] not in morning_times for q in queue):
         _mark_done("rest")
 
 

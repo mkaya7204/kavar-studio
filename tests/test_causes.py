@@ -219,7 +219,9 @@ def test_the_two_step_day_never_makes_a_stage_twice(monkeypatch, tmp_path):
     made = []
     monkeypatch.setattr(daily, "produce_guide_reel", lambda: made.append("guide") or
                         {"kind": "reel", "folder": "g", "title": "G", "concept": "guide"})
-    monkeypatch.setattr(daily, "produce_news_items", lambda n: made.append("news") or [])
+    # 11-14: the rest is done only when it made something (a carousel here), not by the morning Reel alone
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: made.append("news") or
+                        [{"kind": "carousel", "folder": "c", "title": "C"}])
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
     assert daily.produce("morning") is False  # the morning step: no exit 1 even before the carousels exist
     assert daily.produce("rest") is True
@@ -268,3 +270,29 @@ def test_the_workflow_uploads_the_morning_reel_before_the_rest(name):
                   if "kavar-morning" in str(s.get("with", {}).get("name", "")))
     rest = steps.index("Produce the rest of the day (news carousels + Reels, each reviewed by the editor)")
     assert morning < upload < rest
+
+
+def test_the_morning_reel_alone_does_not_finish_the_rest(monkeypatch, tmp_path):
+    """11-14 production: only the 07:30 guide Reel was ready (usage limit), yet the rest was marked done, so no
+    later run refilled the 4 empty slots."""
+    import daily
+
+    monkeypatch.setattr(daily, "ROOT", tmp_path)
+    monkeypatch.setattr(daily, "QUEUE_DIR", tmp_path / "queue")
+    monkeypatch.setattr(daily, "LOG_DIR", tmp_path / "logs")
+    monkeypatch.delenv("KAVAR_FORCE", raising=False)
+    monkeypatch.setattr(daily, "schedule", lambda: {"guide_reel": True, "tool_reels": False, "slots": [
+        {"time": "07:30", "kind": "reel", "concept": "guide"}, {"time": "12:30", "kind": "carousel"}]})
+    monkeypatch.setattr(daily, "produce_guide_reel", lambda: {"kind": "reel", "folder": "g", "title": "G",
+                                                             "concept": "guide"})
+    monkeypatch.setattr(daily, "produce_news_items", lambda n: [])
+    monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
+    daily.produce("morning")
+    daily.produce("rest")
+    assert "rest" not in daily.stages_done()  # a backup run tries the empty slots again
+
+
+def test_a_testable_repeat_is_skipped_too():
+    """11-14 dry run: Gemini 4 Hydrogen was marked repeat but written first because it was testable."""
+    d = (Path(__file__).resolve().parents[1] / "daily.py").read_text(encoding="utf-8")
+    assert 'if r and (r["repeat"] or (not r["fits"] and not item.get("testable"))):' in d
