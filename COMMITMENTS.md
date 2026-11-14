@@ -31,6 +31,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 18 | Instagram API token (posting and metrics without this PC) | KULLANICIDA | Meta phone verification |
 | 19 | cron-job.org token expiry date | KULLANICIDA | the user looks it up |
 | 20 | Reserve Skillbox + ElevenLabs Reels can be voiced only until 2026-11-14 | KODDA | artifact of run 43158731682 expires |
+| 25 | D-77: a Reel's picture may be the product's name + its company's logo; no tool skipped and no Reel rejected for "the picture doesn't prove the promise" (user 11-14) | YAPILIYOR | branch logo-yeter b6e2f51; Reel dry run 43593954177; merge to main only with the user's OK |
 
 What Claude cannot promise: reach, follows or any result on Instagram. Claude can promise that each line above is
 built, tested in the cloud, shown to the user and reported honestly, and that a usage limit only pauses the list.
