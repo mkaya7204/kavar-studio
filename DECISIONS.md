@@ -758,3 +758,20 @@ the decisions that are currently locked; this file explains why they exist and h
 - **The user:** "tamam", after the daytime dry run 43879717666 (branch deneme1116) showed: two more OpenAI stories skipped and 18:00 going to Hugging Face, Hob from Show HN with two Hacker News users' reports attributed in its caption, and the three Reels' silent kits in release kept-reels.
 - **On main:** D-73 (experiences), D-74 (Show HN), D-75 (repeats in other words, brand spread, 8 new feeds), D-80 (kept-reels). Batch 2 (D-76 news channels, KISA Reel, 18:00 guide carousel, #26) stays on branch deneyenler.
 - **Guarded by:** tests/test_d73_deneyenler.py, test_d74_kaynaklar.py, test_d75_cesitlilik.py, test_d80_kept_reels.py.
+## D-71 · 2026-11-14 · The KISA Reel (C), and A changed to other people's real tests
+- **The user (11-12):** "C olsun onay veriyorum bunu da takip et yeni hangi reel olduğunu bil, takip etmesi kolay
+  olsun bakalım tutacak mı". **11-14:** "bunlara zaten onay vermiştim kurmuş olman gerekiyordu" (C, D and A were
+  approved on 11-12 and not built; Claude's failure, not the user's).
+- **Built (C):** the second tool Reel of the day, the 11:45 one, is a KISA Reel: 10-12 s with ONE point (hook, one
+  card, one product shot, the closing card, then the crow). src/script_writer.py: SHORT_ENV, SHORT_WORDS 14-18,
+  SHORT_RULES, VideoScript.variant "kisa" (1 key point; point2 / point3 / why empty), reel_seconds() = 9.5-13.6 s
+  for it. src/hyperframes_builder.py plan_short (unused scenes start after the end, so they never show or sound).
+  daily.py produce_reel(short=True) for the noon Reel, the queue item carries "variant": "kisa", every queue
+  listing prints [KISA]. The editor, the fixing agent and the length checks (daily, agent_tools, voice_kept) know it.
+  schedule.json "short_reel": true switches it. Metrics rows of a KISA Reel carry "variant": "kisa"; after 7 KISA
+  Reels Claude compares their reach / watch / sends with the normal Reels and shows the user.
+- **A changed (user 11-14):** "A da bizim gerçekten deneme şansımız yok ama denenmiş olunmuş hallerini
+  bulabilirmişiz, kullanıcı deneyimleri veya bunları denenmiş kurumlar veya platformlar". Not built yet: a tool Reel
+  may carry what real users / reviewers found when they tried the tool, in our own words, with the source named,
+  never their images or videos (§1.9) and never "denedik" (we didn't).
+- **Guarded by:** tests/test_d71_kisa.py.
