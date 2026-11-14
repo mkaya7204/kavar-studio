@@ -67,6 +67,9 @@ def find_experiences(tool: dict) -> list[dict]:
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
     prompt = PROMPT.format(name=tool["tool_name"], url=tool["website_url"], tag=tool.get("tag_line", ""),
                            n=MAX_FINDINGS)
+    if tool.get("discussion_url"):  # D-74: the Show HN thread where people who tried it comment
+        prompt += (f"\nStart with this discussion, where people who tried it commented: {tool['discussion_url']} "
+                   "(the maker's own comments there are not experiences).")
     try:
         proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(SCHEMA),
                                "--tools", "WebSearch,WebFetch", "--allowedTools", "WebSearch,WebFetch",
