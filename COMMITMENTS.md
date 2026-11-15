@@ -39,7 +39,7 @@ Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in pro
 | 26 | Tool Reels also fed by the news channels (new AI agents / assistants, launches) and GitHub (new AI projects), not only Product Hunt / Show HN (user 11-14 "bütün o haber kaynaklarından beslensek") | BAŞLAMADI | user 11-15: "Reel kaynağı yapalım"; built together with plan 5 (#14) after the 11-15 yükle, on a branch, daytime dry run, shown before merge |
 | 27 | Approved but unposted Reels never vanish: their silent parts are copied somewhere permanent (11-14: the reserve's archives expired, #20) | BAŞLAMADI | user 11-15 "Evet"; first after the 11-15 yükle |
 | 28 | Every Monday one page of numbers: per post reach / views / watch / follows, what worked and why | BAŞLAMADI | user 11-15 "Evet"; first on Monday 2026-11-16 |
-| 29 | Branch deneyenler (KISA Reel, 18:00 guide carousel, news channels, experiences, Show HN): talk with the user before any more work on it | CEVAP BEKLİYOR | user 11-15: "ayrıca konuşalım öyle başlarsın" |
+| 29 | Branch deneyenler in two batches (user 11-15 "iki partili yol uygun"): batch 1 = A experiences (D-73), Show HN (D-74), repeat / brand spread (D-75) on main after one daytime dry run and the user's "tamam"; batch 2 = news channels (D-76, picture fallback fixed), KISA Reel (C, with D-77), 18:00 guide carousel (D, no money / shopping topics), together with #26 | BAŞLAMADI | starts after the 11-15 yükle; KISA re-approved by the user 11-15 ("kısa reel onay veriyorum") |
 
 What Claude cannot promise: reach, follows or any result on Instagram. Claude can promise that each line above is
 built, tested in the cloud, shown to the user and reported honestly, and that a usage limit only pauses the list.
