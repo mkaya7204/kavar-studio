@@ -133,5 +133,75 @@
   "url": "https://gatrends.com/",
   "description": "Tell GAtrends which keywords matter to you. It spots unusual spikes across news, search and communities, pings you in Telegram, and lets you ask Claude or ChatGPT what is rising and why. An AI-friendly platform that connects in minutes.",
   "date": "2026-11-14"
+ },
+ "mapgo": {
+  "url": "https://mapgo.app/",
+  "description": "MapGo, MAP & GO!, is the map go app. Map your day: tasks and events have a place, weather sits on the pin, and AI is one tap away.",
+  "date": "2026-11-15"
+ },
+ "kokonutui": {
+  "url": "https://kokonutui.com/",
+  "description": "Kokonut UI is a free, open-source library of React components for AI apps, built with Tailwind CSS, Motion and shadcn/ui. Install any of them with one command or one prompt.",
+  "date": "2026-11-15"
+ },
+ "dexsemantics": {
+  "url": "https://trydex.ai/",
+  "description": "Let your agent build your analytics. The agent-native analytics engine for Claude Code and any agent: explore your data, build dbt models and semantic layers, and keep them in sync as schemas change.",
+  "date": "2026-11-15"
+ },
+ "vbnotes": {
+  "url": "https://vbnotes.com/",
+  "description": "Markdown notes kept as plain files in a folder you choose, with search that understands what you mean. Free, no account.",
+  "date": "2026-11-15"
+ },
+ "valutorio": {
+  "url": "https://valutorio.com/",
+  "description": "Valutorio is a native knowledge base for Mac and iPhone. Markdown notes at native speed, free to download, readable by every AI you use. On the App Store.",
+  "date": "2026-11-15"
+ },
+ "uberparking": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-15"
+ },
+ "thunder": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-15"
+ },
+ "tacie": {
+  "url": "https://tacie.app/",
+  "description": "Tacie는 회의 중에 연결한 팀 자료에서 답과 근거를 찾고, 회의가 끝나면 결정과 할 일을 정리하는 맥용 회의 어시스턴트예요.",
+  "date": "2026-11-15"
+ },
+ "restorationscope": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-15"
+ },
+ "codemesh": {
+  "url": "https://codemesh.cloud/",
+  "description": "Your codebase as a knowledge graph, synced from your editor and queryable by your agents over MCP.",
+  "date": "2026-11-15"
+ },
+ "defaulttamer": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-15"
+ },
+ "aboardsign": {
+  "url": "https://sign.aboard.com/",
+  "description": "Digitally sign any document in minutes. Email the agreement, CC sign@aboard.com, and everyone gets a link to sign. Free.",
+  "date": "2026-11-15"
+ },
+ "drops": {
+  "url": "https://www.gotdrops.com/",
+  "description": "Drops - Find new music through short song clips.",
+  "date": "2026-11-15"
+ },
+ "replay": {
+  "url": "https://heyreplay.app/",
+  "description": "On-device meeting recorder for Mac. Records any call, transcribes it locally with speaker names, and makes it searchable and AI-ready.",
+  "date": "2026-11-15"
  }
 }

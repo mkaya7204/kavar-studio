@@ -1559,5 +1559,44 @@
     "duration_sec": 22.9,
     "words": 37,
     "status": "rejected: Kapak ve 0-5 sn kanıt görseli: boş bir 'Untitled document' Google Docs ekranı. Beceriler (skills) özelliğini hiç göstermiyor, vaadi kanıtlamıyor; ayrıca küçük ve telefonda okunmuyor.; 11.4 sn karesinde kanıt görseli yine aynı boş Docs sayfası gri zeminde; 12.4 sn karesinde kutu boş görünüyor ('ŞİMDİLİK SADECE' altında içerik yok). Anlatılan İngilizce sınırı ve kademeli açılış ekranda yok, görsel ses/kartla uyuşmuyor.; Kanıt yok: sayfada @ ile çağırma, beceri oluşturma ya da çıktı gösteren okunabilir bir görsel yok. Kaynak sayfa kırpması başlık alanı değil boş bir ekran görüntüsü."
+  },
+  {
+    "id": "2026-11-15_elevenlabs",
+    "date": "2026-11-15",
+    "kind": "guide",
+    "tool": "ElevenLabs",
+    "hook_pattern": "result",
+    "headline": "Metni yaz, sesin okusun",
+    "spoken_hook": "Metni yaz, kendi sesin okusun.",
+    "cta": "Youtuber arkadaşına gönder.",
+    "duration_sec": 22.7,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-15_tacie",
+    "date": "2026-11-15",
+    "kind": "tool",
+    "tool": "Tacie",
+    "hook_pattern": "result",
+    "headline": "Toplantıda cevap kendi geliyor",
+    "spoken_hook": "Toplantıda lazım olan cevap kendi kendine geliyor.",
+    "cta": "Ekip lideri arkadaşına at.",
+    "duration_sec": 22.2,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-15_valutorio",
+    "date": "2026-11-15",
+    "kind": "tool",
+    "tool": "Valutorio",
+    "hook_pattern": "result",
+    "headline": "Notların her yapay zekâya açık",
+    "spoken_hook": "Notların kullandığın her yapay zekâya açık.",
+    "cta": "Notlarını dağınık tutan arkadaşına gönder.",
+    "duration_sec": 22.9,
+    "words": 40,
+    "status": "produced"
   }
 ]

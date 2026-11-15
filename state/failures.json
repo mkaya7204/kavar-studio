@@ -2629,5 +2629,73 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`...    rank 30 [Google Workspace Updates] Expanding Gemini in Gmail to more Google Workspace users (Gemini in Gmail reaching more users is an AI feature in an app people use, and a) ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-15",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "ElevenLabs",
+  "rendered": true,
+  "host": "elevenlabs.io",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-15",
+  "stage": "news",
+  "kind": "news",
+  "item": "Designing for privacy on intelligent eyewear",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-15",
+  "stage": "news",
+  "kind": "news",
+  "item": "Gondola doubles revenue as its team builds more with Codex",
+  "rendered": false,
+  "host": "openai.com",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: article has no cover image or too little text"
+ },
+ {
+  "date": "2026-11-15",
+  "stage": "news",
+  "kind": "news",
+  "item": "Holiday Extras is rethinking what it can build with Codex",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-15",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Tacie",
+  "rendered": true,
+  "host": "tacie.app",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-15",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Valutorio",
+  "rendered": true,
+  "host": "valutorio.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

@@ -1,26 +1,5 @@
 [
   {
-    "tool": "Google",
-    "hook": "Arabada yapay zekâ sohbeti",
-    "pattern": "news",
-    "spoken_hook": "Google yapay zekâ asistanını arabaya getirdi.",
-    "cta": "iPhone'lu arkadaşına gönder."
-  },
-  {
-    "tool": "Kippy AI",
-    "hook": "Konuşmaya gelince donuyorsun",
-    "pattern": "pain",
-    "spoken_hook": "Kelimeleri biliyorsun ama konuşurken donup kalıyorsun.",
-    "cta": "Dil öğrenen arkadaşına gönder."
-  },
-  {
-    "tool": "Relay",
-    "hook": "Belgeden sonra soru yağıyor",
-    "pattern": "pain",
-    "spoken_hook": "Belgeyi gönderiyorsun, arkasından soru yağıyor.",
-    "cta": "Belge gönderen arkadaşına at."
-  },
-  {
     "tool": "Mister Blocks",
     "hook": "Elindeki legolardan yapı çıkıyor",
     "pattern": "result",
@@ -68,5 +47,26 @@
     "pattern": "curiosity",
     "spoken_hook": "Gemini'ye bir kez anlat, hep aynı yazsın.",
     "cta": "Pazarlama ekibine gönder."
+  },
+  {
+    "tool": "ElevenLabs",
+    "hook": "Metni yaz, sesin okusun",
+    "pattern": "result",
+    "spoken_hook": "Metni yaz, kendi sesin okusun.",
+    "cta": "Youtuber arkadaşına gönder."
+  },
+  {
+    "tool": "Tacie",
+    "hook": "Toplantı bitince görevler hazır",
+    "pattern": "result",
+    "spoken_hook": "Toplantı biter bitmez kararlar ve görevler hazır.",
+    "cta": "Ekip lideri arkadaşına at."
+  },
+  {
+    "tool": "Valutorio",
+    "hook": "Notların her yapay zekâya açık",
+    "pattern": "result",
+    "spoken_hook": "Notların kullandığın her yapay zekâya açık.",
+    "cta": "Notlarını dağınık tutan arkadaşına gönder."
   }
 ]
