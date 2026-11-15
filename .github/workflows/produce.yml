@@ -86,15 +86,6 @@ jobs:
       # D-49: the PC's hook (.claude/settings.json) calls a Windows path; on this Linux runner the call fails
       # and `onFailure: block` refused every Bash call of the fixing agent (10-24: its render, twice).
       # Removed on the runner only (never committed: Save state adds state/ alone); the PC keeps it.
-      - name: No test run in the production night (11-14, COMMITMENTS #24)
-        # three night dry runs used the Claude limit that production needed: 11-15 got 1 of 5 posts
-        if: github.event.inputs.dry == 'yes'
-        run: |
-          h=$(date -u +%H)
-          if [ "$h" -ge 0 ] && [ "$h" -lt 7 ]; then
-            echo "::error::dry runs are refused 00:00-07:00 UTC; production shares the Claude limit"; exit 1
-          fi
-
       - name: Cloud runner (drop the PC-only hook, free artifact storage)
         if: steps.guard.outputs.skip != 'true'
         run: |

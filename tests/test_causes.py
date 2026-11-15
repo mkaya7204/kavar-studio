@@ -298,10 +298,8 @@ def test_a_testable_repeat_is_skipped_too():
     assert 'if r and (r["repeat"] or (not r["fits"] and not item.get("testable"))):' in d
 
 
-def test_test_runs_never_take_the_production_nights_usage_and_voice_runs_queue():
-    """11-14: night dry runs emptied the Claude limit before production; two voice runs collided on their push."""
+def test_voice_runs_queue():
+    """11-14: two voice runs collided on their final state push (HiringNow's used tool was lost)."""
     wf = Path(__file__).resolve().parents[1] / ".github" / "workflows"
-    produce = (wf / "produce.yml").read_text(encoding="utf-8")
-    assert "dry runs are refused 00:00-07:00 UTC" in produce
     voice = (wf / "voice.yml").read_text(encoding="utf-8")
     assert "concurrency:\n  group: voice" in voice
