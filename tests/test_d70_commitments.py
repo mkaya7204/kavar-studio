@@ -17,7 +17,7 @@ APPROVED_11_12 = {
     "illustrator": "illustrator to draw the crow",
     "plan": "artifact/8nuzgbgVwnEzCJ1t1cTnMN",
 }
-STATUSES = ("DONE", "KODDA", "YAPILIYOR", "BAŞLAMADI", "KULLANICIDA", "CEVAP BEKLİYOR")
+STATUSES = ("DONE", "KODDA", "YAPILIYOR", "BAŞLAMADI", "KULLANICIDA", "CEVAP BEKLİYOR", "KAÇTI")  # KAÇTI: missed, can no longer be done (11-14 #20)
 
 
 def test_the_decisions_of_11_12_stay_on_the_promise_list():

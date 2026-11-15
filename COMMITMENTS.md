@@ -7,7 +7,7 @@ cloud run's log or files as evidence (D-49); "kodda" alone is not done. Nothing 
 
 Status: `DONE` (seen in a run) · `KODDA` (built and tested, not yet seen in production) · `YAPILIYOR` (being built)
 · `BAŞLAMADI` (promised, not started) · `KULLANICIDA` (needs the user or an outside person; Claude cannot do it)
-· `CEVAP BEKLİYOR` (waiting for the user's answer).
+· `CEVAP BEKLİYOR` (waiting for the user's answer) · `KAÇTI` (missed; it can no longer be done, said openly).
 
 | # | Söz (promise) | Status | Evidence / next check |
 |---|---|---|---|
