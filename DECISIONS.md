@@ -704,3 +704,8 @@ the decisions that are currently locked; this file explains why they exist and h
 - **The user:** "1. günde iki karusel kalsın 2. Reel kaynağı yapalım dediklerini 3. Evet 4. Ayrıca konuşalım öyle başlarsın", after Claude showed 103 posts: carousels avg reach 34 and 0 follows, Reels avg reach 145 and 4 follows.
 - **Means:** schedule.json keeps 12:30 and 18:00 carousels (no change). Tool Reels will also take candidates from the news channels and GitHub (COMMITMENTS #26). Approved, unposted Reels are kept permanently (#27). A Monday numbers page (#28). Branch deneyenler waits for a talk (#29). The user's own tasks (Instagram token, cron-job.org token, crow drawing) are on hold until they say.
 
+## D-79 (2026-11-15): repeats fixed on main, empty slots still filled, a concept per hour
+- **The user:** "Gerçek kuyrukta gördüğün iki sorunun 1 ana sisteme doğru şekilde al 2. Boş kalmasın kuralı devam, bir de istediğin hale gelmesi bölümü için de uygundur diyorum."
+- **Found (queues 11-05..11-14):** times are fixed (schedule.json); only 07:30 has its own concept; 11:45 / 20:30 get Reels by rank (best at 20:30), 12:30 / 18:00 get news carousels by rank with the same concept; the ranker never considers the hour. Real repeat: "Gemini 4 Carbon" at 18:00 on 11-12 and 12:30 on 11-13.
+- **Means:** D-75's repeat check goes to main (COMMITMENTS #22). _fill_empty_reel_slots and the other empty-slot fills stay. After the Monday numbers page, each slot gets its own concept with the user (#30).
+
