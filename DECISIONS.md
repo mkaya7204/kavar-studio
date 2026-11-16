@@ -709,3 +709,8 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Found (queues 11-05..11-14):** times are fixed (schedule.json); only 07:30 has its own concept; 11:45 / 20:30 get Reels by rank (best at 20:30), 12:30 / 18:00 get news carousels by rank with the same concept; the ranker never considers the hour. Real repeat: "Gemini 4 Carbon" at 18:00 on 11-12 and 12:30 on 11-13.
 - **Means:** D-75's repeat check goes to main (COMMITMENTS #22). _fill_empty_reel_slots and the other empty-slot fills stay. After the Monday numbers page, each slot gets its own concept with the user (#30).
 
+## D-80 (2026-11-16): approved Reels are kept for good (COMMITMENTS #27)
+- **The user (11-15):** "Evet" to keeping approved, unposted Reels permanently; 11-16: "Zaten gündüz daha neyi bekliyorsun sana başla demiştim".
+- **Cause:** a run's archive expires in 2-3 days; on 11-14 the reserve's Skillbox and ElevenLabs Reels could no longer be voiced (#20 KAÇTI).
+- **Built:** .github/keep_reels.sh: every Reel of a produce.yml run (production and dry runs) with a `_voice` kit is packed without its videos and uploaded to the release `kept-reels` (never expires, `--clobber`). voice.yml: when `gh run download` fails, it takes `keep-<reel>.tgz` from that release.
+- **Guarded by:** tests/test_d80_kept_reels.py.
