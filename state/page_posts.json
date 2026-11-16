@@ -646,5 +646,15 @@
   "date": "2024-03-17T00:00:00+00:00",
   "summary": "We are releasing the weights and architecture of our 314 billion parameter Mixture-of-Experts model Grok-1."
  },
- "https://api-docs.deepseek.com/news/news261113": null
+ "https://api-docs.deepseek.com/news/news261113": null,
+ "https://x.ai/news/prompt-ide": {
+  "title": "Announcing PromptIDE",
+  "date": "2023-11-06T00:00:00+00:00",
+  "summary": "Integrated development environment for prompt engineering and interpretability research."
+ },
+ "https://x.ai/news/grok": {
+  "title": "Announcing Grok",
+  "date": "2023-11-03T00:00:00+00:00",
+  "summary": "Grok is an AI modeled after the Hitchhiker’s Guide to the Galaxy. It is intended to answer almost anything and, far harder, even suggest what questions to ask!"
+ }
 }

@@ -1,19 +1,5 @@
 [
   {
-    "tool": "Mister Blocks",
-    "hook": "Elindeki legolardan yapı çıkıyor",
-    "pattern": "result",
-    "spoken_hook": "Dağınık legolarını çek, yapay zekâ yapı önersin.",
-    "cta": "Lego seven arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
-    "hook": "Karışık soru, tek cümle",
-    "pattern": "result",
-    "spoken_hook": "Karışık soruyu Google'a tek cümlede sorabilirsin.",
-    "cta": "Bunu çok araştıran arkadaşına gönder."
-  },
-  {
     "tool": "YouArt Desktop App",
     "hook": "Görsel ve video tek yerden",
     "pattern": "result",
@@ -68,5 +54,19 @@
     "pattern": "result",
     "spoken_hook": "Notların kullandığın her yapay zekâya açık.",
     "cta": "Notlarını dağınık tutan arkadaşına gönder."
+  },
+  {
+    "tool": "Spiik",
+    "hook": "Ders kaydın çalışma kartı oluyor",
+    "pattern": "result",
+    "spoken_hook": "Ders kaydın not ve çalışma kartına dönüşüyor.",
+    "cta": "Sınava çalışan arkadaşına gönder."
+  },
+  {
+    "tool": "collecto.rs",
+    "hook": "Fotoğraftan koleksiyon kataloğu",
+    "pattern": "result",
+    "spoken_hook": "Koleksiyonunu artık fotoğraf çekerek kataloglayabilirsin.",
+    "cta": "Koleksiyoncu arkadaşına gönder."
   }
 ]

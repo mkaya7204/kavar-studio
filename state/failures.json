@@ -2697,5 +2697,75 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-16",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 30 [Google Workspace Updates] Expanding Gemini in Gmail to more Google Workspace users (Gemini in Gmail reaching more users is a usable AI feature in a known product.) ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-16",
+  "stage": "news",
+  "kind": "news",
+  "item": "Our new blog for science",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-16",
+  "stage": "news",
+  "kind": "news",
+  "item": "Build a Robot Pick-and-Place Simulation with SimReady Assets",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-16",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Spiik",
+  "rendered": true,
+  "host": "spiik.io",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-16",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "collecto.rs",
+  "rendered": true,
+  "host": "collecto.rs",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-16",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`...    rank 30 [Google Workspace Updates] Expanding Gemini in Gmail to more Google Workspace users (Gemini in Gmail reaching more users is a usable AI feature and can be shown with) [article] workspaceupdates.googleblog.com answered 429; reading it through t"
  }
 ]

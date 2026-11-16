@@ -203,5 +203,50 @@
   "url": "https://heyreplay.app/",
   "description": "On-device meeting recorder for Mac. Records any call, transcribes it locally with speaker names, and makes it searchable and AI-ready.",
   "date": "2026-11-15"
+ },
+ "tulvo": {
+  "url": "https://tulvo.io/",
+  "description": "Bring your projects, docs, forms, and records into one shared workspace. Use Tulvo AI to build your setup and make changes as your team",
+  "date": "2026-11-16"
+ },
+ "spiik": {
+  "url": "https://spiik.io/",
+  "description": "Press record. Spiik transcribes it, labels who said what, and turns it into notes, quizzes and flashcards, in 100+ languages.",
+  "date": "2026-11-16"
+ },
+ "emayler": {
+  "url": "https://emayler.com/",
+  "description": "Real mailboxes on your own domain, a web inbox you will enjoy, and a dashboard to set everything up. Unlimited aliases on paid plans, one flat account price, no per-user fees.",
+  "date": "2026-11-16"
+ },
+ "twobucket": {
+  "url": "https://usetwobucket.com/",
+  "description": "Mobile detailing software for detailers who come to the customer. Customers send the vehicle, its condition, photos and the work they want. You send the estimate, schedule the visit, get paid and bring them back, in the app for iPhone and Android or on the web. One plan with everything.",
+  "date": "2026-11-16"
+ },
+ "collectors": {
+  "url": "https://collecto.rs/",
+  "description": "Free collection tracker app for iPhone and the web. Catalog anything with AI photo ID, 14M+ items to search, or spreadsheet import, then share it.",
+  "date": "2026-11-16"
+ },
+ "pixeloffice": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-16"
+ },
+ "talyn": {
+  "url": "https://www.talyn.dev/",
+  "description": "Run Claude Code and Codex in parallel cloud sandboxes, on the subscription you already pay for. Each session gets a branch, a diff and a path to a merged PR.",
+  "date": "2026-11-16"
+ },
+ "privacyboard": {
+  "url": "https://privacyboard.io/",
+  "description": "Stay on top of privacy compliance: policies, records, cookie consent and privacy requests in one workspace, with a public privacy center and an AI connector.",
+  "date": "2026-11-16"
+ },
+ "rakazo": {
+  "url": "https://rakazo.com/",
+  "description": "Rakazo is an open source Grok Bot alternative for persistent AI teammates that do real work. Your keys, your model, your machine.",
+  "date": "2026-11-16"
  }
 }

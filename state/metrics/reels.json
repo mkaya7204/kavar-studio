@@ -1598,5 +1598,31 @@
     "duration_sec": 22.9,
     "words": 40,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-16_spiik",
+    "date": "2026-11-16",
+    "kind": "tool",
+    "tool": "Spiik",
+    "hook_pattern": "result",
+    "headline": "Ders kaydın yazıya dökülüyor",
+    "spoken_hook": "Ders kaydın otomatik olarak yazıya dökülüyor.",
+    "cta": "Sınava çalışan arkadaşına gönder.",
+    "duration_sec": 21.9,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-16_collecto-rs",
+    "date": "2026-11-16",
+    "kind": "tool",
+    "tool": "collecto.rs",
+    "hook_pattern": "result",
+    "headline": "Fotoğraftan koleksiyon kataloğu",
+    "spoken_hook": "Koleksiyonunu artık fotoğraf çekerek kataloglayabilirsin.",
+    "cta": "Koleksiyoncu arkadaşına gönder.",
+    "duration_sec": 24.7,
+    "words": 41,
+    "status": "produced"
   }
 ]
