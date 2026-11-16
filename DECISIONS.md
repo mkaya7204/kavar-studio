@@ -709,3 +709,42 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Found (queues 11-05..11-14):** times are fixed (schedule.json); only 07:30 has its own concept; 11:45 / 20:30 get Reels by rank (best at 20:30), 12:30 / 18:00 get news carousels by rank with the same concept; the ranker never considers the hour. Real repeat: "Gemini 4 Carbon" at 18:00 on 11-12 and 12:30 on 11-13.
 - **Means:** D-75's repeat check goes to main (COMMITMENTS #22). _fill_empty_reel_slots and the other empty-slot fills stay. After the Monday numbers page, each slot gets its own concept with the user (#30).
 
+## D-73 · 2026-11-14 · A: what real people found when they tried the tool
+- **The user (11-12):** "A için evet"; **11-14:** "A da bizim gerçekten deneme şansımız yok ama denenmiş olunmuş
+  hallerini bulabilirmişiz, kullanıcı deneyimleri veya bunları denenmiş kurumlar veya platformlar".
+- **Built:** src/experiences.py find_experiences(): before a tool Reel's script, Claude searches the web (WebSearch +
+  WebFetch) for first-hand reports of trying THIS product (Product Hunt reviews / comments, Reddit, Hacker News, G2,
+  app stores, independent reviewers); up to 3 findings, each with source, url, one Turkish sentence, tone. clean()
+  drops the maker's own site, findings with prices (§1.1) and anything without a source. The tool Reel pipeline puts
+  them in the tool data (fetcher.Tool.experiences, tool.json); the writer may lead with the most concrete one, always
+  attributed ("Product Hunt'ta deneyenler ... diyor"), source in the caption, never "denedik" (we didn't try it); the
+  editor checks attributed claims against them. Words only, never their images or videos (§1.9). Usage label
+  "tool_experiences".
+- **Guarded by:** tests/test_d73_deneyenler.py.
+
+## D-74 · 2026-11-14 · A second source for tools: Hacker News Show HN
+- **The user:** "A için konuşuyorum, başka kaynaklardan da baksan, tek bir kaynakta sürekli olmayabilir veya başka
+  kaynaklarda daha iyi kaliteli içerik yakalarsın".
+- **Why:** Product Hunt lists this week's launches; the D-73 dry run found no reports of people trying them.
+- **Built:** src/fetcher.py fetch_show_hn(): Hacker News Show HN posts of the last 45 days with AI in the title, at
+  least 40 points and 10 comments (people voted it up and talked about it), most discussed first, up to 4 next to
+  Product Hunt's; Tool.source / Tool.discussion_url. The ranker sees the source; the experiences search starts from
+  the Show HN thread (the maker's own comments are not experiences). Honest limit: Show HN is developer-heavy, so the
+  ranker drops many of them as off-concept for our viewers.
+- **Guarded by:** tests/test_d74_kaynaklar.py.
+
+## D-75 · 2026-11-14 · More sources, no repeated story, not always the same brand
+- **The user:** "diğer paylaşım saatleri içinde başka kaynaklardan da faydalan, bir de aynı haberin onaydan geçmesi
+  veya aynı haberin başka yerde de bulup yayına onay çıkması konusunda da önlem al ... kaynak çoğalınca hep aynı
+  isimlerin haberlerini yapmayalım ... Gemini benim için sorun değil ... hep Gemini olması kendimizi tekrara ve aynı
+  şeyleri yayınlıyoruz gibi oluyor".
+- **Cause found:** D-66 caught only identical titles: "Introducing Gemini 4 Hydrogen" passed (D-72 dry run) after
+  "Gemini 4 Hydrogen: everyday coding ..." was queued. The ranker's "recent posts" came only from recorded metrics,
+  so a story queued a day ahead (D-56) was invisible. 7 of 20 news feeds were Google's.
+- **Built:** news_fetcher.same_story / seen_story (shared distinctive word, brands and filler words ignored), used by
+  fetch_news and the guide sources; src/recent_posts.py keeps each publish day's ready posts with their brand family
+  in state/recent_posts.json (daily.py records the queue) and reads this run's queue files; content_ranker counts
+  them as recent (repeat check) and takes 3 points off per post of the same brand family in the last 3 days (max 9);
+  one story per brand family a day. New company feeds (checked live): news Microsoft 365, Windows, Character.AI,
+  Opera; guide Grammarly, Duolingo, Dropbox, Mozilla.
+- **Guarded by:** tests/test_d75_cesitlilik.py.

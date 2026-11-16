@@ -173,5 +173,9 @@ def review_reel(video: Path, script: dict, tool: dict) -> dict:
               "unedited test outputs of the model (they replace the site images, so the 'proof from the "
               "product's own site' rule is met by them), and 'denedik / yazdırdık / sorduk' about these tests "
               "is true. Judge every result claim against tool_data_source.kavar_test, the rest against "
-              "tool_data_source.article." if tool.get("kavar_test") else ""))
+              "tool_data_source.article." if tool.get("kavar_test") else "")
+           + ("\ntool_data_source.experiences are real users' / reviewers' reports of trying the tool, found on the "
+              "web with their source (D-73, the page owner's decision). A claim attributed to them (\"deneyenler ... "
+              "diyor\", \"bir incelemeye göre\") is allowed when it matches one of them; presented as the page's own "
+              "experience it is not." if tool.get("experiences") else ""))
     return _ask(folder, msg)
