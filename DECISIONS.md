@@ -748,3 +748,13 @@ the decisions that are currently locked; this file explains why they exist and h
   one story per brand family a day. New company feeds (checked live): news Microsoft 365, Windows, Character.AI,
   Opera; guide Grammarly, Duolingo, Dropbox, Mozilla.
 - **Guarded by:** tests/test_d75_cesitlilik.py.
+## D-80 (2026-11-16): approved Reels are kept for good (COMMITMENTS #27)
+- **The user (11-15):** "Evet" to keeping approved, unposted Reels permanently; 11-16: "Zaten gündüz daha neyi bekliyorsun sana başla demiştim".
+- **Cause:** a run's archive expires in 2-3 days; on 11-14 the reserve's Skillbox and ElevenLabs Reels could no longer be voiced (#20 KAÇTI).
+- **Built:** .github/keep_reels.sh: every Reel of a produce.yml run (production and dry runs) with a `_voice` kit is packed without its videos and uploaded to the release `kept-reels` (never expires, `--clobber`). voice.yml: when `gh run download` fails, it takes `keep-<reel>.tgz` from that release.
+- **Guarded by:** tests/test_d80_kept_reels.py.
+
+## D-81 (2026-11-16): batch 1 and D-80 on main
+- **The user:** "tamam", after the daytime dry run 43879717666 (branch deneme1116) showed: two more OpenAI stories skipped and 18:00 going to Hugging Face, Hob from Show HN with two Hacker News users' reports attributed in its caption, and the three Reels' silent kits in release kept-reels.
+- **On main:** D-73 (experiences), D-74 (Show HN), D-75 (repeats in other words, brand spread, 8 new feeds), D-80 (kept-reels). Batch 2 (D-76 news channels, KISA Reel, 18:00 guide carousel, #26) stays on branch deneyenler.
+- **Guarded by:** tests/test_d73_deneyenler.py, test_d74_kaynaklar.py, test_d75_cesitlilik.py, test_d80_kept_reels.py.

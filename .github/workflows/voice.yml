@@ -74,10 +74,17 @@ jobs:
           cp "$(find /tmp/inter -name 'Inter-Black.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguibl.ttf
           cp "$(find /tmp/inter -name 'Inter-SemiBold.ttf' | head -1)" templates/hyperframes_news/assets/fonts/seguisb.ttf
       - name: The approved silent Reel from its run
+        # D-80 (#27): the run's archive expires in 2-3 days; then the copy kept for good in release kept-reels
         run: |
-          gh run download "${{ github.event.inputs.run_id }}" -n "${{ github.event.inputs.artifact }}" -D /tmp/arc
-          tar -xzf "$(find /tmp/arc -name '*.tgz' | head -1)" "output/reels/${{ github.event.inputs.reel }}"
-          test -f "output/reels/${{ github.event.inputs.reel }}/_voice/capture.json"
+          R="${{ github.event.inputs.reel }}"
+          if gh run download "${{ github.event.inputs.run_id }}" -n "${{ github.event.inputs.artifact }}" -D /tmp/arc; then
+            tar -xzf "$(find /tmp/arc -name '*.tgz' | head -1)" "output/reels/$R"
+          else
+            echo "the run's archive is gone; taking the kept copy (release kept-reels)"
+            gh release download kept-reels -p "keep-$R.tgz" -D /tmp/kept
+            tar -xzf "/tmp/kept/keep-$R.tgz"
+          fi
+          test -f "output/reels/$R/_voice/capture.json"
       - name: Voice it with George (once) and check it
         run: python src/voice_kept.py "output/reels/${{ github.event.inputs.reel }}"
       - name: Upload-size copy (Business Suite in the browser takes at most 10 MB)
