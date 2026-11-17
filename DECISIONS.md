@@ -808,3 +808,8 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Built:** src/fetcher.py fetch_github(): AI projects created in the last 30 days with at least 300 stars (GitHub search, topics ai / llm / ai-agents), lists / courses / papers skipped, the project's own homepage else the repository; fetch_news_tools(): launch stories of the D-76 news channels, Claude names the product and its OWN page (never a news site), checked to load and name the product, at most 2 look-ups per run (usage label "tool_from_news"). Both join Product Hunt and Show HN; the ranker still decides. daily.py MONEY_TOPIC: the 18:00 guide carousel never picks a shopping / payment page (11-14 dry run: Edge shopping guide had prices on its cover).
 - **Branch parti2:** D-71 KISA Reel, D-72 18:00 guide carousel, D-76 news channels, D-82. Main only after a daytime dry run and the user's "tamam".
 - **Guarded by:** tests/test_d82_reel_kaynaklari.py, test_d71*, test_d72_rehber.py, test_d76_kanallar.py.
+
+## D-83 (2026-11-17): batch 2 on main
+- **The user:** "Tamam", after dry run 44045532487 (branch parti2): KISA Reel Link.bio approved at 11:45, 18:00 guide carousel (Gemini regional voices) approved, a news-channel story (Engadget) written from Apple's own page, GitHub and news-channel tool candidates found (the ranker put them OFF), checks green.
+- **On main:** D-71 KISA Reel, D-72 18:00 guide carousel (+ no shopping / payment pages), D-76 news channels, D-82 tool Reels from GitHub and news (news look-ups once per run).
+- **Open, not changed without the user:** when the first tool fails, a tool the ranker marked OFF can still be made (Hako, developer-only, was made at 20:30 in the dry run); this is older behaviour.
