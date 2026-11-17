@@ -802,3 +802,9 @@ the decisions that are currently locked; this file explains why they exist and h
   no picture, article_capture.company_cover() takes the same company's own share image from its home page, else the
   screenshot of its own page.
 - **Guarded by:** tests/test_d76_kanallar.py; tests/conftest.py keeps every test offline (no channel, no Show HN).
+
+## D-82 (2026-11-17): tool Reels from GitHub and the news channels (#26); batch 2 prepared (#29)
+- **The user:** 11-14 "bütün o haber kaynaklarından beslensek", 11-15 "Reel kaynağı yapalım"; 11-16 "bunu unutmaman gerekiyor" (COMMITMENTS #32).
+- **Built:** src/fetcher.py fetch_github(): AI projects created in the last 30 days with at least 300 stars (GitHub search, topics ai / llm / ai-agents), lists / courses / papers skipped, the project's own homepage else the repository; fetch_news_tools(): launch stories of the D-76 news channels, Claude names the product and its OWN page (never a news site), checked to load and name the product, at most 2 look-ups per run (usage label "tool_from_news"). Both join Product Hunt and Show HN; the ranker still decides. daily.py MONEY_TOPIC: the 18:00 guide carousel never picks a shopping / payment page (11-14 dry run: Edge shopping guide had prices on its cover).
+- **Branch parti2:** D-71 KISA Reel, D-72 18:00 guide carousel, D-76 news channels, D-82. Main only after a daytime dry run and the user's "tamam".
+- **Guarded by:** tests/test_d82_reel_kaynaklari.py, test_d71*, test_d72_rehber.py, test_d76_kanallar.py.

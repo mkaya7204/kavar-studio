@@ -302,6 +302,140 @@ def fetch_show_hn(limit: int = HN_TOOLS, skip: set[str] | None = None, now: floa
     return out
 
 
+# D-82 / COMMITMENTS #26 (user 11-14 "bütün o haber kaynaklarından beslensek", 11-15 "Reel kaynağı yapalım"): tool
+# Reels also come from GitHub (new AI projects people starred) and from the news channels (D-76) when they report a
+# new AI app or assistant people can use. The ranker (content_ranker) still decides what a viewer can try.
+GH_SEARCH = "https://api.github.com/search/repositories"
+GH_DAYS = 30
+GH_MIN_STARS = 300
+GH_TOOLS = 3
+GH_SKIP = re.compile(r"\b(awesome|list|tutorial|course|paper|papers|dataset|benchmark|book|interview|roadmap|"
+                     r"prompts?|cheatsheet|examples?|learning|lessons?|curated|resources?)\b", re.I)
+NEWS_TOOLS = 2  # Claude look-ups per run for a launch found on the news channels
+LAUNCH_WORDS = re.compile(r"\b(launch\w*|introduc\w*|unveil\w*|releas\w*|debut\w*|rolls? out|now available|new app|"
+                          r"tanıttı|duyurdu|yayınladı|kullanıma sundu|piyasaya)\b", re.I)
+
+
+def _github_tool(repo: dict) -> Tool | None:
+    desc = (repo.get("description") or "").strip()
+    name = (repo.get("name") or "").strip()
+    topics = " ".join(repo.get("topics") or [])
+    if not desc or not name or repo.get("fork") or repo.get("archived"):
+        return None
+    if GH_SKIP.search(f"{name.replace('-', ' ')} {desc}") or not AI_WORDS.search(f"{desc} {topics}"):
+        return None
+    if not classify_tool(name, desc)[0]:
+        return None
+    home = (repo.get("homepage") or "").strip()
+    site = home if home.startswith("http") and "github.com" not in home else repo.get("html_url", "")
+    if not site.startswith("http"):
+        return None
+    return Tool(tool_name=name, tag_line=desc[:200], website_url=_clean_url(site), description=desc,
+                source="GitHub", discussion_url=repo.get("html_url", ""))
+
+
+def fetch_github(limit: int = GH_TOOLS, skip: set[str] | None = None, now: float | None = None) -> list[Tool]:
+    """AI projects made in the last GH_DAYS that many people starred, most starred first."""
+    if limit <= 0:
+        return []
+    since = time.strftime("%Y-%m-%d", time.gmtime((now or time.time()) - GH_DAYS * 86400))
+    headers = dict(HEADERS, Accept="application/vnd.github+json")
+    if token := os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {token}"
+    out: list[Tool] = []
+    for topic in ("ai", "llm", "ai-agents"):
+        params = {"q": f"topic:{topic} created:>{since} stars:>={GH_MIN_STARS}", "sort": "stars", "order": "desc",
+                  "per_page": 30}
+        try:
+            resp = requests.get(GH_SEARCH, params=params, headers=headers, timeout=TIMEOUT)
+            resp.raise_for_status()
+            repos = resp.json().get("items", [])
+        except (requests.RequestException, ValueError) as exc:
+            print(f"[fetcher] GitHub search failed ({exc}).")
+            continue
+        for repo in repos:
+            tool = _github_tool(repo)
+            if tool and not already_used(tool.tool_name, skip or set()) and \
+                    all(_fold(t.tool_name) != _fold(tool.tool_name) for t in out):
+                out.append(tool)
+            if len(out) >= limit:
+                return out
+    return out
+
+
+NEWS_TOOL_SCHEMA = {"type": "object", "additionalProperties": False, "required": ["product", "url"],
+                    "properties": {"product": {"type": "string"}, "url": {"type": "string"}}}
+NEWS_TOOL_PROMPT = """A tech news channel ran this story:
+title: {title}
+summary: {summary}
+channel article: {url}
+
+Is it the launch of an AI app, assistant, agent or tool that an ordinary person can use now (not a model only \
+developers call, not a deal, lawsuit, funding or research result)? If yes, return the product's name and the URL of \
+its OWN page (the product's site or the company's announcement on its own domain; open it with WebFetch and check). \
+Never a news site, social media, Reddit, YouTube or an app store. Otherwise return product "" and url ""."""
+
+
+def launch_candidates(stories: list[dict]) -> list[dict]:
+    """News-channel stories that look like a product launch, most channels first (discovery already sorts)."""
+    return [s for s in stories if LAUNCH_WORDS.search(s.get("title", ""))]
+
+
+def _news_tool(story: dict) -> Tool | None:
+    exe = None if os.getenv("SCRIPT_WRITER_NO_CLI") else shutil.which("claude")
+    if not exe:
+        return None
+    env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
+    try:
+        proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(NEWS_TOOL_SCHEMA),
+                               "--tools", "WebSearch,WebFetch", "--allowedTools", "WebSearch,WebFetch",
+                               "--no-session-persistence"],
+                              input=NEWS_TOOL_PROMPT.format(title=story["title"], summary=story.get("summary", ""),
+                                                            url=story["url"]),
+                              capture_output=True, text=True, encoding="utf-8", timeout=240, env=env)
+        record_usage("tool_from_news", proc.stdout)
+        out = json.loads(proc.stdout).get("structured_output") or {}
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
+        return None
+    return news_tool_from(out, story)
+
+
+def news_tool_from(out: dict, story: dict) -> Tool | None:
+    """The answer only when it names a product and its own page loads and names it (never a news site)."""
+    from discovery import _media, media_hosts
+    product, url = (out.get("product") or "").strip(), (out.get("url") or "").strip()
+    if not product or not url.startswith("http") or _media(url, media_hosts()) or "producthunt.com" in url:
+        return None
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+        resp.raise_for_status()
+    except requests.RequestException:
+        return None
+    if _fold(product)[:12] not in _fold(resp.text[:300_000]):
+        return None
+    desc = _meta_description(resp.text) or story.get("summary") or story["title"]
+    return Tool(tool_name=product, tag_line=story["title"][:200], website_url=_clean_url(resp.url),
+                description=desc, source=story.get("source") or "News")  # a news article is no users' thread
+
+
+def fetch_news_tools(limit: int = NEWS_TOOLS, skip: set[str] | None = None) -> list[Tool]:
+    if limit <= 0:
+        return []
+    try:
+        from discovery import discover
+        stories = launch_candidates(discover(30))
+    except Exception as exc:  # noqa: BLE001  the channels are extra; Product Hunt still works
+        print(f"[fetcher] news channels failed ({type(exc).__name__}).")
+        return []
+    out: list[Tool] = []
+    for story in stories[:limit]:
+        tool = _news_tool(story)
+        if tool and not already_used(tool.tool_name, skip or set()) and \
+                all(_fold(t.tool_name) != _fold(tool.tool_name) for t in out):
+            out.append(tool)
+    return out
+
+
 def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool = False,
                        exclude: set[str] | None = None) -> list[dict]:
     """Return up to `limit` recent SaaS / AI tools as JSON-serialisable dicts.
@@ -332,6 +466,9 @@ def fetch_latest_tools(limit: int = 3, use_sample: bool = False, verbose: bool =
             print(f"[fetcher] Product Hunt feed failed ({exc}); using sample data.")
         # D-74: a second source with people who tried the tool
         tools += fetch_show_hn(HN_TOOLS, {_fold(n) for n in exclude or ()} | {_fold(t.tool_name) for t in tools})
+        # D-82 (#26): GitHub and the news channels too
+        tools += fetch_github(GH_TOOLS, {_fold(n) for n in exclude or ()} | {_fold(t.tool_name) for t in tools})
+        tools += fetch_news_tools(NEWS_TOOLS, {_fold(n) for n in exclude or ()} | {_fold(t.tool_name) for t in tools})
 
     if len(tools) < limit:
         if not use_sample:

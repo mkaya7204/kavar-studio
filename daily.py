@@ -262,6 +262,10 @@ def produce_news_items(count: int) -> list[dict]:
 GUIDE_CAROUSEL_TRIES = 2  # D-72: company pages tried for the 18:00 guide carousel
 
 
+MONEY_TOPIC = re.compile(r"\b(shop\w*|shopping|buy\w*|purchas\w*|checkout|pric\w*|deals?|discounts?|coupons?|"
+                         r"payments?|pay|wallet|cart|subscri\w*|billing|alışveriş|fiyat\w*|indirim\w*|ödeme\w*)\b", re.I)
+
+
 def produce_guide_carousel() -> dict | None:
     """D-72 (user 2026-11-12: "D onay veriyorum olsun"): the 18:00 carousel is a saveable guide to an AI feature of
     a known product, from the company's own page (the guide Reel's sources, D-31/D-41), ranked for saving."""
@@ -274,6 +278,11 @@ def produce_guide_carousel() -> dict | None:
             break
         r = item.get("rank") or {}
         if r and (not r["fits"] or r["repeat"]):
+            continue
+        # 11-14 dry run 43571295790: a shopping guide (Edge) carried prices on its cover; a guide about buying or
+        # paying can't be written without them (§1.1), so such pages are never chosen for the guide carousel
+        if MONEY_TOPIC.search(f"{item['title']} {item.get('summary', '')}"):
+            log(f"   skip (shopping / payment topic, §1.1): {item['title']}")
             continue
         tries += 1
         log(f"guide carousel: {item['source']} - {item['title']}")
