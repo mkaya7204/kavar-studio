@@ -2767,5 +2767,74 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`...    rank 30 [Google Workspace Updates] Expanding Gemini in Gmail to more Google Workspace users (Gemini in Gmail reaching more users is a usable AI feature and can be shown with) [article] workspaceupdates.googleblog.com answered 429; reading it through t"
+ },
+ {
+  "date": "2026-11-17",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-17",
+  "stage": "news",
+  "kind": "news",
+  "item": "New Ask Maps features to help with holiday travel and prep",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-17",
+  "stage": "news",
+  "kind": "news",
+  "item": "Broadening access to AI for scientists",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-17",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Hob",
+  "rendered": true,
+  "host": "github.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "facts"
+  ],
+  "detail": "11,2 sn çevresindeki sahne (18 GB model indirme cümlesi) GitHub kenar çubuğunu gösteriyor (windows, Readme, MIT license, 549 stars, 48 forks), alt yarısı bulanık gri. Anlatılan şeyi kanıtlamıyor; sahne ile ses uyuşmuyor.; Daha iyi görsel: Hacker News'teki wilg yorumunun okunur ekran görüntüsü (18 GB"
+ },
+ {
+  "date": "2026-11-17",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Freebuff",
+  "rendered": true,
+  "host": "freebuff.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-17",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Pine Drama Studio",
+  "rendered": true,
+  "host": "github.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

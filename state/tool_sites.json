@@ -248,5 +248,115 @@
   "url": "https://rakazo.com/",
   "description": "Rakazo is an open source Grok Bot alternative for persistent AI teammates that do real work. Your keys, your model, your machine.",
   "date": "2026-11-16"
+ },
+ "cookieaway": {
+  "url": "https://www.cookieaway.com/",
+  "description": "Cookie Away is a free, open-source Chrome extension that rejects cookie banners for you, even when Reject is hidden behind a settings screen.",
+  "date": "2026-11-17"
+ },
+ "freebuff": {
+  "url": "https://freebuff.com/",
+  "description": "Code, build and deploy apps, and chat with AI for free. Work in your browser, desktop or terminal with Freebuff.",
+  "date": "2026-11-17"
+ },
+ "newsology": {
+  "url": "https://newsology.app/",
+  "description": "See who",
+  "date": "2026-11-17"
+ },
+ "openbot": {
+  "url": "https://open.bot/",
+  "description": "Work with AI coworkers on your laptop or deploy OpenBot across your company with built-in permissions and approvals. Bring your own agents, models, and tools.",
+  "date": "2026-11-17"
+ },
+ "zoomslides": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-17"
+ },
+ "openframe": {
+  "url": "https://openframe.ai/",
+  "description": "Swap bloated vendor tools for open ones. Automate the boring crap. Take your margin back. AI-driven open-source OS for MSPs.",
+  "date": "2026-11-17"
+ },
+ "pharenhub": {
+  "url": "https://pharen.de/",
+  "description": "Pharen ist eine KI-Agentur aus Leipzig: Agenten, Automation und Workshops für den Mittelstand. Wir bauen KI dort ein, wo sie euch messbar Arbeit abnimmt.",
+  "date": "2026-11-17"
+ },
+ "zode": {
+  "url": "https://zode.dev/",
+  "description": "Cloud computers for coding agents and the CI that checks their work: a Linux microVM per agent with Docker, a live browser and mid-run forks, credentials that never enter the machine, and warm GitHub Actions runners.",
+  "date": "2026-11-17"
+ },
+ "pinedramastudio": {
+  "url": "https://github.com/PineComputer/pine-drama-studio",
+  "description": "A desktop studio for AI short dramas, built on Code-OSS, working with agents on Pine Computers - PineComputer/pine-drama-studio",
+  "date": "2026-11-17"
+ },
+ "papyras": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-17"
+ },
+ "laurence": {
+  "url": "https://www.laurence.com/",
+  "description": "Laurence grows e-commerce revenue across Amazon, DTC, and more. Its models run your ads against your profit, CAC, and market size.",
+  "date": "2026-11-17"
+ },
+ "notebooktonotes": {
+  "url": "https://notebooktonotes.com/",
+  "description": "Move your OneNote notebooks to Apple Notes with folders, native checklists, attachments and links between pages. 100% offline macOS app.",
+  "date": "2026-11-17"
+ },
+ "blommafororganizations": {
+  "url": "https://www.blomma.com/orgs",
+  "description": "Blomma brings humanity back to growthâpairing AI with emotional intelligence to help people and teams bloom in their careers and everyday work.",
+  "date": "2026-11-17"
+ },
+ "centralize": {
+  "url": "https://www.usecentralize.com/",
+  "description": "Centralize builds a living map of every account, finds missing stakeholders, uncovers warm paths, and gives your deal team one place to work every relationship, from prospect to expansion.",
+  "date": "2026-11-17"
+ },
+ "chatgptwallet": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-17"
+ },
+ "curates": {
+  "url": "https://curates.io/",
+  "description": "Share, review and showcase your work. One place for all of it.",
+  "date": "2026-11-17"
+ },
+ "lingomic": {
+  "url": "https://lingomic.com/",
+  "description": "Speak naturally and be heard in any language. LingoMic translates your voice live on Google Meet, Zoom and Microsoft Teams, keeps your tone, captions every speaker and writes the notes.",
+  "date": "2026-11-17"
+ },
+ "findy": {
+  "url": "https://getfindy.xyz/",
+  "description": "Search your Mac the way youâd describe a file: âpdfs from gmail last weekâ. Findy reads the text in images and PDFs too.",
+  "date": "2026-11-17"
+ },
+ "punchcutter": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-17"
+ },
+ "glifa": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-17"
+ },
+ "intelligenteyewear": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-17"
+ },
+ "nexus": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-17"
  }
 }

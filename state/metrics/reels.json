@@ -1624,5 +1624,57 @@
     "duration_sec": 24.7,
     "words": 41,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-17_google",
+    "date": "2026-11-17",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Notların interaktif site oluyor",
+    "spoken_hook": "Notların ve kaynakların interaktif siteye dönüşüyor.",
+    "cta": "Sınava çalışan arkadaşına at.",
+    "duration_sec": 22.4,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-17_hob",
+    "date": "2026-11-17",
+    "kind": "tool",
+    "tool": "Hob",
+    "hook_pattern": "curiosity",
+    "headline": "Açık kaynak ChatGPT alternatifi",
+    "spoken_hook": "Cihazda çalışan açık kaynak ChatGPT alternatifi çıktı.",
+    "cta": "Yerel yapay zekâ meraklısına gönder.",
+    "duration_sec": 22.5,
+    "words": 36,
+    "status": "rejected: 11,2 sn çevresindeki sahne (18 GB model indirme cümlesi) GitHub kenar çubuğunu gösteriyor (windows, Readme, MIT license, 549 stars, 48 forks), alt yarısı bulanık gri. Anlatılan şeyi kanıtlamıyor; sahne ile ses uyuşmuyor.; Daha iyi görsel: Hacker News'teki wilg yorumunun okunur ekran görüntüsü (18 GB model, zayıf modeller). Bu görsel 02/03. kartların sahnesinde kullanılmalı.; Kart 02 ('Büyük model indirmesi gerekebilir') ekranda görünürken sesteki 18 GB cümlesiyle aynı sahnede olması gerekiyor. Şu an sahne GitHub depo sayfası ve kaynak etiketi 'github.com'; Hacker News yorumu için etiket 'news.ycombinator.com' olmalı."
+  },
+  {
+    "id": "2026-11-17_freebuff",
+    "date": "2026-11-17",
+    "kind": "tool",
+    "tool": "Freebuff",
+    "hook_pattern": "result",
+    "headline": "Uygulama yazıp yayına alıyor",
+    "spoken_hook": "Yapay zekâ uygulamanı yazıp yayına alıyor.",
+    "cta": "Yazılımcı arkadaşına gönder.",
+    "duration_sec": 22.5,
+    "words": 39,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-17_pine-drama-studio",
+    "date": "2026-11-17",
+    "kind": "tool",
+    "tool": "Pine Drama Studio",
+    "hook_pattern": "curiosity",
+    "headline": "Filmciliğin Cursor'ı çıkmış",
+    "spoken_hook": "Yapay zekâlı filmciliğin Cursor'ı çıkmış.",
+    "cta": "Kısa film çeken arkadaşına gönder.",
+    "duration_sec": 22.1,
+    "words": 39,
+    "status": "produced"
   }
 ]

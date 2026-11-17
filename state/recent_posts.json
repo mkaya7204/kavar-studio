@@ -1,0 +1,51 @@
+[
+ {
+  "day": "2026-11-17",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "a",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-17",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "b",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-18",
+  "time": "07:30",
+  "kind": "reel",
+  "title": "Google",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-18",
+  "time": "11:45",
+  "kind": "reel",
+  "title": "Pine Drama Studio",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-18",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "New Ask Maps features to help with holiday travel and prep",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-18",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "Broadening access to AI for scientists",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-18",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "Freebuff",
+  "brand": ""
+ }
+]
