@@ -1522,5 +1522,73 @@
     "shares": 0,
     "saves": 1,
     "avg_watch_sec": 3
+  },
+  {
+    "published": "2026-11-16 07:31",
+    "kind": "reel",
+    "title": "ElevenLabs ses klonlama rehber Reel",
+    "folder": "2026-11-15_elevenlabs",
+    "reach": 127,
+    "views": 141,
+    "follows": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 2
+  },
+  {
+    "published": "2026-11-16 11:46",
+    "kind": "reel",
+    "title": "Valutorio",
+    "folder": "2026-11-15_valutorio",
+    "reach": 121,
+    "views": 133,
+    "follows": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "saves": 1,
+    "avg_watch_sec": 2
+  },
+  {
+    "published": "2026-11-16 12:30",
+    "kind": "carousel",
+    "title": "Google akıllı gözlük gizliliği",
+    "folder": "2026-11-15_haber-designing-for-privacy-on-intelligent-eye",
+    "reach": 15,
+    "views": 33,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-16 18:00",
+    "kind": "carousel",
+    "title": "Holiday Extras / Codex",
+    "folder": "2026-11-15_haber-holiday-extras-is-rethinking-what-it-can",
+    "reach": 7,
+    "views": 12,
+    "follows": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-16 20:31",
+    "kind": "reel",
+    "title": "Tacie",
+    "folder": "2026-11-15_tacie",
+    "reach": 118,
+    "views": 134,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 1,
+    "avg_watch_sec": 2
   }
 ]
