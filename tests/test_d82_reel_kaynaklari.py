@@ -89,3 +89,15 @@ def test_the_guide_carousel_never_picks_a_shopping_or_payment_page():
         assert daily.MONEY_TOPIC.search(title), title
     for title in ("Turn notes into interactive sites with Gemini Notebook", "Regional voices in the Gemini app"):
         assert not daily.MONEY_TOPIC.search(title), title
+
+
+def test_the_news_channels_are_asked_once_per_run(monkeypatch):
+    """11-17 dry run 44045532487: 4 look-ups instead of 2 (each Reel attempt fetched the tools again)."""
+    import discovery
+    calls = []
+    monkeypatch.setattr(fetcher, "_NEWS_TOOLS_CACHE", None)
+    monkeypatch.setattr(discovery, "discover", lambda n: [{"title": "Acme launches Pal", "url": "u", "source": "X"}])
+    monkeypatch.setattr(fetcher, "_news_tool", lambda s: calls.append(s) or None)
+    fetcher.fetch_news_tools(2)
+    fetcher.fetch_news_tools(2)
+    assert len(calls) == 1

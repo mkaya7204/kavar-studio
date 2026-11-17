@@ -418,9 +418,18 @@ def news_tool_from(out: dict, story: dict) -> Tool | None:
                 description=desc, source=story.get("source") or "News")  # a news article is no users' thread
 
 
+_NEWS_TOOLS_CACHE: list[Tool] | None = None  # one look-up per run: every Reel attempt asks for the tools again
+
+
 def fetch_news_tools(limit: int = NEWS_TOOLS, skip: set[str] | None = None) -> list[Tool]:
+    """11-17 dry run 44045532487: 4 look-ups instead of 2, because each Reel attempt fetched the tools again; the
+    run's first answer is kept and reused."""
+    global _NEWS_TOOLS_CACHE
     if limit <= 0:
         return []
+    if _NEWS_TOOLS_CACHE is not None:
+        return [t for t in _NEWS_TOOLS_CACHE if not already_used(t.tool_name, skip or set())]
+    _NEWS_TOOLS_CACHE = []
     try:
         from discovery import discover
         stories = launch_candidates(discover(30))
@@ -433,6 +442,7 @@ def fetch_news_tools(limit: int = NEWS_TOOLS, skip: set[str] | None = None) -> l
         if tool and not already_used(tool.tool_name, skip or set()) and \
                 all(_fold(t.tool_name) != _fold(tool.tool_name) for t in out):
             out.append(tool)
+    _NEWS_TOOLS_CACHE = out
     return out
 
 
