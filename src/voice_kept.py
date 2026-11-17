@@ -47,7 +47,10 @@ def main(folder: Path) -> int:
     first = first_frame_report(folder / "final_video.mp4", folder)
     dur = pacing_report(folder / "final_video.mp4")["duration_sec"]
     cut = cut_frames(folder / "final_video.mp4", folder)
-    if not first["ok"] or not REEL_SECONDS[0] <= dur <= REEL_SECONDS[1] or cut:
+    from script_writer import reel_seconds
+    variant = json.loads((folder / "_voice" / "script.json").read_text(encoding="utf-8")).get("variant", "")
+    low, high = reel_seconds(variant)  # D-71: a KISA Reel is 10-12 s + the crow
+    if not first["ok"] or not low <= dur <= high or cut:
         print(f"✖ voiced Reel failed the measured checks: first frame ok={first['ok']}, {dur:.1f}s, cut at {cut[:6]}")
         return 1
     print(f"✅ voiced with George: {folder} ({dur:.1f}s)")

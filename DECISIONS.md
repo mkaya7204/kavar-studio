@@ -758,3 +758,53 @@ the decisions that are currently locked; this file explains why they exist and h
 - **The user:** "tamam", after the daytime dry run 43879717666 (branch deneme1116) showed: two more OpenAI stories skipped and 18:00 going to Hugging Face, Hob from Show HN with two Hacker News users' reports attributed in its caption, and the three Reels' silent kits in release kept-reels.
 - **On main:** D-73 (experiences), D-74 (Show HN), D-75 (repeats in other words, brand spread, 8 new feeds), D-80 (kept-reels). Batch 2 (D-76 news channels, KISA Reel, 18:00 guide carousel, #26) stays on branch deneyenler.
 - **Guarded by:** tests/test_d73_deneyenler.py, test_d74_kaynaklar.py, test_d75_cesitlilik.py, test_d80_kept_reels.py.
+## D-71 · 2026-11-14 · The KISA Reel (C), and A changed to other people's real tests
+- **The user (11-12):** "C olsun onay veriyorum bunu da takip et yeni hangi reel olduğunu bil, takip etmesi kolay
+  olsun bakalım tutacak mı". **11-14:** "bunlara zaten onay vermiştim kurmuş olman gerekiyordu" (C, D and A were
+  approved on 11-12 and not built; Claude's failure, not the user's).
+- **Built (C):** the second tool Reel of the day, the 11:45 one, is a KISA Reel: 10-12 s with ONE point (hook, one
+  card, one product shot, the closing card, then the crow). src/script_writer.py: SHORT_ENV, SHORT_WORDS 14-18,
+  SHORT_RULES, VideoScript.variant "kisa" (1 key point; point2 / point3 / why empty), reel_seconds() = 9.5-13.6 s
+  for it. src/hyperframes_builder.py plan_short (unused scenes start after the end, so they never show or sound).
+  daily.py produce_reel(short=True) for the noon Reel, the queue item carries "variant": "kisa", every queue
+  listing prints [KISA]. The editor, the fixing agent and the length checks (daily, agent_tools, voice_kept) know it.
+  schedule.json "short_reel": true switches it. Metrics rows of a KISA Reel carry "variant": "kisa"; after 7 KISA
+  Reels Claude compares their reach / watch / sends with the normal Reels and shows the user.
+- **A changed (user 11-14):** "A da bizim gerçekten deneme şansımız yok ama denenmiş olunmuş hallerini
+  bulabilirmişiz, kullanıcı deneyimleri veya bunları denenmiş kurumlar veya platformlar". Not built yet: a tool Reel
+  may carry what real users / reviewers found when they tried the tool, in our own words, with the source named,
+  never their images or videos (§1.9) and never "denedik" (we didn't).
+- **Guarded by:** tests/test_d71_kisa.py.
+
+## D-72 · 2026-11-14 · The 18:00 guide carousel (D)
+- **The user (11-12):** "D onay veriyorum olsun" (18:00 = a saveable guide carousel instead of news; D-31's guide
+  carousel, never built until now).
+- **Built:** schedule.json 18:00 slot `"concept": "guide"`. daily.py produce_guide_carousel(): the guide Reel's
+  sources (guide_reel.fetch_guide: the companies' own pages, D-31/D-41), ranked by content_ranker "guide_carousel"
+  (what a viewer would SAVE), at most 2 pages tried; the carousel builder's produce_news with concept guide writes it
+  with news_writer.GUIDE_NOTE (a how-to cover, steps only from the company page, a "Kaydet" line, no model trial)
+  into a `rehber-` folder; the editor is told it is a guide, not news. _carousel_for puts it on the 18:00 slot; if
+  none is made, a news carousel fills 18:00 (never empty). The morning guide Reel is only ever a Reel (kind checked).
+- **Guarded by:** tests/test_d72_rehber.py.
+
+## D-76 · 2026-11-14 · Many news channels find the stories; the company's own page tells them
+- **The user:** "deneme ne zaman, bir de senden kaynak çoğalt dediğim yine sadece bilindik isimleri takibe almışsın,
+  bunun neresi çoklu kaynak" (D-75 had added only big companies' blogs), then, on the proposal: "Tamam da işte bir
+  çok haber kanalı takip edilecek, ilgili haberin kaynağına gidip o şirketin kendi sayfasından, görsel olarak da
+  uygun bulunmazsa da ilgili şirketin herhangi görselleri alınarak haber yapılacak".
+- **Built:** news_sources.json "discovery_feeds": 15 channels checked live 11-14 (Techmeme, The Verge AI, TechCrunch AI,
+  VentureBeat AI, Ars Technica AI, MIT Technology Review AI, Wired AI, Engadget, The Decoder, MarkTechPost, Google
+  News AI, Reddit r/artificial, Webtekno, ShiftDelete, DonanımHaber). src/discovery.py discover(): their AI stories of
+  the last 48 h, unused, one per story (counted by how many channels ran it). They are ranked with the companies' own
+  blogs; before a found story is made, company_page() (Claude WebSearch + WebFetch, at most 4 a run) finds the
+  company's own announcement page and checked_page() refuses news sites and pages that don't carry the story. The
+  carousel is written ONLY from that page (§1.9 stays: no press-site photos). No own page = skipped. If the page has
+  no picture, article_capture.company_cover() takes the same company's own share image from its home page, else the
+  screenshot of its own page.
+- **Guarded by:** tests/test_d76_kanallar.py; tests/conftest.py keeps every test offline (no channel, no Show HN).
+
+## D-82 (2026-11-17): tool Reels from GitHub and the news channels (#26); batch 2 prepared (#29)
+- **The user:** 11-14 "bütün o haber kaynaklarından beslensek", 11-15 "Reel kaynağı yapalım"; 11-16 "bunu unutmaman gerekiyor" (COMMITMENTS #32).
+- **Built:** src/fetcher.py fetch_github(): AI projects created in the last 30 days with at least 300 stars (GitHub search, topics ai / llm / ai-agents), lists / courses / papers skipped, the project's own homepage else the repository; fetch_news_tools(): launch stories of the D-76 news channels, Claude names the product and its OWN page (never a news site), checked to load and name the product, at most 2 look-ups per run (usage label "tool_from_news"). Both join Product Hunt and Show HN; the ranker still decides. daily.py MONEY_TOPIC: the 18:00 guide carousel never picks a shopping / payment page (11-14 dry run: Edge shopping guide had prices on its cover).
+- **Branch parti2:** D-71 KISA Reel, D-72 18:00 guide carousel, D-76 news channels, D-82. Main only after a daytime dry run and the user's "tamam".
+- **Guarded by:** tests/test_d82_reel_kaynaklari.py, test_d71*, test_d72_rehber.py, test_d76_kanallar.py.

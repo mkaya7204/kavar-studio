@@ -45,6 +45,13 @@ CONCEPTS = {
                   "partnerships, events, chips and data centres, enterprise-only or developer-only APIs, anything "
                   "the viewer cannot try themselves. A model or feature arriving in an app people use (e.g. a "
                   "new model in the Gemini or ChatGPT app) fits: the Reel shows how to use it.",
+    "guide_carousel": "18:00 guide carousel (D-72): a saveable, step-by-step guide to an AI feature of a known product "
+                      "(ChatGPT, Gemini, Claude, Copilot, the AI in YouTube, Android, WhatsApp, Google Search, "
+                      "Workspace...) that a Turkish viewer can use today: what it is for, where it is, the steps, "
+                      "which mode fits which job, the limits. Score highest what a viewer would SAVE to use later "
+                      "(how-to, settings, prompts, modes), not what is merely new. Off concept: the same as the guide "
+                      "Reel (no AI in it, research, business news, events, chips, enterprise- or developer-only APIs, "
+                      "anything the viewer cannot try).",
 }
 
 SYSTEM = """You choose content for KAVAR (@thekavar.ai), a Turkish Instagram page about AI. The page \

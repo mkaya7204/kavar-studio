@@ -35,7 +35,8 @@ from carousel_renderer import RenderError  # noqa: E402
 from content_ranker import rank  # noqa: E402
 from editor_review import review_carousel, review_reel  # noqa: E402
 from media_capturer import CaptureError  # noqa: E402
-from news_fetcher import fetch_news, mark_used, unmark  # noqa: E402
+from news_fetcher import fetch_news, load_history, mark_used, unmark  # noqa: E402
+from discovery import company_page, discover  # noqa: E402
 from model_trial import testable_first  # noqa: E402
 from news_writer import NewsScript, revise_for_editor  # noqa: E402
 from reel_metrics import log_reel  # noqa: E402
@@ -46,6 +47,7 @@ import failures  # noqa: E402
 import recent_posts  # noqa: E402
 import reserve  # noqa: E402
 from tts_engine import DRAFT_ENV  # noqa: E402
+from script_writer import SHORT_ENV, reel_seconds  # noqa: E402
 
 SCHEDULE_PATH = ROOT / "schedule.json"
 QUEUE_DIR = ROOT / "output" / "queue"
@@ -169,11 +171,17 @@ FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (on
 
 
 def produce_news_items(count: int) -> list[dict]:
-    items, chosen_titles, chosen_companies, tries = [], [], set(), 0
+    items, chosen_titles, chosen_companies, tries, lookups = [], [], set(), 0, 0
     blocked = set(failures.blocked_hosts())  # D-39: hosts that kept failing are skipped for 7 days
     # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first; then the stories
     # that reach more people (D-29, src/content_ranker.py)
-    candidates = rank(testable_first(fetch_news(20)), "news_carousel")  # 20: more sources since D-29
+    # D-76: stories the news channels ran, also of companies we don't follow; written only from the company's page
+    try:
+        found = discover(20)
+    except Exception as exc:  # noqa: BLE001  the channels are extra; the companies' own blogs still work
+        log(f"discovery failed: {type(exc).__name__}: {str(exc)[:200]}")
+        found = []
+    candidates = rank(testable_first(fetch_news(20)) + found, "news_carousel")  # 20: more sources since D-29
     log(f"news: {len(candidates)} fresh candidates")
     for c in candidates:
         if r := c.get("rank"):
@@ -202,6 +210,20 @@ def produce_news_items(count: int) -> list[dict]:
         if any(_same_story(item["title"], t) for t in chosen_titles):
             log(f"   skip (same story): {item['title']}")
             continue
+        if item.get("discovered"):  # D-76: to the company's own page, or not at all
+            if lookups >= DISCOVERY_LOOKUPS:
+                continue
+            lookups += 1
+            page = company_page(item)
+            mark_used(item["url"])  # the channel's article is never looked up twice
+            if not page or page["url"] in load_history():
+                log(f"   skip (no own page of the company, found on {item['source']}): {item['title']}")
+                continue
+            log(f"   found on {item['source']} ({item['mentions']} channels); the company's own page: {page['url']}")
+            item = {**item, "url": page["url"], "found_via": item["source"], "source": page["company"] or item["source"]}
+            host = urlsplit(item["url"]).hostname or ""
+            if host in blocked:
+                continue
         log(f"news: {item['source']} - {item['title']}")
         tries += 1
         try:
@@ -237,6 +259,55 @@ def produce_news_items(count: int) -> list[dict]:
     return sorted(items, key=lambda i: not i["tested"])
 
 
+GUIDE_CAROUSEL_TRIES = 2  # D-72: company pages tried for the 18:00 guide carousel
+
+
+MONEY_TOPIC = re.compile(r"\b(shop\w*|shopping|buy\w*|purchas\w*|checkout|pric\w*|deals?|discounts?|coupons?|"
+                         r"payments?|pay|wallet|cart|subscri\w*|billing|alışveriş|fiyat\w*|indirim\w*|ödeme\w*)\b", re.I)
+
+
+def produce_guide_carousel() -> dict | None:
+    """D-72 (user 2026-11-12: "D onay veriyorum olsun"): the 18:00 carousel is a saveable guide to an AI feature of
+    a known product, from the company's own page (the guide Reel's sources, D-31/D-41), ranked for saving."""
+    from guide_reel import fetch_guide
+    candidates = rank(fetch_guide(), "guide_carousel")
+    log(f"guide carousel: {len(candidates)} company posts")
+    tries = 0
+    for item in candidates:
+        if tries >= GUIDE_CAROUSEL_TRIES:
+            break
+        r = item.get("rank") or {}
+        if r and (not r["fits"] or r["repeat"]):
+            continue
+        # 11-14 dry run 43571295790: a shopping guide (Edge) carried prices on its cover; a guide about buying or
+        # paying can't be written without them (§1.1), so such pages are never chosen for the guide carousel
+        if MONEY_TOPIC.search(f"{item['title']} {item.get('summary', '')}"):
+            log(f"   skip (shopping / payment topic, §1.1): {item['title']}")
+            continue
+        tries += 1
+        log(f"guide carousel: {item['source']} - {item['title']}")
+        try:
+            folder = produce_news({**item, "concept": "guide"})
+            ok, problems = _reviewed_news(folder)
+        except Exception as exc:  # noqa: BLE001  one bad page never stops the day
+            log(f"   failed: {type(exc).__name__}: {str(exc)[:300]}")
+            mark_used(item["url"])
+            failures.record("news", "guide_carousel", item["title"], f"{type(exc).__name__}: {exc}", item["url"],
+                            rendered=False)
+            continue
+        if ok:
+            failures.ok("news", "guide_carousel", item["title"], item["url"])
+            return {"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": False,
+                    "concept": "guide", "category": r.get("category", "")}
+        if any("gave no verdict" in p for p in problems):
+            unmark(item["url"], item.get("title", ""))
+        log(f"   rejected, not queued: {folder.name}")
+        failures.record("news", "guide_carousel", item["title"], "; ".join(problems), item["url"])
+    return None
+
+
+DISCOVERY_LOOKUPS = 4  # D-76: company-page searches per run for stories found on the news channels
+
 REEL_TIMEOUT = 1800  # seconds per Reel run; the job has 120 min for everything
 REEL_ATTEMPTS = 3  # rendered Reels per day; 1 in 7 passed the editor on 2026-10-13/14, so retry with the next tool
 GUIDE_ATTEMPTS = 2  # 07:30 guide Reel drafts per morning (silent drafts cost no voice, D-30); the rest waits for it
@@ -253,6 +324,7 @@ AGENT_SESSIONS_PER_RUN = 2
 _agent_sessions = 0
 GUIDE_EXTRA = 2  # D-42: guide Reel drafts the rest stage may make for a Reel slot that is still empty
 REEL_SECONDS = (14.0, 27.6)  # the editor's 14-26 s rule + the crow's 1.6 s sign-off (D-69), checked again on the voiced Reel
+# D-71: the KISA Reel has its own length (script_writer.reel_seconds); it is the second tool Reel, the 11:45 one
 
 
 JOB_BUDGET = 105 * 60  # produce.yml gives the job 120 min; stop starting Reel renders after this
@@ -263,7 +335,8 @@ def _time_for_a_reel() -> bool:
     return time.monotonic() - _STARTED + REEL_TIMEOUT <= JOB_BUDGET + 15 * 60
 
 
-def produce_reel() -> dict | None:
+def produce_reel(short: bool = False) -> dict | None:
+    """short: a KISA Reel (D-71), 10-12 s with one point, marked variant \"kisa\" in the queue."""
     for attempt in range(1, REEL_ATTEMPTS + 1):
         if not _time_for_a_reel():
             log("reel: no time left in the job for another render")
@@ -271,11 +344,11 @@ def produce_reel() -> dict | None:
         # D-77 (user 11-14): the product's name + logo picture only as the last resort, on the last attempt
         last = attempt == REEL_ATTEMPTS
         log(f"reel: running the video pipeline (attempt {attempt}/{REEL_ATTEMPTS})"
-            + (" [last resort: name / logo picture allowed]" if last else ""))
+            + (" [last resort: name / logo picture allowed]" if last else "") + (" [KISA]" if short else ""))
         if last:
             os.environ[BRAND_ENV] = "1"
         try:
-            item, rendered = _reel_attempt()
+            item, rendered = _reel_attempt(short=short)
         except Exception as exc:  # noqa: BLE001  D-49: one broken attempt never ends the day's tool Reels
             log(f"   reel attempt failed: {type(exc).__name__}: {str(exc)[:300]}")
             continue
@@ -324,7 +397,8 @@ def _voice_approved_reel(out: Path) -> bool:
             shutil.copy(final / name, out / name)
     make_cover(out / "final_video.mp4", out)
     first, dur = first_frame_report(out / "final_video.mp4", out), pacing_report(out / "final_video.mp4")["duration_sec"]
-    if not first["ok"] or not REEL_SECONDS[0] <= dur <= REEL_SECONDS[1]:
+    low, high = reel_seconds(_script_variant(out))
+    if not first["ok"] or not low <= dur <= high:
         log(f"   voiced Reel failed the measured checks: first frame ok={first['ok']}, {dur:.1f}s")
         return False
     if cut := cut_frames(out / "final_video.mp4", out):
@@ -336,6 +410,13 @@ def _voice_approved_reel(out: Path) -> bool:
             return False
     log(f"   voiced with George: {dur:.1f}s")
     return True
+
+
+def _script_variant(out: Path) -> str:
+    try:
+        return json.loads((out / "script.json").read_text(encoding="utf-8")).get("variant", "")
+    except (OSError, json.JSONDecodeError):
+        return ""
 
 
 def _voiced_still_rebuild(out: Path) -> list[float]:
@@ -485,7 +566,7 @@ def _new_reel_folder(tool_name: str) -> Path:
     return out
 
 
-def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
+def _reel_attempt(cmd: list[str] | None = None, short: bool = False) -> tuple[dict | None, bool]:
     """One main.py run + editor review. Returns (queue item or None, whether a Reel was rendered).
     A rejected tool is in the script history, so the next run moves on to another tool.
     The run uses the silent draft voice (D-30); only an approved Reel is voiced. Every outcome goes to the
@@ -495,7 +576,8 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
     try:
         proc = subprocess.run(cmd or [sys.executable, "main.py", "--live-only"], cwd=ROOT, capture_output=True,
                               text=True, encoding="utf-8", errors="replace", timeout=REEL_TIMEOUT,
-                              env={**os.environ, DRAFT_ENV: "1"})
+                              env={**{k: v for k, v in os.environ.items() if k != SHORT_ENV}, DRAFT_ENV: "1",
+                                   **({SHORT_ENV: "1"} if short else {})})
     except subprocess.TimeoutExpired:
         log(f"   video pipeline timed out after {REEL_TIMEOUT}s")
         return None, False
@@ -534,7 +616,8 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
         _keep_for_voice(out)
         log("   approved in a test run: kept silent for voice.yml (George only for a Reel going out, D-46)")
         failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
-        return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True}, True
+        return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True,
+                **_variant(script)}, True
     if verdict["verdict"] == "publish":
         # 11-03: three approved Reels were lost in one day when every ElevenLabs key was out of quota. Keep the
         # silent Reel's words and pictures first, so voice.yml can voice it later instead of losing it.
@@ -558,7 +641,12 @@ def _reel_attempt(cmd: list[str] | None = None) -> tuple[dict | None, bool]:
                         script.get("website_url", ""), rendered="no verdict" not in " ".join(verdict["problems"]))
         return None, True
     failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
-    return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"]}, True
+    return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], **_variant(script)}, True
+
+
+def _variant(script: dict) -> dict:
+    """D-71: a KISA Reel is marked in the queue, so every report and metrics row can name it."""
+    return {"variant": script["variant"]} if script.get("variant") else {}
 
 
 STAGES = ("morning", "rest")  # D-29/D-31: the 07:30 guide Reel first, the rest after it is scheduled
@@ -635,7 +723,7 @@ def produce(only: str = "") -> bool:
     for line in failures.react():  # D-39: the last 7 days' failures change today's run by fixed rules
         log("self-correct: " + line)
     if only in ("", "morning"):
-        wants_guide = cfg.get("guide_reel") or any(s.get("concept") == "guide" for s in slots)
+        wants_guide = cfg.get("guide_reel") or any(_guide_reel_slot(s) for s in slots)
         morning = produce_guide_reel() if wants_guide else None
         save_queue(_build_queue(slots, [], [], morning))
         log(f"guide Reel: {morning['title'] if morning else '-'} [{'ready' if morning else 'none'}]")
@@ -655,12 +743,21 @@ def _produce_rest(slots: list[dict], only: str) -> None:
         log(f"token refresh skipped: {exc}")
     news = []
     if only != "reel":
+        carousels = [s for s in slots if s["kind"] == "carousel"]
+        guide_slots = sum(s.get("concept") == "guide" for s in carousels)
+        for _ in range(guide_slots):  # D-72: the 18:00 guide carousel; if none is made, news fills its slot
+            try:
+                if guide := produce_guide_carousel():
+                    news.append(guide)
+            except Exception as exc:
+                log(f"guide carousel failed: {type(exc).__name__}: {str(exc)[:300]}")
         try:
-            news = produce_news_items(sum(s["kind"] == "carousel" for s in slots))
+            news = produce_news_items(len(carousels) - len(news)) + news
         except Exception as exc:
             log(f"news production failed: {type(exc).__name__}: {str(exc)[:300]}")
     # the morning stage's guide Reel stays in its slot when the rest is made in the same run
-    morning = next((q for q in load_queue() if q.get("concept") == "guide" and q["status"] == "ready"), None)
+    morning = next((q for q in load_queue() if q.get("concept") == "guide" and q["kind"] == "reel"
+                    and q["status"] == "ready"), None)
     save_queue(_build_queue(slots, list(news), [], morning))  # approved carousels survive a Reel crash or timeout
     reels: list[dict] = []  # best first: the "Biz denedik" Reel, then tool Reels
     wanted = sum(s["kind"] == "reel" and s.get("concept") != "guide" for s in slots)
@@ -668,8 +765,10 @@ def _produce_rest(slots: list[dict], only: str) -> None:
         if trial := produce_trial_reel(news):
             reels.append(trial)
         while len(reels) < wanted and schedule().get("tool_reels", True) and not failures.paused("tool"):
+            # D-71: the Reel for the noon slot (reels fill the slots from the last one back) is the KISA one
+            short = wanted >= 2 and len(reels) == wanted - 1 and schedule().get("short_reel", True)
             try:
-                tool_reel = produce_reel()
+                tool_reel = produce_reel(short=short)
             except Exception as exc:
                 log(f"reel production failed: {type(exc).__name__}: {str(exc)[:300]}")
                 break
@@ -685,7 +784,7 @@ def _produce_rest(slots: list[dict], only: str) -> None:
     queued = {q.get("folder") for q in queue}
     _save_surplus([i for i in news + reels + ([morning] if morning else []) if i.get("folder") not in queued])
     for q in queue:
-        log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]")
+        log(f"queued {q['time']}: {q['kind']} {q.get('title', '-')} [{q['status']}]" + (" KISA" if q.get("variant") else ""))
     # the rest counts as done only when something is ready: a crashed or empty run leaves room for
     # the later runs (08:00 cron-job.org, produce.yml backups) to try again
     # 11-14: the 07:30 guide Reel alone made the rest look done, so no later run refilled 4 empty slots; only a
@@ -701,7 +800,7 @@ def _fill_empty_reel_slots(slots: list[dict], news: list[dict], reels: list[dict
     made for it: first for an empty 07:30 guide slot (it goes out later that morning), then for the other
     Reel slots. `reels` grows in place; returns the guide slot's Reel."""
     cfg = schedule()
-    has_guide_slot = any(s.get("concept") == "guide" for s in slots)
+    has_guide_slot = any(_guide_reel_slot(s) for s in slots)
     if not (cfg.get("guide_reel") or has_guide_slot):
         return morning
     open_slots = sum(s["kind"] == "reel" and s.get("concept") != "guide" for s in slots) - len(reels) \
@@ -744,18 +843,32 @@ def _save_surplus(items: list[dict]) -> None:
         log(f"reserve: {i['kind']} {i.get('title', '-')} (approved, no slot today)")
 
 
+def _guide_reel_slot(slot: dict) -> bool:
+    return slot["kind"] == "reel" and slot.get("concept") == "guide"
+
+
+def _carousel_for(slot: dict, news: list[dict]) -> dict | None:
+    """D-72: the guide carousel goes to the carousel slot with concept guide (18:00), news to the others; a slot
+    whose own kind is missing takes the other kind rather than stay empty. Takes the item out of `news`."""
+    want = slot.get("concept") == "guide"
+    pick = next((n for n in news if (n.get("concept") == "guide") == want), None) or (news[0] if news else None)
+    if pick is not None:
+        news.remove(pick)
+    return pick
+
+
 def _build_queue(slots: list[dict], news: list[dict], reels: list[dict], morning: dict | None = None) -> list[dict]:
     """Carousels fill their slots in order. Reels (best first) fill the reel slots from the LAST one
     back: the best Reel ("Biz denedik") goes out in the evening, a second one at noon (user, 2026-10-16).
     A slot with concept "guide" (D-31) takes only the guide Reel, and the guide Reel only that slot. Without
     such a slot (D-38) the guide Reel is the last choice for the Reel slots, after "Biz denedik" and tool Reels."""
     reel_slots = [i for i, s in enumerate(slots) if s["kind"] == "reel" and s.get("concept") != "guide"]
-    has_guide_slot = any(s.get("concept") == "guide" for s in slots)
+    has_guide_slot = any(_guide_reel_slot(s) for s in slots)
     by_slot = dict(zip(reversed(reel_slots), reels + ([morning] if morning and not has_guide_slot else [])))
-    by_slot.update({i: morning for i, s in enumerate(slots) if s.get("concept") == "guide" and morning})
+    by_slot.update({i: morning for i, s in enumerate(slots) if _guide_reel_slot(s) and morning})
     queue = []
     for i, s in enumerate(slots):
-        item = news.pop(0) if s["kind"] == "carousel" and news else by_slot.get(i)
+        item = _carousel_for(s, news) if s["kind"] == "carousel" else by_slot.get(i)
         if item:
             queue.append({**item, "time": s["time"], "status": "ready"})
         else:
@@ -954,7 +1067,7 @@ def _fetch_queue(runs: list[dict], day: date) -> None:
         if day != date.today():
             log(f"kept for {day.isoformat()} (D-56):")
             for i, q in enumerate(load_queue(day), 1):
-                log(f"   {i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')}")
+                log(f"   {i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')}" + (" [KISA]" if q.get("variant") else ""))
         return
     shutil.rmtree(tmp, ignore_errors=True)
     log(f"no cloud run with the queue for {day.isoformat()} yet")
@@ -1002,7 +1115,8 @@ def status() -> None:
     if not queue:
         print("Nothing queued today.")
     for i, q in enumerate(queue, 1):
-        print(f"{i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')} {q.get('permalink', '')}")
+        print(f"{i}. {q['time']} {q['kind']:8} {q['status']:9} {q.get('title', '-')} {q.get('permalink', '')}"
+              + (" [KISA]" if q.get("variant") else ""))
 
 
 def check() -> None:

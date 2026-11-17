@@ -72,7 +72,9 @@ cd, no pipes and no other options.
 open frames.jpg and look at every frame as a strict editor: cut or overlapping text, a proof that doesn't \
 prove the hook, empty boxes, unreadable pictures, claims stronger than tool.json. report.json has the \
 measurements (cut_at_seconds must be empty, duration 14-27.6 s: 14-26 s of Reel + KAVAR's fixed 1.6 s crow \
-sign-off at the end, D-69; never change or remove the sign-off scene).
+sign-off at the end, D-69; never change or remove the sign-off scene). A script with "variant": "kisa" is a KISA \
+Reel (D-71, the owner's test): 9.5-13.6 s with ONE point (key_points 1; point2, point3 and why stay ""); keep it short \
+and single-point, never add points to it.
 5. Repeat 3-4 until clean (at most 3 renders: get it right on the first one if you can).
 6. Write result.json: {{"fixed": true|false, "reason": "what was wrong and what you changed", "lesson": \
 "one rule for the playbook that would have prevented this, or empty"}}. fixed=true only when your LAST render \

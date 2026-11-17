@@ -68,7 +68,7 @@ def test_approved_posts_without_a_slot_go_to_the_reserve(monkeypatch, store):
         (store / n["folder"] / "caption.txt").write_text("x", encoding="utf-8")
     monkeypatch.setattr(daily, "produce_news_items", lambda n: list(news))
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
-    monkeypatch.setattr(daily, "produce_reel", lambda: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: None)
     daily.produce()
     queue = json.loads(next((store / "output" / "queue").glob("*.json")).read_text(encoding="utf-8"))
     assert [q.get("title") for q in queue if q["kind"] == "carousel"] == ["a", "b"]

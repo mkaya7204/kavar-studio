@@ -271,5 +271,68 @@
     }
   ],
   "_pages_help": "D-59 (user 2026-11-03, 'onay veriyorum'): AI labs whose own site has no RSS. src/page_sources.py reads the lab's own news page, then each post's own page (title, date, image); pattern = the post links' path. Not readable from outside on 11-03: Perplexity (403), Z.ai (404). Luma left out: its news page is mostly marketing guides.",
-  "_sources_d75": "D-75 (user 2026-11-14: \"diğer paylaşım saatleri içinde başka kaynaklardan da faydalan ... hep Gemini olması kendimizi tekrar ediyoruz gibi oluyor\"): 7 of 20 news feeds were Google's. Added other companies' own blogs, each checked live 11-14 (200, posts, AI words): news Microsoft 365, Windows, Character.AI, Opera; guide Grammarly, Duolingo, Dropbox, Mozilla. The ranker also lowers a brand family posted in the last 3 days (src/recent_posts.py)."
+  "_sources_d75": "D-75 (user 2026-11-14: \"diğer paylaşım saatleri içinde başka kaynaklardan da faydalan ... hep Gemini olması kendimizi tekrar ediyoruz gibi oluyor\"): 7 of 20 news feeds were Google's. Added other companies' own blogs, each checked live 11-14 (200, posts, AI words): news Microsoft 365, Windows, Character.AI, Opera; guide Grammarly, Duolingo, Dropbox, Mozilla. The ranker also lowers a brand family posted in the last 3 days (src/recent_posts.py).",
+  "_discovery_help": "D-76 (user 2026-11-14: \"bir çok haber kanalı takip edilecek, ilgili haberin kaynağına gidip o şirketin kendi sayfasından ...\"): channels used only to FIND stories (src/discovery.py). The text and pictures always come from the company's own page (§1.9); a story without one is skipped. Each feed checked live 11-14.",
+  "discovery_feeds": [
+    {
+      "name": "Techmeme",
+      "url": "https://www.techmeme.com/feed.xml"
+    },
+    {
+      "name": "The Verge AI",
+      "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+    },
+    {
+      "name": "TechCrunch AI",
+      "url": "https://techcrunch.com/category/artificial-intelligence/feed/"
+    },
+    {
+      "name": "VentureBeat AI",
+      "url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "name": "Ars Technica AI",
+      "url": "https://arstechnica.com/ai/feed/"
+    },
+    {
+      "name": "MIT Technology Review AI",
+      "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed"
+    },
+    {
+      "name": "Wired AI",
+      "url": "https://www.wired.com/feed/tag/ai/latest/rss"
+    },
+    {
+      "name": "Engadget",
+      "url": "https://www.engadget.com/rss.xml"
+    },
+    {
+      "name": "The Decoder",
+      "url": "https://the-decoder.com/feed/"
+    },
+    {
+      "name": "MarkTechPost",
+      "url": "https://www.marktechpost.com/feed/"
+    },
+    {
+      "name": "Google News AI",
+      "url": "https://news.google.com/rss/search?q=artificial+intelligence+launch&hl=en-US&gl=US&ceid=US:en"
+    },
+    {
+      "name": "Reddit r/artificial",
+      "url": "https://www.reddit.com/r/artificial/top/.rss?t=day"
+    },
+    {
+      "name": "Webtekno",
+      "url": "https://www.webtekno.com/rss.xml"
+    },
+    {
+      "name": "ShiftDelete",
+      "url": "https://shiftdelete.net/feed"
+    },
+    {
+      "name": "DonanimHaber",
+      "url": "https://www.donanimhaber.com/rss/tum/"
+    }
+  ]
 }

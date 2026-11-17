@@ -140,6 +140,12 @@ def review_carousel(folder: Path) -> dict:
            f"- The source: {source} (field 'text' is the article; field 'trial_note', when present, "
            f"is our own test of the model: the 'Biz denedik' slides must match it, and the figures "
            f"credited 'KAVAR denemesi' are its real outputs)\n")
+    if (folder / "article" / "article.json").exists() and \
+            json.loads((folder / "article" / "article.json").read_text(encoding="utf-8")).get("guide_note"):
+        msg += ("- This is KAVAR's 18:00 GUIDE carousel (D-72, the page owner's decision), not news: a step-by-step "
+                "guide to a feature, made to be saved. Judge it by article.json 'guide_note': steps and modes only "
+                "from the company's page, a how-to cover, a save line at the end. Never reject it for not being "
+                "news or for having no event date.\n")
     return _ask(folder, msg)
 
 
@@ -177,5 +183,9 @@ def review_reel(video: Path, script: dict, tool: dict) -> dict:
            + ("\ntool_data_source.experiences are real users' / reviewers' reports of trying the tool, found on the "
               "web with their source (D-73, the page owner's decision). A claim attributed to them (\"deneyenler ... "
               "diyor\", \"bir incelemeye göre\") is allowed when it matches one of them; presented as the page's own "
-              "experience it is not." if tool.get("experiences") else ""))
+              "experience it is not." if tool.get("experiences") else "")
+           + ("\nThis is a KISA Reel (script.variant \"kisa\", D-71: a test format the page owner approved): it is "
+              "10-12 s on purpose, plus the 1.6 s crow sign-off, with ONE point: hook, one card, one product shot, "
+              "the closing card. Judge its length against 9.5-13.6 s and never reject it for being short or for "
+              "having only one point; every other rule applies." if script.get("variant") == "kisa" else ""))
     return _ask(folder, msg)

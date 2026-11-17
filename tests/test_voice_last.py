@@ -501,7 +501,7 @@ def test_one_broken_tool_reel_attempt_does_not_end_the_days_tool_reels(monkeypat
 
     tries = iter([KeyError("no Reel with id '2026-10-24_gerty'"), ({"kind": "reel", "title": "Next"}, True)])
 
-    def attempt():
+    def attempt(**_):
         nxt = next(tries)
         if isinstance(nxt, Exception):
             raise nxt

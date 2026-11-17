@@ -39,7 +39,7 @@ def test_trial_reel_comes_before_the_tool_reel(monkeypatch, sandbox):
     calls = []
     monkeypatch.setattr(daily, "produce_news_items", lambda n: list(CAROUSELS))
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: calls.append("trial") or REEL)
-    monkeypatch.setattr(daily, "produce_reel", lambda: calls.append("tool") or TOOL)
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: calls.append("tool") or TOOL)
     daily.produce()
     assert calls == ["trial", "tool"]
     q = _queue(sandbox)
@@ -54,7 +54,7 @@ def test_tool_reel_is_the_fallback(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "produce_news_items", lambda n: list(CAROUSELS))
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: calls.append("trial") or None)
     tools = iter([REEL, TOOL])
-    monkeypatch.setattr(daily, "produce_reel", lambda: calls.append("tool") or next(tools))
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: calls.append("tool") or next(tools))
     daily.produce()
     assert calls == ["trial", "tool", "tool"]
     q = _queue(sandbox)
@@ -62,7 +62,7 @@ def test_tool_reel_is_the_fallback(monkeypatch, sandbox):
 
 
 def test_a_reel_crash_keeps_the_carousels(monkeypatch, sandbox):
-    def boom():
+    def boom(**_):
         raise RuntimeError("render died")
 
     monkeypatch.setattr(daily, "produce_news_items", lambda n: list(CAROUSELS))
@@ -83,7 +83,7 @@ def test_carousels_are_saved_before_the_reel_stage(monkeypatch, sandbox):
 
     monkeypatch.setattr(daily, "produce_news_items", lambda n: list(CAROUSELS))
     monkeypatch.setattr(daily, "produce_trial_reel", reel_stage)
-    monkeypatch.setattr(daily, "produce_reel", lambda: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: None)
     daily.produce()
     assert [x["status"] for x in seen["queue"]] == ["empty", "ready", "ready", "empty"]
 
@@ -92,7 +92,7 @@ def test_an_empty_day_is_not_marked_done(monkeypatch, sandbox):
     """Later scheduled runs (produce.yml) may then try again."""
     monkeypatch.setattr(daily, "produce_news_items", lambda n: [])
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
-    monkeypatch.setattr(daily, "produce_reel", lambda: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: None)
     daily.produce()
     assert "rest" not in daily.stages_done()  # the 08:00 run and the backups may try the rest again
 
@@ -138,7 +138,7 @@ def test_one_reel_goes_to_the_evening(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "produce_news_items", lambda n: list(CAROUSELS))
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
     tools = iter([TOOL, None])
-    monkeypatch.setattr(daily, "produce_reel", lambda: next(tools))
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: next(tools))
     daily.produce()
     q = _queue(sandbox)
     assert [(x["time"], x["status"]) for x in q] == [("11:45", "empty"), ("12:30", "ready"), ("18:00", "ready"),
@@ -217,7 +217,7 @@ def test_morning_stage_makes_only_the_guide_reel_and_next_runs_the_rest(monkeypa
     calls = []
     monkeypatch.setattr(daily, "produce_news_items", lambda n: calls.append("news") or [])
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
-    monkeypatch.setattr(daily, "produce_reel", lambda: {"kind": "reel", "folder": "t", "title": "Tool"})
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: {"kind": "reel", "folder": "t", "title": "Tool"})
     daily.produce("next")
     assert calls == [] and daily.stages_done() == ["morning"]
     q = daily.load_queue()
@@ -240,7 +240,7 @@ def test_an_empty_reel_slot_gets_a_guide_reel(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "produce_guide_reel", lambda: next(guides))
     monkeypatch.setattr(daily, "produce_news_items", lambda n: list(CAROUSELS))
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
-    monkeypatch.setattr(daily, "produce_reel", lambda: None)
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: None)
     daily.produce()  # morning: None; rest: the guide slot gets "Meet", 20:30 gets "Docs"
     q = {x["time"]: (x.get("title"), x["status"]) for x in _queue(sandbox)}
     assert q["07:30"] == ("Meet", "ready")
@@ -438,7 +438,7 @@ def test_d38_guide_reel_fills_the_evening_and_no_tool_reel_is_made(monkeypatch, 
     monkeypatch.setattr(daily, "produce_guide_reel", lambda: dict(GUIDE))
     monkeypatch.setattr(daily, "produce_news_items", lambda n: [dict(CAROUSELS[1])])
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
-    monkeypatch.setattr(daily, "produce_reel", lambda: pytest.fail("tool Reels are paused"))
+    monkeypatch.setattr(daily, "produce_reel", lambda **_: pytest.fail("tool Reels are paused"))
     daily.produce()
     assert [(q["time"], q.get("title"), q["status"]) for q in _queue(sandbox)] == [
         ("12:30", "B", "ready"), ("20:30", "Guide", "ready")]
