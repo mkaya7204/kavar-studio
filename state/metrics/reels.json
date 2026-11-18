@@ -1676,5 +1676,44 @@
     "duration_sec": 22.1,
     "words": 39,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-18_google",
+    "date": "2026-11-18",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Geçmişe kaydolmayan arama",
+    "spoken_hook": "Aramanın geçmişe kaydolmasını istemiyor musun?",
+    "cta": "Bunu hediye arayan arkadaşına at.",
+    "duration_sec": 24.0,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-18_hako",
+    "date": "2026-11-18",
+    "kind": "tool",
+    "tool": "Hako",
+    "hook_pattern": "result",
+    "headline": "Kodlama ajanların cebinde",
+    "spoken_hook": "Kodlama ajanlarını artık telefonundan yönetebilirsin.",
+    "cta": "Kod yazan arkadaşına gönder.",
+    "duration_sec": 22.4,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-18_ai-ref-library-cn",
+    "date": "2026-11-18",
+    "kind": "tool",
+    "tool": "ai-ref-library-cn",
+    "hook_pattern": "pain",
+    "headline": "Poz ve kıyafet aramaktan bıktın",
+    "spoken_hook": "Görsel üretirken poz aramaktan yoruldun mu?",
+    "cta": "Görsel üretene gönder.",
+    "duration_sec": 11.3,
+    "words": 17,
+    "status": "produced"
   }
 ]

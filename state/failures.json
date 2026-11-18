@@ -2836,5 +2836,60 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-18",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-18",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Introducing Visuals",
+  "rendered": true,
+  "host": "suno.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-18",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing GPT-6.2 Astra and Sol",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-18",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Hako",
+  "rendered": true,
+  "host": "hako.md",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-18",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "ai-ref-library-cn",
+  "rendered": true,
+  "host": "sleepyzone.online",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

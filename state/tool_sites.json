@@ -358,5 +358,100 @@
   "url": "",
   "description": null,
   "date": "2026-11-17"
+ },
+ "creatifymax": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-18"
+ },
+ "vinc": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-18"
+ },
+ "pinecall": {
+  "url": "https://pinecall.io/",
+  "description": "Build voice agents in a form and voice apps in code, test them before anyone calls, and run them from the console or a phone. Phone, WhatsApp and web, every call logged and scored. Apache-2.0, on your servers or ours.",
+  "date": "2026-11-18"
+ },
+ "gatherhqagentresearch": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-18"
+ },
+ "clamor": {
+  "url": "https://www.clamor.social/",
+  "description": "Real-time social media analysis that understands modern language and context across organic and paid conversations—so brand teams get insights they can trust.",
+  "date": "2026-11-18"
+ },
+ "rankspot": {
+  "url": "https://www.rankspot.ai/",
+  "description": "Give your agent the data and the actions to rank in Google and AI answers. Skip a dozen SEO tools and the team that runs them. Set up in 2 minutes.",
+  "date": "2026-11-18"
+ },
+ "glasspage": {
+  "url": "https://glasspage.ai/",
+  "description": "Your agent publishes what it makes. Share the link, and people review it in Threads.",
+  "date": "2026-11-18"
+ },
+ "thebold": {
+  "url": "https://thebold.vc/",
+  "description": "See what specific investors are looking for, build that traction week by week, practice the conversation, and book the meeting on their calendar.",
+  "date": "2026-11-18"
+ },
+ "superlog": {
+  "url": "https://superlog.sh/",
+  "description": "Superlog scans billions of log lines, finds the production issues your alerts miss, and posts each one to Slack with the impact, root cause, and a suggested fix when there is one.",
+  "date": "2026-11-18"
+ },
+ "hako": {
+  "url": "https://hako.md/",
+  "description": "Claude Code, Codex and every agent on every Mac, in one native list on your iPhone, iPad and Mac, sorted by who needs you. Answer them from the Lock Screen.",
+  "date": "2026-11-18"
+ },
+ "3bcad": {
+  "url": "https://three-bugs-studio.github.io/3bcad/",
+  "description": "How to install and use 3BCAD, the open-source parametric CAD for makers and 3D printing.",
+  "date": "2026-11-18"
+ },
+ "infaiw": {
+  "url": "https://infai.dipankar-das.com/infaiw/",
+  "description": "Delegate the work. Keep the wheel. A daemon-first agent harness with sidecar loops, durable timelines, and human-in-the-loop approvals.",
+  "date": "2026-11-18"
+ },
+ "liquidd12": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-18"
+ },
+ "ekline": {
+  "url": "https://ekline.io/",
+  "description": "Your buyer asks Claude what to use, then asks Cursor to build with it. EkLine finds what those agents get wrong about you and fixes what they read: docs, help center, marketing.",
+  "date": "2026-11-18"
+ },
+ "rootkeyplatform": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-18"
+ },
+ "onlinecompilerio": {
+  "url": "https://onlinecompiler.io/",
+  "description": "Code execution API and online compiler API for 46 languages, with test-case judging and Judge0 and Piston compatibility. Free up to 100k runs a month.",
+  "date": "2026-11-18"
+ },
+ "versine": {
+  "url": "https://versine.com/",
+  "description": "Versine lets AI assistants like ChatGPT and Claude send and receive money for you, within limits you set and with payments only you can approve.",
+  "date": "2026-11-18"
+ },
+ "tradingagents": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-18"
+ },
+ "linkbio": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-18"
  }
 }

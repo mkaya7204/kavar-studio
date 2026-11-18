@@ -1,26 +1,5 @@
 [
   {
-    "tool": "Google Workspace",
-    "hook": "Gemini'ye bir kez anlat",
-    "pattern": "curiosity",
-    "spoken_hook": "Gemini'ye bir kez anlat, hep aynı yazsın.",
-    "cta": "Pazarlama ekibine gönder."
-  },
-  {
-    "tool": "ElevenLabs",
-    "hook": "Metni yaz, sesin okusun",
-    "pattern": "result",
-    "spoken_hook": "Metni yaz, kendi sesin okusun.",
-    "cta": "Youtuber arkadaşına gönder."
-  },
-  {
-    "tool": "Tacie",
-    "hook": "Toplantı bitince görevler hazır",
-    "pattern": "result",
-    "spoken_hook": "Toplantı biter bitmez kararlar ve görevler hazır.",
-    "cta": "Ekip lideri arkadaşına at."
-  },
-  {
     "tool": "Valutorio",
     "hook": "Notların her yapay zekâya açık",
     "pattern": "result",
@@ -68,5 +47,26 @@
     "pattern": "curiosity",
     "spoken_hook": "Yapay zekâlı filmciliğin Cursor'ı çıkmış.",
     "cta": "Kısa film çeken arkadaşına gönder."
+  },
+  {
+    "tool": "Google",
+    "hook": "Geçmişe kaydolmayan arama",
+    "pattern": "result",
+    "spoken_hook": "Aramanın geçmişe kaydolmasını istemiyor musun?",
+    "cta": "Bunu hediye arayan arkadaşına at."
+  },
+  {
+    "tool": "Hako",
+    "hook": "Kodlama ajanların cebinde",
+    "pattern": "result",
+    "spoken_hook": "Kodlama ajanlarını artık telefonundan yönetebilirsin.",
+    "cta": "Kod yazan arkadaşına gönder."
+  },
+  {
+    "tool": "ai-ref-library-cn",
+    "hook": "Poz ve kıyafet aramaktan bıktın",
+    "pattern": "pain",
+    "spoken_hook": "Görsel üretirken poz aramaktan yoruldun mu?",
+    "cta": "Görsel üretene gönder."
   }
 ]
