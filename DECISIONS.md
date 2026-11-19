@@ -813,3 +813,9 @@ the decisions that are currently locked; this file explains why they exist and h
 - **The user:** "Tamam", after dry run 44045532487 (branch parti2): KISA Reel Link.bio approved at 11:45, 18:00 guide carousel (Gemini regional voices) approved, a news-channel story (Engadget) written from Apple's own page, GitHub and news-channel tool candidates found (the ranker put them OFF), checks green.
 - **On main:** D-71 KISA Reel, D-72 18:00 guide carousel (+ no shopping / payment pages), D-76 news channels, D-82 tool Reels from GitHub and news (news look-ups once per run).
 - **Open, not changed without the user:** when the first tool fails, a tool the ranker marked OFF can still be made (Hako, developer-only, was made at 20:30 in the dry run); this is older behaviour.
+
+## D-84 (2026-11-19): spend the Claude limit where it makes posts (#14, #34)
+- **The user:** "Bir şeyi kısma gerektiği gibi kullan yeter ki verimli ... açıkları sapta ... zayıf kalmış yerleri güçlendirelim"; Plan 5 (#14) approved 11-12.
+- **Records:** tool_site_search was 34-45 % of production's Claude spend 11-12..11-18; on 11-19 the weekly limit answered and the run made 36 more failing calls, filed as off-concept; news tool look-ups ran 6 times instead of 2 (each Reel attempt is its own process).
+- **Built:** fetcher: Product Hunt sites are no longer looked up for every listed product; main pipeline resolve_site() only for a candidate it tries (SITE_LOOKUPS = 4). fetch_news_tools keeps the day's answer in output/temp/news_tools.json. claude_usage notices the limit answer (output/temp/claude_limit.json); daily.py's retry loops stop (_claude_limit), a backup run after the reset makes the day; failures files it as claude_limit.
+- **Evidence:** reel dry run 44518063776: 3 Reels approved, ~2 site searches. **Guarded by:** tests/test_d82_reel_kaynaklari.py, tests/test_claude_limit.py.
