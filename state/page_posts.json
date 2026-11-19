@@ -661,5 +661,10 @@
   "title": "Building an accounting team with Grok Bot",
   "date": "2026-11-16T00:00:00+00:00",
   "summary": "Five Grok Bots at SpaceXSI each own an accounting job end to end, from provisioning a customer account to collecting payment. They only involve a person when the work needs judgment."
+ },
+ "https://www.anthropic.com/news/anthropic-prices-initial-public-offering": {
+  "title": "Anthropic prices initial public offering",
+  "date": "2026-11-18T00:00:00+00:00",
+  "summary": "Today Anthropic, PBC priced its initial public offering of its Class A common stock."
  }
 }

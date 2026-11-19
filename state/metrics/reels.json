@@ -1715,5 +1715,57 @@
     "duration_sec": 11.3,
     "words": 17,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-19_google-deepmind",
+    "date": "2026-11-19",
+    "kind": "guide",
+    "tool": "Google DeepMind",
+    "hook_pattern": "result",
+    "headline": "Yeni Gemini testlerde öne çıktı",
+    "spoken_hook": "Yeni Gemini testlerde öne çıktı mı?",
+    "cta": "Model seçen arkadaşına gönder.",
+    "duration_sec": 22.2,
+    "words": 40,
+    "status": "rejected: Kapak başlığı \"Yeni Gemini testlerde öne çıktı\" kaynağın kendi iddiasını gerçek gibi veriyor; kaynak Google'ın kendi kıyası. \"Google'a göre\" atfı yok. Sesli kanca soru olduğu için başlıkla birebir uyuşmuyor ve başlık sesten daha güçlü.; Kanıt görseli Google'ın kendi kıyas tablosu ama telefonda okunamayacak kadar küçük. Rakip model adları da içeriyor (Claude Opus 5.5, GPT-6.2). Tabloda Gemini'nin geride kaldığı satırlar da var (Terminal-bench, FrontierCode, Chartography), bu yüzden \"öne çıktı\" yanıltıcı. Daha iyi görsel: tek bir sonucu okunur boyutta gösteren kırpım, ya da sayfanın üst kısmı.; 12.8 s karesinde kart 03 boş cam kutu; altyazı \"ŞİRKET, TABLO VE\" konuşuluyor ama kartın başlığı ve ayrıntısı yok. Bir saniye sonraki kare elimizde olmadığı için bunun giriş animasyonu olup olmadığı doğrulanamıyor. 2.5 s karesinde de kart boş (giriş olabilir). Metin ve ses sırası kontrol edilmeli."
+  },
+  {
+    "id": "2026-11-19_agentrun",
+    "date": "2026-11-19",
+    "kind": "tool",
+    "tool": "AgentRun",
+    "hook_pattern": "",
+    "headline": "Bu araç saatlerini geri veriyor",
+    "spoken_hook": "Hâlâ bu işi elle mi yapıyorsun?",
+    "cta": "Kaydet, lazım olur.",
+    "duration_sec": 21.1,
+    "words": 40,
+    "status": "rejected: editor gave no verdict (success, is_error=True: You've hit your weekly limit · resets 1pm (Europe/Istanbul))"
+  },
+  {
+    "id": "2026-11-19_agentrun-2",
+    "date": "2026-11-19",
+    "kind": "tool",
+    "tool": "AgentRun",
+    "hook_pattern": "",
+    "headline": "Bu araç saatlerini geri veriyor",
+    "spoken_hook": "Hâlâ bu işi elle mi yapıyorsun?",
+    "cta": "Kaydet, lazım olur.",
+    "duration_sec": 21.1,
+    "words": 40,
+    "status": "rejected: editor gave no verdict (success, is_error=True: You've hit your weekly limit · resets 1pm (Europe/Istanbul))"
+  },
+  {
+    "id": "2026-11-19_sphinx",
+    "date": "2026-11-19",
+    "kind": "tool",
+    "tool": "Sphinx",
+    "hook_pattern": "",
+    "headline": "Bu araç saatlerini geri veriyor",
+    "spoken_hook": "Hâlâ bu işi elle mi yapıyorsun?",
+    "cta": "Kaydet, lazım olur.",
+    "duration_sec": 20.9,
+    "words": 40,
+    "status": "rejected: editor gave no verdict (success, is_error=True: You've hit your weekly limit · resets 1pm (Europe/Istanbul))"
   }
 ]

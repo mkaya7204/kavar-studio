@@ -2891,5 +2891,205 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google DeepMind",
+  "rendered": true,
+  "host": "deepmind.google",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "facts"
+  ],
+  "detail": "Kapak başlığı \"Yeni Gemini testlerde öne çıktı\" kaynağın kendi iddiasını gerçek gibi veriyor; kaynak Google'ın kendi kıyası. \"Google'a göre\" atfı yok. Sesli kanca soru olduğu için başlıkla birebir uyuşmuyor ve başlık sesten daha güçlü.; Kanıt görseli Google'ın kendi kıyas tablosu ama telefonda okuna"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "ting with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your weekly limit · resets 1pm (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Add inline captions, cross-references, and tables of captions in Google Docs",
+  "rendered": false,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: http://workspaceupdates.googleblog.com/2026/11/add-inline-captions-cross-references-and-tables-of-captions-in-Google-Docs.html returned HTTP 429"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Source material: Creative Director Chase Rutherford on what makes something iconic",
+  "rendered": false,
+  "host": "figma.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "news",
+  "item": "Genie 4 is now available",
+  "rendered": false,
+  "host": "deepmind.google",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "news",
+  "item": "Genie 4 is now available",
+  "rendered": false,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "news",
+  "item": "DaisyRose-27B: Pushing the Frontier of Post-Training Efficiency",
+  "rendered": false,
+  "host": "huggingface.co",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "news",
+  "item": "Rumble-2-Flash: an open 0.5B speech model for 40+ languages",
+  "rendered": false,
+  "host": "huggingface.co",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "news",
+  "item": "See what 5 builders are making with Gemini 4 Carbon",
+  "rendered": false,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "CaptureError: no Claude source wrote a valid news carousel (news mode has no mock)"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "news",
+  "item": "Samsung TV Plus Brings 2026 MAMA AWARDS to K-pop Fans Around the World",
+  "rendered": false,
+  "host": "news.samsung.com",
+  "outcome": "failed",
+  "categories": [
+   "timeout"
+  ],
+  "detail": "CaptureError: timed out connecting to https://news.samsung.com/global/samsung-tv-plus-brings-2026-mama-awards-to-k-pop-fans-around-the-world"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "AgentRun",
+  "rendered": false,
+  "host": "github.com",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty"
+  ],
+  "detail": "editor gave no verdict (success, is_error=True: You've hit your weekly limit · resets 1pm (Europe/Istanbul))"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "AgentRun",
+  "rendered": false,
+  "host": "github.com",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty"
+  ],
+  "detail": "editor gave no verdict (success, is_error=True: You've hit your weekly limit · resets 1pm (Europe/Istanbul))"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Sphinx",
+  "rendered": false,
+  "host": "sphinx-six-theta.vercel.app",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty"
+  ],
+  "detail": "editor gave no verdict (success, is_error=True: You've hit your weekly limit · resets 1pm (Europe/Istanbul))"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "ting with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your weekly limit · resets 1pm (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "claude_empty",
+   "off_concept"
+  ],
+  "detail": "ting with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your weekly limit · resets 1pm (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You"
  }
 ]

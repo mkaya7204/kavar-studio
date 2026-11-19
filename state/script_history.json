@@ -1,12 +1,5 @@
 [
   {
-    "tool": "Valutorio",
-    "hook": "Notların her yapay zekâya açık",
-    "pattern": "result",
-    "spoken_hook": "Notların kullandığın her yapay zekâya açık.",
-    "cta": "Notlarını dağınık tutan arkadaşına gönder."
-  },
-  {
     "tool": "Spiik",
     "hook": "Ders kaydın çalışma kartı oluyor",
     "pattern": "result",
@@ -68,5 +61,12 @@
     "pattern": "pain",
     "spoken_hook": "Görsel üretirken poz aramaktan yoruldun mu?",
     "cta": "Görsel üretene gönder."
+  },
+  {
+    "tool": "Google DeepMind",
+    "hook": "PDF, tablo ve video tek yerde",
+    "pattern": "result",
+    "spoken_hook": "PDF, tablo ve videoyu tek yerde çözmek ister misin?",
+    "cta": "Ofisteki arkadaşına gönder."
   }
 ]
