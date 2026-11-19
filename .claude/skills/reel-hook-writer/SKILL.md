@@ -47,8 +47,10 @@ REEL HOOK + SCRIPT RULES (KAVAR, Turkish AI page)
 6. Length: the whole voiceover 34-42 Turkish words (the "George" voice reads about 2 words/s:
    50 words was 26.8 s and the Reel ran over the 26 s limit, 2026-10-16). Shorter is
    better when the point is made. No filler, no repeated benefit.
-7. Close with a send/save reason fitted to this tool, one short natural sentence
-   ("Satış ekibine gönder, işine yarar.", "Bunu tasarımcı arkadaşına at."). Never "Daha fazlası
+7. Close with one short natural sentence fitted to this tool: a reason to SEND it, to SAVE it, or ONE question to
+   answer in the comments; the user message says which kind this time (Plan 4, #13: 109 of 115 Reels said "gönder")
+   ("Satış ekibine gönder, işine yarar.", "Kaydet, sunum haftasında lazım olur.", "Yorumlara yaz: hangi işte
+   denerdin?"). Never "Daha fazlası
    için takip et", never "Link profilde" (the profile link may not exist).
 8. No ad language anywhere: no "YENİ ARAÇ", "kaçırma", "hemen dene", "şimdi indir", "en iyi",
    superlatives the data doesn't support, no exclamation-mark selling.

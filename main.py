@@ -132,6 +132,11 @@ def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyper
             raise CaptureError("no clean proof image on the site (prices, logos or badges everywhere)")
         capture["proof_path"] = str(proof)
 
+    # Plan 1 (#10): the writer reads the page itself and knows what the viewer's picture shows
+    tool = {**tool, "page_text": (capture.get("page_text") or "")[:4000]}
+    if proof is not None and not tool.get("proof_kind"):
+        from hyperframes_builder import LAST_PROOF_SHOWS as _shows
+        tool["proof_shows"] = _shows
     if script is None:  # D-73: what real users / reviewers found when they tried it, before the script
         tool = {**tool, "experiences": find_experiences(tool)}
         print(f"   experiences of people who tried it: {len(tool['experiences'])}"

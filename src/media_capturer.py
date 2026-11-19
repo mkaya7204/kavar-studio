@@ -22,6 +22,8 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeout
 
 from product_images import PAGE_MEDIA_JS
 
+PAGE_TEXT_CHARS = 6000  # Plan 1 (#10): the page's own words for the writer
+
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = ROOT / "output" / "temp"
 
@@ -318,6 +320,11 @@ def capture_site(
             except PlaywrightError as exc:
                 print(f"[capture] page images not read: {exc.message.splitlines()[0]}")
             title, final_url = page.title(), page.url
+            # Plan 1 (#10): the writer knew a tool only from a two-sentence tagline; now it reads the page itself
+            try:
+                page_text = (page.evaluate("document.body ? document.body.innerText : ''") or "")[:PAGE_TEXT_CHARS]
+            except PlaywrightError:
+                page_text = ""
         except PlaywrightError as exc:  # any other browser failure: skip this tool, don't crash the run
             raise CaptureError(f"capture of {url} failed: {exc.message.splitlines()[0]}") from exc
         finally:
@@ -332,6 +339,7 @@ def capture_site(
         "logo_path": str(logo_path) if logo_path else None,
         "scroll_video_path": None,
         "page_media": page_media,
+        "page_text": page_text,
         **cleanup,
     }
     if scroll_seconds and min(page_height, max_css_height) > css_h:
