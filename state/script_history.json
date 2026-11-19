@@ -1,26 +1,5 @@
 [
   {
-    "tool": "Spiik",
-    "hook": "Ders kaydın çalışma kartı oluyor",
-    "pattern": "result",
-    "spoken_hook": "Ders kaydın not ve çalışma kartına dönüşüyor.",
-    "cta": "Sınava çalışan arkadaşına gönder."
-  },
-  {
-    "tool": "collecto.rs",
-    "hook": "Fotoğraftan koleksiyon kataloğu",
-    "pattern": "result",
-    "spoken_hook": "Koleksiyonunu artık fotoğraf çekerek kataloglayabilirsin.",
-    "cta": "Koleksiyoncu arkadaşına gönder."
-  },
-  {
-    "tool": "Google",
-    "hook": "Notların interaktif site oluyor",
-    "pattern": "result",
-    "spoken_hook": "Notların ve kaynakların interaktif siteye dönüşüyor.",
-    "cta": "Sınava çalışan arkadaşına at."
-  },
-  {
     "tool": "Hob",
     "hook": "ChatGPT'ye cihazda rakip var",
     "pattern": "curiosity",
@@ -68,5 +47,26 @@
     "pattern": "result",
     "spoken_hook": "PDF, tablo ve videoyu tek yerde çözmek ister misin?",
     "cta": "Ofisteki arkadaşına gönder."
+  },
+  {
+    "tool": "HeyGen Avatar 6",
+    "hook": "Kameraya çıkmaktan kaçıyorsun",
+    "pattern": "pain",
+    "spoken_hook": "Kameraya çıkmak istemediğin için video mu erteliyorsun?",
+    "cta": "Videocu arkadaşına gönder."
+  },
+  {
+    "tool": "Impractical",
+    "hook": "Lansman videosu tek promptta",
+    "pattern": "result",
+    "spoken_hook": "Lansman videonu tek promptla yapabilirsin.",
+    "cta": "Ürün ekibine gönder."
+  },
+  {
+    "tool": "Opera",
+    "hook": "Eklentin sohbetle hazır oluyor",
+    "pattern": "result",
+    "spoken_hook": "Kendi tarayıcı eklentin sohbetle hazır oluyor.",
+    "cta": "Bunu arkadaşına gönder, işine yarar."
   }
 ]

@@ -3091,5 +3091,60 @@
    "off_concept"
   ],
   "detail": "ting with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You've hit your weekly limit · resets 1pm (Europe/Istanbul)). [carousel_writer] Writing with `claude -p`... [carousel_writer] claude -p returned no carousel (success, is_error=True, exit 1: You"
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "The Gemini app is now available on lower-memory Android devices.",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing Gemini 4 Neon",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "HeyGen Avatar 6",
+  "rendered": true,
+  "host": "heygen.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Impractical",
+  "rendered": true,
+  "host": "impractical.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-19",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Opera",
+  "rendered": true,
+  "host": "blogs.opera.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

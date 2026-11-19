@@ -513,5 +513,85 @@
   "url": "",
   "description": null,
   "date": "2026-11-19"
+ },
+ "spellarforchrome": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-19"
+ },
+ "heygenavatar6": {
+  "url": "https://www.heygen.com/models/heygen-avatar-6",
+  "description": "Avatar 6 is HeyGen’s most realistic AI avatar model, 84.4% indistinguishable from real footage. Your first video is free.",
+  "date": "2026-11-19"
+ },
+ "upsolvemcpconnections": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-19"
+ },
+ "teaflask": {
+  "url": "https://teaflask.com/",
+  "description": "Teaflask puts an AI agent inside your product that gets work done for your users: real actions through your own API, as the signed-in user, within the policies you set. Added through a React component or a script tag.",
+  "date": "2026-11-19"
+ },
+ "thecalmcreatormastermind": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-19"
+ },
+ "meilisearchsearchandising": {
+  "url": "https://www.meilisearch.com/products/search-rules",
+  "description": "Pin, boost, deboost and hide search results with Meilisearch search rules. Visual editor in Cloud, scheduled campaigns, API access. 3 rules free on every project.",
+  "date": "2026-11-19"
+ },
+ "verseenginebyctruh": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-19"
+ },
+ "rezoraio": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-19"
+ },
+ "abletenhybridaitravelplanner": {
+  "url": "https://ableten.xyz/",
+  "description": "A group travel planner for holidays and vacations. Turn scattered recs into grounded trips on a real map—places everyone can drag into a shared itinerary.",
+  "date": "2026-11-19"
+ },
+ "tabstackbymozilla": {
+  "url": "https://tabstack.ai/",
+  "description": "Give your model the web without giving up your privacy. Managed research, extraction, and browser automation. Never trained on. Private by default.",
+  "date": "2026-11-19"
+ },
+ "enrichablebycontextdev": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-19"
+ },
+ "nuko": {
+  "url": "https://nuko.design/",
+  "description": "Open a template or start from scratch. Animate posts, stories and videos, then export.",
+  "date": "2026-11-19"
+ },
+ "ofintechdesk": {
+  "url": "https://ofintech.ai/",
+  "description": "كل رقم مرتبط بمصدره.",
+  "date": "2026-11-19"
+ },
+ "impractical": {
+  "url": "https://impractical.ai/",
+  "description": "Impractical is a motion design canvas that takes you and your agents from prompt to beautiful motion graphics videos, so any team can create product, marketing, and social content at scale.",
+  "date": "2026-11-19"
+ },
+ "everysignal": {
+  "url": "https://everysignal.com/",
+  "description": "Sourced teardowns of any company in about an hour. Every number says how we know it.",
+  "date": "2026-11-19"
+ },
+ "tooljet": {
+  "url": "https://tooljet.com/",
+  "description": "ToolJet is the open-source, AI-native low-code platform for internal tools. Build with AI, Visual Builder or React Builder, on ToolJet Cloud or self-hosted.",
+  "date": "2026-11-19"
  }
 }

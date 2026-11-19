@@ -1767,5 +1767,44 @@
     "duration_sec": 20.9,
     "words": 40,
     "status": "rejected: editor gave no verdict (success, is_error=True: You've hit your weekly limit · resets 1pm (Europe/Istanbul))"
+  },
+  {
+    "id": "2026-11-19_heygen-avatar-6",
+    "date": "2026-11-19",
+    "kind": "tool",
+    "tool": "HeyGen Avatar 6",
+    "hook_pattern": "pain",
+    "headline": "Kameraya çıkmaktan kaçıyorsun",
+    "spoken_hook": "Kameraya çıkmak istemediğin için video mu erteliyorsun?",
+    "cta": "Videocu arkadaşına gönder.",
+    "duration_sec": 25.9,
+    "words": 43,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-19_impractical",
+    "date": "2026-11-19",
+    "kind": "tool",
+    "tool": "Impractical",
+    "hook_pattern": "result",
+    "headline": "Lansman videosu tek promptta",
+    "spoken_hook": "Lansman videonu tek promptla yapabilirsin.",
+    "cta": "Ürün ekibine gönder.",
+    "duration_sec": 11.4,
+    "words": 18,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-19_opera",
+    "date": "2026-11-19",
+    "kind": "guide",
+    "tool": "Opera",
+    "hook_pattern": "result",
+    "headline": "Eklentin sohbetle hazır oluyor",
+    "spoken_hook": "Kendi tarayıcı eklentin sohbetle hazır oluyor.",
+    "cta": "Bunu arkadaşına gönder, işine yarar.",
+    "duration_sec": 22.0,
+    "words": 37,
+    "status": "produced"
   }
 ]

@@ -82,5 +82,40 @@
   "kind": "reel",
   "title": "Hako",
   "brand": ""
+ },
+ {
+  "day": "2026-11-20",
+  "time": "07:30",
+  "kind": "reel",
+  "title": "Opera",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-20",
+  "time": "11:45",
+  "kind": "reel",
+  "title": "Impractical",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-20",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "Introducing Gemini 4 Neon",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-20",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "The Gemini app is now available on lower-memory Android devices.",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-20",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "HeyGen Avatar 6",
+  "brand": ""
  }
 ]
