@@ -29,6 +29,7 @@ KEEP_DAYS = 60
 
 # first match wins per category; a failure can carry several categories (a rejection lists many problems)
 CATEGORIES = [
+    ("claude_limit", r"hit your (weekly|session|usage|daily) limit"),  # 11-19: was counted as off-concept
     ("claude_empty", r"returned no |gave no verdict|no ranking from Claude|no choice from Claude"),
     ("no_proof", r"kanıt|proof|vaadi göstermiyor|slogan|maskot|no product screens|no clean proof"),
     ("cut_text", r"kesik|kırp|yarım|cut off|truncat"),

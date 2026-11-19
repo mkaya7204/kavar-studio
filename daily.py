@@ -170,6 +170,15 @@ def _reviewed_news(folder: Path) -> tuple[bool, list[str]]:
 FIX_ROUNDS = 2  # 2026-10-15: two carousels died on small second-round fixes (one word, one date)
 
 
+def _claude_limit() -> bool:
+    """11-19 run 44450359526: after the weekly limit answered, 36 more calls failed. Stop trying for this run; a later
+    run (cron-job.org / produce.yml backups) after the reset makes the day."""
+    why = claude_usage.limit_reached()
+    if why:
+        log(f"Claude limit reached ({why[:90]}): no more tries in this run; a run after the reset makes the day")
+    return bool(why)
+
+
 def produce_news_items(count: int) -> list[dict]:
     items, chosen_titles, chosen_companies, tries, lookups = [], [], set(), 0, 0
     blocked = set(failures.blocked_hosts())  # D-39: hosts that kept failing are skipped for 7 days
@@ -188,6 +197,8 @@ def produce_news_items(count: int) -> list[dict]:
             log(f"   rank {r['score']:>2} {r['category']:<20} {'' if r['fits'] else 'off-concept '}"
                 f"{'repeat ' if r['repeat'] else ''}{c['title'][:70]} ({r['reason'][:90]})")
     for item in candidates:
+        if _claude_limit():  # 11-19: no more tries after the limit answered
+            break
         if len(items) >= count or tries >= MAX_NEWS_TRIES:
             break
         r = item.get("rank") or {}
@@ -274,6 +285,8 @@ def produce_guide_carousel() -> dict | None:
     log(f"guide carousel: {len(candidates)} company posts")
     tries = 0
     for item in candidates:
+        if _claude_limit():  # 11-19: no more tries after the limit answered
+            break
         if tries >= GUIDE_CAROUSEL_TRIES:
             break
         r = item.get("rank") or {}
@@ -338,6 +351,8 @@ def _time_for_a_reel() -> bool:
 def produce_reel(short: bool = False) -> dict | None:
     """short: a KISA Reel (D-71), 10-12 s with one point, marked variant \"kisa\" in the queue."""
     for attempt in range(1, REEL_ATTEMPTS + 1):
+        if _claude_limit():  # 11-19: no more tries after the limit answered
+            break
         if not _time_for_a_reel():
             log("reel: no time left in the job for another render")
             return None
@@ -680,6 +695,8 @@ def produce_guide_reel() -> dict | None:
         log("reel: guide Reels are paused by the failure ledger (state/self_correct.json)")
         return None
     for attempt in range(1, GUIDE_ATTEMPTS + 1):  # a rejected post is marked used, so the next try takes another
+        if _claude_limit():  # 11-19: no more tries after the limit answered
+            break
         log(f"reel: 07:30 Rehber Reel (attempt {attempt}/{GUIDE_ATTEMPTS})")
         try:
             item, rendered = _reel_attempt([sys.executable, "src/guide_reel.py"])
