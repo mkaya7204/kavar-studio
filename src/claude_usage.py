@@ -9,11 +9,17 @@ billed, but it is the best common measure of how much of the limit a call used.
 
 import json
 import os
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LOG = ROOT / "state" / "claude_usage.jsonl"
+# 11-19 run 44450359526: after "You've hit your weekly limit" the run made 36 more calls that all failed and
+# logged them as empty / off-concept. The first such answer is kept here; daily.py stops trying for the run.
+LIMIT_FLAG = ROOT / "output" / "temp" / "claude_limit.json"
+LIMIT_TEXT = re.compile(r"hit your (weekly|session|usage|daily) limit|usage limit reached", re.I)
+LIMIT_HOURS = 6
 
 
 def record(stage: str, stdout: str) -> None:
@@ -33,8 +39,23 @@ def record(stage: str, stdout: str) -> None:
         LOG.parent.mkdir(parents=True, exist_ok=True)
         with LOG.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(row) + "\n")
+        if out.get("is_error") and LIMIT_TEXT.search(str(out.get("result") or "")):
+            LIMIT_FLAG.parent.mkdir(parents=True, exist_ok=True)
+            LIMIT_FLAG.write_text(json.dumps({"at": row["at"], "stage": stage, "result": str(out.get("result"))[:200]}),
+                                  encoding="utf-8")
     except Exception:  # noqa: BLE001
         return
+
+
+def limit_reached(now: datetime | None = None) -> str:
+    """The limit answer of this run (within LIMIT_HOURS), else "". Never raises."""
+    try:
+        flag = json.loads(LIMIT_FLAG.read_text(encoding="utf-8"))
+        if datetime.fromisoformat(flag["at"]) >= (now or datetime.now()) - timedelta(hours=LIMIT_HOURS):
+            return flag.get("result") or "limit"
+    except Exception:  # noqa: BLE001
+        pass
+    return ""
 
 
 def summary(days: int = 7, log: Path | None = None) -> list[dict]:
