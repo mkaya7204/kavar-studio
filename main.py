@@ -27,7 +27,9 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from brand_picture import BRAND_ENV, brand_picture  # noqa: E402  D-77
 from distribution import build_post  # noqa: E402
-from fetcher import fetch_latest_tools  # noqa: E402
+from fetcher import fetch_latest_tools, resolve_site  # noqa: E402
+
+SITE_LOOKUPS = 4  # Plan 5 (#14): Claude site searches per Reel attempt, only for candidates actually tried
 from hyperframes_builder import BuildError as HFBuildError  # noqa: E402
 from hyperframes_builder import best_proof_crop, build_video_hyperframes  # noqa: E402
 from media_capturer import CaptureError, capture_site  # noqa: E402
@@ -200,11 +202,13 @@ def main() -> int:
     with Step(1, "Fetching latest SaaS/AI tools"):
         used = set(used_tools())  # every tool already turned into a Reel (state/used_tools.json)
         tools = fetch_latest_tools(limit=CANDIDATES, use_sample=args.sample, exclude=used)
-        # A Product Hunt URL means the real site couldn't be resolved: nothing useful to film.
-        candidates = [t for t in tools if "producthunt.com" not in t["website_url"]]
+        # Plan 5 (#14): a Product Hunt URL means the site is not looked up yet; it is, only for a candidate that is
+        # actually tried (resolve_site below), after the ranker has put the list in order
+        candidates = list(tools)
         for t in tools:
-            mark = "  " if t in candidates else "✖ "
-            print(f"   {mark}{t['tool_name']} — {t['website_url']}")
+            later = "producthunt.com" in t["website_url"]
+            print(f"   {'… ' if later else '  '}{t['tool_name']} — {t['website_url']}"
+                  + ("  (site looked up only if tried)" if later else ""))
         if args.live_only:  # daily production: never post the built-in sample tools (Notion etc.)
             sample = {t["tool_name"] for t in fetch_latest_tools(limit=99, use_sample=True)}
             candidates = [t for t in candidates if t["tool_name"] not in sample]
@@ -220,8 +224,20 @@ def main() -> int:
             print("   no candidate has its own website; falling back to sample tools")
             candidates = fetch_latest_tools(limit=CANDIDATES, use_sample=True)
 
+    lookups = 0
     for i, tool in enumerate(candidates, 1):
         print(f"\n--- Candidate {i}/{len(candidates)}: {tool['tool_name']} ---")
+        if "producthunt.com" in tool["website_url"]:  # Plan 5 (#14): the site only now, and at most SITE_LOOKUPS
+            if lookups >= SITE_LOOKUPS:
+                print("   skipping: site look-ups for this run used up")
+                continue
+            lookups += 1
+            resolved = resolve_site(tool)
+            if resolved is None:
+                print(f"   skipping {tool['tool_name']}: its own site was not found")
+                continue
+            tool = resolved
+            print(f"   site: {tool['website_url']}")
         try:
             post = produce_video(tool, renderer=args.renderer)
             break

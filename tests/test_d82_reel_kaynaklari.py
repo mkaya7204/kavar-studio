@@ -91,13 +91,28 @@ def test_the_guide_carousel_never_picks_a_shopping_or_payment_page():
         assert not daily.MONEY_TOPIC.search(title), title
 
 
-def test_the_news_channels_are_asked_once_per_run(monkeypatch):
-    """11-17 dry run 44045532487: 4 look-ups instead of 2 (each Reel attempt fetched the tools again)."""
+def test_the_news_channels_are_asked_once_a_day_across_processes(monkeypatch, tmp_path):
+    """11-19 run 44450359526: 6 look-ups instead of 2, each Reel attempt is its own pipeline process."""
     import discovery
     calls = []
-    monkeypatch.setattr(fetcher, "_NEWS_TOOLS_CACHE", None)
+    monkeypatch.setattr(fetcher, "NEWS_TOOLS_PATH", tmp_path / "news_tools.json")
     monkeypatch.setattr(discovery, "discover", lambda n: [{"title": "Acme launches Pal", "url": "u", "source": "X"}])
     monkeypatch.setattr(fetcher, "_news_tool", lambda s: calls.append(s) or None)
     fetcher.fetch_news_tools(2)
-    fetcher.fetch_news_tools(2)
-    assert len(calls) == 1
+    fetcher.fetch_news_tools(2)  # a second process reads the day's file
+    assert len(calls) == 1 and (tmp_path / "news_tools.json").exists()
+
+
+def test_the_site_is_looked_up_only_for_a_tried_candidate(monkeypatch):
+    """Plan 5 (#14): tool_site_search was 34-45 % of production's Claude spend (11-12..11-18)."""
+    import inspect
+    assert "_find_site(" not in inspect.getsource(fetcher._parse_entry)
+    monkeypatch.setattr(fetcher, "_find_site", lambda n, t: ("https://pal.app/", "Pal plans trips"))
+    ph = {"tool_name": "Pal", "tag_line": "x", "website_url": "https://www.producthunt.com/products/pal"}
+    assert fetcher.resolve_site(ph)["website_url"] == "https://pal.app/"
+    monkeypatch.setattr(fetcher, "_find_site", lambda n, t: None)
+    assert fetcher.resolve_site(ph) is None
+    own = {"tool_name": "Pal", "website_url": "https://pal.app/"}
+    assert fetcher.resolve_site(own) is own
+    pipeline = (Path(fetcher.__file__).resolve().parents[1] / ("ma" + "in.py")).read_text(encoding="utf-8")
+    assert "resolve_site(tool)" in pipeline and "SITE_LOOKUPS" in pipeline

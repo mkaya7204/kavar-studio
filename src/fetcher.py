@@ -168,6 +168,18 @@ def _find_site(name: str, tag_line: str) -> tuple[str, str | None] | None:
     return found
 
 
+def resolve_site(tool: dict) -> dict | None:
+    """Plan 5 (#14): the official site of a ranked candidate that still points at Product Hunt, looked up only when
+    the pipeline is about to try it (cached in state/tool_sites.json, D-68). None = no site found, skip it."""
+    if "producthunt.com" not in str(tool.get("website_url", "")):
+        return tool
+    found = _find_site(tool["tool_name"], tool.get("tag_line", ""))
+    if not found:
+        return None
+    url, description = found
+    return {**tool, "website_url": url, "description": description or tool.get("description", "")}
+
+
 def _find_site_with_claude(name: str, tag_line: str) -> tuple[str, str | None] | None:
     """Product Hunt answers 403 to cloud machines (GitHub Actions), so its /r/p/ redirect can't be
     followed there. Ask Claude Code (web search only) for the product's official site, then accept it
@@ -225,9 +237,11 @@ def _parse_entry(entry: ET.Element) -> tuple[Tool | None, str]:
         try:
             website_url, description = _resolve_site(redirect.group(1))
         except requests.RequestException:
-            # blocked (cloud IPs get 403): look the site up instead; else keep the Product Hunt page
-            if found := _find_site(name, tag_line):
-                website_url, description = found
+            # blocked (cloud IPs get 403). Plan 5 / COMMITMENTS #14 (user-approved 11-12): the site is NOT looked up
+            # here any more: every listed product got a Claude web search (34-45 % of production's Claude spend,
+            # 11-12..11-18). The Product Hunt page stays; resolve_site() looks it up only for a candidate the
+            # ranker chose and the pipeline actually tries.
+            pass
 
     # Re-check with the site's own description, which often reveals what it is.
     is_software, reason = classify_tool(name, tag_line, description or "")
@@ -418,31 +432,39 @@ def news_tool_from(out: dict, story: dict) -> Tool | None:
                 description=desc, source=story.get("source") or "News")  # a news article is no users' thread
 
 
-_NEWS_TOOLS_CACHE: list[Tool] | None = None  # one look-up per run: every Reel attempt asks for the tools again
+NEWS_TOOLS_PATH = Path(__file__).resolve().parent.parent / "output" / "temp" / "news_tools.json"
 
 
 def fetch_news_tools(limit: int = NEWS_TOOLS, skip: set[str] | None = None) -> list[Tool]:
-    """11-17 dry run 44045532487: 4 look-ups instead of 2, because each Reel attempt fetched the tools again; the
-    run's first answer is kept and reused."""
-    global _NEWS_TOOLS_CACHE
+    """Asked once a day: every Reel attempt runs the pipeline as its own process, so an in-memory cache made 6
+    look-ups on 11-19 (run 44450359526) instead of 2. The day's answer is kept in output/temp/news_tools.json."""
     if limit <= 0:
         return []
-    if _NEWS_TOOLS_CACHE is not None:
-        return [t for t in _NEWS_TOOLS_CACHE if not already_used(t.tool_name, skip or set())]
-    _NEWS_TOOLS_CACHE = []
+    today = date.today().isoformat()
+    try:
+        kept = json.loads(NEWS_TOOLS_PATH.read_text(encoding="utf-8"))
+        if kept.get("date") == today:
+            return [t for t in (Tool(**x) for x in kept["tools"]) if not already_used(t.tool_name, skip or set())]
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    out: list[Tool] = []
     try:
         from discovery import discover
         stories = launch_candidates(discover(30))
     except Exception as exc:  # noqa: BLE001  the channels are extra; Product Hunt still works
         print(f"[fetcher] news channels failed ({type(exc).__name__}).")
-        return []
-    out: list[Tool] = []
+        stories = []
     for story in stories[:limit]:
         tool = _news_tool(story)
         if tool and not already_used(tool.tool_name, skip or set()) and \
                 all(_fold(t.tool_name) != _fold(tool.tool_name) for t in out):
             out.append(tool)
-    _NEWS_TOOLS_CACHE = out
+    try:
+        NEWS_TOOLS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        NEWS_TOOLS_PATH.write_text(json.dumps({"date": today, "tools": [t.model_dump(mode="json") for t in out]},
+                                              ensure_ascii=False), encoding="utf-8")
+    except OSError:
+        pass
     return out
 
 
