@@ -753,6 +753,9 @@ breaks any rule below scores at most 3.
 
 {skill_rules("reel-hook-writer")}
 
+PICTURE (11-20 dry run 44680542652: 3 of 3 rejections): the headline sits on top of the proof picture. If the tool \
+data has proof_shows, a candidate whose promise that picture does not show scores at most 4, however surprising.
+
 SURPRISE FIRST (Plan 2, #11): score first how surprising and concrete the hook is for this viewer; following the \
 rules is a filter (a rule break caps the score at 3), not what makes a hook good. A plain "X artık Y yapıyor" result \
 hook is safe but forgettable: prefer a concrete risk, contrast, number, pain or question when it is just as clear and \

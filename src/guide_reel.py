@@ -156,7 +156,9 @@ def write_script(product: str, page: dict) -> dict | None:
     prompt = (f"Write the Reel in language code '{language}', voiceover {low}-{high} words (hard limit: under "
               f"26 seconds).\n\nProduct / company: {product}\n\nCOMPANY PAGE ({page['url']}, published "
               f"{page.get('published') or '?'}):\n{page['text'][:6000]}"
-              f"\n\n{cta_rule(_load_history())}")  # #13: the guide Reel's closing rotates too (fix every path)
+              f"\n\n{cta_rule(_load_history())}"
+              + (f"\n\nPROOF PICTURE under the headline shows: {page['proof_shows']}. The hook and point1 must "
+                 f"promise what this picture shows." if page.get("proof_shows") else ""))  # #13: the guide Reel's closing rotates too (fix every path)
     system = SYSTEM_PROMPT + GUIDE_RULES
     fallback = None
     for attempt in range(1, 4):
@@ -215,14 +217,17 @@ def _make_from(candidates: list[dict]) -> int:
         # ...and without "Newsroom" / "Blog": "Meta Newsroom" made the writer explain the site in the voiceover
         site = re.sub(r"\s+(Newsroom|News|Blog|Press|Stories)$", "", page.get("publisher") or "", flags=re.I)
         product = (c.get("rank") or {}).get("company") or site or c["source"]
-        script = write_script(product, page)
+        # 11-20 dry run 44680542652: two guide hooks promised what the picture didn't show; both now know it
+        from hyperframes_builder import describe_picture
+        shows = describe_picture(capture["proof_path"])
+        script = write_script(product, {**page, "proof_shows": shows})
         if script is None:
             print("   no valid script")
             continue
         tool = {"tool_name": product, "website_url": page["url"],
                 "kind": "07:30 GUIDE Reel (D-31): how to use a feature of a known AI product the right way. "
                         "Facts, steps and pictures come only from the company's own page (article).",
-                "article": page["text"][:6000]}
+                "article": page["text"][:6000], "proof_shows": shows}
         script = judge_hooks(script, tool)
         TEMP_DIR.mkdir(parents=True, exist_ok=True)
         (TEMP_DIR / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")

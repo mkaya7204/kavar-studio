@@ -340,6 +340,29 @@ def _proof_windows(img: Image.Image, screens: int = 4) -> list[int]:
 LAST_PROOF_SHOWS = ""  # Plan 1 (#10): what the last chosen proof picture shows, for the script writer
 
 
+def describe_picture(path: Path | str) -> str:
+    """One plain sentence on what a picture shows (the guide Reel's proof had no description, so its hook promised
+    what the picture did not show: 11-20 dry run 44680542652). "" when Claude can't answer; never raises."""
+    exe = shutil.which("claude")
+    path = Path(path)
+    if not exe or not path.exists():
+        return ""
+    schema = {"type": "object", "additionalProperties": False, "required": ["shows"],
+              "properties": {"shows": {"type": "string"}}}
+    prompt = (f"Open {path.name} with the Read tool and say in one plain English sentence what it actually shows "
+              f"(the interface, output or scene a viewer sees; any readable text in it).")
+    env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
+    try:
+        proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
+                               "--tools", "Read", "--allowedTools", "Read", "--no-session-persistence"],
+                              input=prompt, capture_output=True, text=True, encoding="utf-8", timeout=180,
+                              cwd=path.parent, env=env)
+        record_usage("proof_pick", proc.stdout)
+        return str((json.loads(proc.stdout).get("structured_output") or {}).get("shows") or "")[:300]
+    except Exception:  # noqa: BLE001
+        return ""
+
+
 def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
     """Claude (Read tool only) looks at the numbered candidates and ranks the allowed ones, best
     proof first (empty list = none allowed)."""
