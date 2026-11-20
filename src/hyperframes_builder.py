@@ -337,15 +337,19 @@ def _proof_windows(img: Image.Image, screens: int = 4) -> list[int]:
     return sorted(picked) or [0]
 
 
+LAST_PROOF_SHOWS = ""  # Plan 1 (#10): what the last chosen proof picture shows, for the script writer
+
+
 def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
     """Claude (Read tool only) looks at the numbered candidates and ranks the allowed ones, best
     proof first (empty list = none allowed)."""
     exe = shutil.which("claude")
     if not exe:
         return None
-    schema = {"type": "object", "additionalProperties": False, "required": ["allowed"],
+    schema = {"type": "object", "additionalProperties": False, "required": ["allowed", "shows"],
               "properties": {"allowed": {"type": "array", "maxItems": count,
-                                         "items": {"type": "integer", "minimum": 0, "maximum": count - 1}}}}
+                                         "items": {"type": "integer", "minimum": 0, "maximum": count - 1}},
+                             "shows": {"type": "string"}}}
     prompt = (f"Open {sheet.name} with the Read tool. It shows {count} numbered crops (0-{count - 1}) of a "
               f"product's website and images from its own pages (screenshots of the app, its outputs). "
               f"A Reel opens with this promise on screen: \"{hint}\". Pick the crop that "
@@ -360,7 +364,8 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
               f"proof), a wall of customer logos, or another product. Prefer the product's "
               f"output or interface in use over empty forms; avoid plain paragraphs of text. Answer with "
               f"every allowed crop's number, best proof first (the next ones are shown later in the Reel), "
-              f"or an empty list if none is allowed.")
+              f"or an empty list if none is allowed. In 'shows', say in one plain English sentence what the best crop "
+              f"actually shows (Plan 1, #10: the writer must describe the picture the viewer sees), or an empty string.")
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
     try:
         proc = subprocess.run([exe, "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
@@ -370,6 +375,8 @@ def _ask_proof_choice(sheet: Path, hint: str, count: int) -> list[int] | None:
         record_usage("proof_pick", proc.stdout)
         out = json.loads(proc.stdout)
         allowed = (out.get("structured_output") or {}).get("allowed")
+        global LAST_PROOF_SHOWS
+        LAST_PROOF_SHOWS = str((out.get("structured_output") or {}).get("shows") or "")[:300]
     except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError) as exc:
         print(f"   [proof] no choice from Claude ({type(exc).__name__}); the first window is used")
         return None

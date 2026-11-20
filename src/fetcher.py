@@ -37,6 +37,8 @@ class Tool(BaseModel):
     experiences: list[dict] = []
     source: str = "Product Hunt"  # D-74: where the tool was found
     discussion_url: str = ""  # D-74: a page where people who tried it comment (Hacker News thread)
+    page_text: str = ""  # Plan 1 (#10): the tool's own page, as a visitor reads it
+    proof_shows: str = ""  # Plan 1 (#10): what the picture under the hook really shows
 
 
 SAMPLE_TOOLS = [

@@ -563,6 +563,38 @@ def _save_history(script: VideoScript) -> None:
                                           indent=1, ensure_ascii=False), encoding="utf-8")
 
 
+# Plan 1 / COMMITMENTS #10 (user-approved 11-12): 76 of 115 Reels opened with the same "result" pattern and said only
+# what the tagline said. The writer now reads page_text and proof_shows and must take ONE angle.
+ANGLE_RULE = (
+    "ANGLE (required): before writing, pick ONE angle and build the whole script on it: "
+    "(a) one specific person in Turkey (a teacher, a shop owner, a student, a freelancer...) and the concrete job "
+    "they would do with it; (b) the single most surprising concrete thing in page_text; or (c) the tool's honest "
+    "limit or catch, from page_text or experiences. Facts only from page_text, description, tag_line and "
+    "experiences: never invent features, numbers or steps. If proof_shows is given, the hook and the first "
+    "point must match what that picture shows, because the viewer sees it under the headline.")
+
+
+CTA_KINDS = {
+    "save": "the cta asks the viewer to SAVE it for later (Kaydet ..., because they will need it), not to send it",
+    "comment": "the cta asks ONE short question the viewer can answer in the comments (Yorumlara yaz: ...), not send",
+    "send": "the cta asks the viewer to send it to ONE specific kind of person who needs it",
+}
+CTA_WORDS = {"save": ("kaydet",), "comment": ("yorum",), "send": ("gönder", "gonder", "paylaş")}
+
+
+def _cta_kind(cta: str) -> str:
+    low = (cta or "").lower()
+    return next((k for k, words in CTA_WORDS.items() if any(w in low for w in words)), "send")
+
+
+def cta_rule(history: list[dict]) -> str:
+    """Plan 4 (#13, user-approved 11-12): 109 of 115 Reels closed with "... arkadaşına gönder", 1 with "kaydet".
+    The closing kind rotates: the one used least in the recent history comes next."""
+    used = [_cta_kind(h.get("cta", "")) for h in history]
+    kind = min(("save", "comment", "send"), key=lambda k: (used.count(k), ("save", "comment", "send").index(k)))
+    return f"CLOSING LINE (required this time): {CTA_KINDS[kind]}."
+
+
 def _user_message(tool: Tool, language: str) -> str:
     short = bool(os.getenv(SHORT_ENV))
     low, high = SHORT_WORDS if short else TARGET_WORDS_BY_LANGUAGE.get(language, TARGET_WORDS)
@@ -572,7 +604,10 @@ def _user_message(tool: Tool, language: str) -> str:
         f"should be {low}-{high} words.\n\n"
         + (SHORT_RULES.format(low=low, high=high) + "\n\n" if short else "")
         + f"Tool data:\n{tool.model_dump_json(indent=2)}"
+        + ("\n\n" + ANGLE_RULE if not short else "")
     )
+    if not short:
+        msg += "\n\n" + cta_rule(_load_history())
     if history := _load_history():
         lines = "\n".join(f'- [{h.get("pattern") or "?"}] hook: "{h["hook"]}" / spoken: "{h["spoken_hook"]}" / cta: "{h["cta"]}"'
                           for h in history)
