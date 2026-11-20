@@ -225,7 +225,7 @@ def reel_rule_problems(script: "VideoScript") -> list[str]:
     if (words := len(script.voiceover.split())) > high + 2:  # 55 Turkish words rendered a 29.9 s Reel (max 26)
         problems.append(f"voiceover has {words} words; max {high} - cut a sentence")
     if len(script.hook_candidates) < 3:
-        problems.append("write 5 hook_candidates (one per pattern) before choosing the hook")
+        problems.append("write 5 hook_candidates (at least 4 different patterns) before choosing the hook")
     if bad := card_voice_mismatch(script):
         problems.append(f"key_points {bad} don't match the voiceover part spoken under them: card N is shown "
                         "while pointN is spoken, so key_points[N-1] must say the same thing as pointN "
@@ -238,7 +238,8 @@ def reel_rule_problems(script: "VideoScript") -> list[str]:
 
 
 class HookCandidate(BaseModel):
-    pattern: Literal["result", "pain", "question", "curiosity", "news"]
+    # Plan 2 (#11): risk, contrast and number added; 76 of 115 Reels opened with "result"
+    pattern: Literal["result", "pain", "question", "curiosity", "news", "risk", "contrast", "number"]
     headline: str  # on-screen, 3-6 words (D-17), at most 32 characters
     spoken: str  # first spoken sentence, 5-9 words
 
@@ -364,7 +365,7 @@ Write for the ear and the thumb: the Reel is decided in its first 2 seconds, on 
 {skill_rules("reel-hook-writer")}
 
 Fields:
-- hook_candidates: FIRST write 5 candidates, one per pattern (result, pain, question, curiosity, news - for a tool that isn't news, write a second strong candidate of the best pattern instead of news). Each has: pattern, headline (on-screen, 3-6 words and at most 32 characters so it fits 2 lines, no tool name) and spoken (the first spoken sentence, 5-9 words, no tool name; the headline is its core).
+- hook_candidates: FIRST write 5 candidates in at least 4 DIFFERENT patterns, at most one of them "result". Patterns: result (what you get), pain (the chore it ends), question, curiosity, news (only for real news), risk (what it changes or threatens for someone, e.g. a job or a habit), contrast (the common belief vs what the page shows), number (one striking number taken from the tool data, never invented, never a price). Each has: pattern, headline (on-screen, 3-6 words and at most 32 characters so it fits 2 lines, no tool name) and spoken (the first spoken sentence, 5-9 words, no tool name; the headline is its core).
 - hook_pattern / hook / voiceover_segments.hook: the winning candidate's pattern, headline and spoken sentence, copied exactly. Pick the one a stranger would stop for and could send to a specific person, that the tool data fully supports.
 - voiceover: the full narration, in the word range the user message gives. Plain spoken sentences; no emojis, hashtags, URLs or stage directions.
 - voiceover_segments: the same narration split into six parts, joined with spaces they equal the voiceover. Each scene starts when its part is spoken: hook (one sentence, about 2 s), point1 (names the tool for the first time and says what kind of product it is, then the first proof; about 3-4 s), point2 and point3 (one benefit each, about 2.5-3.5 s), why (one short sentence on why it matters to the viewer, about 2.5 s), cta (one short send/save sentence, see the rules).
@@ -752,6 +753,12 @@ breaks any rule below scores at most 3.
 
 {skill_rules("reel-hook-writer")}
 
+SURPRISE FIRST (Plan 2, #11): score first how surprising and concrete the hook is for this viewer; following the \
+rules is a filter (a rule break caps the score at 3), not what makes a hook good. A plain "X artık Y yapıyor" result \
+hook is safe but forgettable: prefer a concrete risk, contrast, number, pain or question when it is just as clear and \
+fully supported. If the user message lists the patterns of the last Reels and one pattern dominates, a different \
+pattern wins a tie or a 1-point gap.
+
 Return one score per candidate in order, the 0-based index of the best, and a one-sentence reason."""
 
 
@@ -768,9 +775,11 @@ def judge_hooks(script: dict, tool_data: dict | None = None) -> dict:
     seg = script["voiceover_segments"]
     listing = "\n".join(f'{i}. [{c["pattern"]}] headline: "{c["headline"]}" / spoken: "{c["spoken"]}"'
                         for i, c in enumerate(cands))
+    recent = [h.get("pattern") or "?" for h in _load_history()][-8:]
     prompt = (f"Tool data:\n{json.dumps(tool_data or {'tool_name': script['tool_name']}, ensure_ascii=False, default=str)}"
               f"\n\nThe Reel continues after the hook with: \"{seg['point1']} {seg['point2']}\"\n\n"
-              f"Hook candidates:\n{listing}")
+              f"Hook candidates:\n{listing}"
+              + (f"\n\nPatterns of the last Reels, oldest first: {', '.join(recent)}" if recent else ""))
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
     try:
         proc = subprocess.run(
