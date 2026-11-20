@@ -35,7 +35,8 @@ from hyperframes_builder import FINAL_PATH, SHOT_NAMES, _fit_whole, _shot_frame,
 from media_capturer import CaptureError  # noqa: E402
 from news_fetcher import SOURCES_PATH, _items, load_history, load_titles, mark_used, seen_story  # noqa: E402
 from script_writer import (NO_PRICE_RULE, SYSTEM_PROMPT, ScriptDraft, VideoScript,  # noqa: E402
-                           _load_language, _save_history, _script_price_mentions, judge_hooks, reel_rule_problems)
+                           _load_history, _load_language, _save_history, _script_price_mentions, cta_rule,
+                           judge_hooks, reel_rule_problems)
 from tts_engine import reel_voice, voice_for  # noqa: E402
 from voice_final import save_capture  # noqa: E402
 
@@ -154,7 +155,8 @@ def write_script(product: str, page: dict) -> dict | None:
     low, high = WORDS
     prompt = (f"Write the Reel in language code '{language}', voiceover {low}-{high} words (hard limit: under "
               f"26 seconds).\n\nProduct / company: {product}\n\nCOMPANY PAGE ({page['url']}, published "
-              f"{page.get('published') or '?'}):\n{page['text'][:6000]}")
+              f"{page.get('published') or '?'}):\n{page['text'][:6000]}"
+              f"\n\n{cta_rule(_load_history())}")  # #13: the guide Reel's closing rotates too (fix every path)
     system = SYSTEM_PROMPT + GUIDE_RULES
     fallback = None
     for attempt in range(1, 4):
