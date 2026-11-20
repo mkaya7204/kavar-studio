@@ -1806,5 +1806,44 @@
     "duration_sec": 22.0,
     "words": 37,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-20_google-gemini",
+    "date": "2026-11-20",
+    "kind": "guide",
+    "tool": "Google Gemini",
+    "hook_pattern": "result",
+    "headline": "Geçmişin yeni asistana taşınıyor",
+    "spoken_hook": "Başka yapay zekâdan geçerken sohbet geçmişini taşıyabilirsin.",
+    "cta": "Asistan değiştiren arkadaşına gönder.",
+    "duration_sec": 23.7,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-20_codedesign-v3",
+    "date": "2026-11-20",
+    "kind": "tool",
+    "tool": "CodeDesign v3",
+    "hook_pattern": "result",
+    "headline": "Siteni sohbetten yönetiyorsun",
+    "spoken_hook": "Web siteni ChatGPT'den ya da Claude'dan yönetebilirsin.",
+    "cta": "Sitesi olmayan arkadaşına at.",
+    "duration_sec": 24.7,
+    "words": 40,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-20_room-ai",
+    "date": "2026-11-20",
+    "kind": "tool",
+    "tool": "Room AI",
+    "hook_pattern": "result",
+    "headline": "Odanı konuşarak yeniden tasarla",
+    "spoken_hook": "Odanı artık konuşarak yeniden tasarlayabilirsin.",
+    "cta": "Ev dekore edene gönder.",
+    "duration_sec": 11.7,
+    "words": 18,
+    "status": "produced"
   }
 ]

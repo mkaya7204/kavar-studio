@@ -1,26 +1,5 @@
 [
   {
-    "tool": "Hob",
-    "hook": "ChatGPT'ye cihazda rakip var",
-    "pattern": "curiosity",
-    "spoken_hook": "ChatGPT'ye cihazında çalışan bir rakip çıkmış.",
-    "cta": "Yerel yapay zekâ meraklısına gönder."
-  },
-  {
-    "tool": "Freebuff",
-    "hook": "Uygulama yazıp yayına alıyor",
-    "pattern": "result",
-    "spoken_hook": "Yapay zekâ uygulamanı yazıp yayına alıyor.",
-    "cta": "Yazılımcı arkadaşına gönder."
-  },
-  {
-    "tool": "Pine Drama Studio",
-    "hook": "Filmciliğin Cursor'ı çıkmış",
-    "pattern": "curiosity",
-    "spoken_hook": "Yapay zekâlı filmciliğin Cursor'ı çıkmış.",
-    "cta": "Kısa film çeken arkadaşına gönder."
-  },
-  {
     "tool": "Google",
     "hook": "Geçmişe kaydolmayan arama",
     "pattern": "result",
@@ -68,5 +47,26 @@
     "pattern": "result",
     "spoken_hook": "Kendi tarayıcı eklentin sohbetle hazır oluyor.",
     "cta": "Bunu arkadaşına gönder, işine yarar."
+  },
+  {
+    "tool": "Google Gemini",
+    "hook": "Geçmişin yeni asistana taşınıyor",
+    "pattern": "result",
+    "spoken_hook": "Başka yapay zekâdan geçerken sohbet geçmişini taşıyabilirsin.",
+    "cta": "Asistan değiştiren arkadaşına gönder."
+  },
+  {
+    "tool": "CodeDesign v3",
+    "hook": "Siteni sohbetten yönetiyorsun",
+    "pattern": "result",
+    "spoken_hook": "Web siteni ChatGPT'den ya da Claude'dan yönetebilirsin.",
+    "cta": "Sitesi olmayan arkadaşına at."
+  },
+  {
+    "tool": "Room AI",
+    "hook": "Odanı konuşarak yeniden tasarla",
+    "pattern": "result",
+    "spoken_hook": "Odanı artık konuşarak yeniden tasarlayabilirsin.",
+    "cta": "Ev dekore edene gönder."
   }
 ]

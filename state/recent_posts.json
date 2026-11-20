@@ -117,5 +117,40 @@
   "kind": "reel",
   "title": "HeyGen Avatar 6",
   "brand": ""
+ },
+ {
+  "day": "2026-11-21",
+  "time": "07:30",
+  "kind": "reel",
+  "title": "Google Gemini",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-21",
+  "time": "11:45",
+  "kind": "reel",
+  "title": "Room AI",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-21",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "Hybrid intelligence on the Web: Introducing Aion Instruct and Prompt API in Microsoft Edge",
+  "brand": "microsoft"
+ },
+ {
+  "day": "2026-11-21",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "Google Pics upgrades to Nano Banana 2.1 for higher-quality image generation and editing",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-21",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "CodeDesign v3",
+  "brand": ""
  }
 ]

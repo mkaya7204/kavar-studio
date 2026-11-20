@@ -593,5 +593,15 @@
   "url": "https://tooljet.com/",
   "description": "ToolJet is the open-source, AI-native low-code platform for internal tools. Build with AI, Visual Builder or React Builder, on ToolJet Cloud or self-hosted.",
   "date": "2026-11-19"
+ },
+ "codedesignv3": {
+  "url": "https://codedesign.ai/",
+  "description": "Free AI website builder. Describe your business, edit by chat or drag and drop, host on your domain, publish to WordPress or export the code. 4M+ sites built, rated 4.7/5.",
+  "date": "2026-11-20"
+ },
+ "roomai": {
+  "url": "https://roomai.com/",
+  "description": "Upload a photo of your room and say what you'd change. An AI interior designer you talk to: every reply is a new photo of your room, layout kept. Free to try.",
+  "date": "2026-11-20"
  }
 }

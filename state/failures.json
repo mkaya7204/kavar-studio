@@ -3146,5 +3146,60 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-20",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Gemini",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-20",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Google Pics upgrades to Nano Banana 2.1 for higher-quality image generation and editing",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-20",
+  "stage": "news",
+  "kind": "news",
+  "item": "Hybrid intelligence on the Web: Introducing Aion Instruct and Prompt API in Microsoft Edge",
+  "rendered": true,
+  "host": "blogs.windows.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-20",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "CodeDesign v3",
+  "rendered": true,
+  "host": "codedesign.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-20",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Room AI",
+  "rendered": true,
+  "host": "roomai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]
