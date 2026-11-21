@@ -603,5 +603,20 @@
   "url": "https://roomai.com/",
   "description": "Upload a photo of your room and say what you'd change. An AI interior designer you talk to: every reply is a new photo of your room, layout kept. Free to try.",
   "date": "2026-11-20"
+ },
+ "rox": {
+  "url": "https://www.talktorox.com/",
+  "description": "Track chronic illness symptoms and medications, view wearable data alongside your logs, and prepare reports for doctor visits with Rox.",
+  "date": "2026-11-21"
+ },
+ "storiara": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-21"
+ },
+ "mailpipe": {
+  "url": "https://mailpipeai.com/",
+  "description": "Draft replies in Apple Mail with Codex CLI, DeepSeek Harness, Claude Code, OpenCode, OpenClaw, Hermes Agent. Open Mailpipe in the compose toolbar to generate, review and copy a reply.",
+  "date": "2026-11-21"
  }
 }

@@ -3201,5 +3201,74 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-21",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Gemini",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-21",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Regional voices are rolling out in the Gemini app.",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-21",
+  "stage": "news",
+  "kind": "news",
+  "item": "Welcome Inkling 2 Mini, Cutting-edge Performance for your Local Setup",
+  "rendered": true,
+  "host": "huggingface.co",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-21",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Rox",
+  "rendered": true,
+  "host": "talktorox.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kapak ve 0-2.5 sn kanıt görseli zayıf: sitenin hero kısmı, iki telefon yanlardan kesilmiş, ortası boş beyaz-pembe alan. Arayüz 'Symp', 'How' diye yarım okunuyor, 'Belirtini mesaj atar gibi yaz' vaadini göstermiyor.; Kanıt kutusunun tam ortasında büyük siyah 'download ios app' düğmesi var. İlk 3 sn'd"
+ },
+ {
+  "date": "2026-11-21",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Atticus",
+  "rendered": true,
+  "host": "github.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-21",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Mailpipe",
+  "rendered": true,
+  "host": "mailpipeai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

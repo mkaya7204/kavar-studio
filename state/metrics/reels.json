@@ -1845,5 +1845,57 @@
     "duration_sec": 11.7,
     "words": 18,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-21_google-gemini",
+    "date": "2026-11-21",
+    "kind": "guide",
+    "tool": "Google Gemini",
+    "hook_pattern": "question",
+    "headline": "Mac'te tıklamayı kim yapsın?",
+    "spoken_hook": "Mac'te tekrar eden işi hâlâ elle mi yapıyorsun?",
+    "cta": "Kaydet, tekrarlı iş çıkınca lazım olur.",
+    "duration_sec": 24.3,
+    "words": 39,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-21_rox",
+    "date": "2026-11-21",
+    "kind": "tool",
+    "tool": "Rox",
+    "hook_pattern": "result",
+    "headline": "Belirtini mesaj atar gibi yaz",
+    "spoken_hook": "Belirtini mesaj atar gibi yazabilirsin.",
+    "cta": "Yorumlara yaz: randevuda neyi unutuyorsun?",
+    "duration_sec": 25.4,
+    "words": 42,
+    "status": "rejected: Kapak ve 0-2.5 sn kanıt görseli zayıf: sitenin hero kısmı, iki telefon yanlardan kesilmiş, ortası boş beyaz-pembe alan. Arayüz 'Symp', 'How' diye yarım okunuyor, 'Belirtini mesaj atar gibi yaz' vaadini göstermiyor.; Kanıt kutusunun tam ortasında büyük siyah 'download ios app' düğmesi var. İlk 3 sn'de CTA düğmesi gibi görünüyor, reklam hissi veriyor.; 12.7 ve 13.7 sn karelerinde aynı site yakalaması duruyor (rox logosu, 'download ios app' düğmesi, 'your always available bestie for chronic illness'). Alt metin 'rox connects to your wearables,' yarım kesik. Saat verisi / rapor bölümü gösterilmiyor. Kare değişmiyor, en uzun statik süre 4.9 sn."
+  },
+  {
+    "id": "2026-11-21_atticus",
+    "date": "2026-11-21",
+    "kind": "tool",
+    "tool": "Atticus",
+    "hook_pattern": "result",
+    "headline": "Ekranda daire çiz, sor",
+    "spoken_hook": "Ekranı daire içine alıp sorabilirsin.",
+    "cta": "Kaydet, Mac'in varsa dene.",
+    "duration_sec": 23.9,
+    "words": 40,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-21_mailpipe",
+    "date": "2026-11-21",
+    "kind": "tool",
+    "tool": "Mailpipe",
+    "hook_pattern": "pain",
+    "headline": "Mail cevaplamak vaktini yiyor",
+    "spoken_hook": "Mail cevaplamak her gün vaktini mi yiyor?",
+    "cta": "Mac'li arkadaşına gönder.",
+    "duration_sec": 11.4,
+    "words": 19,
+    "status": "produced"
   }
 ]

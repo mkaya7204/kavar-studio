@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Google",
-    "hook": "Geçmişe kaydolmayan arama",
-    "pattern": "result",
-    "spoken_hook": "Aramanın geçmişe kaydolmasını istemiyor musun?",
-    "cta": "Bunu hediye arayan arkadaşına at."
-  },
-  {
-    "tool": "Hako",
-    "hook": "Kodlama ajanların cebinde",
-    "pattern": "result",
-    "spoken_hook": "Kodlama ajanlarını artık telefonundan yönetebilirsin.",
-    "cta": "Kod yazan arkadaşına gönder."
-  },
-  {
-    "tool": "ai-ref-library-cn",
-    "hook": "Poz ve kıyafet aramaktan bıktın",
-    "pattern": "pain",
-    "spoken_hook": "Görsel üretirken poz aramaktan yoruldun mu?",
-    "cta": "Görsel üretene gönder."
-  },
-  {
-    "tool": "Google DeepMind",
-    "hook": "PDF, tablo ve video tek yerde",
-    "pattern": "result",
-    "spoken_hook": "PDF, tablo ve videoyu tek yerde çözmek ister misin?",
-    "cta": "Ofisteki arkadaşına gönder."
-  },
-  {
     "tool": "HeyGen Avatar 6",
     "hook": "Kameraya çıkmaktan kaçıyorsun",
     "pattern": "pain",
@@ -68,5 +40,33 @@
     "pattern": "result",
     "spoken_hook": "Odanı artık konuşarak yeniden tasarlayabilirsin.",
     "cta": "Ev dekore edene gönder."
+  },
+  {
+    "tool": "Google Gemini",
+    "hook": "Mac'te tıklamayı kim yapsın?",
+    "pattern": "question",
+    "spoken_hook": "Mac'te tekrar eden işi hâlâ elle mi yapıyorsun?",
+    "cta": "Kaydet, tekrarlı iş çıkınca lazım olur."
+  },
+  {
+    "tool": "Rox",
+    "hook": "Sohbet botu seni unutur",
+    "pattern": "contrast",
+    "spoken_hook": "Sıradan sohbet botları seni kapattığın an unutur.",
+    "cta": "Yorumlara yaz: randevuda neyi unutuyorsun?"
+  },
+  {
+    "tool": "Atticus",
+    "hook": "Ekranda daire çiz, sor",
+    "pattern": "result",
+    "spoken_hook": "Ekrandaki her şeyi daire içine alıp sorabilirsin.",
+    "cta": "Kaydet, Mac'te işine yarar."
+  },
+  {
+    "tool": "Mailpipe",
+    "hook": "Mail cevaplamak vaktini yiyor",
+    "pattern": "pain",
+    "spoken_hook": "Mail cevaplamak her gün vaktini mi yiyor?",
+    "cta": "Mac'li arkadaşına gönder."
   }
 ]
