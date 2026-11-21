@@ -835,4 +835,5 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Shared identity:** the KAVAR mark, one font pair, one accent, the same closing slide and the crow on every style.
 - **Checks:** the design detector (Impeccable detect + our checks) sends a slide back to fixing (D-85).
 - **Measure:** the style is written into the queue and every metrics row; after 2-3 weeks the numbers per style go to the user, who decides what to drop.
-- **Built:** on branch `tarz`; dry runs show each style before main.
+- **Built:** on branch `tarz`; round 2 test runs 44888894042 (E) / 44888896351 (F) / 44888898685 (G) / 44888901261 (auto, chose E): 0 layout problems, Impeccable check green; shown to the user (https://claude.ai/artifact/CPFJiH1kWihHKbHZ5iAngR), the user: "Tamam" -> merged to main 2026-11-21.
+- **Guarded by:** tests/test_d86_styles.py; checks.yml job `design` (Impeccable detect on templates/carousel_v2).
