@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Carousel v2 (D-86)</title>
+    <!--
+      D-85 / D-86 (user 2026-11-21): the news carousel in one of three styles, chosen per story by the writer.
+        E  real screen + hand notes (idea from Webtekno / chatgptricks)
+        F  headline + witty kicker (idea from The Economist)
+        G  Kavar the crow explains, question headline (idea from Kurzgesagt)
+      Shared identity on every style: the KAVAR mark, the orange accent, Kavar the crow, the same closing slide.
+      No neon, no glow, no gradient text, no eyebrow labels, no caption under a picture (design-quality.md).
+      Same contract as templates/carousel: assets/data.js sets window.DATA; index.html?mode=carousel|story;
+      window.__show(i), window.__qa, window.__ready; a video card carries data-video-slot and .tag children.
+    -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Caveat:wght@700&family=Newsreader:ital,opsz,wght@0,6..72,500;1,6..72,400&display=block" />
+    <script src="assets/data.js"></script>
+    <style>
+      :root {
+        --W: 1080px;
+        --H: 1350px;
+        --ink: #17130f;
+        --ink-2: #4b443b;
+        --paper: #f7f7f5;
+        --paper-2: #e6e6e2;
+        --accent: #ff6b3d; /* the one accent, on every style */
+        --accent-ink: #c2421c; /* the accent as text on light grounds (contrast) */
+        --sans: "Bricolage Grotesque", "Segoe UI", sans-serif;
+        --serif: "Newsreader", Georgia, serif;
+        --hand: "Caveat", "Segoe Print", cursive;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: var(--W); height: var(--H); overflow: hidden; background: #ffffff; }
+      body.story { --H: 1920px; }
+      #strip { position: absolute; left: 0; top: 0; height: var(--H); font-family: var(--sans); color: var(--ink);
+        -webkit-font-smoothing: antialiased; }
+      .slide { position: absolute; top: 0; width: var(--W); height: var(--H); overflow: hidden; background: var(--paper); }
+      .content { position: absolute; left: 76px; right: 76px; display: flex; flex-direction: column; gap: 22px; }
+      h2, h3, p { text-wrap: balance; }
+      p { text-wrap: pretty; }
+      .t-title { font-weight: 800; letter-spacing: -0.02em; line-height: 1.04; }
+      .t-body { font-weight: 400; line-height: 1.42; }
+      .t-body b { font-weight: 800; color: var(--accent-ink); }
+      .k-mark { display: flex; align-items: center; gap: 14px; font: 800 30px/1 var(--sans); letter-spacing: 0.04em; }
+      .k-mark i { width: 46px; height: 46px; border-radius: 11px; background: var(--ink); color: var(--paper);
+        display: grid; place-items: center; font: 800 30px/1 var(--sans); font-style: normal; }
+      .k-mark img { width: 46px; height: 46px; border-radius: 11px; }
+      .top { position: absolute; left: 76px; right: 76px; top: 52px; display: flex; justify-content: space-between; align-items: center; }
+      body.story .top { top: 214px; } /* under Instagram's story bar */
+      .dots { display: flex; gap: 8px; }
+      .dots b { width: 34px; height: 7px; border-radius: 4px; background: rgba(23, 19, 15, 0.16); }
+      .dots b.on { background: var(--ink); }
+      .on-dark .dots b { background: rgba(255, 255, 255, 0.28); }
+      .on-dark .dots b.on { background: #fff; }
+      .on-dark .k-mark i { background: #fff; color: var(--ink); }
+      /* a picture as printed paper: white border, soft offset shadow, never cropped (shown whole) */
+      .print { position: absolute; background: #fff; padding: 14px; box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22), 0 2px 4px rgba(0, 0, 0, 0.12); }
+      .print .pic { width: 100%; height: 100%; background: #fff; overflow: hidden; position: relative; }
+      .print img.main { width: 100%; height: 100%; object-fit: contain; display: block; }
+      .src { position: absolute; right: 14px; bottom: 14px; background: rgba(255, 255, 255, 0.92); color: var(--ink-2);
+        font: 600 22px/1 var(--sans); padding: 6px 10px; border-radius: 6px; }
+      .tag { position: absolute; font: 800 26px/1 var(--sans); padding: 8px 12px; border-radius: 6px; background: var(--ink); color: #fff; }
+      .crow { position: absolute; width: 260px; height: 260px; filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.18)); }
+      .bubble { position: absolute; background: #fff; border: 5px solid var(--ink); border-radius: 40px; padding: 24px 32px;
+        font: 600 36px/1.28 var(--sans); color: var(--ink); }
+      .bubble::after { content: ""; position: absolute; width: 40px; height: 40px; background: #fff; border-right: 5px solid var(--ink);
+        border-bottom: 5px solid var(--ink); bottom: -24px; transform: rotate(45deg); }
+      .bubble.tail-l::after { left: 60px; }
+      .bubble.tail-r::after { right: 60px; }
+      .swipe { position: absolute; right: 76px; bottom: 60px; font: 800 30px/1 var(--sans); letter-spacing: 0.04em; }
+
+      /* ---------- E: real screen + hand notes ---------- */
+      .E.cover { background: var(--accent); }
+      .E.inner { background: #ffffff; }
+      .E .note { position: absolute; font: 700 60px/1 var(--hand); color: var(--ink); background: #ffd84d; padding: 10px 22px 14px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18); white-space: nowrap; z-index: 3; }
+      .E.cover .note { color: #fff; }
+      .E .scribble { position: absolute; overflow: visible; pointer-events: none; }
+      .E.cover .t-title { color: var(--ink); }
+      .E.cover .t-title em { color: #fff; font-style: normal; }
+      .E .t-title em { color: var(--accent-ink); font-style: normal; }
+
+      /* ---------- F: headline + wit ---------- */
+      .F.cover { background: #111; color: #f4f1ea; }
+      .F .photo { position: absolute; left: 0; right: 0; top: 0; overflow: hidden; background: #fff; }
+      .F .photo img.main { width: 100%; height: 100%; object-fit: contain; display: block; }
+      .F .photo img.blur { position: absolute; inset: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; filter: blur(28px) saturate(1.1); opacity: 0.7; }
+      .F .photo img.main { position: relative; }
+      .F .photo .src { right: 52px; bottom: 56px; }
+      .F.cover .photo .src { bottom: 24px; }
+      .F .kick { font: 600 38px/1.1 var(--sans); color: var(--accent); }
+      .F.cover .t-title { font-family: var(--serif); font-weight: 500; letter-spacing: -0.01em; line-height: 1.06; color: #f4f1ea; }
+      .F .stand { font: italic 400 40px/1.3 var(--serif); color: #d9d2c4; }
+      .F.inner { background: var(--paper); }
+      .F.inner .t-title { font-family: var(--serif); font-weight: 500; letter-spacing: -0.01em; }
+      .F.inner .photo { top: auto; bottom: 0; border-top: 5px solid var(--ink); }
+
+      /* ---------- G: Kavar explains ---------- */
+      .G { background: #e8eef1; }
+      .G .qbox { background: var(--ink); color: #f6f1e7; border-radius: 48px; padding: 44px 52px; }
+      .G .qbox .t-title { color: #f6f1e7; font-stretch: 90%; }
+      .G .qbox .t-title em { color: #ffb24d; font-style: normal; }
+      .G .screen { position: absolute; background: #fff; border: 5px solid var(--ink); border-radius: 26px; overflow: hidden; }
+      .G .screen img.main { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+      /* ---------- shared: crow-only, why, closing ---------- */
+      .plain .t-title em { color: var(--accent-ink); font-style: normal; }
+      .close { background: var(--ink); color: var(--paper); }
+      .close .t-title { color: var(--paper); }
+      .close .t-title em { color: var(--accent); font-style: normal; }
+      .close .handle { font: 800 46px/1 var(--sans); }
+      .close .line { font: 400 32px/1.3 var(--sans); color: #cfc6b6; margin-top: 10px; }
+      .close .follow { background: var(--accent); color: var(--ink); font: 800 38px/1 var(--sans); padding: 26px 46px; border-radius: 60px; }
+      .close .credit { font: 400 26px/1.3 var(--sans); color: #bdb3a2; }
+      .close .k-mark i { background: var(--paper); color: var(--ink); }
+      .sticker-slot { border: 5px dashed var(--accent); border-radius: 40px; height: 260px; display: grid; place-items: center;
+        font: 600 30px/1 var(--sans); color: var(--accent-ink); }
+      .poll-opt { border: 5px solid var(--ink); border-radius: 30px; padding: 26px 34px; font: 800 44px/1.1 var(--sans); background: #fff; }
+    </style>
+  </head>
+  <body>
+    <div id="strip"></div>
+    <script>
+      (function () {
+        const D = window.DATA;
+        const STORY = new URLSearchParams(location.search).get("mode") === "story";
+        const W = 1080;
+        const H = STORY ? 1920 : 1350;
+        const MIN_FONT = STORY ? 32 : 28;
+        const MIN_CHROME = 22;
+        if (STORY) document.body.classList.add("story");
+        document.documentElement.style.setProperty("--H", H + "px");
+        const frames = STORY ? D.story : D.slides;
+        const N = frames.length;
+        const STYLE = D.style || "F";
+        const NEWS = D.news || { figures: [], publisher: "", date_label: "" };
+        const strip = document.getElementById("strip");
+        strip.style.width = N * W + "px";
+        const CROW = "assets/karga.svg";
+
+        function el(tag, cls, parent, text) {
+          const e = document.createElement(tag);
+          if (cls) e.className = cls;
+          if (text !== undefined) e.textContent = text;
+          if (parent) parent.appendChild(e);
+          return e;
+        }
+        const FIT = [];
+        function fit(e, sizes) {
+          e.style.fontSize = sizes[0] + "px";
+          FIT.push({ e, sizes, i: 0 });
+        }
+        // title: **word** marks the accent words (written by the writer in the body style); plain text otherwise
+        function rich(parent, text, tag, cls, sizes, qa) {
+          const e = el(tag, cls, parent);
+          String(text || "").split(/\*\*(.+?)\*\*/).forEach((part, k) => {
+            if (k % 2) el(tag === "p" ? "b" : "em", "", e, part);
+            else if (part) e.append(part);
+          });
+          e.dataset.qa = qa || "text";
+          if (sizes) fit(e, sizes);
+          return e;
+        }
+        function title(parent, text, sizes) {
+          return rich(parent, text, "h2", "t-title", sizes);
+        }
+        function body(parent, text, sizes) {
+          if (!text) return null;
+          return rich(parent, text, "p", "t-body", sizes || (STORY ? [46, 42, 38, 35] : [40, 37, 34, 31, 29]));
+        }
+        function mark(parent) {
+          const m = el("div", "k-mark", parent);
+          if (D.brand && D.brand.logo) el("img", "", m).src = D.brand.logo;
+          else el("i", "", m, "K");
+          el("span", "", m, D.brand ? D.brand.name || "KAVAR" : "KAVAR");
+          m.dataset.qa = "chrome";
+          return m;
+        }
+        function topBar(s, i) {
+          const t = el("div", "top", s);
+          mark(t);
+          const d = el("div", "dots", t);
+          for (let k = 0; k < N; k++) el("b", k === i ? "on" : "", d);
+          return t;
+        }
+        function srcOf(f) {
+          if (f.visual === "figure") return (NEWS.figures[f.visual_index - 1] || {}).src;
+          if (f.visual === "page") return "assets/page.jpg";
+          if (f.visual === "cover" || f.visual === "screenshot") return "assets/cover.jpg";
+          return null;
+        }
+        function creditOf(f) {
+          const own = f.visual === "figure" ? (NEWS.figures[f.visual_index - 1] || {}).credit : f.visual === "cover" && NEWS.cover_credit;
+          return own || D.domain || NEWS.publisher;
+        }
+        // the picture inside a holder: an image shown whole, or the video slot the renderer fills
+        function picture(holder, f, imgCls) {
+          if (f.visual === "video") {
+            holder.dataset.videoSlot = String(f.visual_index);
+            holder.style.background = "#000";
+            const t = el("div", "tag", holder, "▶ VİDEO");
+            Object.assign(t.style, { left: "16px", top: "16px" });
+            const h = el("div", "tag", holder, D.brand.handle);
+            Object.assign(h.style, { right: "16px", bottom: "16px" });
+            return;
+          }
+          const im = el("img", imgCls || "main", holder);
+          im.src = srcOf(f);
+          if (f.visual === "page") Object.assign(im.style, { objectFit: "cover", objectPosition: "top" });
+          el("div", "src", holder, creditOf(f)).dataset.qa = "chrome";
+        }
+        function crowSays(s, text, css, bubbleCss, tail) {
+          const c = el("img", "crow", s);
+          c.src = CROW;
+          c.alt = "";
+          Object.assign(c.style, css);
+          if (!text) return;
+          const b = el("div", "bubble " + (tail || "tail-r"), s, text);
+          Object.assign(b.style, bubbleCss);
+          b.dataset.qa = "text";
+          b.dataset.obstacle = "";
+        }
+        // a hand-drawn arrow from the note into the picture (style E)
+        function scribble(s, d, css, color) {
+          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          svg.setAttribute("viewBox", "0 0 200 140");
+          svg.setAttribute("class", "scribble");
+          Object.assign(svg.style, css);
+          const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          p.setAttribute("d", d);
+          p.setAttribute("fill", "none");
+          p.setAttribute("stroke", color);
+          p.setAttribute("stroke-width", "7");
+          p.setAttribute("stroke-linecap", "round");
+          p.setAttribute("stroke-linejoin", "round");
+          svg.appendChild(p);
+          s.appendChild(svg);
+        }
+        const ARROW = "M190 18 C 150 10, 90 30, 60 92 M60 92 l 4 -30 M60 92 l 28 -12";
+        const FIRST_CROW = (frames.find((f) => f.crow) || {}).crow;
+
+        // ---------------- carousel slides ----------------
+        function cover(s, f) {
+          if (STYLE === "E") {
+            s.classList.add("E", "cover");
+            topBar(s, 0).classList.add("on-dark");
+            const p = el("div", "print", s);
+            Object.assign(p.style, { left: "60px", top: "140px", width: "960px", height: STORY ? "900px" : "580px", transform: "rotate(-2.2deg)" });
+            p.dataset.obstacle = "1";
+            picture(el("div", "pic", p), { visual: "cover" });
+            const c = el("div", "content", s);
+            Object.assign(c.style, { top: STORY ? "1140px" : "780px", bottom: STORY ? "240px" : "120px", justifyContent: "flex-end" });
+            title(c, f.title, STORY ? [104, 96, 88, 80, 72] : [96, 88, 80, 72, 66, 60]);
+          } else if (STYLE === "F") {
+            s.classList.add("F", "cover", "on-dark");
+            topBar(s, 0).classList.add("on-dark");
+            const ph = el("div", "photo", s);
+            ph.style.height = STORY ? "1040px" : "720px";
+            el("img", "blur", ph).src = "assets/cover.jpg";
+            picture(ph, { visual: "cover" });
+            const c = el("div", "content", s);
+            Object.assign(c.style, { top: STORY ? "1100px" : "760px", bottom: STORY ? "220px" : "120px", gap: "18px", justifyContent: "center" });
+            if (D.kicker) rich(c, D.kicker, "div", "kick", null);
+            title(c, f.title, STORY ? [104, 96, 88, 80] : [100, 92, 84, 76, 70, 64]);
+            if (f.body) rich(c, f.body, "p", "stand", STORY ? [44, 40] : [40, 36, 33]);
+          } else {
+            s.classList.add("G", "cover");
+            topBar(s, 0);
+            const c = el("div", "content", s);
+            Object.assign(c.style, { top: STORY ? "220px" : "130px", height: STORY ? "640px" : "430px", transform: "rotate(-1.4deg)" });
+            const q = el("div", "qbox", c);
+            title(q, f.title, STORY ? [92, 84, 76, 70] : [84, 76, 70, 64, 58]);
+            const sc = el("div", "screen", s);
+            Object.assign(sc.style, { left: "76px", top: STORY ? "1000px" : "730px", width: "600px", height: STORY ? "520px" : "400px", transform: "rotate(-2deg)" });
+            sc.dataset.obstacle = "1";
+            picture(sc, { visual: "cover" });
+            crowSays(s, FIRST_CROW ? "Getirdim, bak şuna!" : "", { right: "40px", bottom: STORY ? "260px" : "110px" },
+              { right: "60px", top: STORY ? "870px" : "590px", width: "330px" });
+          }
+          if (!STORY) el("div", "swipe", s, "Kaydır →").dataset.qa = "chrome";
+          if (STYLE === "E" || STYLE === "F") s.querySelector(".swipe") && (s.querySelector(".swipe").style.color = STYLE === "F" ? "#f4f1ea" : "var(--ink)");
+        }
+
+        function news(s, f, i) {
+          if (f.visual === "none") return crowOnly(s, f, i);
+          topBar(s, i);
+          const c = el("div", "content", s);
+          const tilt = i % 2 ? 1.6 : -1.4;
+          if (STYLE === "E") {
+            s.classList.add("E", "inner");
+            Object.assign(c.style, { top: "128px", height: STORY ? "560px" : "420px" });
+            if (f.title) title(c, f.title, [64, 58, 52, 48]);
+            body(c, f.body);
+            const p = el("div", "print", s);
+            Object.assign(p.style, { left: "64px", right: "64px", top: STORY ? "760px" : "600px", height: STORY ? "900px" : "600px", transform: "rotate(" + tilt + "deg)" });
+            p.dataset.obstacle = "1";
+            picture(el("div", "pic", p), f);
+            if (f.note) {
+              const t = el("div", "note", s, f.note);
+              Object.assign(t.style, { right: "50px", top: STORY ? "720px" : "560px", transform: "rotate(4deg)" });
+              t.dataset.qa = "chrome";
+            }
+          } else if (STYLE === "F") {
+            s.classList.add("F", "inner");
+            Object.assign(c.style, { top: "128px", height: STORY ? "620px" : "470px" });
+            if (f.title) title(c, f.title, [66, 60, 54, 50]);
+            body(c, f.body);
+            const ph = el("div", "photo", s);
+            ph.style.height = STORY ? "1060px" : "690px";
+            ph.dataset.obstacle = "1";
+            picture(ph, f);
+          } else {
+            s.classList.add("G", "inner");
+            crowSays(s, f.crow, { left: "40px", top: "120px", width: "220px", height: "220px" },
+              { left: "290px", right: "76px", top: "140px" }, "tail-l");
+            Object.assign(c.style, { top: STORY ? "1360px" : "1010px", bottom: STORY ? "200px" : "84px" });
+            const sc = el("div", "screen", s);
+            Object.assign(sc.style, { left: "76px", right: "76px", top: STORY ? "420px" : "380px", height: STORY ? "880px" : "590px", transform: "rotate(" + tilt / 2 + "deg)" });
+            sc.dataset.obstacle = "1";
+            picture(sc, f);
+            if (f.title) title(c, f.title, [52, 48, 44]);
+            body(c, f.body, STORY ? [42, 38, 35] : [36, 33, 30, 28]);
+          }
+        }
+
+        function crowOnly(s, f, i) {
+          s.classList.add("plain", STYLE);
+          if (STYLE === "E") s.style.background = "#ffffff";
+          if (STYLE === "F") s.style.background = "var(--paper)";
+          topBar(s, i);
+          crowSays(s, f.crow, { left: "60px", top: STORY ? "1300px" : "930px", width: "300px", height: "300px" },
+            { left: "360px", right: "76px", top: STORY ? "1240px" : "900px" }, "tail-l");
+          const c = el("div", "content", s);
+          Object.assign(c.style, { top: "170px", height: STORY ? "1000px" : "700px", justifyContent: "center" });
+          if (f.title) title(c, f.title, [88, 80, 72, 64, 56]);
+          body(c, f.body, STORY ? [54, 50, 46, 42] : [52, 48, 44, 40, 36, 32]);
+        }
+
+        function why(s, f, i) {
+          s.classList.add("plain", STYLE);
+          s.style.background = STYLE === "G" ? "#e8eef1" : "var(--paper)";
+          topBar(s, i);
+          const c = el("div", "content", s);
+          Object.assign(c.style, { top: "170px", height: STORY ? "1100px" : "760px", justifyContent: "center" });
+          title(c, f.title, [80, 72, 64, 58, 52]);
+          body(c, f.body, STORY ? [50, 46, 42] : [46, 42, 38, 35]);
+          crowSays(s, f.crow, { right: "50px", bottom: STORY ? "240px" : "70px", width: "230px", height: "230px" },
+            { right: "300px", left: "76px", bottom: STORY ? "330px" : "150px" }, "tail-r");
+        }
+
+        function closing(s, f, i) {
+          s.classList.add("close");
+          const t = topBar(s, i);
+          t.classList.add("on-dark");
+          const c = el("div", "content", s);
+          Object.assign(c.style, { top: "170px", bottom: STORY ? "260px" : "90px", justifyContent: "center", gap: "30px" });
+          title(c, f.title || "Yapay zekada olanları ilk sen öğren", [88, 80, 72, 64]);
+          if (f.body) body(c, f.body, [40, 36]).style.color = "#e7dfd0";
+          const row = el("div", "", c);
+          Object.assign(row.style, { display: "flex", alignItems: "center", gap: "30px", marginTop: "30px" });
+          const cr = el("img", "", row);
+          cr.src = CROW;
+          Object.assign(cr.style, { width: "170px", height: "170px" });
+          const who = el("div", "", row);
+          el("div", "handle", who, D.brand.handle).dataset.qa = "text";
+          el("div", "line", who, "Yarın yenisini getiririm.").dataset.qa = "text";
+          const fb = el("div", "", c);
+          el("span", "follow", fb, "+ Takip et").dataset.qa = "text";
+          const cred = el("div", "credit", c, "Kaynak: " + (NEWS.publisher || D.domain) + (NEWS.date_label ? ", " + NEWS.date_label : ""));
+          cred.dataset.qa = "chrome";
+        }
+
+        // ---------------- story frames ----------------
+        function storyFrame(s, f, i) {
+          if (f.role === "hook") return cover(s, { title: f.title, body: f.body });
+          topBar(s, i);
+          s.classList.add(STYLE);
+          s.style.background = STYLE === "G" ? "#e8eef1" : STYLE === "E" ? "#ffffff" : "var(--paper)";
+          const c = el("div", "content", s);
+          Object.assign(c.style, { top: "320px" });
+          if (f.role === "fact") {
+            c.style.height = "560px";
+            title(c, f.title, [84, 76, 68, 60]);
+            body(c, f.body);
+            const src = f.visual === "page" ? "assets/page.jpg" : f.visual === "screenshot" ? "assets/cover.jpg" : null;
+            if (src) {
+              const p = el("div", "print", s);
+              Object.assign(p.style, { left: "76px", right: "76px", top: "900px", height: "720px", transform: "rotate(-1.4deg)" });
+              p.dataset.obstacle = "1";
+              const pic = el("div", "pic", p);
+              el("img", "main", pic).src = src;
+            } else crowSays(s, "", { left: "60px", top: "1100px", width: "380px", height: "380px" });
+          } else if (f.role === "poll") {
+            c.style.height = "1300px";
+            title(c, f.title, [88, 80, 72]);
+            (f.poll_options || []).forEach((o) => (el("div", "poll-opt", c, o).dataset.qa = "text"));
+            el("div", "sticker-slot", c, "anket");
+          } else {
+            c.style.height = "1300px";
+            title(c, f.title, [88, 80, 72, 64]);
+            body(c, f.body);
+            el("div", "sticker-slot", c, "bağlantı");
+            crowSays(s, "", { right: "60px", top: "1340px", width: "260px", height: "260px" });
+          }
+        }
+
+        frames.forEach((f, i) => {
+          const s = el("section", "slide", strip);
+          s.style.left = i * W + "px";
+          s.dataset.index = i;
+          if (STORY) return storyFrame(s, f, i);
+          if (f.role === "cover") cover(s, f);
+          else if (f.role === "news") news(s, f, i);
+          else if (f.role === "why") why(s, f, i);
+          else closing(s, f, i);
+        });
+
+        window.__show = function (i) {
+          strip.style.transform = "translateX(" + -i * W + "px)";
+        };
+
+        // ---------------- fit, then measure (same checks as templates/carousel) ----------------
+        function tooTall(c) {
+          const box = c.getBoundingClientRect();
+          const kids = [...c.children].map((k) => k.getBoundingClientRect()).filter((r) => r.height);
+          const above = kids.length ? box.top - Math.min(...kids.map((r) => r.top)) : 0;
+          const below = kids.length ? Math.max(...kids.map((r) => r.bottom)) - box.bottom : 0;
+          // from the children's boxes only: scrollHeight also counts glyphs hanging below a tight line box,
+          // which read as overflow on a bottom-aligned headline and shrank it to its smallest size
+          return Math.max(0, Math.round(above), Math.round(below));
+        }
+        function overflowing(slide) {
+          const c = slide.querySelector(".content");
+          if (c && tooTall(c) > 1) return true;
+          return [...slide.querySelectorAll("[data-qa]")].some((e) => e.scrollWidth > e.clientWidth + 1);
+        }
+        function fitAll() {
+          document.querySelectorAll(".slide").forEach((slide) => {
+            const items = FIT.filter((f) => slide.contains(f.e));
+            for (let guard = 0; guard < 40 && overflowing(slide); guard++) {
+              const next = items.filter((f) => f.i < f.sizes.length - 1).sort((a, b) => b.sizes[b.i] - a.sizes[a.i])[0];
+              if (!next) break;
+              next.i++;
+              next.e.style.fontSize = next.sizes[next.i] + "px";
+            }
+          });
+        }
+        function lum(rgb) {
+          const c = rgb.map((v) => {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+          });
+          return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+        }
+        function parseColor(s) {
+          const m = String(s).match(/rgba?\(([^)]+)\)/);
+          if (!m) return null;
+          const p = m[1].split(",").map((x) => parseFloat(x));
+          return { rgb: p.slice(0, 3), a: p.length > 3 ? p[3] : 1 };
+        }
+        function bgOf(e) {
+          for (let n = e; n && n !== strip; n = n.parentElement) {
+            const c = parseColor(getComputedStyle(n).backgroundColor);
+            if (c && c.a >= 0.5) return c.rgb;
+          }
+          return [246, 241, 231];
+        }
+        function measure() {
+          const problems = [];
+          [...document.querySelectorAll(".slide")].forEach((slide, i) => {
+            const x0 = i * W;
+            const label = (STORY ? "story frame " : "slide ") + (i + 1);
+            const c = slide.querySelector(".content");
+            if (c && tooTall(c) > 1)
+              problems.push({ frame: i, kind: "overflow", msg: label + ": text is " + tooTall(c) + "px too tall for the layout" });
+            const obstacles = [...slide.querySelectorAll('[data-obstacle="1"]')].map((o) => o.getBoundingClientRect());
+            const safe = STORY ? { l: 40, r: 1040, t: 200, b: 1700 } : { l: 36, r: 1044, t: 36, b: 1314 };
+            slide.querySelectorAll("[data-qa]").forEach((e) => {
+              const r = e.getBoundingClientRect();
+              if (!r.width || !r.height) return;
+              const text = e.textContent.trim().slice(0, 40);
+              const cs = getComputedStyle(e);
+              const fs = parseFloat(cs.fontSize);
+              const min = e.dataset.qa === "chrome" ? MIN_CHROME : MIN_FONT;
+              if (fs < min - 0.1) problems.push({ frame: i, kind: "small", msg: label + ": '" + text + "' is " + fs + "px, min " + min });
+              if (e.scrollWidth > e.clientWidth + 1) problems.push({ frame: i, kind: "overflow", msg: label + ": '" + text + "' is too wide (a word is too long)" });
+              const L = r.left - x0, R = r.right - x0;
+              if (L < safe.l - 1 || R > safe.r + 1 || r.top < safe.t - 1 || r.bottom > safe.b + 1)
+                problems.push({ frame: i, kind: "safe_zone", msg: label + ": '" + text + "' leaves the safe zone" });
+              if (e.dataset.qa === "text" && !e.closest('[data-obstacle="1"]'))
+                obstacles.forEach((o) => {
+                  const ix = Math.min(r.right, o.right) - Math.max(r.left, o.left);
+                  const iy = Math.min(r.bottom, o.bottom) - Math.max(r.top, o.top);
+                  if (ix > 2 && iy > 2) problems.push({ frame: i, kind: "collision", msg: label + ": '" + text + "' runs into the picture" });
+                });
+              const fg = parseColor(cs.color);
+              if (fg && !e.classList.contains("note")) {
+                const L1 = lum(fg.rgb), L2 = lum(bgOf(e));
+                const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+                if (ratio < 4.5) problems.push({ frame: i, kind: "contrast", msg: label + ": '" + text + "' contrast " + ratio.toFixed(1) + ":1, min 4.5" });
+              }
+            });
+          });
+          return problems;
+        }
+
+        async function ready() {
+          const sample = "İĞŞÇÖÜığşçöü";
+          await Promise.all([
+            document.fonts.load('800 64px "Bricolage Grotesque"', sample),
+            document.fonts.load('400 40px "Bricolage Grotesque"', sample),
+            document.fonts.load('500 64px "Newsreader"', sample),
+            document.fonts.load('italic 400 40px "Newsreader"', sample),
+            document.fonts.load('700 64px "Caveat"', sample),
+          ]).catch(() => {});
+          await document.fonts.ready;
+          const need = { E: ["Bricolage Grotesque", "Caveat"], F: ["Bricolage Grotesque", "Newsreader"], G: ["Bricolage Grotesque"] }[STYLE] || ["Bricolage Grotesque"];
+          const missing = need.filter((fam) => !document.fonts.check('700 40px "' + fam + '"', "İĞŞ"));
+          await Promise.all([...document.images].map((im) => im.decode().catch(() => (im.dataset.broken = "1"))));
+          fitAll();
+          const qa = measure();
+          if (missing.length) qa.push({ frame: -1, kind: "fonts", msg: "fonts did not load: " + missing.join(", ") });
+          [...document.images].filter((im) => im.dataset.broken).forEach((im) => qa.push({ frame: -1, kind: "image", msg: "image failed to load: " + im.getAttribute("src") }));
+          window.__qa = qa;
+          window.__show(0);
+          window.__ready = true;
+        }
+        ready();
+      })();
+    </script>
+  </body>
+</html>

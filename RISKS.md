@@ -67,3 +67,11 @@ but not covered by a test, 🔴 open.
 - **The Claude weekly usage limit stops both the cloud and the morning session (2026-10-21/22).** Cloud runs use the user's subscription (CLAUDE_CODE_OAUTH_TOKEN), the same one as this session. On 10-21 the limit hit mid-"yükle" (4 ready posts never scheduled); on 10-22 the 06:17 run got empty answers from `claude -p` ("returned no carousel (success)", ranker with empty reasons, each call back within milliseconds) and produced 0/5. The usage limit is the likeliest cause, NOT proven: the log had no reason text (corrected in the 10-22 audit). Since D-38 the reason (`is_error`, `result`) is logged and an empty day exits 1. Sign: every writer fails within seconds in the day log. Mitigation: few test runs late in the week; when the limit resets, reuse the unposted ready items of the day before (state already marks them used) and rerun production.
 
 - **The cut check rejects a clean Reel (D-50, 2026-10-24).** `reel_qa.cut_frames` reads detail in the outer 24 px. A smooth glow or blur there (the shot frame's neon glow) turned into codec block steps and read as a cut picture; two guide Reels were rejected for their site shots and the still rebuild could not help. Mitigation: only sharp edges count (EDGE_FLOOR), no template glow reaches the strip, both tested on the real frames (tests/test_voice_last.py). Sign: "measured: a picture runs off the frame" at a shot's seconds, the same after the still rebuild; look at the `_cut_*.jpg` frames next to the Reel before trusting the reading. ✅
+
+## D-86 carousel v2 (2026-11-21)
+- **Fonts from Google Fonts at render time.** templates/carousel_v2 loads Bricolage Grotesque, Newsreader and Caveat
+  over the network. If the cloud runner cannot reach fonts.googleapis.com, the template's QA reports "fonts did not
+  load" (qa.json, kind "fonts") and the slides fall back to system fonts; the editor sees it. Lasting fix if it
+  happens: vendor the font files into templates/carousel_v2/assets/fonts.
+- **A writer that chooses no style** falls back to the old (neon) template, and the queue logs "style old template".
+- **F's wit can miss.** The editor judges the kicker ("kicker zayıf") and sends it back to the writer.

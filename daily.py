@@ -253,7 +253,7 @@ def produce_news_items(count: int) -> list[dict]:
             failures.ok("news", "news", item["title"], item["url"])
             tested = "trial_note" in json.loads((folder / "article" / "article.json").read_text(encoding="utf-8"))
             items.append({"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": tested,
-                          "category": (item.get("rank") or {}).get("category", "")})
+                          "category": (item.get("rank") or {}).get("category", ""), "style": _style(folder)})
             chosen_titles.append(item["title"])
             chosen_companies.add(company)
         else:
@@ -268,6 +268,17 @@ def produce_news_items(count: int) -> list[dict]:
             failures.record("news", "news", item["title"], "; ".join(problems), item["url"], rendered=not unanswered)
     # a carousel with our own test takes the day's first carousel slot
     return sorted(items, key=lambda i: not i["tested"])
+
+
+def _style(folder: Path) -> str:
+    """D-86: the carousel's style (E / F / G, "" for the old template), kept in the queue for the numbers."""
+    try:
+        script = json.loads((folder / "carousel.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    style = script.get("style", "")
+    log(f"   style {style or 'old template'}: {script.get('style_reason', '')}")
+    return style
 
 
 GUIDE_CAROUSEL_TRIES = 2  # D-72: company pages tried for the 18:00 guide carousel
@@ -311,7 +322,7 @@ def produce_guide_carousel() -> dict | None:
         if ok:
             failures.ok("news", "guide_carousel", item["title"], item["url"])
             return {"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": False,
-                    "concept": "guide", "category": r.get("category", "")}
+                    "concept": "guide", "category": r.get("category", ""), "style": _style(folder)}
         if any("gave no verdict" in p for p in problems):
             unmark(item["url"], item.get("title", ""))
         log(f"   rejected, not queued: {folder.name}")

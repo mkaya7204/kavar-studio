@@ -21,6 +21,9 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = ROOT / "templates" / "carousel"
+# D-86 (user 2026-11-21): a news carousel whose writer chose a style (E / F / G) uses the new template
+TEMPLATE_V2_DIR = ROOT / "templates" / "carousel_v2"
+STYLES = ("E", "F", "G")
 FONTS_DIR = ROOT / "templates" / "hyperframes_news" / "assets" / "fonts"
 BRAND_PATH = ROOT / "brand.json"
 SIZES = {"carousel": (1080, 1350), "story": (1080, 1920)}
@@ -123,11 +126,18 @@ def _news_assets(assets: Path, article: dict) -> dict:
             "cover_credit": article.get("cover_credit")}  # our own test image as the cover
 
 
+def template_dir(script: dict) -> Path:
+    """D-86: the styled template for a news carousel with a chosen style, else the old one."""
+    if script.get("kind") == "news" and script.get("style") in STYLES:
+        return TEMPLATE_V2_DIR
+    return TEMPLATE_DIR
+
+
 def _prepare(build: Path, script: dict, capture: dict, brand: dict) -> None:
     if build.exists():
         shutil.rmtree(build)
     assets = build / "assets"
-    shutil.copytree(TEMPLATE_DIR, build)
+    shutil.copytree(template_dir(script), build)
     shutil.copytree(FONTS_DIR, assets / "fonts", dirs_exist_ok=True)
     news = None
     if script.get("kind") == "news":  # capture is an article from article_capture
@@ -170,6 +180,8 @@ def _prepare(build: Path, script: dict, capture: dict, brand: dict) -> None:
         "brand": brand,
         "kind": script.get("kind", "tool"),
         "news": news,
+        "style": script.get("style", ""),
+        "kicker": script.get("kicker", ""),
     }
     (assets / "data.js").write_text("window.DATA = " + json.dumps(data, ensure_ascii=False) + ";",
                                     encoding="utf-8")
