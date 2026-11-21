@@ -25,3 +25,19 @@ jobs:
         run: pip freeze
       - name: Invariant tests
         run: python -m pytest -q tests
+
+  # D-85 / D-86 (user 2026-11-21: "bulutta çalıştırarak ... çalışır hale getir"): Impeccable's design detector
+  # (pbakaus/impeccable, Apache-2.0, pinned) checks the carousel template for AI-made design habits
+  # (glow, gradient text, eyebrow labels, low contrast, tiny text ...). No secrets in this job. A finding fails
+  # the check, so a template change that brings the neon look back never reaches production.
+  design:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Impeccable detect (carousel v2 template)
+        shell: bash  # -o pipefail: a finding (exit 2) fails the step through tee
+        run: npx -y impeccable@4.10.0 detect --json templates/carousel_v2/index.html | tee design-findings.json

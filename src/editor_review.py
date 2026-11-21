@@ -59,6 +59,7 @@ region or age limits). Quotes attributed correctly.
 - Design (contact sheet): text cut off, overlapping, unreadable, broken images, a still with a \
 play button that doesn't play, wrong brand. The handle must be @thekavar.ai.
 - Agreed design (DECISIONS.md D-17/D-20), never a problem: the cover headline is 3-6 big words, and the feed cover has a "KAYDIR →" pill at the bottom right (a swipe cue, not an ad button).
+- D-86 styles (carousel.json "style", the page owner's decision): "E" = the real screen as a tilted print with a hand-written note and a hand-drawn arrow (intentional, not sloppy); "F" = a witty kicker line above a serif headline; "G" = Kavar, KAVAR's crow mascot, speaks in a speech bubble and the cover headline is a question (up to 9 words). Kavar the crow on any slide, a slide without a picture showing Kavar, and one small source label inside a picture are agreed design, never a problem. Judge the F kicker hard: it must be a clean, real Turkish play on words about THIS story; a weak, forced, cringe or misleading kicker is a "fix" problem ("kicker zayıf: ..."). A hand note or a crow line that claims more than the slide's picture or text shows is a problem too.
 Verdict: "publish" if it is ready; "fix" when rewriting text (slides, story, caption) and/or dropping \
 wrong pictures would make it publishable: list the problems precisely (the writer rewrites the whole post \
 from them, within its own rules), optionally give fixes (1-based slide number, complete new title and body), \

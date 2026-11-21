@@ -9,6 +9,7 @@ Same Claude sources and checks as carousel_writer (no invented figures, no price
 """
 
 import json
+import os
 import re
 from typing import Literal
 
@@ -19,8 +20,16 @@ from script_writer import NO_PRICE_RULE, caption_problems, day_words, price_ment
 from skill_rules import editor_lessons
 
 SLIDES = (6, 10)
-BODY_WORDS = {"news": (20, 75), "why": (12, 45)}
+BODY_WORDS = {"news": (20, 75), "why": (12, 45)}  # the old (neon) template, a draft with no style
 HEADLINE_WORDS = 6  # D-17 (research 2026-10-16): 3-6 big words on the cover
+# D-85 / D-86 (user 2026-11-21): short slides, a picture on every slide, the style chosen per story
+STYLE_BODY_WORDS = {"news": (10, 35), "why": (8, 30)}
+STYLES = ("E", "F", "G")
+QUESTION_HEADLINE_WORDS = 9  # G: the cover asks a question, which needs a few more words
+NOTE_WORDS = 5
+CROW_WORDS = 12
+KICKER_WORDS = (2, 6)
+MAX_CROW_ONLY = 2  # news slides with no picture show the crow; at most this many in E and F
 
 
 class NewsSlide(BaseModel):
@@ -32,6 +41,8 @@ class NewsSlide(BaseModel):
     alt_text: str
     # D-40: for a figure, a few words copied from that figure's alt / caption, so a wrong number is caught
     visual_quote: str = ""
+    note: str = ""  # D-86 style E: a hand-written note on the picture, <= 5 words ("" for none)
+    crow: str = ""  # D-86: what Kavar the crow says on this slide, <= 12 words ("" for none)
 
 
 class NewsDraft(BaseModel):
@@ -39,6 +50,10 @@ class NewsDraft(BaseModel):
     story: list[StoryFrame]
     caption: str
     hashtags: list[str]
+    # D-86: the look chosen for this story; "" = the old template (a writer that chose none)
+    style: Literal["", "E", "F", "G"] = ""
+    style_reason: str = ""  # one line: why this style fits this story (logged)
+    kicker: str = ""  # style F: the witty line above the cover headline, 2-6 words
 
 
 class NewsScript(NewsDraft):
@@ -71,6 +86,46 @@ def _words(text: str) -> int:
     return len(text.replace("**", "").split())
 
 
+def style_problems(c: NewsScript) -> list[str]:
+    """D-86: the rules of the chosen style (E screen + hand notes, F headline + wit, G Kavar explains)."""
+    out = []
+    style = c.style
+    news = [(i, s) for i, s in enumerate(c.slides, 1) if s.role == "news"]
+    screens = [i for i, s in news if s.visual in ("page", "figure")]
+    crow_only = [i for i, s in news if s.visual == "none"]
+    if style == "E" and len(screens) < 2:
+        out.append("style E needs at least 2 news slides showing a real screen (visual page or figure); "
+                   "pick F or G when the article has no screens to show")
+    if style == "E" and not any(s.note for _, s in news):
+        out.append("style E: write a hand note (note, <= 5 words) on at least one news slide with a picture")
+    if style in ("E", "F") and len(crow_only) > MAX_CROW_ONLY:
+        out.append(f"style {style}: at most {MAX_CROW_ONLY} news slides without a picture (slides {crow_only}); "
+                   "merge them or pick style G")
+    if style == "F" and not KICKER_WORDS[0] <= _words(c.kicker) <= KICKER_WORDS[1]:
+        out.append(f"style F needs a witty kicker of {KICKER_WORDS[0]}-{KICKER_WORDS[1]} words above the "
+                   f"cover headline, has {_words(c.kicker)}")
+    if style != "F" and c.kicker:
+        out.append("kicker is only for style F; leave it \"\"")
+    if style == "G" and c.slides and not c.slides[0].title.rstrip().endswith("?"):
+        out.append("style G: the cover headline is a question and ends with '?'")
+    if style == "G" and not any(s.crow for _, s in news):
+        out.append("style G: Kavar speaks (crow, <= 12 words) on the news slides")
+    if not c.style_reason.strip():
+        out.append("style_reason: say in one line why this style fits this story")
+    for i, s in enumerate(c.slides, 1):
+        if _words(s.note) > NOTE_WORDS:
+            out.append(f"slide {i}: note max {NOTE_WORDS} words")
+        if s.note and (s.role != "news" or s.visual == "none"):
+            out.append(f"slide {i}: a note goes only on a news slide with a picture")
+        if _words(s.crow) > CROW_WORDS:
+            out.append(f"slide {i}: crow max {CROW_WORDS} words")
+        if s.role == "news" and s.visual == "none" and not s.crow:
+            out.append(f"slide {i}: a slide with no picture shows Kavar; give it a crow line")
+        if s.role == "why" and re.fullmatch(r"\s*neden önemli\??\s*", s.title.lower()):
+            out.append(f"slide {i}: the why slide's title says what it means, not 'Neden önemli?' (no label)")
+    return out
+
+
 def news_problems(c: NewsScript) -> list[str]:
     out = caption_problems(c.caption, c.hashtags)
     n = len(c.slides)
@@ -82,18 +137,22 @@ def news_problems(c: NewsScript) -> list[str]:
         out.append("the last slide must have role 'cta'")
     if sum(s.visual == "video" for s in c.slides) > 2:
         out.append("at most two video slides")
+    style = getattr(c, "style", "")
+    out += style_problems(c) if style else []
+    body_words = STYLE_BODY_WORDS if style else BODY_WORDS
+    head_max = QUESTION_HEADLINE_WORDS if style == "G" else HEADLINE_WORDS
     for i, s in enumerate(c.slides, 1):
-        if s.role == "cover" and not 3 <= _words(s.title) <= HEADLINE_WORDS:
-            out.append(f"slide 1: headline needs 3-{HEADLINE_WORDS} words, has {_words(s.title)}")
-        if s.role in BODY_WORDS:
-            lo, hi = BODY_WORDS[s.role]
+        if s.role == "cover" and not 3 <= _words(s.title) <= head_max:
+            out.append(f"slide 1: headline needs 3-{head_max} words, has {_words(s.title)}")
+        if s.role in body_words:
+            lo, hi = body_words[s.role]
             if not lo <= _words(s.body) <= hi:
                 out.append(f"slide {i} ({s.role}): body has {_words(s.body)} words, needs {lo}-{hi}")
             if s.body.count("**") % 2:
                 out.append(f"slide {i}: unbalanced ** marks")
             if len(re.findall(r"\*\*(.+?)\*\*", s.body)) > 3:
                 out.append(f"slide {i}: at most 3 highlighted phrases")
-        if _words(s.title) > (HEADLINE_WORDS if s.role == "cover" else 9):
+        if _words(s.title) > (head_max if s.role == "cover" else 9):
             out.append(f"slide {i}: title too long")
         if s.visual == "figure" and not 1 <= s.visual_index <= c.figures:
             out.append(f"slide {i}: figure {s.visual_index} doesn't exist (the article has {c.figures})")
@@ -115,6 +174,8 @@ def news_problems(c: NewsScript) -> list[str]:
             out.append(f"story frame {i}: a poll needs exactly 2 options")
     texts = [c.caption, *c.hashtags] + [t for s in c.slides for t in (s.title, s.body, s.alt_text)] + \
             [t for f in c.story for t in (f.kicker, f.title, f.body, *f.poll_options)]
+    if style:  # the new fields are read by people too: same price / day / name rules
+        texts += [getattr(c, "kicker", "")] + [t for s in c.slides for t in (s.note, s.crow)]
     if bad := price_mentions(*texts):
         out.append(f"page policy, no prices: remove every price / payment mention ({', '.join(bad)})")
     if bad := day_words(*texts[1:]):  # the caption is checked by caption_problems
@@ -144,7 +205,7 @@ applied by the template. visual "cover" (the article's own image). body "".
 - news (most slides): title "" or a short heading (max 6 words); body 20-75 words telling one \
 part of the story: what happened, the details, how it works, the reactions or criticism, what is \
 still unknown. Mark the 1-3 phrases a skimming reader must not miss with **double asterisks** \
-(drawn bold in neon). Each news slide shows one visual: "figure" with visual_index (the \
+(drawn bold). Each news slide shows one visual: "figure" with visual_index (the \
 article's images, listed in the user message with their captions; use each one where it fits \
 the text, at most once; visual_quote = 3-8 words copied exactly from THAT figure's alt or caption, \
 so the figure matches what the slide says), "page" (the article's headline area, good on slide 2, \
@@ -184,6 +245,28 @@ invites to tap the link sticker; body says the full story is in the post). Story
 "screenshot" = the cover image, "page" = the article's headline area, "none". Use kicker "" or 1-2 \
 words, page_section 0, poll_options [] unless poll. Max {STORY_WORDS} words per frame.
 
+STYLE (D-86, the page owner's decision): choose the look that tells THIS story best and write for it. \
+Set style and style_reason (one line, why). These rules override the lengths above:
+- Every style: news slide body {STYLE_BODY_WORDS['news'][0]}-{STYLE_BODY_WORDS['news'][1]} words, why body \
+{STYLE_BODY_WORDS['why'][0]}-{STYLE_BODY_WORDS['why'][1]} words: short, one idea a slide. Every news slide should \
+show a picture; a slide with visual "none" shows Kavar (KAVAR's crow mascot) instead and needs a crow line. The why \
+slide's title is a statement of what it means for the reader, never the label "Neden önemli?". Use fewer slides \
+rather than padding (6-8 is fine). In a title you may mark 1-3 key words with **double asterisks**: they are \
+drawn in the accent colour (the cover's payoff: "Bilgisayarında çalışan bu model **4 kat** hızlanıyor").
+- "E" (real screen + hand notes): when the value is something you can SEE on a screen: a tool, a feature, a menu, \
+a how-to (most guide carousels), a chart. Needs at least 2 news slides with visual "page" or "figure". On those, \
+note = a short hand-written remark a friend would scribble on the screenshot (max {NOTE_WORDS} words: "4 kat!", \
+"buraya dokun", "işte sonuç"), only what the picture really shows. kicker "".
+- "F" (headline + wit): big company news, a launch, a policy, a deal, where there is little to show on a screen but \
+a strong picture. kicker = a short witty Turkish line above the cover headline ({KICKER_WORDS[0]}-{KICKER_WORDS[1]} \
+words): a real pun or play on words about THIS story ("Küçük ama kodu büyük", "Fırça yok, kod var"); clean, never \
+cringe, never a cliché, never mocking people. If no good line comes, choose E or G instead of a weak joke.
+- "G" (Kavar explains): a concept, a "why / how" question, numbers or a comparison, or when the pictures are weak. \
+The cover title is a question that ends with "?" (3-{QUESTION_HEADLINE_WORDS} words). On news slides crow = what \
+Kavar says, max {CROW_WORDS} words, plain and warm ("Getirdim, bak şuna!", "Fırça yok, kod var."), never a new fact \
+the body doesn't support. kicker "".
+- crow may also be used in E and F on a slide without a picture; note is only for E.
+
 caption: 3-5 short lines: the news in one line with a Turkish search keyword, 1-2 lines of \
 context, then "Kaynak: <publisher>". 0-2 emojis. hashtags: 3-{MAX_HASHTAGS}, e.g. #yapayzeka plus \
 the company / product.
@@ -220,7 +303,14 @@ def _user_message(article: dict) -> str:
             f"Images you can show:\n{figs}\nVideos you can show: {len(article['videos'])}\n{page}\n"
             f"Article text:\n{article['text']}"
             + (f"\n\n{article['trial_note']}" if article.get("trial_note") else "")
-            + (f"\n\n{article['guide_note']}" if article.get("guide_note") else ""))
+            + (f"\n\n{article['guide_note']}" if article.get("guide_note") else "")
+            + _forced_style())
+
+
+def _forced_style() -> str:
+    """news-test.yml style=E|F|G: a test run asks for one style, to see each style rendered (D-86)."""
+    s = os.environ.get("KAVAR_STYLE", "").strip().upper()
+    return f"\n\nFOR THIS TEST RUN use style \"{s}\" and follow its rules." if s in STYLES else ""
 
 
 def _finish(draft: dict, article: dict, source: str, model: str | None) -> NewsScript:
@@ -344,15 +434,17 @@ def revise_for_editor(script: dict, verdict: dict, article: dict, attempts: int 
         draft["slides"][n - 1].update(visual="none", visual_index=0, visual_quote="")
     asked = "; ".join(f"slide {f['slide']}: title \"{f['title']}\", body \"{f['body']}\""
                       for f in verdict.get("fixes", []))
+    words = STYLE_BODY_WORDS if draft.get("style") else BODY_WORDS
     problems = ("the editor-in-chief asked for these changes: " + "; ".join(verdict.get("problems", []))
                 + (f". Suggested text (keep within every rule, e.g. the headline length): {asked}" if asked else "")
-                + (f". Slides {sorted(bad)} now have no picture; keep them text-only" if bad else "")
+                + (f". Slides {sorted(bad)} now have no picture; keep them text-only"
+                   + ("; Kavar shows instead, so give each a crow line" if draft.get("style") else "") if bad else "")
                 + ". Fix every point (slides, story and caption alike), keep the same slides in the same order."
                 # 10-30 / 10-31 Gemini: told to cut a repeated or invented sentence, the writer left the slide at
                 # 13 / 15 words and the post was lost; the length rule is said before it writes (D-53)
                 + " Removing a repeated or unsupported sentence must not make a slide too short: every news slide "
-                  f"body keeps {BODY_WORDS['news'][0]}-{BODY_WORDS['news'][1]} words and the why slide "
-                  f"{BODY_WORDS['why'][0]}-{BODY_WORDS['why'][1]}; if a slide falls short, add another fact "
+                  f"body keeps {words['news'][0]}-{words['news'][1]} words and the why slide "
+                  f"{words['why'][0]}-{words['why'][1]}; if a slide falls short, add another fact "
                   "from the article (never a guess).")
     prompt = _revision_prompt(_user_message(article), draft, problems)
     for attempt in range(1, attempts + 1):
