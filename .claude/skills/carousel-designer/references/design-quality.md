@@ -48,4 +48,8 @@ These are rules distilled from them, not their code. Nothing here is executed.
 2. Is any slide text only? → add the picture or merge the slide.
 3. Any glow, gradient text, eyebrow pill, purple, emoji icon, caption under a picture? → remove.
 4. Heading ≤ 8 words, body ≤ 35 words, one accent word per headline.
-5. Contrast measured, Turkish casing right, nothing in the outer 6 % of the frame.
+5. Contrast measured, Turkish casing right, nothing in the outer 6 % of the frame. With `text-transform:
+   uppercase` under `lang="tr"`, an English brand name turns "Hugging" into "HUGGİNG": wrap brand names
+   in `lang="en"` (seen in the 11-21 mock).
+6. A cover picture that is the company's own banner carries its English title: crop / zoom to the
+   picture part, never show half an English sentence.
