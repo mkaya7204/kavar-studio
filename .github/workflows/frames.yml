@@ -1,54 +1,34 @@
-# Look at a stretch of a rendered Reel frame by frame without the PC (no ffmpeg on the 4 GB PC):
-# takes the video from a run's artifact and makes one contact sheet of frames.
-#   gh workflow run frames.yml -f run=<run id> -f artifact=rerender -f video=final_video.mp4 -f start=10 -f end=15
 name: frames
-
+# Pulls still frames out of a video the user sent (style study). The video and the frames stay in a
+# DRAFT release (visible only to the repo owner); the repo is public, so no workflow artifacts here.
 on:
   workflow_dispatch:
     inputs:
-      run:
-        description: "run id that holds the video"
+      tag:
+        description: "draft release tag holding the video (asset video.mp4)"
         required: true
-      artifact:
-        description: "artifact name (plain files, e.g. rerender)"
-        default: "rerender"
-      video:
-        description: "video path inside the artifact"
-        default: "final_video.mp4"
-      start:
-        description: "first second"
-        default: "0"
-      end:
-        description: "last second"
-        default: "30"
-      step:
+      every:
         description: "seconds between frames"
-        default: "0.5"
-
+        default: "2"
 permissions:
-  actions: read
-  contents: read
-
+  contents: write
 jobs:
   frames:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
     steps:
-      - uses: actions/checkout@v7  # .github/apt_install.sh lives in the repo (10-24: missing since 10-23, exit 127)
-      - name: ffmpeg
-        run: bash .github/apt_install.sh ffmpeg
-      - name: Contact sheet
+      - name: Get the video from the draft release
+        run: gh release download "${{ inputs.tag }}" -p video.mp4 -D in
+      - name: Frames
         run: |
-          gh run download "${{ github.event.inputs.run }}" -R "${{ github.repository }}" -n "${{ github.event.inputs.artifact }}" -D in
-          V="in/${{ github.event.inputs.video }}"
-          mkdir -p out
-          S=${{ github.event.inputs.start }}; E=${{ github.event.inputs.end }}; P=${{ github.event.inputs.step }}
-          ffmpeg -loglevel error -ss "$S" -to "$E" -i "$V" -vf "fps=1/$P,scale=270:-1,drawtext=text='%{pts\:hms}':x=6:y=6:fontsize=18:fontcolor=yellow:box=1:boxcolor=black@0.6,tile=6x4" -frames:v 1 out/sheet.jpg
-          ls -la out
-      - uses: actions/upload-artifact@v7
-        with:
-          name: frames
-          path: out/sheet.jpg
-          retention-days: 3
+          sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y ffmpeg >/dev/null
+          mkdir out
+          ffmpeg -hide_banner -loglevel error -i in/video.mp4 -vf "fps=1/${{ inputs.every }},scale=720:-2" -q:v 3 out/f_%03d.jpg
+          ffprobe -v error -show_entries format=duration:stream=codec_name,width,height -of compact in/video.mp4
+          ls out | wc -l
+          cd out && zip -q ../frames.zip *.jpg
+      - name: Put the frames back into the same draft release
+        run: gh release upload "${{ inputs.tag }}" frames.zip --clobber
