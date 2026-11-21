@@ -10,6 +10,12 @@ helpers with the video pipeline, but never touches `main.py` or `templates/hyper
 The user uploads by hand (no auto-publish). Research behind every rule:
 `reports/Carousel ve story görsel sistemi.md`.
 
+**READ FIRST for any design work (D-85, 2026-11-21):** `references/design-quality.md`. The neon / glow /
+dark-grid look is retired by the user ("çok yapay"); that file lists what made slides look AI-made and the
+new look's rules. For type, colour and spacing details use the project skills `better-typography`,
+`better-colors`, `better-layout` (Jakub Krehel, MIT). What the real pages do:
+`reports/karusel-arastirma-2026-11-21.html`.
+
 ## Running
 
 | Situation | Command |
