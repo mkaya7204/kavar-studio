@@ -827,3 +827,12 @@ the decisions that are currently locked; this file explains why they exist and h
 - **User 11-21 ("kapakta kişi geliştirici vs kullan ... müzik ekle kontrol et ekleniyor mu"):** a carousel cover MAY show a real person tied to the story (the developer, the company's CEO / team), taken from the company's or the maker's own page (rule 9 widened for covers only; still no press-site photos). Music: checked 11-21, neither Business Suite's composer (Edit photos has no audio) nor instagram.com's create flow offers music for a photo carousel; only the phone app does.
 - **Built:** nothing yet. Branch, dry run, shown to the user before main.
 - **11-21 later (the user):** the design skills must work inside the system; a design-detector finding (Impeccable detect + our own checks) sends the slide back to fixing ("Düzeltmeye geri gönder"), not just a warning. The four category looks (paper / pink paper / full picture + band / brand-colour poster) were rejected: "bunlar çok bilindik herkesin yaptığı ve üstelik yapay olduğu çok belli". Next looks come from KAVAR's own story (the crow that brings the news and collects shiny things).
+
+## D-86 (2026-11-21): the carousel style is chosen per story (E / F / G)
+- **The user:** "bu tarzları elimizdeki sisteme şöyle uyarlasak haberin içeriğine tarzına göre seçilse ... hangisi daha uygun başarılı bir çalışma yapacaksa o tarz seçilsin", then "Başla".
+- **Styles** (mock https://claude.ai/artifact/HZG9AgpNxvookF2qikUAon): E = real screen + hand marks (Webtekno / chatgptricks idea), F = headline + witty kicker (The Economist idea), G = Kavar the crow explains, question headline (Kurzgesagt idea). The neon look goes (D-85).
+- **Choice:** the writer picks per story with a reason (logged); hard rules: E needs a real screen picture, a weak picture leads to G; F's kicker is scored by the editor and falls back to a plain headline when weak.
+- **Shared identity:** the KAVAR mark, one font pair, one accent, the same closing slide and the crow on every style.
+- **Checks:** the design detector (Impeccable detect + our checks) sends a slide back to fixing (D-85).
+- **Measure:** the style is written into the queue and every metrics row; after 2-3 weeks the numbers per style go to the user, who decides what to drop.
+- **Built:** on branch `tarz`; dry runs show each style before main.
