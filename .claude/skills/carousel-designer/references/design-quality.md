@@ -53,3 +53,17 @@ These are rules distilled from them, not their code. Nothing here is executed.
    in `lang="en"` (seen in the 11-21 mock).
 6. A cover picture that is the company's own banner carries its English title: crop / zoom to the
    picture part, never show half an English sentence.
+
+## What successful real pages do (seen on Instagram 2026-11-21)
+
+- **Webtekno** (1.6 M, Turkish tech): the real screen or app icons lead; hand-drawn red crosses, green ticks and
+  tilted sticker labels on top; a person's real photo on the cover; one line of the headline in a second colour.
+- **chatgptricks** (2.7 M): the inner slides are the real chat screenshots; the best post (2,200 likes) was a funny
+  real conversation, a plain gadget announcement got 10.
+- **The Economist** (8.9 M): one strong picture, a black panel, a small witty kicker (a pun) above a serif headline
+  and one italic sentence. The wit makes it human ("Lame duck or Angry Bird?" 2,000 likes, 99 comments).
+- **Kurzgesagt** (1.6 M): own characters and a mascot on every post, the cover headline a question.
+- **Jarrus** (52 K, Turkish AI): "N examples of what people made" lists with the makers' videos beat launch news
+  (499 vs 158 likes).
+Take the idea that works (real screen + human marks, wit, a mascot that talks), never the page's look.
+
