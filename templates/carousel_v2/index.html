@@ -21,8 +21,8 @@
         --H: 1350px;
         --ink: #17130f;
         --ink-2: #4b443b;
-        --paper: #f6f1e7;
-        --paper-2: #e9e1d2;
+        --paper: #f7f7f5;
+        --paper-2: #e6e6e2;
         --accent: #ff6b3d; /* the one accent, on every style */
         --accent-ink: #c2421c; /* the accent as text on light grounds (contrast) */
         --sans: "Bricolage Grotesque", "Segoe UI", sans-serif;
@@ -30,7 +30,7 @@
         --hand: "Caveat", "Segoe Print", cursive;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { width: var(--W); height: var(--H); overflow: hidden; background: var(--paper); }
+      html, body { width: var(--W); height: var(--H); overflow: hidden; background: #ffffff; }
       body.story { --H: 1920px; }
       #strip { position: absolute; left: 0; top: 0; height: var(--H); font-family: var(--sans); color: var(--ink);
         -webkit-font-smoothing: antialiased; }
@@ -54,7 +54,7 @@
       .on-dark .dots b.on { background: #fff; }
       .on-dark .k-mark i { background: #fff; color: var(--ink); }
       /* a picture as printed paper: white border, soft offset shadow, never cropped (shown whole) */
-      .print { position: absolute; background: #fff; padding: 14px; box-shadow: 0 18px 34px rgba(40, 20, 0, 0.28), 0 2px 4px rgba(0, 0, 0, 0.12); }
+      .print { position: absolute; background: #fff; padding: 14px; box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22), 0 2px 4px rgba(0, 0, 0, 0.12); }
       .print .pic { width: 100%; height: 100%; background: #fff; overflow: hidden; position: relative; }
       .print img.main { width: 100%; height: 100%; object-fit: contain; display: block; }
       .src { position: absolute; right: 14px; bottom: 14px; background: rgba(255, 255, 255, 0.92); color: var(--ink-2);
@@ -71,8 +71,9 @@
 
       /* ---------- E: real screen + hand notes ---------- */
       .E.cover { background: var(--accent); }
-      .E.inner { background: #fff4ec; }
-      .E .note { position: absolute; font: 700 64px/1 var(--hand); color: var(--ink); transform: rotate(-5deg); white-space: nowrap; }
+      .E.inner { background: #ffffff; }
+      .E .note { position: absolute; font: 700 60px/1 var(--hand); color: var(--ink); background: #ffd84d; padding: 10px 22px 14px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18); white-space: nowrap; z-index: 3; }
       .E.cover .note { color: #fff; }
       .E .scribble { position: absolute; overflow: visible; pointer-events: none; }
       .E.cover .t-title { color: var(--ink); }
@@ -85,7 +86,7 @@
       .F .photo img.main { width: 100%; height: 100%; object-fit: contain; display: block; }
       .F .photo img.blur { position: absolute; inset: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; filter: blur(28px) saturate(1.1); opacity: 0.7; }
       .F .photo img.main { position: relative; }
-      .F .photo .src { right: 52px; bottom: 24px; }
+      .F .photo .src { right: 52px; bottom: 56px; }
       .F.cover .photo .src { bottom: 24px; }
       .F .kick { font: 600 38px/1.1 var(--sans); color: var(--accent); }
       .F.cover .t-title { font-family: var(--serif); font-weight: 500; letter-spacing: -0.01em; line-height: 1.06; color: #f4f1ea; }
@@ -95,7 +96,7 @@
       .F.inner .photo { top: auto; bottom: 0; border-top: 5px solid var(--ink); }
 
       /* ---------- G: Kavar explains ---------- */
-      .G { background: #f3ead7; }
+      .G { background: #e8eef1; }
       .G .qbox { background: var(--ink); color: #f6f1e7; border-radius: 48px; padding: 44px 52px; }
       .G .qbox .t-title { color: #f6f1e7; font-stretch: 90%; }
       .G .qbox .t-title em { color: #ffb24d; font-style: normal; }
@@ -205,6 +206,7 @@
           }
           const im = el("img", imgCls || "main", holder);
           im.src = srcOf(f);
+          if (f.visual === "page") Object.assign(im.style, { objectFit: "cover", objectPosition: "top" });
           el("div", "src", holder, creditOf(f)).dataset.qa = "chrome";
         }
         function crowSays(s, text, css, bubbleCss, tail) {
@@ -253,13 +255,13 @@
             s.classList.add("F", "cover", "on-dark");
             topBar(s, 0).classList.add("on-dark");
             const ph = el("div", "photo", s);
-            ph.style.height = STORY ? "1040px" : "760px";
+            ph.style.height = STORY ? "1040px" : "720px";
             el("img", "blur", ph).src = "assets/cover.jpg";
             picture(ph, { visual: "cover" });
             const c = el("div", "content", s);
-            Object.assign(c.style, { top: STORY ? "1100px" : "800px", bottom: STORY ? "220px" : "110px", gap: "18px" });
+            Object.assign(c.style, { top: STORY ? "1100px" : "760px", bottom: STORY ? "220px" : "120px", gap: "18px", justifyContent: "center" });
             if (D.kicker) rich(c, D.kicker, "div", "kick", null);
-            title(c, f.title, STORY ? [92, 84, 76, 70] : [82, 76, 70, 64, 58]);
+            title(c, f.title, STORY ? [104, 96, 88, 80] : [100, 92, 84, 76, 70, 64]);
             if (f.body) rich(c, f.body, "p", "stand", STORY ? [44, 40] : [40, 36, 33]);
           } else {
             s.classList.add("G", "cover");
@@ -295,9 +297,8 @@
             picture(el("div", "pic", p), f);
             if (f.note) {
               const t = el("div", "note", s, f.note);
-              Object.assign(t.style, { right: "84px", top: STORY ? "680px" : "530px", transform: "rotate(3deg)" });
+              Object.assign(t.style, { right: "50px", top: STORY ? "720px" : "560px", transform: "rotate(4deg)" });
               t.dataset.qa = "chrome";
-              scribble(s, ARROW, { right: "40px", top: STORY ? "740px" : "590px", width: "150px", height: "100px" }, "var(--accent-ink)");
             }
           } else if (STYLE === "F") {
             s.classList.add("F", "inner");
@@ -324,20 +325,20 @@
 
         function crowOnly(s, f, i) {
           s.classList.add("plain", STYLE);
-          if (STYLE === "E") s.style.background = "#fff4ec";
+          if (STYLE === "E") s.style.background = "#ffffff";
           if (STYLE === "F") s.style.background = "var(--paper)";
           topBar(s, i);
           crowSays(s, f.crow, { left: "60px", top: STORY ? "1300px" : "930px", width: "300px", height: "300px" },
             { left: "360px", right: "76px", top: STORY ? "1240px" : "900px" }, "tail-l");
           const c = el("div", "content", s);
-          Object.assign(c.style, { top: "150px", height: STORY ? "1000px" : "700px", justifyContent: "center" });
-          if (f.title) title(c, f.title, [76, 68, 60, 54]);
-          body(c, f.body, STORY ? [50, 46, 42, 38] : [46, 42, 38, 35, 32]);
+          Object.assign(c.style, { top: "170px", height: STORY ? "1000px" : "700px", justifyContent: "center" });
+          if (f.title) title(c, f.title, [88, 80, 72, 64, 56]);
+          body(c, f.body, STORY ? [54, 50, 46, 42] : [52, 48, 44, 40, 36, 32]);
         }
 
         function why(s, f, i) {
           s.classList.add("plain", STYLE);
-          s.style.background = STYLE === "G" ? "#f3ead7" : "var(--paper)";
+          s.style.background = STYLE === "G" ? "#e8eef1" : "var(--paper)";
           topBar(s, i);
           const c = el("div", "content", s);
           Object.assign(c.style, { top: "170px", height: STORY ? "1100px" : "760px", justifyContent: "center" });
@@ -374,7 +375,7 @@
           if (f.role === "hook") return cover(s, { title: f.title, body: f.body });
           topBar(s, i);
           s.classList.add(STYLE);
-          s.style.background = STYLE === "G" ? "#f3ead7" : STYLE === "E" ? "#fff4ec" : "var(--paper)";
+          s.style.background = STYLE === "G" ? "#e8eef1" : STYLE === "E" ? "#ffffff" : "var(--paper)";
           const c = el("div", "content", s);
           Object.assign(c.style, { top: "320px" });
           if (f.role === "fact") {

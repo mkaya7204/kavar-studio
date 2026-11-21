@@ -29,7 +29,7 @@ QUESTION_HEADLINE_WORDS = 9  # G: the cover asks a question, which needs a few m
 NOTE_WORDS = 5
 CROW_WORDS = 12
 KICKER_WORDS = (2, 6)
-MAX_CROW_ONLY = 2  # news slides with no picture show the crow; at most this many in E and F
+MAX_CROW_ONLY = {"E": 2, "F": 2, "G": 3}  # news slides with no picture show the crow (11-21 G run had 4 in a row)
 
 
 class NewsSlide(BaseModel):
@@ -98,9 +98,9 @@ def style_problems(c: NewsScript) -> list[str]:
                    "pick F or G when the article has no screens to show")
     if style == "E" and not any(s.note for _, s in news):
         out.append("style E: write a hand note (note, <= 5 words) on at least one news slide with a picture")
-    if style in ("E", "F") and len(crow_only) > MAX_CROW_ONLY:
-        out.append(f"style {style}: at most {MAX_CROW_ONLY} news slides without a picture (slides {crow_only}); "
-                   "merge them or pick style G")
+    if len(crow_only) > MAX_CROW_ONLY[style]:
+        out.append(f"style {style}: at most {MAX_CROW_ONLY[style]} news slides without a picture (slides {crow_only}); "
+                   "merge them" + (" or pick style G" if style != "G" else ""))
     if style == "F" and not KICKER_WORDS[0] <= _words(c.kicker) <= KICKER_WORDS[1]:
         out.append(f"style F needs a witty kicker of {KICKER_WORDS[0]}-{KICKER_WORDS[1]} words above the "
                    f"cover headline, has {_words(c.kicker)}")
@@ -255,8 +255,9 @@ rather than padding (6-8 is fine). In a title you may mark 1-3 key words with **
 drawn in the accent colour (the cover's payoff: "Bilgisayarında çalışan bu model **4 kat** hızlanıyor").
 - "E" (real screen + hand notes): when the value is something you can SEE on a screen: a tool, a feature, a menu, \
 a how-to (most guide carousels), a chart. Needs at least 2 news slides with visual "page" or "figure". On those, \
-note = a short hand-written remark a friend would scribble on the screenshot (max {NOTE_WORDS} words: "4 kat!", \
-"buraya dokun", "işte sonuç"), only what the picture really shows. kicker "".
+note = a short hand-written label stuck on the picture's corner (max {NOTE_WORDS} words: "4 kat!", "48'de 32", \
+"işte sonuç"): what the WHOLE picture shows, read off it; never "buraya" / "burada" or a pointer to one spot, never \
+more than the picture shows. Use each picture once. kicker "".
 - "F" (headline + wit): big company news, a launch, a policy, a deal, where there is little to show on a screen but \
 a strong picture. kicker = a short witty Turkish line above the cover headline ({KICKER_WORDS[0]}-{KICKER_WORDS[1]} \
 words): a real pun or play on words about THIS story ("Küçük ama kodu büyük", "Fırça yok, kod var"); clean, never \
