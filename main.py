@@ -86,7 +86,9 @@ def ai_tools_first(tools: list[dict]) -> list[dict]:
         if r.get("fits", True):
             fits.append(c["tool"])
         elif AI_WORDS.search(f"{c['title']} {c['summary']}"):
-            fallback.append(c["tool"])
+            # D-87 (user 2026-11-21 "Yapılsın, ölçelim"): an OFF tool may still fill the slot; it is marked so its
+            # numbers can be compared with the ranker's picks (Hako 11-19, OFF, was the best Reel of that week)
+            fallback.append({**c["tool"], "ranker_off": True})
     return fits + fallback
 
 

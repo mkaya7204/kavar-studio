@@ -667,7 +667,10 @@ def _reel_attempt(cmd: list[str] | None = None, short: bool = False) -> tuple[di
                         script.get("website_url", ""), rendered="no verdict" not in " ".join(verdict["problems"]))
         return None, True
     failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
-    return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], **_variant(script)}, True
+    if tool.get("ranker_off"):  # D-87: made although the ranker said OFF; marked for the comparison
+        log(f"   ranker OFF tool queued (D-87, measured): {script['tool_name']}")
+    return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], **_variant(script),
+            **({"ranker_off": True} if tool.get("ranker_off") else {})}, True
 
 
 def _variant(script: dict) -> dict:

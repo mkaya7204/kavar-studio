@@ -837,3 +837,13 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Measure:** the style is written into the queue and every metrics row; after 2-3 weeks the numbers per style go to the user, who decides what to drop.
 - **Built:** on branch `tarz`; round 2 test runs 44888894042 (E) / 44888896351 (F) / 44888898685 (G) / 44888901261 (auto, chose E): 0 layout problems, Impeccable check green; shown to the user (https://claude.ai/artifact/CPFJiH1kWihHKbHZ5iAngR), the user: "Tamam" -> merged to main 2026-11-21.
 - **Guarded by:** tests/test_d86_styles.py; checks.yml job `design` (Impeccable detect on templates/carousel_v2).
+
+## D-87 (2026-11-21): a tool the ranker marked OFF may still fill a Reel slot, and is measured
+- **The user** (COMMITMENTS #33 part 1, kept for later on 11-17): "Yapılsın, ölçelim", after the explanation: when the
+  first tool of a slot fails, the next attempt may use a tool the ranker marked OFF (developer-only, Mac-only ...),
+  as the code already did since D-42; the editor gate still decides.
+- **Evidence shown:** 11-21 production made Atticus (20:30) and Mailpipe (11:45, KISA) from OFF tools, both approved;
+  Hako (11-19 20:31, OFF) reached 151, the best of 17-20 Nov (others 106-143).
+- **Built:** main.py marks such a tool `ranker_off`; daily.py logs "ranker OFF tool queued" and writes
+  `"ranker_off": true` into the queue item. After two weeks the numbers of OFF Reels vs ranker picks go to the user.
+- **Guarded by:** tests/test_d87_ranker_off.py.
