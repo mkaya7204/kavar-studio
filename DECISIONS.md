@@ -847,3 +847,13 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Built:** main.py marks such a tool `ranker_off`; daily.py logs "ranker OFF tool queued" and writes
   `"ranker_off": true` into the queue item. After two weeks the numbers of OFF Reels vs ranker picks go to the user.
 - **Guarded by:** tests/test_d87_ranker_off.py.
+
+## D-88 (2026-11-21): one company may have a Reel and a carousel the same day, never two carousels
+- **The user** (COMMITMENTS #33 part 2): asked whether the 07:30 guide Reel counts in the one-brand-a-day rule (D-75)
+  (11-22 has a Gemini guide Reel at 07:30 and a Gemini guide carousel at 18:00): "Biri reel biri de carousel olursa
+  sorun olmaz".
+- **So:** a Reel and a carousel of the same company on one day is fine (as the code already allowed). Two carousels
+  of one company are not: until now the 12:30 news carousel did not know the 18:00 guide carousel's company.
+- **Built:** produce_guide_carousel returns its company; produce_news_items(count, taken) skips it ("skip (already a
+  <company> story today)").
+- **Guarded by:** tests/test_d87_ranker_off.py::test_news_skips_the_guide_carousels_company.

@@ -179,8 +179,9 @@ def _claude_limit() -> bool:
     return bool(why)
 
 
-def produce_news_items(count: int) -> list[dict]:
-    items, chosen_titles, chosen_companies, tries, lookups = [], [], set(), 0, 0
+def produce_news_items(count: int, taken: set[str] | None = None) -> list[dict]:
+    """taken: companies the day's other carousels already carry (D-88: two carousels of one company never)."""
+    items, chosen_titles, chosen_companies, tries, lookups = [], [], set(taken or ()), 0, 0
     blocked = set(failures.blocked_hosts())  # D-39: hosts that kept failing are skipped for 7 days
     # "Biz denedik" (agreed 2026-10-15): new models we can run ourselves come first; then the stories
     # that reach more people (D-29, src/content_ranker.py)
@@ -322,7 +323,8 @@ def produce_guide_carousel() -> dict | None:
         if ok:
             failures.ok("news", "guide_carousel", item["title"], item["url"])
             return {"kind": "carousel", "folder": _rel(folder), "title": item["title"], "tested": False,
-                    "concept": "guide", "category": r.get("category", ""), "style": _style(folder)}
+                    "concept": "guide", "category": r.get("category", ""), "style": _style(folder),
+                    "company": (r.get("brand") or r.get("company") or "").strip().lower()}
         if any("gave no verdict" in p for p in problems):
             unmark(item["url"], item.get("title", ""))
         log(f"   rejected, not queued: {folder.name}")
@@ -783,7 +785,11 @@ def _produce_rest(slots: list[dict], only: str) -> None:
             except Exception as exc:
                 log(f"guide carousel failed: {type(exc).__name__}: {str(exc)[:300]}")
         try:
-            news = produce_news_items(len(carousels) - len(news)) + news
+            # D-88 (user 2026-11-21 "Biri reel biri de carousel olursa sorun olmaz"): one company may have a Reel
+            # and a carousel the same day, never two carousels: the news carousel skips the guide carousel's company
+            taken = {n["company"] for n in news if n.get("company")}
+            wanted = len(carousels) - len(news)
+            news = (produce_news_items(wanted, taken) if taken else produce_news_items(wanted)) + news
         except Exception as exc:
             log(f"news production failed: {type(exc).__name__}: {str(exc)[:300]}")
     # the morning stage's guide Reel stays in its slot when the rest is made in the same run

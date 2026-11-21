@@ -25,6 +25,18 @@ def test_off_tools_come_last_and_are_marked(monkeypatch):
     assert ranked[1].get("ranker_off") is True and not ranked[0].get("ranker_off")
 
 
+def test_news_skips_the_guide_carousels_company():
+    """D-88: a Reel + a carousel of one company is fine; two carousels of one company never."""
+    import inspect
+
+    import daily
+    assert "taken" in inspect.signature(daily.produce_news_items).parameters
+    src = (ROOT / "daily.py").read_text(encoding="utf-8")
+    assert 'taken = {n["company"] for n in news if n.get("company")}' in src
+    assert "produce_news_items(wanted, taken)" in src
+    assert '"company": (r.get("brand") or r.get("company") or "").strip().lower()' in src
+
+
 def test_the_queue_marks_an_off_reel():
     src = (ROOT / "daily.py").read_text(encoding="utf-8")
     assert '"ranker_off": True' in src and "ranker OFF tool queued" in src
