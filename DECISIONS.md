@@ -819,3 +819,10 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Records:** tool_site_search was 34-45 % of production's Claude spend 11-12..11-18; on 11-19 the weekly limit answered and the run made 36 more failing calls, filed as off-concept; news tool look-ups ran 6 times instead of 2 (each Reel attempt is its own process).
 - **Built:** fetcher: Product Hunt sites are no longer looked up for every listed product; main pipeline resolve_site() only for a candidate it tries (SITE_LOOKUPS = 4). fetch_news_tools keeps the day's answer in output/temp/news_tools.json. claude_usage notices the limit answer (output/temp/claude_limit.json); daily.py's retry loops stop (_claude_limit), a backup run after the reset makes the day; failures files it as claude_limit.
 - **Evidence:** reel dry run 44518063776: 3 Reels approved, ~2 site searches. **Guarded by:** tests/test_d82_reel_kaynaklari.py, tests/test_claude_limit.py.
+
+## D-85 (2026-11-21): carousels follow what the real pages do; no slot becomes a Reel; new look
+- **The user:** "bir carusel saati reel çevirmek yok edinmiş olduğun bilgi ışığında bizde onların yaptıklarını yapalım birde tarzını değiştir neon yazı renkleri çok yapay görünüyor ... sana birkaç bilgi paylaşıcam incele ve vereceklerimden faydalan".
+- **Source:** carousel research reports/karusel-arastirma-2026-11-21.html (COMMITMENTS #36): @jarrus.ai, @therundownai, @chatgptricks, @evrimagaci.
+- **Decided:** the 12:30 and 18:00 carousel slots stay (D-40 unchanged). Carousels take the real pages' practice: topic = people and results before plain announcements; cover = one big picture + round logo badge + 3-line Turkish headline; at most ~35 words and a picture on every slide; video slides from the company's own demo; numbers / curiosity / gain in the headline; a comment question at the end. The neon text colours go; the new look waits for the material the user will share.
+- **Not decided yet (asked):** real people's photos on the cover (rule 9), music on carousels.
+- **Built:** nothing yet. Branch, dry run, shown to the user before main.
