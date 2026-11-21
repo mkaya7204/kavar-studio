@@ -1,0 +1,138 @@
+<title>Karusel Araştırması</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+/* Layout: one reading column, findings as numbered evidence blocks, tables scroll inside their own box */
+:root{
+  --bg:#f6f7f9; --fg:#14171c; --muted:#5b6370; --line:#dde1e7; --card:#ffffff;
+  --accent:#0a84c6; --good:#1a7f4b; --warn:#a15c00; --bad:#b3261e;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1117; --fg:#e7ebf0; --muted:#9aa4b2; --line:#283040; --card:#151b24;
+  --accent:#4cc2ff; --good:#4fd18b; --warn:#f0b44c; --bad:#ff7a70; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --fg:#e7ebf0; --muted:#9aa4b2; --line:#283040; --card:#151b24;
+  --accent:#4cc2ff; --good:#4fd18b; --warn:#f0b44c; --bad:#ff7a70; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-block:28px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:2rem}
+h2{font-size:1.35rem;margin-top:40px;padding-top:20px;border-top:1px solid var(--line)}
+h3{font-size:1.05rem;margin-top:22px}
+p,li{max-width:65ch}
+.meta{color:var(--muted);font-size:.9rem;margin-top:6px}
+.lead{font-size:1.08rem;margin-top:18px}
+.sum{display:grid;gap:10px;margin-top:18px;padding:0;list-style:none}
+.sum li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.sum b{color:var(--accent)}
+.tbl{overflow-x:auto;margin-top:14px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.hi{color:var(--good);font-weight:600}.lo{color:var(--bad);font-weight:600}
+.rec{counter-reset:r;list-style:none;padding:0;display:grid;gap:12px;margin-top:14px}
+.rec li{counter-increment:r;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 14px 14px 52px;position:relative}
+.rec li::before{content:counter(r);position:absolute;left:14px;top:13px;width:26px;height:26px;border-radius:50%;
+  background:var(--accent);color:var(--bg);font:700 .85rem/26px var(--display);text-align:center}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:2px 8px;border-radius:999px;border:1px solid currentColor;margin-left:6px;vertical-align:2px}
+.tag.ok{color:var(--good)}.tag.ask{color:var(--warn)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.cmp>div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.cmp h4{margin:0 0 6px;font:700 .8rem var(--body);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+@media (max-width:560px){.cmp{grid-template-columns:1fr}}
+.src{font-size:.88rem;color:var(--muted)}
+.src a{color:var(--accent)}
+.note{border-left:3px solid var(--warn);padding:4px 0 4px 12px;margin-top:14px;color:var(--fg)}
+</style>
+
+<div class="wrap">
+<h1>Karusel Araştırması</h1>
+<p class="meta">21 Kasım 2026 · 4 gerçek sayfanın son paylaşımları Instagram'da tek tek açıldı, beğeni ve yorumlar o anki sayılardır · bizim sayılar Business Suite'ten</p>
+
+<p class="lead">Kısa cevap: bizim carousel'lerimiz tasarım olarak temiz ama <b>konu seçimi, kapak ve görsel yoğunluğu</b> ile kaybediyor. Büyük sayfalarda bile düz "şirket X'i duyurdu" carousel'i az ilgi görüyor; ilgi çekenler insan, sonuç ve şaşırtma içeren paylaşımlar.</p>
+
+<ul class="sum">
+<li><b>Konu her şeyden önce geliyor.</b> Jarrus'ta "Fable 5.2 ile yapılan 14 şaşırtıcı proje" 499 beğeni aldı; aynı haftanın "GPT-6.2 çıktı" duyurusu 158. 2,7 milyon takipçili chatgptricks'te bir gözlük duyurusu 10 beğeni aldı.</li>
+<li><b>Üç büyük sayfanın kapağı aynı formülde:</b> büyük bir fotoğraf + yuvarlak şirket logosu + alt kısımda 3 satır kalın başlık (bir kelime renkli) + "kaydır" işareti. Bizim kapak ise şirket blogunun İngilizce kartı ya da beyaz zemin üstünde bir logo.</li>
+<li><b>İç slaytlarda az yazı, büyük görsel, çoğu zaman video.</b> Bizde slayt başına 50-70 kelime; Gemini rehberinin 8 slaytının 7'sinde hiç görsel yok.</li>
+<li><b>Carousel kaydetme getiriyor, takipçi değil.</b> 2026 verisine göre carousel'ler en çok kaydetmeyi, Reels en çok paylaşım ve yorumu alıyor; 50 bin takipçinin altındaki hesaplarda büyümeyi Reels getiriyor.</li>
+</ul>
+
+<h2>İncelenen sayfalar</h2>
+<div class="tbl"><table>
+<thead><tr><th>Sayfa</th><th>Takipçi</th><th>Biçim</th><th>Son paylaşımlar (beğeni)</th><th>En iyi / en kötü</th></tr></thead>
+<tbody>
+<tr><td>@jarrus.ai (Türkçe YZ)</td><td class="n">52,4 B</td><td>10 slaytlık carousel, içinde video slaytlar</td><td class="n">34 – 499</td><td><span class="hi">499:</span> "Fable 5.2 ile yapılanlar, 14 örnek"<br><span class="lo">34:</span> Norveç somon lazeri</td></tr>
+<tr><td>@therundownai</td><td class="n">672 B</td><td>Çoğu tek görsel, bazen carousel</td><td class="n">54 – 683</td><td><span class="hi">683 + 110 yorum:</span> "Apple kendi ajanını yapıyor"<br><span class="lo">75:</span> "ChatGPT Space tanıtıldı"</td></tr>
+<tr><td>@chatgptricks</td><td class="n">2,7 Mn</td><td>Carousel, iç slaytlar gerçek sohbet ekranı</td><td class="n">10 – 2.200</td><td><span class="hi">2.200:</span> "ChatGPT'ye neden James Bond olamadığını sordu" (komik sohbet)<br><span class="lo">10:</span> Gemini'li gözlük duyurusu</td></tr>
+<tr><td>@evrimagaci (Türkçe bilim)</td><td class="n">828 B</td><td>Metin ağırlıklı açıklayıcı carousel</td><td class="n">2 – 205</td><td><span class="hi">205:</span> "İkinci Yeni şairleri dili neden bilerek bozdu?"</td></tr>
+<tr><td><b>@thekavar.ai (biz)</b></td><td class="n">–</td><td>8-10 slayt, koyu tema</td><td class="n">erişim 6 – 21</td><td>17-20 Kasım: 7 carousel, 0 takip, en fazla 2 beğeni</td></tr>
+</tbody></table></div>
+<p class="src">chatgptricks'in 1.500 beğenili "Claude ile GPU kiralama" paylaşımı bir marka iş birliği; sayılmadı.</p>
+
+<h2>Ne işe yarıyor (gözlenen)</h2>
+
+<h3>1. Konu: duyuru değil, insan ve sonuç</h3>
+<p>Dört sayfada da en iyi paylaşım ya <b>insanların bir araçla yaptığı şaşırtıcı şeyler</b> (Jarrus: 14 proje, Claude'un 1994 Jeep'i çözmesi 196), ya <b>herkesi doğrudan ilgilendiren bir şey</b> (Apple, Signal'in gizlilik kısıtı 300, Meta'nın takip etmeyenleri bırakan YZ'si 156), ya da <b>bir hikâye</b> (Bond sohbeti). Teknik model duyuruları her sayfada alt sırada kalıyor. Bizim 12:30 carousel'imiz ise tam bu tür: "Inkling 2 Mini katmanları döngüye alıyor".</p>
+
+<h3>2. Kapak: tek büyük görsel + logo rozeti + 3 satır başlık</h3>
+<div class="cmp">
+<div><h4>Onlar</h4>Tam sayfa, duygusu olan bir fotoğraf (bir kişi, ürünün kendisi, sahne) · yuvarlak şirket logosu rozet gibi · altta koyu geçiş üstünde 3 satır, büyük, kalın Türkçe başlık · bir kelime vurgu renginde · "kaydır" işareti.</div>
+<div><h4>Biz</h4>Üst yarıda kaynağın blog kartı (İngilizce yazılı, küçük) ya da beyaz zemin üstünde Google "G" logosu · altta büyük başlık. Kapak akışta bir "basın bülteni" gibi duruyor, durduran bir görüntü yok.</div>
+</div>
+
+<h3>3. İç slaytlar: az yazı, büyük görsel, hareket</h3>
+<div class="cmp">
+<div><h4>Onlar</h4>Jarrus: üstte kalın başlık + 2-3 satır (30-40 kelime), altta kaynağın videosu, altında "Video: yapımcı (X)". chatgptricks: gerçek sohbet ekran görüntüsü. Evrim Ağacı: metin ağırlıklı ama her slaytın başlığı hikâyenin bir adımı ("Ortada ne bildiri vardı ne de ortak karar"), üstte ilerleme çubuğu.</div>
+<div><h4>Biz</h4>Inkling: 10 slaytın 6'sı yalnız metin, slayt başına 50-70 kelime, "MTP", "speculative decoding" gibi terimler. Gemini rehberi: adım adım anlatıyor ama 8 slaytın 7'sinde ekran görüntüsü yok; okuyucu hangi menüye dokunacağını göremiyor.</div>
+</div>
+
+<h3>4. Başlık dili</h3>
+<p>İşe yarayanlar: <b>sayı</b> ("14 örnek", "bu 10 prompt"), <b>merak sorusu</b> ("neden bilerek bozdu?"), <b>duygu</b> ("görenleri şaşırttı", "komik bir yere gitti"). Bizimkiler teknik: "Katmanları döngüye alıyor", "Gemini'de yerel ses nasıl seçilir?". İkincisi doğru yönde ama soru, okuyucunun merak edeceği bir şey değil.</p>
+
+<h3>5. Yorum isteyen kapanış</h3>
+<p>Jarrus her paylaşımı bir soruyla bitiriyor: "Sizce hangisi en etkileyici? 👇", "Sizce bu yöntem balıklar için iyi bir çözüm mü?". 499 beğenili paylaşımın altında gerçek bir tartışma var (fiyat, "para tuzağı", "yetişemiyorum"). Bizim kapanış "kaydet / takip et" diyor, soru sormuyor.</p>
+
+<h2>Veriler ne diyor</h2>
+<ul>
+<li>Socialinsider (Mayıs 2026, 21,3 milyon gönderi): carousel'ler en çok <b>kaydetme</b> alıyor (medyan 37), Reels en çok <b>yorum ve paylaşım</b>.</li>
+<li>Aynı veriye dayanan bir yorum: 50 bin takipçinin altındaki hesaplarda büyümeyi Reels getiriyor; carousel'ler bu eşiğin üstünde öne geçiyor. Bizim sayılarımız da bunu gösteriyor: Reels 106-151 erişim, carousel 6-21.</li>
+<li>Meta'nın kendi belgesi: Feed, birinin carousel'i sonuna kadar kaydırma ihtimalini tahmin edip sıralamada kullanıyor. Yani iç slaytlar sıkıcıysa paylaşım geri plana düşüyor.</li>
+<li>Mosseri: DM ile gönderilme ("sends") yeni kişilere ulaşmada önemli bir sinyal. Müzik eklenmiş carousel'in Reels akışında da görünebildiği ve kaydırılıp geçilen carousel'in 2. slaytıyla tekrar gösterildiği söyleniyor; bunu 2026 için birincil kaynakta doğrulayamadım.</li>
+<li>Kaç slayt: kaynaklar çelişiyor (4-6 diyen de var, 7-10 diyen de). Tek ortak nokta: iç slaytlar kaydırmayı hak etmiyorsa sayı fark etmiyor.</li>
+</ul>
+
+<h2>Bizim için öneriler</h2>
+<p>Hiçbiri yapılmadı. Yeşil olanlar mevcut kurallarla yapılabilir; turuncu olanlar kilitli bir kararı etkiliyor ve senin kararını bekliyor.</p>
+<ol class="rec">
+<li><b>Konu seçiminde "insan ve sonuç" önce gelsin.</b><span class="tag ok">kurala uygun</span><br>Sıralayıcı, şirket bloglarındaki vitrin yazılarını ("X ile neler yapıldı", müşteri hikâyesi, demo) ve herkesi ilgilendiren konuları (gizlilik, telefon, Instagram/WhatsApp) teknik model duyurularının önüne koysun. Teknik duyuru ancak "bu sana ne kazandırır" cümlesi kurulabiliyorsa seçilsin.</li>
+<li><b>Yeni kapak: tek büyük görsel + yuvarlak logo rozeti + 3 satır Türkçe başlık, bir kelime vurgu renginde.</b><span class="tag ok">kurala uygun</span><br>Blogun İngilizce kartı kapaktan çıksın. Görsel, şirketin kendi sayfasındaki en çarpıcı ürün görseli ya da demo karesi olsun.</li>
+<li><b>Kapakta gerçek kişi fotoğrafı (CEO, geliştirici).</b><span class="tag ask">senin kararın</span><br>Üç büyük sayfanın üçü de kullanıyor. Bizim kural 9 basın sitesi fotoğrafını yasaklıyor, şirketin kendi görsellerine izin veriyor; gerçek kişi fotoğrafı ise ayrıca bir karar.</li>
+<li><b>Slayt başına en çok 35 kelime ve her slaytta bir görsel.</b><span class="tag ok">kurala uygun</span><br>Görseli olmayan slayt birleştirilsin ya da atılsın. Rehber carousel'inde her adımın ekran görüntüsü olsun; bulunamıyorsa o rehber yapılmasın (Gemini sesleri örneği).</li>
+<li><b>Video slayt: şirketin kendi demo videosundan 5-10 saniye.</b><span class="tag ok">kurala uygun</span><br>Business Suite carousel'e video kabul ediyor; Jarrus'un en iyi paylaşımları videolu. Sistemde daha önce video slayt denenmişti (Google Playground, 10-11).</li>
+<li><b>Başlık: sayı, merak sorusu ya da okuyucunun kazancı.</b><span class="tag ok">kurala uygun</span><br>"Katmanları döngüye alıyor" yerine örneğin "Bilgisayarında çalışan model, 48 testin 32'sinde önde". Editörün bunu ölçmesi Plan 3'teki (#12) "kaydırmayı durdurur mu" puanıyla birleşir.</li>
+<li><b>Son slayt öncesi ve açıklamanın sonunda bir yorum sorusu.</b><span class="tag ok">kurala uygun</span><br>"Sen hangisini denerdin? 👇" gibi; kapanış dönüşümüne (#13) eklenir.</li>
+<li><b>Carousel'e müzik eklemek (Reels akışında görünme ihtimali).</b><span class="tag ask">önce doğrulanmalı</span><br>Business Suite'te carousel'e müzik seçeneği olup olmadığına bakmam gerekiyor; yoksa bu sadece telefondan yapılabilir.</li>
+<li><b>Bir carousel saatini Reel'e çevirmek.</b><span class="tag ask">senin kararın (D-40)</span><br>Veriler ve bizim sayılar, bu takipçi sayısında büyümeyi Reels'in getirdiğini gösteriyor. Carousel'ler kaydetme için kalabilir ama günde iki tane şart olmayabilir.</li>
+</ol>
+
+<div class="note"><b>Ölçme önerisi:</b> 1, 2, 4, 6 ve 7'yi önce yalnızca 12:30 carousel'inde bir hafta dene; 18:00 olduğu gibi kalsın. Bir haftanın sonunda iki saati erişim, kaydetme ve paylaşım olarak karşılaştırırım.</div>
+
+<h2>Kaynaklar</h2>
+<p class="src">
+Instagram sayfaları (21 Kasım 2026'da açıldı): <a href="https://www.instagram.com/jarrus.ai/">@jarrus.ai</a> · <a href="https://www.instagram.com/therundownai/">@therundownai</a> · <a href="https://www.instagram.com/chatgptricks/">@chatgptricks</a> · <a href="https://www.instagram.com/evrimagaci/">@evrimagaci</a><br>
+<a href="https://www.socialinsider.io/social-media-benchmarks/instagram-engagement-report">Socialinsider – Instagram Engagement Report</a> ·
+<a href="https://carney.co/daily-carnage/reels-vs-carousels/">Carney – Reels vs carousels</a> ·
+<a href="https://www.vidpal.ai/blog/instagram-carousel-posts-2026-saves-shares-algorithm">VidPal – Carousel posts 2026</a> ·
+<a href="https://flockx.io/blog/instagram-carousels-2026">Flockx – Carousels in 2026</a> ·
+<a href="https://postprism.app/blog/instagram-carousel-best-practices">Postprism – Carousel best practices</a> ·
+<a href="https://uppbeat.io/blog/creator-news/whats-working-on-instagram-right-now-carousels-and-sends-says-adam-mosseri">Uppbeat – Mosseri on carousels and sends</a> ·
+<a href="https://liahaberman.substack.com/p/the-best-instagram-content-formats">Lia Haberman – ICYMI</a> ·
+<a href="https://buffer.com/resources//instagram-algorithms/">Buffer – Instagram algorithm 2026</a>
+</p>
+</div>
