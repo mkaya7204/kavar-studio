@@ -618,5 +618,25 @@
   "url": "https://mailpipeai.com/",
   "description": "Draft replies in Apple Mail with Codex CLI, DeepSeek Harness, Claude Code, OpenCode, OpenClaw, Hermes Agent. Open Mailpipe in the compose toolbar to generate, review and copy a reply.",
   "date": "2026-11-21"
+ },
+ "promptpuncher": {
+  "url": "https://www.promptpuncher.com/",
+  "description": "Prompt Puncher is a free browser fighting game where AI CEOs throw hands. Fight as Elon Musk, Sam Altman, Mark Zuckerberg, and more. No downloads or signups required.",
+  "date": "2026-11-22"
+ },
+ "altercontacts": {
+  "url": "https://altercontacts.ai/",
+  "description": "A personal AI assistant for people whose business runs on client relationships. Talk to it after a meeting; it files what was said, notices who needs attention, and drafts the next move for you to approve.",
+  "date": "2026-11-22"
+ },
+ "glassmail": {
+  "url": "https://glassmail.app/",
+  "description": "A native Mac email app for Gmail, iCloud, Outlook, Yahoo and any IMAP account, with private AI that runs on your Mac. Free for 14 days, then pay once.",
+  "date": "2026-11-22"
+ },
+ "shipyard": {
+  "url": "https://www.shipyardmcp.com/",
+  "description": "Connect your stack once, then ship every product in an hour.",
+  "date": "2026-11-22"
  }
 }

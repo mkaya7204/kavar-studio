@@ -3270,5 +3270,89 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-22",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-22",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Share skills and add files from Google Drive, Gemini Notebook and Google Photos to your skills in the Gemini app",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-22",
+  "stage": "news",
+  "kind": "news",
+  "item": "Signal restricts mobile screenshots as it confronts ‘existential threat’ of AI surveillance",
+  "rendered": true,
+  "host": "signal.org",
+  "outcome": "failed",
+  "categories": [
+   "cut_text",
+   "facts",
+   "price"
+  ],
+  "detail": "Tarih tutarsız: son slayt altbilgisi 'Kaynak: Signal Messenger, 21 Kasım 2026' diyor, ama kaynak sayfa yazıyı 20 Kasım 2026 tarihli gösteriyor (slayt 2 ve altyazı da 20 Kasım diyor). Altbilgi sayfadaki tarihle (20 Kasım) aynı olmalı veya tarih çıkarılmalı.; Diğer içerik kaynakla uyumlu: kapak, slayt"
+ },
+ {
+  "date": "2026-11-22",
+  "stage": "news",
+  "kind": "news",
+  "item": "Depth Pro 2: Sharp and Temporally Consistent Metric Monocular Depth",
+  "rendered": true,
+  "host": "machinelearning.apple.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-22",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "KIKA AI",
+  "rendered": true,
+  "host": "kikaai.in",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "price"
+  ],
+  "detail": "Kanıt görseli (kapak ve 0-2.5 sn) sohbet panelinde okunabilir 'prices in rupees' ve 'nemotron-3-super-120b-a12b (free)' yazıları taşıyor: fiyat/para birimi ve ücretsiz ibaresi, sayfa politikasına aykırı. Görsel bu yazılar görünmeyecek şekilde yeniden kadrajlanmalı veya başka bir yakalama seçilmeli.;"
+ },
+ {
+  "date": "2026-11-22",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "AlterContacts",
+  "rendered": true,
+  "host": "altercontacts.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-22",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Shipyard",
+  "rendered": true,
+  "host": "shipyardmcp.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

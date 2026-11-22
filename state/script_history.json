@@ -1,33 +1,5 @@
 [
   {
-    "tool": "HeyGen Avatar 6",
-    "hook": "Kameraya çıkmaktan kaçıyorsun",
-    "pattern": "pain",
-    "spoken_hook": "Kameraya çıkmak istemediğin için video mu erteliyorsun?",
-    "cta": "Videocu arkadaşına gönder."
-  },
-  {
-    "tool": "Impractical",
-    "hook": "Lansman videosu tek promptta",
-    "pattern": "result",
-    "spoken_hook": "Lansman videonu tek promptla yapabilirsin.",
-    "cta": "Ürün ekibine gönder."
-  },
-  {
-    "tool": "Opera",
-    "hook": "Eklentin sohbetle hazır oluyor",
-    "pattern": "result",
-    "spoken_hook": "Kendi tarayıcı eklentin sohbetle hazır oluyor.",
-    "cta": "Bunu arkadaşına gönder, işine yarar."
-  },
-  {
-    "tool": "Google Gemini",
-    "hook": "Geçmişin yeni asistana taşınıyor",
-    "pattern": "result",
-    "spoken_hook": "Başka yapay zekâdan geçerken sohbet geçmişini taşıyabilirsin.",
-    "cta": "Asistan değiştiren arkadaşına gönder."
-  },
-  {
     "tool": "CodeDesign v3",
     "hook": "Siteni sohbetten yönetiyorsun",
     "pattern": "result",
@@ -68,5 +40,33 @@
     "pattern": "pain",
     "spoken_hook": "Mail cevaplamak her gün vaktini mi yiyor?",
     "cta": "Mac'li arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Aynı görseli tekrar yükleme",
+    "pattern": "question",
+    "spoken_hook": "Video üretirken aynı görseli tekrar mı yüklüyorsun?",
+    "cta": "Yorumlara yaz: hangi videoyu üretirdin?"
+  },
+  {
+    "tool": "KIKA AI",
+    "hook": "Cümle yaz, siteye menü eklensin",
+    "pattern": "result",
+    "spoken_hook": "Bir cümle yazıyorsun, kod editörü siteye menü ekliyor.",
+    "cta": "Kaydet, site yaparken lazım olur."
+  },
+  {
+    "tool": "AlterContacts",
+    "hook": "Müşteriyi arayacaktın, unuttun",
+    "pattern": "pain",
+    "spoken_hook": "Müşteriyi arayacaktın ama yine unuttun, değil mi?",
+    "cta": "Yorumlara yaz: takibi en çok neyde aksatıyorsun?"
+  },
+  {
+    "tool": "Shipyard",
+    "hook": "Kurulum günler değil saatler",
+    "pattern": "contrast",
+    "spoken_hook": "Kurulum günler sürer sanıyorsan yanılıyorsun.",
+    "cta": "Girişimci arkadaşına gönder."
   }
 ]

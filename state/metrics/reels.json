@@ -1897,5 +1897,57 @@
     "duration_sec": 11.4,
     "words": 19,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-22_google-workspace",
+    "date": "2026-11-22",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "question",
+    "headline": "Aynı görseli tekrar yükleme",
+    "spoken_hook": "Video üretirken aynı görseli tekrar mı yüklüyorsun?",
+    "cta": "Yorumlara yaz: hangi videoyu üretirdin?",
+    "duration_sec": 23.3,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-22_kika-ai",
+    "date": "2026-11-22",
+    "kind": "tool",
+    "tool": "KIKA AI",
+    "hook_pattern": "result",
+    "headline": "Cümle yaz, siteye menü eklensin",
+    "spoken_hook": "Bir cümle yazıyorsun, kod editörü siteye menü ekliyor.",
+    "cta": "Kaydet, site yaparken lazım olur.",
+    "duration_sec": 22.6,
+    "words": 41,
+    "status": "rejected: Kanıt görseli (kapak ve 0-2.5 sn) sohbet panelinde okunabilir 'prices in rupees' ve 'nemotron-3-super-120b-a12b (free)' yazıları taşıyor: fiyat/para birimi ve ücretsiz ibaresi, sayfa politikasına aykırı. Görsel bu yazılar görünmeyecek şekilde yeniden kadrajlanmalı veya başka bir yakalama seçilmeli.; 11.3 sn karesi: kaynak kartı (kikaai.in) neredeyse boş, içindeki ekran görüntüsü küçük ve okunmuyor. Kutunun büyük kısmı boş.; 12.3 sn karesi: 03 kartı 'Beş yapay zekâya birden sor' başlığında detay metni hâlâ yok, kart boş görünüyor. Council modunu gösteren bir görsel yok: ekranda gösterilen editör görseli bu vaadi kanıtlamıyor. Council modu bölümünün yakalaması kullanılmalı."
+  },
+  {
+    "id": "2026-11-22_altercontacts",
+    "date": "2026-11-22",
+    "kind": "tool",
+    "tool": "AlterContacts",
+    "hook_pattern": "pain",
+    "headline": "Müşteriyi arayacaktın, unuttun",
+    "spoken_hook": "Müşteriyi arayacaktın ama yine unuttun, değil mi?",
+    "cta": "Yorumlara yaz: takibi en çok neyde aksatıyorsun?",
+    "duration_sec": 26.2,
+    "words": 41,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-22_shipyard",
+    "date": "2026-11-22",
+    "kind": "tool",
+    "tool": "Shipyard",
+    "hook_pattern": "contrast",
+    "headline": "Kurulum günler değil saatler",
+    "spoken_hook": "Kurulum günler sürer sanıyorsan yanılıyorsun.",
+    "cta": "Girişimci arkadaşına gönder.",
+    "duration_sec": 11.4,
+    "words": 18,
+    "status": "produced"
   }
 ]
