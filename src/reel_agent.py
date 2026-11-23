@@ -46,7 +46,8 @@ understand what is wrong and why, change whatever fixes the cause, look at the r
 limited to one kind of change.
 
 Your workspace is {WORK_REL}/ (paths below are inside it):
-- playbook.md: our knowledge base, problem -> cause -> right fix -> check. READ IT FIRST. editor_lessons.md too.
+- playbook.md: our knowledge base, problem -> cause -> right fix -> check. READ IT FIRST. editor_lessons.md and learned_lessons.md
+  (rules the system wrote from earlier agent fixes, if present) too.
 - verdict.json: the editor's problems. rejected_frames.jpg: the rejected draft's frames.
 - tool.json: the source facts (the only truth for claims). script.json: the Reel's words (EDITABLE).
 - candidates.jpg + candidates.json: every picture we have, numbered from 0.
@@ -112,7 +113,8 @@ def _setup(folder: Path) -> dict:
     if (folder / "_review_sheet.jpg").exists():
         shutil.copy(folder / "_review_sheet.jpg", WORK / "rejected_frames.jpg")
     for src, name in ((ROOT / "knowledge" / "playbook.md", "playbook.md"),
-                      (ROOT / "rules" / "editor_lessons.md", "editor_lessons.md")):
+                      (ROOT / "rules" / "editor_lessons.md", "editor_lessons.md"),
+                      (ROOT / "state" / "learned_lessons.md", "learned_lessons.md")):  # D-89
         if src.exists():
             shutil.copy(src, WORK / name)
     return json.loads((WORK / "verdict.json").read_text(encoding="utf-8"))
