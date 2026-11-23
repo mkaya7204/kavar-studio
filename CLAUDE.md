@@ -154,6 +154,9 @@ session hit its usage limit while still analysing. Steps 1 and 4 come before any
    limit; made by produce.yml) and cover.jpg as the thumbnail. For a hand-fixed Reel, `shrink.yml`.
    **D-39:** read the "self-correct:" lines of the log and `python daily.py failures` (last 7 days per kind,
    paused kinds, skipped hosts); tell the user what the system changed by itself and why.
+   **D-89:** `python daily.py learned`: the rules the system wrote itself from its fixing agent's repeated fixes
+   (state/learned_lessons.md). Every report says what the system learned, or that it learned nothing; a wrong rule
+   is shown to the user and marked withdrawn, never silently deleted.
 5. **Mondays (D-38):** one page for the user from `state/metrics/posts.json`: per post reach, views,
    average watch, follows; days with both slots filled. Next week changes only what these numbers show.
    Keep cloud test runs few late in the week: the cloud and this session share one Claude usage limit.

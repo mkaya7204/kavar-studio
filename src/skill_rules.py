@@ -12,18 +12,23 @@ SKILLS = ROOT / ".claude" / "skills"
 
 
 LESSONS = ROOT / "rules" / "editor_lessons.md"
-LESSONS_MAX_CHARS = 16000  # all lessons must reach the prompts; at 8000 the oldest (the price lesson) fell out on 10-17
+LEARNED = ROOT / "state" / "learned_lessons.md"  # D-89: rules the system wrote from its own repeated fixes
+# all lessons must reach the prompts; at 8000 the oldest (the price lesson) fell out on 10-17; 11-23 five lessons from
+# 53 agent fixes + the system's own (D-89) -> 30000
+LESSONS_MAX_CHARS = 30000
 
 
 def editor_lessons() -> str:
     """Lessons from content Claude fixed by hand after the editor rejected it (agreed workflow,
-    rules/editor_lessons.md). The editor and the writers read them, so a mistake fixed once is
-    not made, or wrongly rejected, again. "" if there are none."""
-    try:
-        text = LESSONS.read_text(encoding="utf-8")
-    except OSError:
-        return ""
-    entries = text.split("\n## ")[1:]  # one "## <date> ..." section per lesson
+    rules/editor_lessons.md), then the ones the system learned itself (D-89, state/learned_lessons.md).
+    The editor and the writers read them, so a mistake fixed once is not made, or wrongly rejected,
+    again. "" if there are none."""
+    entries = []
+    for path in (LESSONS, LEARNED):
+        try:
+            entries += path.read_text(encoding="utf-8").split("\n## ")[1:]  # one "## <date> ..." section per lesson
+        except OSError:
+            continue
     out = ""
     for e in reversed(entries):  # newest first, until the budget is spent
         if len(out) + len(e) > LESSONS_MAX_CHARS:

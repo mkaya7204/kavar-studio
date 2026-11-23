@@ -857,3 +857,22 @@ the decisions that are currently locked; this file explains why they exist and h
 - **Built:** produce_guide_carousel returns its company; produce_news_items(count, taken) skips it ("skip (already a
   <company> story today)").
 - **Guarded by:** tests/test_d87_ranker_off.py::test_news_skips_the_guide_carousels_company.
+
+## D-89 (2026-11-23): the system learns from its own fixes; 12:30 and 18:00 stay carousels
+- **The user** (after the Monday numbers page: carousels reach ~15, Reels 100-180): "o iki saati reel çevirmeyelim
+  ... takipçi sayımız az ... bu işi ilerde kendi ürünümüz yapıp kullanıma açmayı amaçlıyoruz ... post yazma
+  hazırlama sürecinde ... karşılaştığı sorunlar karşısında öğrenip sistemi geliştirdiğimiz için bize lazım";
+  "bunu sistemine de öğretip o da öğrensin, aynı şeylerle karşılaştığında o da yapabilsin ... dürüstçe konuş".
+  To the plan (carry the agent's notes into the rules now, let the system do it itself after every run, report it
+  at every "yükle"): "Evet".
+- **Honest check that led here:** rules/editor_lessons.md had 14 lessons (last hand lessons 10-18 and 11-14);
+  knowledge/playbook.md last changed 11-08; state/agent_log.jsonl held 56 agent sessions with 53 lessons, none of
+  them carried to any prompt since 11-08 (CLAUDE.md §1.2 asked Claude to do it every "yükle").
+- **Built:** five lessons distilled by hand from the 56 sessions in rules/editor_lessons.md (picture before hook,
+  pictures that are never proof, read every number in a picture, only the source's words and limits, drop a topic
+  with no picture or no AI); LESSONS_MAX_CHARS 16000 -> 30000 so none fall out. src/learning.py: after every
+  production run one Claude call (no tools) turns a cause seen in 2+ Reels that no lesson covers into a rule in
+  state/learned_lessons.md (checked in code: real reels, one new, no prices, at most 3); skill_rules.editor_lessons()
+  feeds it to the writers, editor, fixer and agent; `python daily.py learned` lists it for the "yükle" report.
+  The carousel slots are not changed.
+- **Guarded by:** tests/test_learning.py.

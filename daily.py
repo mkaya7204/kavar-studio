@@ -1172,6 +1172,12 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
     if cmd == "produce":
         rest_ran = produce(sys.argv[2] if len(sys.argv) > 2 else "")
+        try:  # D-89: the fixing agent's repeated fixes become rules the writers read in the next run
+            import learning
+            for title in learning.distil(queue_day()):
+                log(f"learned: {title}")
+        except Exception as exc:
+            log(f"learning skipped: {type(exc).__name__}: {str(exc)[:200]}")
         for row in claude_usage.summary(days=1):  # D-48: what this morning cost of the Claude limit, per step
             log(f"claude usage today: {row['stage']}: {row['calls']} calls, {row['minutes']} min, "
                 f"{row['tokens']} tokens, ~${row['cost_usd']}")
@@ -1190,6 +1196,9 @@ if __name__ == "__main__":
         print(json.dumps({"last_7_days": failures.summary(), "paused": [k for k in ("guide", "trial", "tool")
                           if failures.paused(k)], "blocked_hosts": sorted(failures.blocked_hosts())},
                          indent=1, ensure_ascii=False))
+    elif cmd == "learned":  # D-89: what the system taught itself lately (report it at every "yükle")
+        import learning
+        print("\n".join(learning.recent(int(sys.argv[2]) if len(sys.argv) > 2 else 3)) or "nothing new learned")
     elif cmd == "usage":  # D-48: Claude usage per step, last 7 days (state/claude_usage.jsonl)
         for row in claude_usage.summary():
             print(f"{row['stage']:28} {row['calls']:4} calls {row['minutes']:7} min {row['tokens']:10} tokens "
