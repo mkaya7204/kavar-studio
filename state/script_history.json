@@ -1,47 +1,5 @@
 [
   {
-    "tool": "CodeDesign v3",
-    "hook": "Siteni sohbetten yönetiyorsun",
-    "pattern": "result",
-    "spoken_hook": "Web siteni ChatGPT'den ya da Claude'dan yönetebilirsin.",
-    "cta": "Sitesi olmayan arkadaşına at."
-  },
-  {
-    "tool": "Room AI",
-    "hook": "Odanı konuşarak yeniden tasarla",
-    "pattern": "result",
-    "spoken_hook": "Odanı artık konuşarak yeniden tasarlayabilirsin.",
-    "cta": "Ev dekore edene gönder."
-  },
-  {
-    "tool": "Google Gemini",
-    "hook": "Mac'te tıklamayı kim yapsın?",
-    "pattern": "question",
-    "spoken_hook": "Mac'te tekrar eden işi hâlâ elle mi yapıyorsun?",
-    "cta": "Kaydet, tekrarlı iş çıkınca lazım olur."
-  },
-  {
-    "tool": "Rox",
-    "hook": "Sohbet botu seni unutur",
-    "pattern": "contrast",
-    "spoken_hook": "Sıradan sohbet botları seni kapattığın an unutur.",
-    "cta": "Yorumlara yaz: randevuda neyi unutuyorsun?"
-  },
-  {
-    "tool": "Atticus",
-    "hook": "Ekranda daire çiz, sor",
-    "pattern": "result",
-    "spoken_hook": "Ekrandaki her şeyi daire içine alıp sorabilirsin.",
-    "cta": "Kaydet, Mac'te işine yarar."
-  },
-  {
-    "tool": "Mailpipe",
-    "hook": "Mail cevaplamak vaktini yiyor",
-    "pattern": "pain",
-    "spoken_hook": "Mail cevaplamak her gün vaktini mi yiyor?",
-    "cta": "Mac'li arkadaşına gönder."
-  },
-  {
     "tool": "Google Workspace",
     "hook": "Aynı görseli tekrar yükleme",
     "pattern": "question",
@@ -68,5 +26,47 @@
     "pattern": "contrast",
     "spoken_hook": "Kurulum günler sürer sanıyorsan yanılıyorsun.",
     "cta": "Girişimci arkadaşına gönder."
+  },
+  {
+    "tool": "ElevenLabs",
+    "hook": "Ses markanı yanlış mı okuyor?",
+    "pattern": "question",
+    "spoken_hook": "Yapay ses markanı yanlış mı okuyor?",
+    "cta": "Kaydet, seslendirmede lazım olur."
+  },
+  {
+    "tool": "TeaserKit",
+    "hook": "Yapay zekâ videosu hep aynı",
+    "pattern": "contrast",
+    "spoken_hook": "Yapay zekâ videoları hep aynı mor parıltıya benziyor.",
+    "cta": "Yorumlara yaz: hangi ürünün filmini çekerdin?"
+  },
+  {
+    "tool": "Squint",
+    "hook": "Yemeğe kutu çiz, tarifi gör",
+    "pattern": "result",
+    "spoken_hook": "Ekrandaki yemeğe kutu çiziyorsun, nasıl yapıldığı yanında akıyor.",
+    "cta": "Yemek tarifi kaydeden arkadaşına gönder."
+  },
+  {
+    "tool": "MROffice",
+    "hook": "Claude Excel açabilir mi?",
+    "pattern": "question",
+    "spoken_hook": "Yapay zekâ senin Excel dosyanı düzenleyebilir mi?",
+    "cta": "Kaydet, sonra lazım olur."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Video için kamera şart değil",
+    "pattern": "contrast",
+    "spoken_hook": "Video için kamera şart sanıyordun, değil.",
+    "cta": "Yorumlara yaz: avatarınla ne anlatırdın?"
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Mailler günlerce cevapsız mı?",
+    "pattern": "pain",
+    "spoken_hook": "Mailler günlerce cevapsız mı kalıyor?",
+    "cta": "Kaydet, lazım olacak."
   }
 ]

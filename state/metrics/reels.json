@@ -1949,5 +1949,83 @@
     "duration_sec": 11.4,
     "words": 18,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-23_elevenlabs",
+    "date": "2026-11-23",
+    "kind": "guide",
+    "tool": "ElevenLabs",
+    "hook_pattern": "question",
+    "headline": "Ses markanı yanlış mı okuyor?",
+    "spoken_hook": "Yapay ses markanı yanlış mı okuyor?",
+    "cta": "Kaydet, seslendirmede lazım olur.",
+    "duration_sec": 24.0,
+    "words": 36,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-23_teaserkit",
+    "date": "2026-11-23",
+    "kind": "tool",
+    "tool": "TeaserKit",
+    "hook_pattern": "contrast",
+    "headline": "Lansman videosu yapay durmasın",
+    "spoken_hook": "Lansman videon yapay durmasın istiyorsan bu araca bak.",
+    "cta": "Yorumlara yaz: hangi ürünün filmini çekerdin?",
+    "duration_sec": 24.5,
+    "words": 40,
+    "status": "rejected: Kapak ve 0-2.5 sn ile 12.3 sn karelerindeki kanıt görselinde sol altta \"PAY ONCE\" etiketi okunuyor: bu bir ödeme modeli, sayfa politikası ekranda bile yasak.; Görsel değişimi: kanıtı \"PAY ONCE\" / \"REAL MUSIC, CUT TO THE BEAT\" etiket satırı olmadan kullan. Sağdaki \"Directed, not generated\" oynatıcı ve \"make it punchier\" / \"make it blue\" balonlarını içeren kesit uygun, ödeme etiketleri dışarıda kalacak şekilde kırp ya da sitenin pipeline bölümünü kullan.; Metin, ses ve başlık tutarlı; fiyat, deneyim iddiası ve ürün adı kancada yok. Sorun yalnızca görseldeki ödeme modeli etiketi."
+  },
+  {
+    "id": "2026-11-23_squint",
+    "date": "2026-11-23",
+    "kind": "tool",
+    "tool": "Squint",
+    "hook_pattern": "result",
+    "headline": "Ekrana kutu çiz, cevabı gör",
+    "spoken_hook": "Ekranda anlamadığın şeye kutu çiziyorsun, cevap yanında akıyor.",
+    "cta": "Ekran başında takılan arkadaşına gönder.",
+    "duration_sec": 25.6,
+    "words": 42,
+    "status": "rejected: Kanıt görseli vaadi göstermiyor: başlık 'kutu çiz, cevabı gör' diyor ama kutuda Squint'in iş akışı listesi (İngilizce 4 maddelik metin: 'Press Win+Shift+Q, drag a box...') var. Arayüz, çizilen kutu ya da akan cevap yok. Bu bir özellik/adım listesi, kanıt sayılmaz.; Araç verisindeki proof_shows (yemek fotoğrafı, 'Ask how, not just what.' istemi, tıklanabilir cevap seçenekleri) ile görünen görsel uyuşmuyor. Seçilen kare yanlış, daha iyisi sitedeki 'Watch it work' / 'How do I make it?' arayüz görseli.; Kanıt görseli İngilizce ve küçük metin ağırlıklı. 3. sn'deki 'Squint's workflow' bloğunun telefonda okunması zor. 12.3 sn'deki ikinci plan da aynı listeyi gösteriyor, yani ekranda 2. kanıt yok, değişiklik yok."
+  },
+  {
+    "id": "2026-11-23_mroffice",
+    "date": "2026-11-23",
+    "kind": "tool",
+    "tool": "MROffice",
+    "hook_pattern": "question",
+    "headline": "Claude Excel açabilir mi?",
+    "spoken_hook": "Yapay zekâ senin Excel dosyanı düzenleyebilir mi?",
+    "cta": "Kaydet, sonra lazım olur.",
+    "duration_sec": 22.7,
+    "words": 41,
+    "status": "rejected: görsel kenardan kesik (ölçüldü: [6.75, 7.0, 7.25, 7.5, 11.0, 11.25] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
+  },
+  {
+    "id": "2026-11-23_google-workspace",
+    "date": "2026-11-23",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "contrast",
+    "headline": "Video için kamera şart değil",
+    "spoken_hook": "Video için kamera şart sanıyordun, değil.",
+    "cta": "Yorumlara yaz: avatarınla ne anlatırdın?",
+    "duration_sec": 25.5,
+    "words": 38,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-23_google-workspace-2",
+    "date": "2026-11-23",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "pain",
+    "headline": "Mailler günlerce cevapsız mı?",
+    "spoken_hook": "Mailler günlerce cevapsız mı kalıyor?",
+    "cta": "Kaydet, lazım olacak.",
+    "duration_sec": 23.9,
+    "words": 38,
+    "status": "rejected: Kapak ve kanıt görseli, ortasında oynat düğmesi (▶ 0:31) olan bir video önizlemesi; oynamayan bir still. Dört kişilik stok fotoğraf kolajı.; Görsel Gmail, Gemini ya da yanıt yazmayı göstermiyor; 'Mailler günlerce cevapsız mı?' vaadini kanıtlamıyor. Sadece kişi fotoğrafları var.; Aynı video önizlemesi 11.9 s'de tekrar büyük kutuda kullanılıyor; ekranda arayüz yok."
   }
 ]

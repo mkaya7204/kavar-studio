@@ -638,5 +638,20 @@
   "url": "https://www.shipyardmcp.com/",
   "description": "Connect your stack once, then ship every product in an hour.",
   "date": "2026-11-22"
+ },
+ "oovi": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-23"
+ },
+ "teaserkit": {
+  "url": "https://teaserkit.com/",
+  "description": "Your coding agent directs your launch video: a concept, a house style, a human-made song cut to the beat and a quality check, so it doesn",
+  "date": "2026-11-23"
+ },
+ "squint": {
+  "url": "https://heysquint.com/",
+  "description": "Press a hotkey, drag a box around anything on your screen, and the answer starts streaming in beside it within moments. No switching apps, no chat window.",
+  "date": "2026-11-23"
  }
 }

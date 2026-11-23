@@ -222,5 +222,33 @@
   "kind": "reel",
   "title": "AlterContacts",
   "brand": ""
+ },
+ {
+  "day": "2026-11-24",
+  "time": "07:30",
+  "kind": "reel",
+  "title": "ElevenLabs",
+  "brand": "elevenlabs"
+ },
+ {
+  "day": "2026-11-24",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "Combatting adversarial distillation",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-24",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "Paddy Galloway dives deep with us on Video A/B, Ask Studio, and evolving over time",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-24",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "Google Workspace",
+  "brand": "google"
  }
 ]

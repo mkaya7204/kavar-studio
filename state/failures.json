@@ -3354,5 +3354,143 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "ElevenLabs",
+  "rendered": true,
+  "host": "elevenlabs.io",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Paddy Galloway dives deep with us on Video A/B, Ask Studio, and evolving over time",
+  "rendered": true,
+  "host": "blog.youtube",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "news",
+  "kind": "news",
+  "item": "Security researchers show how cheap AI inference providers steal keys and snoop on users",
+  "rendered": true,
+  "host": "dragos.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "Tarih tutmuyor: son slayt alt bilgisi 'Kaynak: Dragos, 22 Kasım 2026' diyor, ama 2. slayttaki Dragos sayfası 'November 19, 2026' gösteriyor. Kaynağın gösterdiği tarihle metin/alt bilgi uyuşmuyor; bu kural gereği red. Tarih yazıcıyla değil şablonla (feed tarihi) geliyor, yeniden yazımla düzelmez.; Sl"
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "news",
+  "kind": "news",
+  "item": "AI is getting better faster than experts can reliably test whether new systems are safe, METR warns",
+  "rendered": true,
+  "host": "metr.org",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "Tarih uyuşmazlığı: son slayt altbilgisi 'metr.org, 22 Kasım 2026' diyor, ama kaynak sayfa ve URL 20 Kasım 2026 gösteriyor (22 Kasım sadece feed zaman damgası). Tarih sayfadakiyle aynı olmalı, ya da tarih yazılmamalı.; Caption'da satır sonları '\\\\n' olarak kaçmış; Instagram'da 'ya\\n' gibi düz karakte"
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "news",
+  "kind": "news",
+  "item": "Combatting adversarial distillation",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "TeaserKit",
+  "rendered": true,
+  "host": "teaserkit.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "price"
+  ],
+  "detail": "Kapak ve 0-2.5 sn ile 12.3 sn karelerindeki kanıt görselinde sol altta \"PAY ONCE\" etiketi okunuyor: bu bir ödeme modeli, sayfa politikası ekranda bile yasak.; Görsel değişimi: kanıtı \"PAY ONCE\" / \"REAL MUSIC, CUT TO THE BEAT\" etiket satırı olmadan kullan. Sağdaki \"Directed, not generated\" oynatıcı v"
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Squint",
+  "rendered": true,
+  "host": "heysquint.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanıt görseli vaadi göstermiyor: başlık 'kutu çiz, cevabı gör' diyor ama kutuda Squint'in iş akışı listesi (İngilizce 4 maddelik metin: 'Press Win+Shift+Q, drag a box...') var. Arayüz, çizilen kutu ya da akan cevap yok. Bu bir özellik/adım listesi, kanıt sayılmaz.; Araç verisindeki proof_shows (yeme"
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "MROffice",
+  "rendered": true,
+  "host": "mroffice.ai",
+  "outcome": "failed",
+  "categories": [
+   "cut_text"
+  ],
+  "detail": "görsel kenardan kesik (ölçüldü: [6.75, 7.0, 7.25, 7.5, 11.0, 11.25] s); kesik yazı kabul edilmez, görseli bütün gösteren başka bir görsel seç"
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "price"
+  ],
+  "detail": "Kapak ve kanıt görseli, ortasında oynat düğmesi (▶ 0:31) olan bir video önizlemesi; oynamayan bir still. Dört kişilik stok fotoğraf kolajı.; Görsel Gmail, Gemini ya da yanıt yazmayı göstermiyor; 'Mailler günlerce cevapsız mı?' vaadini kanıtlamıyor. Sadece kişi fotoğrafları var.; Aynı video önizlemes"
+ },
+ {
+  "date": "2026-11-23",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
  }
 ]
