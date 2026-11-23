@@ -32,6 +32,14 @@ def restore(folder: Path) -> None:
     (TEMP_DIR / "capture.json").write_text(json.dumps(capture, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
+def still_rebuild(folder: Path) -> list[float]:
+    """daily.py's still rebuild (no shot zoom, the George audio reused, never voiced again); the cuts left."""
+    sys.path.insert(0, str(ROOT))
+    import daily
+
+    return daily._voiced_still_rebuild(folder)
+
+
 def main(folder: Path) -> int:
     import voice_final
     from reel_qa import cut_frames, first_frame_report, make_cover, pacing_report
@@ -50,6 +58,11 @@ def main(folder: Path) -> int:
     from script_writer import reel_seconds
     variant = json.loads((folder / "_voice" / "script.json").read_text(encoding="utf-8")).get("variant", "")
     low, high = reel_seconds(variant)  # D-71: a KISA Reel is 10-12 s + the crow
+    if cut and first["ok"] and low <= dur <= high:
+        # 11-23 Skillbox (voice run 45212099969): voiced, then dropped for a cut at 12.25 s and George's credits
+        # were lost. Production rebuilds such a Reel still on the same George audio (D-49); this path does too.
+        print(f"   a picture runs off the frame at {cut[:6]} s; rebuilding it still on the same voice")
+        cut = still_rebuild(folder)
     if not first["ok"] or not low <= dur <= high or cut:
         print(f"✖ voiced Reel failed the measured checks: first frame ok={first['ok']}, {dur:.1f}s, cut at {cut[:6]}")
         return 1

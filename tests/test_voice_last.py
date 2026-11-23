@@ -530,3 +530,47 @@ def test_george_audio_is_kept_only_for_the_same_words(monkeypatch, tmp_path):
     (tmp_path / "voiceover.mp3").write_text("silent", encoding="utf-8")
     voice_final.keep_voice({**files, "provider": "draft"}, "aynı sözler")
     assert voice_final.kept_voice("aynı sözler") is None  # a silent draft is never "the George voice"
+
+
+def test_a_kept_reel_voiced_later_with_a_cut_is_rebuilt_still_not_dropped(monkeypatch, tmp_path):
+    """11-23 Skillbox (voice.yml run 45212099969): voiced with George for the 11-24 11:45 slot, then failed for a
+    cut at 12.25-12.5 s; voice_kept stopped where production rebuilds still on the same audio (D-49), so the
+    George credits were spent for nothing. voice.yml now takes the same still rebuild."""
+    import reel_qa
+    import script_writer
+    import voice_final
+    import voice_kept
+
+    reel = tmp_path / "reels" / "2026-11-12_skillbox"
+    (reel / "_voice").mkdir(parents=True)
+    (reel / "_voice" / "script.json").write_text("{}", encoding="utf-8")
+    final = tmp_path / "output" / "final"
+    final.mkdir(parents=True)
+    for name in ("final_video.mp4", "post.json"):
+        (final / name).write_text("x", encoding="utf-8")
+    monkeypatch.setattr(voice_kept, "ROOT", tmp_path)
+    monkeypatch.setattr(voice_kept, "restore", lambda folder: None)
+    voiced = []
+    monkeypatch.setattr(voice_final, "main", lambda: voiced.append(1) or 0)
+    monkeypatch.setattr(reel_qa, "make_cover", lambda *a: None)
+    monkeypatch.setattr(reel_qa, "first_frame_report", lambda *a: {"ok": True})
+    monkeypatch.setattr(reel_qa, "pacing_report", lambda *a: {"duration_sec": 23.3})
+    monkeypatch.setattr(reel_qa, "cut_frames", lambda *a: [12.25, 12.5])  # the real run's cut
+    monkeypatch.setattr(script_writer, "reel_seconds", lambda variant: (14.0, 27.6))
+    rebuilt = []
+    monkeypatch.setattr(voice_kept, "still_rebuild", lambda folder: rebuilt.append(folder) or [])
+    assert voice_kept.main(reel) == 0
+    assert voiced == [1] and rebuilt == [reel]  # George once, then the still rebuild on that audio
+    monkeypatch.setattr(voice_kept, "still_rebuild", lambda folder: [12.25])
+    assert voice_kept.main(reel) == 1  # a cut the rebuild cannot remove still never goes out
+
+
+def test_voice_kept_uses_dailys_still_rebuild_on_the_kept_george_audio():
+    import inspect
+
+    import daily
+    import voice_kept
+
+    assert "daily._voiced_still_rebuild(folder)" in inspect.getsource(voice_kept.still_rebuild)
+    src = inspect.getsource(daily._voiced_still_rebuild)
+    assert "REUSE_VOICE_ENV" in src and '"still": True' in src
