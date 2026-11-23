@@ -95,6 +95,30 @@ def ai_tools_first(tools: list[dict]) -> list[dict]:
 AI_WORDS = re.compile(r"\bAI\b|\bagents?\b|\bGPT|ChatGPT|Claude|Gemini|\bLLM|yapay zeka", re.I)
 
 
+def gated_script(tool: dict) -> dict:
+    """D-90 (user 11-23 "notlarla dikkat edilmesini beklemek büyük bir hata ... kodla"): the script passes the picture
+    and claim gate (src/picture_gate.py) before George or a render is spent, or the tool is skipped (CaptureError).
+    No AI in the tool's own words = skipped before writing (papermark 10-26, savorapp 10-28, mo 11-01)."""
+    import picture_gate
+
+    source = "\n".join(str(tool.get(k) or "") for k in ("tool_name", "tag_line", "description", "page_text"))
+    source += "\n" + "\n".join(e.get("finding", "") for e in tool.get("experiences") or [])
+    if not tool.get("proof_kind") and not picture_gate.AI_WORDS.search(source):
+        raise CaptureError("no AI in the tool's own words (D-90): skipped before writing")
+    pictures = [{"shows": tool["proof_shows"]}] if tool.get("proof_shows") else []
+    feedback = ""
+    for attempt in (1, 2):
+        script = picture_gate.drop_ai_tags(generate_script(tool, feedback=feedback), source)
+        if script.get("source") == "mock" or tool.get("proof_kind") == "brand":
+            return script  # D-77: the name / logo picture proves no promise by design; the editor knows it
+        problems, _ = picture_gate.check(script, pictures, source)
+        if not problems:
+            return script
+        print(f"   [gate] script {attempt} refused before voicing: {'; '.join(problems)[:600]}")
+        feedback = "; ".join(problems)
+    raise CaptureError("the script still promises what the picture / the source don't show (D-90)")
+
+
 def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyperframes") -> dict:
     """Steps 2-5 for one tool.
 
@@ -148,7 +172,7 @@ def produce_video(tool: dict, script: dict | None = None, renderer: str = "hyper
                                         encoding="utf-8")
     if script is None:
         with Step(3, f"Writing script for {tool['tool_name']}"):
-            script = generate_script(tool)
+            script = gated_script(tool)
             (TEMP_DIR / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
             print(f"   source={script['source']}, hook: \"{script['hook']}\"")
             print(f"   voiceover: {script['voiceover_words']} words, {len(script['shots'])} shots")
@@ -249,7 +273,7 @@ def main() -> int:
             post = produce_video(tool, renderer=args.renderer)
             break
         except (CaptureError, TTSError) as exc:
-            print(f"   skipping {tool['tool_name']}: {type(exc).__name__}")
+            print(f"   skipping {tool['tool_name']}: {type(exc).__name__}: {str(exc)[:200]}")
     else:
         print("\n✖ Pipeline failed: no candidate could be turned into a video.")
         return 1

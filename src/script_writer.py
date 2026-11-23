@@ -670,7 +670,7 @@ def _claude_cli() -> str | None:
     return shutil.which("claude")
 
 
-def _ask_claude_cli(tool: Tool, language: str, exe: str) -> VideoScript | None:
+def _ask_claude_cli(tool: Tool, language: str, exe: str, feedback: str = "") -> VideoScript | None:
     """Write the script with the local Claude Code CLI (`claude -p`), using its own login.
 
     No API key needed; usage counts against the Claude plan Claude Code is signed in with.
@@ -682,7 +682,7 @@ def _ask_claude_cli(tool: Tool, language: str, exe: str) -> VideoScript | None:
     # placeholder loaded by load_dotenv, or a key the API path just failed with)
     # would take precedence over it.
     env = {k: v for k, v in os.environ.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
-    prompt = _user_message(tool, language)
+    prompt = _user_message(tool, language) + feedback
     fallback = None
     for attempt in (1, 2):
         try:
@@ -815,11 +815,15 @@ def generate_script(
     tool_data: Tool | dict | str,
     client: anthropic.Anthropic | None = None,
     use_mock: bool = False,
+    feedback: str = "",
 ) -> dict:
     """Return a validated 30s video script for one tool as a JSON-serialisable dict.
 
     Source order: Anthropic API (if credentials) -> local `claude -p` (if installed) -> mock.
+    feedback: D-90, why the picture / claim gate refused the previous script (src/picture_gate.py).
     """
+    feedback = (f"\n\nAn earlier script for this tool was refused before voicing: {feedback} Write it again so that "
+                "none of these problems is left.") if feedback else ""
     tool = _coerce_tool(tool_data)
     if use_mock:
         return mock_script(tool, _load_language()).model_dump(mode="json")
@@ -830,7 +834,7 @@ def generate_script(
     client = client or anthropic.Anthropic()
     if _has_credentials(client):
         try:
-            script = _ask_claude(client, tool, language)
+            script = _ask_claude(client, tool, language, feedback)
             if script and (bad := _script_price_mentions(script)):
                 print(f"[script_writer] Draft mentions prices ({', '.join(bad)}); asking again.")
                 script = _ask_claude(client, tool, language,
@@ -855,7 +859,7 @@ def generate_script(
 
     if script is None and (exe := _claude_cli()):
         print("[script_writer] Writing script with `claude -p`...")
-        script = _ask_claude_cli(tool, language, exe)
+        script = _ask_claude_cli(tool, language, exe, feedback)
 
     if script is None:
         print("[script_writer] No Claude source available; using mock script.")

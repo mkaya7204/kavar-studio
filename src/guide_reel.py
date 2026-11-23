@@ -123,17 +123,43 @@ def _video_frames(videos: list[str], folder: Path) -> list[str]:
     return out
 
 
-def _frames(page: dict, folder: Path) -> dict | None:
+def _frames(page: dict, folder: Path, topic: str = "") -> dict | None:
     """proof.png and the two shots, all from the company's own page: the feature's own pictures first
     (the article's figures and stills from its videos, usually the product's screen), the cover last.
     The page itself is never used: shrunk or cropped, its text was unreadable (editor, 10-18 dry runs,
-    twice), and an abstract cover (a big "4") proved nothing, so it only fills in when nothing else exists."""
+    twice), and an abstract cover (a big "4") proved nothing, so it only fills in when nothing else exists.
+    D-90: every picture is inspected first (src/picture_gate.py); only usable ones (a product screen, an output, a
+    diagram or readable text, no money) are proof or shots, best first. Until 11-23 pictures[0] was the proof unseen
+    (video stills, header photos and faces went under the hook: Google 10-30, 11-11, 11-14, 11-17). None usable =
+    None (the topic is dropped before a script is written)."""
+    import picture_gate
+
     folder.mkdir(parents=True, exist_ok=True)
     pictures = [f["path"] for f in page.get("figures", [])] + _video_frames(page.get("videos", []), folder)
     if page.get("cover_path") and informative(page["cover_path"]):  # D-40: never an abstract cover (the "4")
         pictures.append(page["cover_path"])
     if not pictures:
         return None
+    infos = picture_gate.inspect(pictures, folder, topic or page.get("title", ""))
+    if infos is None:
+        print("   [gate] no picture check (no answer): the page's order is kept")
+        menu = []
+    else:
+        menu = picture_gate.order(infos)
+        if refused := picture_gate.reasons(infos):
+            print(f"   [gate] refused pictures: {refused}")
+        if not menu:
+            return None
+        pictures = [m["path"] for m in menu]
+    _place(pictures, folder)
+    domain = (urlsplit(page["url"]).hostname or "").removeprefix("www.")
+    return {"screenshot_path": str(folder / SHOT_NAMES[0]), "fullpage_path": str(folder / SHOT_NAMES[1]),
+            "proof_path": str(folder / "proof.png"), "logo_path": None, "domain_label": domain,
+            "pictures": pictures,  # src/reel_fixer.py may choose others when the editor rejects the draft
+            "picture_check": infos or [], "menu": menu}  # D-90: agent_tools refuses the refused ones
+
+
+def _place(pictures: list[str], folder: Path) -> None:
     _fit_whole(pictures[0]).save(folder / "proof.png")  # D-38: whole, never cropped (10-21: cut on the left)
     # every shot is a whole picture; with too few pictures one comes back whole. The "closer look" crop
     # (the middle 64 %) cut the text at its edges: "in Google Mee" rejected on 10-23 (D-42)
@@ -144,19 +170,52 @@ def _frames(page: dict, folder: Path) -> dict | None:
                 img = img.resize((960, round(img.height * 960 / img.width)), Image.LANCZOS)
             img.thumbnail((960, 1300), Image.LANCZOS)
             _shot_frame(img, folder / name)
-    domain = (urlsplit(page["url"]).hostname or "").removeprefix("www.")
-    return {"screenshot_path": str(folder / SHOT_NAMES[0]), "fullpage_path": str(folder / SHOT_NAMES[1]),
-            "proof_path": str(folder / "proof.png"), "logo_path": None, "domain_label": domain,
-            "pictures": pictures}  # src/reel_fixer.py may choose others when the editor rejects the draft
 
 
-def write_script(product: str, page: dict) -> dict | None:
+def _frames_from(capture: dict, first: int, folder: Path) -> dict:
+    """D-90: the claim check found the headline proven by another usable picture: that one goes under the hook."""
+    menu = capture["menu"]
+    menu = [menu[first]] + [m for i, m in enumerate(menu) if i != first]
+    pictures = [m["path"] for m in menu]
+    _place(pictures, folder)
+    print(f"   [gate] the headline is proven by picture {first}: it goes under the headline")
+    return {**capture, "pictures": pictures, "menu": menu}
+
+
+def _gated_script(product: str, page: dict, tool: dict, capture: dict) -> dict | None:
+    """D-90 layer 4: write, judge the hook, then check it against the pictures and the source; the problems go back to
+    the writer once. Still failing = None: the topic is dropped before George, a render or the editor are spent."""
+    import picture_gate
+
+    menu, feedback = capture.get("menu") or [], ""
+    source = page["text"][:8000]
+    for attempt in (1, 2):
+        script = write_script(product, page, menu, feedback)
+        if script is None:
+            print("   no valid script")
+            return None
+        script = picture_gate.drop_ai_tags(judge_hooks(script, tool), source)
+        problems, proof = picture_gate.check(script, menu, source)
+        if not problems:
+            return {**script, "_proof": proof}
+        print(f"   [gate] script {attempt} refused before voicing: {'; '.join(problems)[:600]}")
+        feedback = "; ".join(problems)
+    print("   [gate] the script still promises what the pictures / the source don't show: skipped")
+    return None
+
+
+def write_script(product: str, page: dict, menu: list[dict] | None = None, feedback: str = "") -> dict | None:
+    import picture_gate
+
     language = _load_language()
     low, high = WORDS
     prompt = (f"Write the Reel in language code '{language}', voiceover {low}-{high} words (hard limit: under "
               f"26 seconds).\n\nProduct / company: {product}\n\nCOMPANY PAGE ({page['url']}, published "
               f"{page.get('published') or '?'}):\n{page['text'][:6000]}"
-              f"\n\n{cta_rule(_load_history())}")  # #13: the guide Reel's closing rotates too (fix every path)
+              + (f"\n\n{picture_gate.menu(menu)}" if menu else "")  # D-90: the writer sees the pictures first
+              + f"\n\n{cta_rule(_load_history())}"  # #13: the guide Reel's closing rotates too (fix every path)
+              + (f"\n\nAn earlier script for this page was refused before voicing: {feedback} Write it again so "
+                 "that none of these problems is left." if feedback else ""))
     system = SYSTEM_PROMPT + GUIDE_RULES
     fallback = None
     for attempt in range(1, 4):
@@ -207,23 +266,25 @@ def _make_from(candidates: list[dict]) -> int:
         except CaptureError as exc:
             print(f"   capture failed: {exc}")
             continue
-        capture = _frames(page, TEMP_DIR / "guide_frames")
+        capture = _frames(page, TEMP_DIR / "guide_frames", c.get("title", ""))
         if capture is None:
-            print("   no picture on the company's page: skipped")
+            print("   no usable picture on the company's page (none, or only video stills / photos / logos / "
+                  "blank / money, D-90): skipped before writing")
             continue
         # a guide_url remake has no ranking: the page's own site name ("Meta"), never the host (about.fb.com)
         # ...and without "Newsroom" / "Blog": "Meta Newsroom" made the writer explain the site in the voiceover
         site = re.sub(r"\s+(Newsroom|News|Blog|Press|Stories)$", "", page.get("publisher") or "", flags=re.I)
         product = (c.get("rank") or {}).get("company") or site or c["source"]
-        script = write_script(product, page)
-        if script is None:
-            print("   no valid script")
-            continue
         tool = {"tool_name": product, "website_url": page["url"],
                 "kind": "07:30 GUIDE Reel (D-31): how to use a feature of a known AI product the right way. "
                         "Facts, steps and pictures come only from the company's own page (article).",
                 "article": page["text"][:6000]}
-        script = judge_hooks(script, tool)
+        script = _gated_script(product, page, tool, capture)
+        if script is None:
+            continue
+        if capture["menu"] and script.get("_proof") and script["_proof"] < len(capture["menu"]):
+            capture = _frames_from(capture, script.pop("_proof"), TEMP_DIR / "guide_frames")
+        script.pop("_proof", None)
         TEMP_DIR.mkdir(parents=True, exist_ok=True)
         (TEMP_DIR / "script.json").write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
         (TEMP_DIR / "tool.json").write_text(json.dumps(tool, indent=2, ensure_ascii=False), encoding="utf-8")

@@ -37,6 +37,16 @@ def plan_capture(base: dict, plan: dict, pictures: list[Path]) -> dict:
     return capture
 
 
+def refused_pictures(base: dict, plan: dict, pictures: list[Path]) -> list[str]:
+    """D-90: the plan's proof / shot pictures that the picture gate refused (capture "picture_check"), by file name."""
+    from picture_gate import usable
+
+    refused = {Path(i["path"]).name: i for i in base.get("picture_check") or [] if not usable(i)}
+    chosen = [int(plan.get("proof", -1)), *[int(i) for i in plan.get("shots", [-1, -1])][:2]]
+    return sorted({f"{pictures[i].name} ({refused[pictures[i].name]['kind']})" for i in chosen
+                   if 0 <= i < len(pictures) and pictures[i].name in refused})
+
+
 def render() -> int:
     from editor_review import contact_sheet, video_frames
     from hyperframes_builder import build_video_hyperframes
@@ -58,6 +68,11 @@ def render() -> int:
     plan = json.loads((WORK / "plan.json").read_text(encoding="utf-8"))
     pictures = [Path(p) for p in json.loads((WORK / "candidates.json").read_text(encoding="utf-8"))]
     base = json.loads((WORK / "capture_base.json").read_text(encoding="utf-8"))
+    if bad := refused_pictures(base, plan, pictures):  # D-90 layer 5: not even the agent may use them
+        print(json.dumps({"ok": False, "refused_pictures": bad, "error": "these pictures failed the picture check "
+                          "(video still, face, mascot, logo, header / stock photo, blank, money or unreadable); "
+                          "choose others in plan.json"}, ensure_ascii=False))
+        return 3
     capture = plan_capture(base, plan, pictures)
     count.write_text(str(done + 1))
     voice = reel_voice(script["voiceover"], voice=voice_for(_load_language()))

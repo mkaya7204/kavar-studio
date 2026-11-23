@@ -876,3 +876,23 @@ the decisions that are currently locked; this file explains why they exist and h
   feeds it to the writers, editor, fixer and agent; `python daily.py learned` lists it for the "yükle" report.
   The carousel slots are not changed.
 - **Guarded by:** tests/test_learning.py.
+
+## D-90 (2026-11-23): the agent's repeated fixes are gates in code, not notes
+- **The user** (to "a lesson didn't stop the picture-before-hook mistake; I'll look at the numbers and propose a root
+  fix later"): "Önerini sonraya bırakmak ... en kalıcı doğru riski ortadan kaldırıp doğru şekilde çalışabilir yolu
+  yap. Bir takım notlarla dikkat edilmesini beklemek büyük bir hata ... kodla ya da başka nasıl oluyorsa katmanlar
+  oluştur ... sınır sistemleri ... gerçek bir şey yap".
+- **Cause found:** the 07:30 guide Reel used the page's FIRST picture as proof without anyone looking at it
+  (guide_reel._frames pictures[0]) and its writer never saw any picture; the tool Reel's writer saw one sentence
+  about the proof as a soft request. Lessons in the prompt are read, not enforced.
+- **Built (src/picture_gate.py):** (1) inspect: one look at every candidate picture -> kind, money, readable, what it
+  shows; usable() in code: only output / product_ui / diagram / text_panel, readable, no money; (2) a guide topic
+  with no usable picture is dropped before writing; a tool with no AI in its own words is skipped before writing;
+  (3) the guide writer gets the usable pictures, numbered, proof first, and writes from picture 0; (4) after the hook
+  judge, a separate call names the picture that proves the headline (the proof moves to it) and copies the source's
+  words for every claim; code checks the quotes really are in the source, and refuses a month / weekday / year the
+  source doesn't have; problems go back to the writer once, still failing = the topic is dropped before George, a
+  render or the editor; #yapayzeka / #aitools are removed when the source never says AI; (5) agent_tools.render
+  refuses a plan that puts a refused picture under the hook or in a shot. The tool Reel's proof choice also refuses
+  video stills, faces, mascots, header / stock photos, blank shells and unreadable pages.
+- **Guarded by:** tests/test_picture_gate.py (13 tests, each on a recorded case).
