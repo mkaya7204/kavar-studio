@@ -108,7 +108,8 @@ def gated_script(tool: dict) -> dict:
     pictures = [{"shows": tool["proof_shows"]}] if tool.get("proof_shows") else []
     feedback = ""
     for attempt in (1, 2):
-        script = picture_gate.drop_ai_tags(generate_script(tool, feedback=feedback), source)
+        script = generate_script(tool, feedback=feedback) if feedback else generate_script(tool)
+        script = picture_gate.drop_ai_tags(script, source)
         if script.get("source") == "mock" or tool.get("proof_kind") == "brand":
             return script  # D-77: the name / logo picture proves no promise by design; the editor knows it
         problems, _ = picture_gate.check(script, pictures, source)

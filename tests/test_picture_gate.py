@@ -156,3 +156,18 @@ def test_the_fixing_agent_cannot_put_a_refused_picture_under_the_hook(tmp_path):
     base = {"picture_check": [_info(pics[0], "video_still"), _info(pics[1], "product_ui")]}
     assert agent_tools.refused_pictures(base, {"proof": 0, "shots": [1, 1]}, pics) == ["video_1.png (video_still)"]
     assert agent_tools.refused_pictures(base, {"proof": 1, "shots": [1, -1]}, pics) == []
+
+
+def test_a_dark_screen_is_never_readable_proof_but_a_dark_output_may_be(tmp_path, monkeypatch):
+    """11-23 dry run 45256909309: the look called a dark Canvas screen readable; the editor refused it twice."""
+    from PIL import Image
+
+    dark, light = tmp_path / "dark.png", tmp_path / "light.png"
+    Image.new("RGB", (800, 600), (24, 24, 28)).save(dark)
+    Image.new("RGB", (800, 600), (240, 240, 240)).save(light)
+    answer = {"pictures": [{"index": 0, "kind": "product_ui", "money": "", "readable": True, "shows": "Canvas"},
+                           {"index": 1, "kind": "product_ui", "money": "", "readable": True, "shows": "Canvas"},
+                           {"index": 2, "kind": "output", "money": "", "readable": True, "shows": "a 3D planet"}]}
+    monkeypatch.setattr(picture_gate, "_run", lambda *a, **k: answer)
+    infos = picture_gate.inspect([str(dark), str(light), str(dark)], tmp_path, "Gemini Canvas")
+    assert [picture_gate.usable(i) for i in infos] == [False, True, True]

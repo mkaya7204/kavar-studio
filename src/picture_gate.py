@@ -58,10 +58,15 @@ For EVERY picture give:
   blank = empty, mostly blank, an empty app shell or form, a gradient;
   other_brand = another company's product or work;
   tiny_page = a whole page shrunk or slanted so its text can't be read on a phone.
-- money: every currency sign, amount, price, "free", "trial", "pricing", "tip", "credit card" you can read in it, \
-however small (axes, sample charts, tables), copied; "" if none.
-- readable: whether its important text can be read on a phone screen.
-- shows: one plain English sentence: what the picture literally shows (not what the article says)."""
+- money: every currency sign, amount, price, "free", "trial", "pricing", "tip", "credit card", "credits", \
+"spend", "spending limit", "cost", "billing" you can read in it, however small (axes, sample charts, \
+tables), copied; "" if none.
+- readable: whether its important text can be read on a phone screen at a glance. A dark screenshot with small \
+text, a dense table or settings list with small text, or a screen whose content is mostly a chat column is NOT \
+readable.
+- shows: one plain English sentence: what the picture literally shows (not what the article says), naming the \
+product it belongs to. A table, form or screen that is not the topic's product (an example spreadsheet, an admin \
+table) is other_brand."""
 
 CHECK_SCHEMA = {
     "type": "object", "additionalProperties": False, "required": ["hook_picture", "claims"],
@@ -172,7 +177,23 @@ def inspect(paths: list[str], folder: Path, topic: str) -> list[dict] | None:
         p = by_index.get(i) or {"kind": "blank", "money": "", "readable": False, "shows": "(not described)"}
         infos.append({"path": path, "kind": p.get("kind", "blank"), "money": str(p.get("money") or "").strip(),
                       "readable": bool(p.get("readable")), "shows": str(p.get("shows") or "")[:300]})
+        if infos[-1]["kind"] != "output" and _dark(path):
+            infos[-1]["readable"] = False  # 11-23 dry runs: the editor refused dark Canvas screens the look let through
     return infos
+
+
+DARK = 60  # mean brightness 0-255; a dark-mode screenshot shrunk into the Reel is unreadable on a phone
+
+
+def _dark(path: str) -> bool:
+    """Measured, not asked: a mostly dark screen (dark mode UI) is not readable proof. A generated output may be dark."""
+    from PIL import Image, ImageStat
+
+    try:
+        with Image.open(path) as img:
+            return ImageStat.Stat(img.convert("L")).mean[0] < DARK
+    except OSError:
+        return False
 
 
 def usable(info: dict) -> bool:
