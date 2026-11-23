@@ -1889,5 +1889,73 @@
     "shares": 1,
     "saves": 0,
     "avg_watch_sec": 5
+  },
+  {
+    "published": "2026-11-22 07:31",
+    "kind": "reel",
+    "title": "Google Gemini",
+    "folder": "2026-11-21_google-gemini",
+    "reach": 378,
+    "views": 449,
+    "follows": 0,
+    "likes": 1,
+    "comments": 0,
+    "shares": 0,
+    "saves": 1,
+    "avg_watch_sec": 5
+  },
+  {
+    "published": "2026-11-22 11:46",
+    "kind": "reel",
+    "title": "Mailpipe",
+    "folder": "2026-11-21_mailpipe",
+    "reach": 114,
+    "views": 135,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 3
+  },
+  {
+    "published": "2026-11-22 12:30",
+    "kind": "carousel",
+    "title": "Welcome Inkling 2 Mini",
+    "folder": "2026-11-21_haber-welcome-inkling-2-mini-cutting-edge-perf",
+    "reach": 12,
+    "views": 31,
+    "follows": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0
+  },
+  {
+    "published": "2026-11-22 18:00",
+    "kind": "carousel",
+    "title": "Regional voices in the Gemini app",
+    "folder": "2026-11-21_rehber-regional-voices-are-rolling-out-in-the-g",
+    "reach": 17,
+    "views": 52,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 1
+  },
+  {
+    "published": "2026-11-22 20:31",
+    "kind": "reel",
+    "title": "Atticus",
+    "folder": "2026-11-21_atticus",
+    "reach": 126,
+    "views": 151,
+    "follows": 0,
+    "likes": 2,
+    "comments": 0,
+    "shares": 0,
+    "saves": 0,
+    "avg_watch_sec": 3
   }
 ]
