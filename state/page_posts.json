@@ -671,5 +671,10 @@
   "title": "Anthropic announces closing of initial public offering, including full exercise of underwriters’ option to purchase additional shares, and closing of concurrent private placement",
   "date": "2026-11-20T00:00:00+00:00",
   "summary": "Today Anthropic, PBC announced the closing of its initial public offering of an aggregate of 1,127,000,000 shares of its Class A common stock at a public offering price of $83.00 per share, including the full exercise by the underwriters of their option to purchase an additional 147,000,000 shares of Class A common stock from Anthropic at the initial public offering price."
+ },
+ "https://www.minimax.io/blog/minimax-m3": {
+  "title": "MiniMax M3: Frontier Coding, 1M Context, Native Multimodality — All in One Model",
+  "date": "2026-05-31T17:31:18+00:00",
+  "summary": "M3 reaches frontier capability on coding and agentic tasks, introduces the brand-new MSA (MiniMax Sparse Attention) supporting up to 1M context, and is a natively multimodal model. It is the only domestic model combining all three Frontier essentials and will be the only open-source one in this class."
  }
 }

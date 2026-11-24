@@ -653,5 +653,30 @@
   "url": "https://heysquint.com/",
   "description": "Press a hotkey, drag a box around anything on your screen, and the answer starts streaming in beside it within moments. No switching apps, no chat window.",
   "date": "2026-11-23"
+ },
+ "gauthpersonalstudyagent": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-24"
+ },
+ "maiimage27": {
+  "url": "https://microsoft.ai/models/mai-image-2-7/",
+  "description": null,
+  "date": "2026-11-24"
+ },
+ "hydrilla": {
+  "url": "https://www.hydrilla.ai/",
+  "description": "Hydrilla is built for creators, studios, and teams who need fast generation of production-ready 3D assets for games, film, architecture, and digital products.",
+  "date": "2026-11-24"
+ },
+ "ashwa": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-24"
+ },
+ "plango": {
+  "url": "https://installplango.com/",
+  "description": "Plango checks your computer's security settings, installed apps, internet connections, and AI agents, MCP servers, plugins, and skills in plain English.",
+  "date": "2026-11-24"
  }
 }

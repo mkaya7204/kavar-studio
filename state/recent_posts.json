@@ -250,5 +250,40 @@
   "kind": "reel",
   "title": "Google Workspace",
   "brand": "google"
+ },
+ {
+  "day": "2026-11-25",
+  "time": "07:30",
+  "kind": "reel",
+  "title": "Google",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-25",
+  "time": "11:45",
+  "kind": "reel",
+  "title": "Plango",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-25",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "Yapay zekâ ile şarkı yapmada Suno'ya rakip çıktı: ACE Music v1 ilk sıraya yerleşti",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-25",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "A more tailored Google Search that’s uniquely yours",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-25",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "Hydrilla",
+  "brand": ""
  }
 ]

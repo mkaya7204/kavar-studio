@@ -2027,5 +2027,57 @@
     "duration_sec": 23.9,
     "words": 38,
     "status": "rejected: Kapak ve kanıt görseli, ortasında oynat düğmesi (▶ 0:31) olan bir video önizlemesi; oynamayan bir still. Dört kişilik stok fotoğraf kolajı.; Görsel Gmail, Gemini ya da yanıt yazmayı göstermiyor; 'Mailler günlerce cevapsız mı?' vaadini kanıtlamıyor. Sadece kişi fotoğrafları var.; Aynı video önizlemesi 11.9 s'de tekrar büyük kutuda kullanılıyor; ekranda arayüz yok."
+  },
+  {
+    "id": "2026-11-24_google",
+    "date": "2026-11-24",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "result",
+    "headline": "Notlarını teste çevirmenin yolu",
+    "spoken_hook": "Notlarını teste çevirmek istiyorsan bunu bil.",
+    "cta": "Sınava hazırlanan bir arkadaşına gönder.",
+    "duration_sec": 23.6,
+    "words": 37,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-24_mai-image-2-7",
+    "date": "2026-11-24",
+    "kind": "tool",
+    "tool": "MAI Image 2.7",
+    "hook_pattern": "pain",
+    "headline": "Microsoft'un yeni görsel modeli",
+    "spoken_hook": "Microsoft'un yeni görsel modeli sınırlı önizlemede.",
+    "cta": "Yorumlara yaz: posterde ilk neyi denerdin?",
+    "duration_sec": 22.5,
+    "words": 40,
+    "status": "rejected: Kanıt görseli (kapak ve 0-2.5 sn) sitenin İngilizce sloganı 'Built for every way you create...'. Slogan kanıt sayılmaz ve metin kutunun altında yarım cümlede kesiliyor ('with greater control over').; Hook bir vaat vermiyor: 'Microsoft'un yeni görsel modeli' sadece kategori tanımı. Yazar 5 hook adayı üretmiş ve hook_judge 4. adayı seçmiş, ama seçilen hook onlardan hiçbiri. Başlık ile sesli hook aynı, ama hiçbir şey vaat etmiyor, kaydırmayı durdurmaz.; Hook (ses) ile point1 aynı şeyi iki kez söylüyor: 'sınırlı önizlemede' tekrar ediyor. Bu da ilk 6 saniyede vaadin gösterilmediği anlamına geliyor."
+  },
+  {
+    "id": "2026-11-24_hydrilla",
+    "date": "2026-11-24",
+    "kind": "tool",
+    "tool": "Hydrilla",
+    "hook_pattern": "result",
+    "headline": "Cümleden 3D oyun objesi çıkıyor",
+    "spoken_hook": "Cümleden oyuna girecek 3D obje çıkıyor.",
+    "cta": "Kaydet, oyun yaparken lazım olur.",
+    "duration_sec": 23.1,
+    "words": 41,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-24_plango",
+    "date": "2026-11-24",
+    "kind": "tool",
+    "tool": "Plango",
+    "hook_pattern": "question",
+    "headline": "Ajan SSH anahtarını görüyor mu?",
+    "spoken_hook": "Kodlama ajanın SSH anahtarlarını görebiliyor mu?",
+    "cta": "Geliştirici arkadaşına gönder.",
+    "duration_sec": 12.8,
+    "words": 18,
+    "status": "produced"
   }
 ]

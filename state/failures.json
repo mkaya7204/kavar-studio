@@ -3492,5 +3492,100 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Organize and share your holiday memories with these five updates in Google Photos.",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "facts"
+  ],
+  "detail": "Slayt 4 karga satırı \"Sevdiklerin üstte, gerisi saklı.\" kaynakta olmayan bir şeyi söylüyor: sayfada yüz şeridine dokununca o kişinin/evcil hayvanın fotoğrafları görünür. Gizleme ise Koleksiyonlar sekmesinde kullanılmayanlar için. Karga satırını kaynağa uygun yaz, örn. \"Bir yüze dokun, o kişinin foto"
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "OpenAI rolls out a version of GPT-6.2 Sol that is \"optimized for everyday conversation\" to the Chat tab for Plus, Pro, B",
+  "rendered": false,
+  "host": "help.openai.com",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: https://help.openai.com/en/articles/6825453-chatgpt-release-notes returned HTTP 403"
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "Yapay zekâ ile şarkı yapmada Suno'ya rakip çıktı: ACE Music v1 ilk sıraya yerleşti",
+  "rendered": true,
+  "host": "acemusic.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "A more tailored Google Search that’s uniquely yours",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "MAI Image 2.7",
+  "rendered": true,
+  "host": "microsoft.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kanıt görseli (kapak ve 0-2.5 sn) sitenin İngilizce sloganı 'Built for every way you create...'. Slogan kanıt sayılmaz ve metin kutunun altında yarım cümlede kesiliyor ('with greater control over').; Hook bir vaat vermiyor: 'Microsoft'un yeni görsel modeli' sadece kategori tanımı. Yazar 5 hook adayı"
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Hydrilla",
+  "rendered": true,
+  "host": "hydrilla.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Plango",
+  "rendered": true,
+  "host": "installplango.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
  }
 ]

@@ -1,33 +1,5 @@
 [
   {
-    "tool": "Google Workspace",
-    "hook": "Aynı görseli tekrar yükleme",
-    "pattern": "question",
-    "spoken_hook": "Video üretirken aynı görseli tekrar mı yüklüyorsun?",
-    "cta": "Yorumlara yaz: hangi videoyu üretirdin?"
-  },
-  {
-    "tool": "KIKA AI",
-    "hook": "Cümle yaz, siteye menü eklensin",
-    "pattern": "result",
-    "spoken_hook": "Bir cümle yazıyorsun, kod editörü siteye menü ekliyor.",
-    "cta": "Kaydet, site yaparken lazım olur."
-  },
-  {
-    "tool": "AlterContacts",
-    "hook": "Müşteriyi arayacaktın, unuttun",
-    "pattern": "pain",
-    "spoken_hook": "Müşteriyi arayacaktın ama yine unuttun, değil mi?",
-    "cta": "Yorumlara yaz: takibi en çok neyde aksatıyorsun?"
-  },
-  {
-    "tool": "Shipyard",
-    "hook": "Kurulum günler değil saatler",
-    "pattern": "contrast",
-    "spoken_hook": "Kurulum günler sürer sanıyorsan yanılıyorsun.",
-    "cta": "Girişimci arkadaşına gönder."
-  },
-  {
     "tool": "ElevenLabs",
     "hook": "Ses markanı yanlış mı okuyor?",
     "pattern": "question",
@@ -68,5 +40,33 @@
     "pattern": "pain",
     "spoken_hook": "Mailler günlerce cevapsız mı kalıyor?",
     "cta": "Kaydet, lazım olacak."
+  },
+  {
+    "tool": "Google",
+    "hook": "Notlarını teste çevirmenin yolu",
+    "pattern": "result",
+    "spoken_hook": "Notlarını teste çevirmek istiyorsan bunu bil.",
+    "cta": "Sınava hazırlanan bir arkadaşına gönder."
+  },
+  {
+    "tool": "MAI Image 2.7",
+    "hook": "Görsel yazıları hep bozuk mu?",
+    "pattern": "pain",
+    "spoken_hook": "Yapay zekâ görsellerinde yazılar hep bozuk mu çıkıyor?",
+    "cta": "Yorumlara yaz: posterde ilk neyi denerdin?"
+  },
+  {
+    "tool": "Hydrilla",
+    "hook": "Cümleden 3D oyun objesi çıkıyor",
+    "pattern": "result",
+    "spoken_hook": "Cümleden oyuna girecek 3D obje çıkıyor.",
+    "cta": "Kaydet, oyun yaparken lazım olur."
+  },
+  {
+    "tool": "Plango",
+    "hook": "Ajan SSH anahtarını görüyor mu?",
+    "pattern": "question",
+    "spoken_hook": "Kodlama ajanın SSH anahtarlarını görebiliyor mu?",
+    "cta": "Geliştirici arkadaşına gönder."
   }
 ]
