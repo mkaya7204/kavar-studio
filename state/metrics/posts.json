@@ -1957,5 +1957,45 @@
     "shares": 0,
     "saves": 0,
     "avg_watch_sec": 3
+  },
+  {
+    "published": "2026-11-23 07:31",
+    "kind": "reel",
+    "title": "Google Vids Gemini Omni assets",
+    "folder": "2026-11-22_google-workspace",
+    "reach": 60,
+    "views": 82
+  },
+  {
+    "published": "2026-11-23 11:46",
+    "kind": "reel",
+    "title": "Shipyard",
+    "folder": "2026-11-22_shipyard",
+    "reach": 85,
+    "views": 100
+  },
+  {
+    "published": "2026-11-23 12:30",
+    "kind": "carousel",
+    "title": "Apple Depth Pro 2",
+    "folder": "2026-11-22_haber-depth-pro-2-sharp-and-temporally-consist",
+    "reach": 11,
+    "views": 28
+  },
+  {
+    "published": "2026-11-23 18:00",
+    "kind": "carousel",
+    "title": "Gemini skill sharing",
+    "folder": "2026-11-22_rehber-share-skills-and-add-files-from-google-d",
+    "reach": 6,
+    "views": 17
+  },
+  {
+    "published": "2026-11-23 20:31",
+    "kind": "reel",
+    "title": "AlterContacts",
+    "folder": "2026-11-22_altercontacts",
+    "reach": 42,
+    "views": 50
   }
 ]
