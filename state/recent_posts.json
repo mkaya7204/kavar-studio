@@ -285,5 +285,40 @@
   "kind": "reel",
   "title": "Hydrilla",
   "brand": ""
+ },
+ {
+  "day": "2026-11-26",
+  "time": "07:30",
+  "kind": "reel",
+  "title": "Figma",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-26",
+  "time": "11:45",
+  "kind": "reel",
+  "title": "ElevenLabs",
+  "brand": "elevenlabs"
+ },
+ {
+  "day": "2026-11-26",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "Anthropic rolls out \"Install as app\" in beta, which turns Claude artifacts into Mac and Windows apps with notifications, optional full computer access, and more (Claude)",
+  "brand": "anthropic"
+ },
+ {
+  "day": "2026-11-26",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "New study enhancements for Flashcards in Gemini Notebook",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-26",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "Astor",
+  "brand": ""
  }
 ]

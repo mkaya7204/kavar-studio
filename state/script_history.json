@@ -1,61 +1,5 @@
 [
   {
-    "tool": "ElevenLabs",
-    "hook": "Ses markanı yanlış mı okuyor?",
-    "pattern": "question",
-    "spoken_hook": "Yapay ses markanı yanlış mı okuyor?",
-    "cta": "Kaydet, seslendirmede lazım olur."
-  },
-  {
-    "tool": "TeaserKit",
-    "hook": "Yapay zekâ videosu hep aynı",
-    "pattern": "contrast",
-    "spoken_hook": "Yapay zekâ videoları hep aynı mor parıltıya benziyor.",
-    "cta": "Yorumlara yaz: hangi ürünün filmini çekerdin?"
-  },
-  {
-    "tool": "Squint",
-    "hook": "Yemeğe kutu çiz, tarifi gör",
-    "pattern": "result",
-    "spoken_hook": "Ekrandaki yemeğe kutu çiziyorsun, nasıl yapıldığı yanında akıyor.",
-    "cta": "Yemek tarifi kaydeden arkadaşına gönder."
-  },
-  {
-    "tool": "MROffice",
-    "hook": "Claude Excel açabilir mi?",
-    "pattern": "question",
-    "spoken_hook": "Yapay zekâ senin Excel dosyanı düzenleyebilir mi?",
-    "cta": "Kaydet, sonra lazım olur."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Video için kamera şart değil",
-    "pattern": "contrast",
-    "spoken_hook": "Video için kamera şart sanıyordun, değil.",
-    "cta": "Yorumlara yaz: avatarınla ne anlatırdın?"
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Mailler günlerce cevapsız mı?",
-    "pattern": "pain",
-    "spoken_hook": "Mailler günlerce cevapsız mı kalıyor?",
-    "cta": "Kaydet, lazım olacak."
-  },
-  {
-    "tool": "Google",
-    "hook": "Notlarını teste çevirmenin yolu",
-    "pattern": "result",
-    "spoken_hook": "Notlarını teste çevirmek istiyorsan bunu bil.",
-    "cta": "Sınava hazırlanan bir arkadaşına gönder."
-  },
-  {
-    "tool": "MAI Image 2.7",
-    "hook": "Görsel yazıları hep bozuk mu?",
-    "pattern": "pain",
-    "spoken_hook": "Yapay zekâ görsellerinde yazılar hep bozuk mu çıkıyor?",
-    "cta": "Yorumlara yaz: posterde ilk neyi denerdin?"
-  },
-  {
     "tool": "Hydrilla",
     "hook": "Cümleden 3D oyun objesi çıkıyor",
     "pattern": "result",
@@ -68,5 +12,61 @@
     "pattern": "question",
     "spoken_hook": "Kodlama ajanın SSH anahtarlarını görebiliyor mu?",
     "cta": "Geliştirici arkadaşına gönder."
+  },
+  {
+    "tool": "Figma",
+    "hook": "Yüz not, tek taslak",
+    "pattern": "contrast",
+    "spoken_hook": "Yüz yorumu tek tek okumana gerek yok.",
+    "cta": "Yorumlara yaz: FigJam mi, Slides mı?"
+  },
+  {
+    "tool": "Tendor",
+    "hook": "Notların buluta gitmiyor",
+    "pattern": "risk",
+    "spoken_hook": "Notların başka bir sunucuya gitmeden bilgisayarında kalıyor.",
+    "cta": "Kaydet, not düzenini kurarken lazım olur."
+  },
+  {
+    "tool": "Astrolabio",
+    "hook": "Hâlâ baştan mı anlatıyorsun?",
+    "pattern": "pain",
+    "spoken_hook": "Yapay zekâya her şeyi hâlâ baştan mı anlatıyorsun?",
+    "cta": "Yorumlara yaz: en çok hangi işte tekrarlıyorsun?"
+  },
+  {
+    "tool": "Astor",
+    "hook": "Onayın olmadan alım yapılmaz",
+    "pattern": "risk",
+    "spoken_hook": "Yatırım ajanı onayın olmadan hiçbir şey almıyor.",
+    "cta": "Yatırıma yeni başlayan arkadaşına gönder."
+  },
+  {
+    "tool": "gezhi-sheets",
+    "hook": "Formülü hâlâ elle mi yazıyorsun?",
+    "pattern": "question",
+    "spoken_hook": "Formülü hâlâ elle mi yazıyorsun?",
+    "cta": "Kaydet, işine yarar."
+  },
+  {
+    "tool": "Granular.Build",
+    "hook": "Terminal ajan için yetmiyor",
+    "pattern": "contrast",
+    "spoken_hook": "Ajanlar için terminal yetmiyor, tek ekran lazım.",
+    "cta": "Builder arkadaşına gönder."
+  },
+  {
+    "tool": "Juncts",
+    "hook": "Mesajlar beş yerde mi dağınık?",
+    "pattern": "pain",
+    "spoken_hook": "Mesajların hâlâ beş yerde mi dağınık?",
+    "cta": "Satıştaki arkadaşına gönder."
+  },
+  {
+    "tool": "ElevenLabs",
+    "hook": "Şarkı mı, video müziği mi?",
+    "pattern": "question",
+    "spoken_hook": "Şarkı mı yapacaksın, video müziği mi?",
+    "cta": "Kaydet, müzik gerektiğinde lazım olur."
   }
 ]

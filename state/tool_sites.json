@@ -678,5 +678,35 @@
   "url": "https://installplango.com/",
   "description": "Plango checks your computer's security settings, installed apps, internet connections, and AI agents, MCP servers, plugins, and skills in plain English.",
   "date": "2026-11-24"
+ },
+ "willowios20": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-25"
+ },
+ "tendor": {
+  "url": "https://tendor.md/",
+  "description": "One hotkey in any Windows app: jot a note or ask AI with your own key (Claude, GPT, Gemini and more). Notes stay on your PC as Markdown. Free to start.",
+  "date": "2026-11-25"
+ },
+ "astrolabio": {
+  "url": "https://glplabs.eu/en/astrolabio/",
+  "description": "A Mac app that keeps a notebook for every project. Claude Code, Codex, Cursor, Gemini CLI and Antigravity read it on their own at the start of every session: nothing to explain again. Try Pro free for 14 days.",
+  "date": "2026-11-25"
+ },
+ "astor": {
+  "url": "https://www.astor.app/",
+  "description": "Astor knows what you own, watches the market all day and texts you when something matters. You make the call. Free on iPhone.",
+  "date": "2026-11-25"
+ },
+ "juncts": {
+  "url": "https://juncts.com/",
+  "description": "Juncts puts your LinkedIn, X, Instagram, WhatsApp and Telegram messages in one keyboard-first inbox, and lets Claude or ChatGPT read and draft replies for you.",
+  "date": "2026-11-25"
+ },
+ "granularbuild": {
+  "url": "https://granular.build/",
+  "description": "An AI workspace for visionary builders. Plug in your existing AI subscriptions and all your tools to build anything. Mac and Windows.",
+  "date": "2026-11-25"
  }
 }
