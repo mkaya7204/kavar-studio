@@ -2183,5 +2183,83 @@
     "duration_sec": 21.4,
     "words": 35,
     "status": "produced"
+  },
+  {
+    "id": "2026-11-26_google",
+    "date": "2026-11-26",
+    "kind": "guide",
+    "tool": "Google",
+    "hook_pattern": "number",
+    "headline": "Yapay zekâ filmleri festivalde",
+    "spoken_hook": "Google Flow ile yapılan beş kısa film festivale gitti.",
+    "cta": "Yorumlara yaz: hangi filmi yapardın?",
+    "duration_sec": 22.1,
+    "words": 38,
+    "status": "rejected: Kanıt görseli yanlış: tüm Reel boyunca ödül töreninden sahne fotoğrafı var (Goa Başbakanı dahil insanlar sahnede poz veriyor). Ürünün arayüzü ya da bir film karesi değil; olay/başlık fotoğrafı kanıt sayılmaz.; Kapak ve hook 'Yapay zekâ filmleri festivalde' diyor, ama görselde hiçbir film ya da Flow çıktısı yok. Hook'u kanıtlayan bir görsel yok.; Görselde kamu görevlisi bir siyasetçi büyük ve tanınır biçimde yer alıyor. Haber yapay zekâ değil tören odaklı görünüyor ve siyasi bir çağrışım var."
+  },
+  {
+    "id": "2026-11-26_google-workspace",
+    "date": "2026-11-26",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "pain",
+    "headline": "Boş mesaj kutusuna bakıyorsun",
+    "spoken_hook": "Yeni ajana ilk mesajı yazmak hep zor.",
+    "cta": "Kaydet, ajan açınca lazım olur.",
+    "duration_sec": 21.5,
+    "words": 39,
+    "status": "rejected: Kanıt görseli okunmuyor: önerilen istem çipleri (\"Learn about Cymbal\", \"Automate catalog\", \"Search the web\") telefonda okunamayacak kadar küçük. Vaat olan \"üç öneri\" görselde seçilemiyor. Çipleri büyüten bir kırpmayla ya da okunur bir metin panelinden gösterilmeli (kırpma kesilmemeli).; Gerçek hatası: seslendirmede \"Google Workspace'in Chat uygulamasında açıklama ve en fazla üç öneri çıkıyor\" deniyor. Kaynakta özellik, geliştiricinin kendi Chat uygulamalarına ve ajanlarına eklediği istemler ve açıklamalar. Google'ın Chat'i kendiliğinden öneri vermiyor. Bu sınır ilk cümlede olmalı. Kart 01'in \"Uygulamayla yazışınca\" ifadesi de belirsiz.; Kanca, vaadi kanıtlayan görselle uyuşmuyor: \"Boş mesaj kutusuna bakıyorsun\" acı noktası kaynakta yok, görsel de öneri çiplerini okutmuyor. Daha küçük ve doğru bir vaat seçilmeli, örneğin \"Chat uygulamaları ilk mesajda üç öneri gösteriyor\". Kaynaktaki geliştirici bağlamı eklenmeli."
+  },
+  {
+    "id": "2026-11-26_openset-llm",
+    "date": "2026-11-26",
+    "kind": "tool",
+    "tool": "openset-llm",
+    "hook_pattern": "curiosity",
+    "headline": "8 GB RAM'e 27B sığdı",
+    "spoken_hook": "Sekiz gigabayt RAM'e 27 milyarlık model nasıl sığdı?",
+    "cta": "Yorumlara yaz: hangi işte denerdin?",
+    "duration_sec": 26.0,
+    "words": 40,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-26_airbot",
+    "date": "2026-11-26",
+    "kind": "tool",
+    "tool": "Airbot",
+    "hook_pattern": "curiosity",
+    "headline": "Yapay zekâ asistanın WhatsApp'ta",
+    "spoken_hook": "Yapay zekâ asistanına artık WhatsApp'tan yazıyorsun.",
+    "cta": "Yoğun arkadaşına gönder.",
+    "duration_sec": 10.4,
+    "words": 18,
+    "status": "rejected: Kanca yanıltıcı: 'artık WhatsApp'tan yazıyorsun' ürünün şimdi kullanılabildiğini söylüyor, oysa sitede 'kapılar çok yakında açılıyor' ve 'Join the waitlist' var. Bekleme listesi sadece açıklamada, kapak ve seste yok.; Kapaktaki ve 0-2.5 s kanıt görseli sohbet göstermiyor, sitenin üst menüsü (SOC 2, HIPAA, GDPR, Get started, Log in) ve boş 'Today' kutusu var. Vaat olan WhatsApp sohbeti ancak 11. saniyede çıkıyor. Daha iyi görsel: 'Why should I even bother with Airbot' sohbet kesiti.; Sitenin WhatsApp/iMessage sohbeti sadece örnek bir demo. 'Cevabı sohbette alıyorsun' ve 'yapay zekâ asistanına artık yazıyorsun' kaynağın söylediğinden güçlü. Kaynak WhatsApp ve iMessage diyor, kanca yalnızca WhatsApp'a indirgiyor."
+  },
+  {
+    "id": "2026-11-26_coderabbit-verify",
+    "date": "2026-11-26",
+    "kind": "tool",
+    "tool": "CodeRabbit Verify",
+    "hook_pattern": "result",
+    "headline": "PR'ını ajan test ediyor",
+    "spoken_hook": "Pull request'ini artık ajan test ediyor.",
+    "cta": "Yazılımcı arkadaşına gönder.",
+    "duration_sec": 11.9,
+    "words": 19,
+    "status": "produced"
+  },
+  {
+    "id": "2026-11-26_google-workspace-2",
+    "date": "2026-11-26",
+    "kind": "guide",
+    "tool": "Google Workspace",
+    "hook_pattern": "contrast",
+    "headline": "Kodu senin yerine Gemini yazıyor",
+    "spoken_hook": "Tablodaki işi anlat, kodu Gemini yazıyor.",
+    "cta": "Yorumlara yaz: hangi işi otomatikleştirirdin?",
+    "duration_sec": 23.3,
+    "words": 38,
+    "status": "rejected: Kapak ve ilk kare kanıtı: resim yalnızca kod editörünü gösteriyor, Gemini paneli ya da yazılan bir istek görünmüyor. Başlık 'Kodu senin yerine Gemini yazıyor' diyor ama hiçbir resim bunu kanıtlamıyor.; Resim kutunun içinde küçük kalmış (kutunun yaklaşık üçte biri). Kod telefonda okunmuyor, kutunun alt ve üst yarısı boş.; Aynı küçük editör resmi 0, 1 ve 2.5 s karelerinde tekrar ediyor. 11.6 ve 12.6 s kareleri de aynı 03 kartı; en uzun durağan an 5 sn."
   }
 ]

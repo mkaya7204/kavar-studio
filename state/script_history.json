@@ -1,47 +1,5 @@
 [
   {
-    "tool": "Hydrilla",
-    "hook": "Cümleden 3D oyun objesi çıkıyor",
-    "pattern": "result",
-    "spoken_hook": "Cümleden oyuna girecek 3D obje çıkıyor.",
-    "cta": "Kaydet, oyun yaparken lazım olur."
-  },
-  {
-    "tool": "Plango",
-    "hook": "Ajan SSH anahtarını görüyor mu?",
-    "pattern": "question",
-    "spoken_hook": "Kodlama ajanın SSH anahtarlarını görebiliyor mu?",
-    "cta": "Geliştirici arkadaşına gönder."
-  },
-  {
-    "tool": "Figma",
-    "hook": "Yüz not, tek taslak",
-    "pattern": "contrast",
-    "spoken_hook": "Yüz yorumu tek tek okumana gerek yok.",
-    "cta": "Yorumlara yaz: FigJam mi, Slides mı?"
-  },
-  {
-    "tool": "Tendor",
-    "hook": "Notların buluta gitmiyor",
-    "pattern": "risk",
-    "spoken_hook": "Notların başka bir sunucuya gitmeden bilgisayarında kalıyor.",
-    "cta": "Kaydet, not düzenini kurarken lazım olur."
-  },
-  {
-    "tool": "Astrolabio",
-    "hook": "Hâlâ baştan mı anlatıyorsun?",
-    "pattern": "pain",
-    "spoken_hook": "Yapay zekâya her şeyi hâlâ baştan mı anlatıyorsun?",
-    "cta": "Yorumlara yaz: en çok hangi işte tekrarlıyorsun?"
-  },
-  {
-    "tool": "Astor",
-    "hook": "Onayın olmadan alım yapılmaz",
-    "pattern": "risk",
-    "spoken_hook": "Yatırım ajanı onayın olmadan hiçbir şey almıyor.",
-    "cta": "Yatırıma yeni başlayan arkadaşına gönder."
-  },
-  {
     "tool": "gezhi-sheets",
     "hook": "Formülü hâlâ elle mi yazıyorsun?",
     "pattern": "question",
@@ -68,5 +26,47 @@
     "pattern": "question",
     "spoken_hook": "Şarkı mı yapacaksın, video müziği mi?",
     "cta": "Kaydet, müzik gerektiğinde lazım olur."
+  },
+  {
+    "tool": "Google",
+    "hook": "Beş kısa film, tek stüdyo",
+    "pattern": "number",
+    "spoken_hook": "Beş kısa film aynı yapay zekâ stüdyosundan çıktı.",
+    "cta": "Yorumlara yaz: hangi filmi yapardın?"
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Boş mesaj kutusuna bakıyorsun",
+    "pattern": "pain",
+    "spoken_hook": "Yeni ajana ilk mesajı yazmak hep zor.",
+    "cta": "Kaydet, ajan açınca lazım olur."
+  },
+  {
+    "tool": "openset-llm",
+    "hook": "8 GB RAM'e 27B sığdı",
+    "pattern": "curiosity",
+    "spoken_hook": "Sekiz gigabayt RAM'e 27 milyarlık model nasıl sığdı?",
+    "cta": "Yorumlara yaz: hangi işte denerdin?"
+  },
+  {
+    "tool": "Airbot",
+    "hook": "Yapay zekâ önce sana yazıyor",
+    "pattern": "curiosity",
+    "spoken_hook": "Yapay zekâ önce sana mesaj atıyor.",
+    "cta": "Yoğun arkadaşına gönder."
+  },
+  {
+    "tool": "CodeRabbit Verify",
+    "hook": "PR'ını ajan test ediyor",
+    "pattern": "result",
+    "spoken_hook": "Pull request'ini artık ajan test ediyor.",
+    "cta": "Yazılımcı arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Otomasyon için kod şart değil",
+    "pattern": "contrast",
+    "spoken_hook": "Otomasyon kurmak için kod bilmen gerekmiyor.",
+    "cta": "Yorumlara yaz: hangi işi otomatikleştirirdin?"
   }
 ]

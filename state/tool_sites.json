@@ -708,5 +708,35 @@
   "url": "https://granular.build/",
   "description": "An AI workspace for visionary builders. Plug in your existing AI subscriptions and all your tools to build anything. Mac and Windows.",
   "date": "2026-11-25"
+ },
+ "canvamcp": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-26"
+ },
+ "qube": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-26"
+ },
+ "myclaw30": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-26"
+ },
+ "airbot": {
+  "url": "https://airbots.ai/",
+  "description": "One text away from your inbox, calendar, calls and CRM. Airbot keeps on top of the busywork so you don",
+  "date": "2026-11-26"
+ },
+ "magi2": {
+  "url": "https://sand.ai/",
+  "description": "Discover Sand.ai's Magi-1, an autoregressive video model delivering top-tier AI solutions for everyone. Join us in advancing AI technology. Advance AI to Benefit Everyone.",
+  "date": "2026-11-26"
+ },
+ "coderabbitverify": {
+  "url": "https://www.coderabbit.ai/verify",
+  "description": "Generate scenarios from PR changes, discover user journeys from your codebase and test the running application. Inspect evidence and send bugs to a coding agent.",
+  "date": "2026-11-26"
  }
 }

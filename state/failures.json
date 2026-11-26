@@ -3724,5 +3724,117 @@
   "outcome": "approved",
   "categories": [],
   "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "off_concept"
+  ],
+  "detail": "Kanıt görseli yanlış: tüm Reel boyunca ödül töreninden sahne fotoğrafı var (Goa Başbakanı dahil insanlar sahnede poz veriyor). Ürünün arayüzü ya da bir film karesi değil; olay/başlık fotoğrafı kanıt sayılmaz.; Kapak ve hook 'Yapay zekâ filmleri festivalde' diyor, ama görselde hiçbir film ya da Flow "
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "facts"
+  ],
+  "detail": "Kanıt görseli okunmuyor: önerilen istem çipleri (\"Learn about Cymbal\", \"Automate catalog\", \"Search the web\") telefonda okunamayacak kadar küçük. Vaat olan \"üç öneri\" görselde seçilemiyor. Çipleri büyüten bir kırpmayla ya da okunur bir metin panelinden gösterilmeli (kırpma kesilmemeli).; Gerçek hatas"
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "news",
+  "kind": "news",
+  "item": "See what 5 builders are making with Gemini 4 Neon",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing Muse in the UK: A Personal AI Agent You Control",
+  "rendered": true,
+  "host": "about.fb.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "openset-llm",
+  "rendered": true,
+  "host": "github.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Airbot",
+  "rendered": true,
+  "host": "airbots.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanca yanıltıcı: 'artık WhatsApp'tan yazıyorsun' ürünün şimdi kullanılabildiğini söylüyor, oysa sitede 'kapılar çok yakında açılıyor' ve 'Join the waitlist' var. Bekleme listesi sadece açıklamada, kapak ve seste yok.; Kapaktaki ve 0-2.5 s kanıt görseli sohbet göstermiyor, sitenin üst menüsü (SOC 2, "
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "CodeRabbit Verify",
+  "rendered": true,
+  "host": "coderabbit.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kapak ve ilk kare kanıtı: resim yalnızca kod editörünü gösteriyor, Gemini paneli ya da yazılan bir istek görünmüyor. Başlık 'Kodu senin yerine Gemini yazıyor' diyor ama hiçbir resim bunu kanıtlamıyor.; Resim kutunun içinde küçük kalmış (kutunun yaklaşık üçte biri). Kod telefonda okunmuyor, kutunun a"
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
  }
 ]
