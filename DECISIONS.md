@@ -910,3 +910,15 @@ the decisions that are currently locked; this file explains why they exist and h
   (b) the 18:00 guide carousel first tries the topic of the morning's approved 07:30 guide Reel, then the pool;
   a rejected guide post gets one second chance from the next day (daily.second_chance).
 - **Guarded by:** tests/test_daily.py (second chance, the carousel follows the morning Reel, help pages in the pool).
+
+## D-92 (2026-11-27): an empty Reel slot takes an approved, never-posted Reel by itself
+- **The user** (to "shall I voice the dry run's approved Mika Reel with George for the empty 20:30?"): "Bunu öyle
+  sözle falan değil gerçek kodla davranışla yap".
+- **Why:** 11-27 and 11-28 Claude filled empty Reel slots by hand from older runs' approved, unposted Reels (Figma,
+  ElevenLabs, Astor from 11-25); the system itself never did, although every approved kit is kept for good (D-80,
+  release kept-reels).
+- **Built:** src/kept_reels.py + daily._fill_from_kept, the production run's last Reel step: kits of the last 4 days,
+  newest first, never one taken (state/kept_used.json) or a tool already queued (state/recent_posts.json); a guide
+  kit for the 07:30 guide slot, any kit for the others; voiced once with George (src/voice_kept.py checks), copied
+  into today's folder without its _voice kit. A test run only logs which kit it would take (D-46).
+- **Guarded by:** tests/test_kept_reels.py.

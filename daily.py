@@ -856,6 +856,7 @@ def _produce_rest(slots: list[dict], only: str) -> None:
             save_queue(_build_queue(slots, list(news), reels, morning))
     if only != "news":
         morning = _fill_empty_reel_slots(slots, news, reels, morning)
+        morning = _fill_from_kept(slots, reels, morning)
     queue = _build_queue(slots, list(news), reels, morning)
     save_queue(queue)
     recent_posts.record(queue, queue_day())  # D-75: the next runs know what this day carries (stories, brands)
@@ -902,6 +903,63 @@ def _fill_empty_reel_slots(slots: list[dict], news: list[dict], reels: list[dict
             reels.append(extra)
         open_slots -= 1
         save_queue(_build_queue(slots, list(news), reels, morning))
+    return morning
+
+
+def _open_reel_slots(slots: list[dict], reels: list[dict], morning: dict | None) -> tuple[bool, int]:
+    """(the 07:30 guide slot is empty, how many other Reel slots are empty)."""
+    has_guide_slot = any(_guide_reel_slot(s) for s in slots)
+    others = sum(s["kind"] == "reel" and s.get("concept") != "guide" for s in slots) - len(reels) \
+        - (1 if morning and not has_guide_slot else 0)
+    return has_guide_slot and morning is None, max(0, others)
+
+
+def _fill_from_kept(slots: list[dict], reels: list[dict], morning: dict | None) -> dict | None:
+    """User 11-27 ("Bunu öyle sözle falan değil gerçek kodla davranışla yap"): a Reel slot still empty takes an
+    approved Reel that never went out (src/kept_reels.py), voiced once with George; a test run only says which.
+    `reels` grows in place; returns the 07:30 guide slot's Reel."""
+    import kept_reels
+
+    guide_open, others = _open_reel_slots(slots, reels, morning)
+    if not (guide_open or others):
+        return morning
+    found = kept_reels.candidates(kept_reels._assets())
+    log(f"kept Reels: {len(found)} approved, never posted, made in the last {kept_reels.KEEP_DAYS} days"
+        + (f" ({', '.join(c['name'] for c in found[:6])})" if found else ""))
+    for c in found:
+        if not (guide_open or others):
+            break
+        kit = kept_reels.download(c)
+        if kit is None:
+            continue
+        guide = kept_reels.is_guide(kit)
+        if not others and not guide:
+            continue  # only the 07:30 guide slot is open, and this is a tool Reel (D-31: the slot's concept)
+        slot = "07:30 guide" if guide and guide_open else "Reel"
+        if os.getenv(DRY_ENV):
+            log(f"   kept Reel for the {slot} slot: {c['name']} (test run: not voiced, D-46)")
+        else:
+            if not _time_for_a_reel():
+                break
+            if not kept_reels.voice(kit):
+                log(f"   kept Reel {c['name']}: George failed or the voiced Reel failed its checks; no more tries")
+                break
+            script = json.loads((kit / "_voice" / "script.json").read_text(encoding="utf-8"))
+            out = kept_reels.into_today(kit, _new_reel_folder(script["tool_name"]))
+            kept_reels.mark_taken(c["name"], c["tool_slug"])
+            from script_writer import remember_tool
+            remember_tool(script["tool_name"])
+            item = {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "kept_from": c["name"],
+                    **_variant(script), **({"concept": "guide"} if guide else {})}
+            log(f"   kept Reel voiced with George for the {slot} slot: {c['name']} -> {_rel(out)}")
+            if guide and guide_open:
+                morning = item
+            else:
+                reels.append(item)
+        if guide and guide_open:
+            guide_open = False
+        else:
+            others -= 1
     return morning
 
 
