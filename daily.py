@@ -670,12 +670,36 @@ def _reel_attempt(cmd: list[str] | None = None, short: bool = False) -> tuple[di
         log("   reel not queued")
         failures.record("reel", kind, script["tool_name"], "; ".join(verdict["problems"]),
                         script.get("website_url", ""), rendered="no verdict" not in " ".join(verdict["problems"]))
+        if kind == "guide" and tool.get("post_url"):
+            second_chance(tool["post_url"], tool.get("post_title", ""))
         return None, True
     failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
     if tool.get("ranker_off"):  # D-87: made although the ranker said OFF; marked for the comparison
         log(f"   ranker OFF tool queued (D-87, measured): {script['tool_name']}")
     return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], **_variant(script),
             **({"ranker_off": True} if tool.get("ranker_off") else {})}, True
+
+
+def second_chance(url: str, title: str = "") -> bool:
+    """11-27: '100 company posts, 0 fit' three mornings running. Every guide post the morning rendered was used up,
+    approved or not, so the best topics ('4 things you didn't know you could do with Gemini Canvas', 11-23) were
+    lost to a picture or a sentence the editor refused, and the pool ran dry. A rejected guide post goes back to
+    the pool ONCE, from tomorrow (guide_reel.returned_today); a second rejection uses it up for good."""
+    from guide_reel import SECOND_CHANCE
+
+    try:
+        given = json.loads(SECOND_CHANCE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        given = {}
+    if url in given:
+        log(f"   guide post already had its second chance ({given[url]}): used up")
+        return False
+    given[url] = datetime.now().strftime("%Y-%m-%d")
+    SECOND_CHANCE.parent.mkdir(parents=True, exist_ok=True)
+    SECOND_CHANCE.write_text(json.dumps(given, indent=1, ensure_ascii=False), encoding="utf-8")
+    unmark(url, title)
+    log(f"   guide post back in the pool from tomorrow (one second chance): {title or url}")
+    return True
 
 
 def _variant(script: dict) -> dict:

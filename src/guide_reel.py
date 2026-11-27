@@ -69,6 +69,20 @@ benchmarks), leave that out: "Kodun gece boyu hızlanıyor" overstated a develop
 when the feature is AI."""
 
 
+SECOND_CHANCE = ROOT / "state" / "guide_second_chance.json"
+
+
+def returned_today() -> set[str]:
+    """Guide posts given back today (daily.second_chance): they wait for tomorrow, so the same morning never
+    renders the same rejected topic again."""
+    try:
+        given = json.loads(SECOND_CHANCE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    today = datetime.now().strftime("%Y-%m-%d")
+    return {url for url, day in given.items() if day == today}
+
+
 def fetch_guide(limit: int = POOL) -> list[dict]:
     """Unused posts of the companies' own blogs from the last GUIDE_DAYS, newest first, plus the guide-only
     sources (D-41: news_sources.json "guide_feeds", official feature announcements such as Workspace Updates)."""
@@ -76,7 +90,7 @@ def fetch_guide(limit: int = POOL) -> list[dict]:
     feeds = config["feeds"] + config.get("guide_feeds", [])
     guide_only = {f["name"] for f in config.get("guide_feeds", [])}
     since = datetime.now(timezone.utc) - timedelta(days=GUIDE_DAYS)
-    used = set(load_history())
+    used = set(load_history()) | returned_today()
     used_titles = load_titles()  # D-75: the same story told on another blog, in other words, is used too
     items = []
     for feed in feeds:
@@ -302,7 +316,8 @@ def _make_from(candidates: list[dict]) -> int:
         tool = {"tool_name": product, "website_url": page["url"],
                 "kind": "07:30 GUIDE Reel (D-31): how to use a feature of a known AI product the right way. "
                         "Facts, steps and pictures come only from the company's own page (article).",
-                "article": page["text"][:6000]}
+                "article": page["text"][:6000],
+                "post_url": c["url"], "post_title": c.get("title", "")}  # daily.py: one second chance (11-27)
         script = _gated_script(product, page, tool, capture)
         if script is None:
             continue

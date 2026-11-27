@@ -468,3 +468,29 @@ def test_d38_an_empty_day_is_reported(monkeypatch, sandbox):
     monkeypatch.setattr(daily, "produce_trial_reel", lambda news: None)
     daily.produce()
     assert daily.empty_day()
+
+
+def test_a_rejected_guide_post_gets_one_second_chance_from_tomorrow(monkeypatch, tmp_path):
+    """11-27: '100 company posts, 0 fit' three mornings; every rendered guide post was used up, approved or not, so
+    '4 things you didn't know you could do with Gemini Canvas' (11-23) was lost to a refused picture. A rejected
+    guide post comes back once, never the same morning, and a second rejection uses it up."""
+    from pathlib import Path
+
+    import guide_reel
+    import news_fetcher
+
+    monkeypatch.setattr(news_fetcher, "HISTORY_PATH", tmp_path / "h.json")
+    monkeypatch.setattr(news_fetcher, "TITLES_PATH", tmp_path / "t.json")
+    monkeypatch.setattr(guide_reel, "SECOND_CHANCE", tmp_path / "second.json")
+    monkeypatch.setattr(daily, "log", lambda *a, **k: None)
+    url, title = "https://blog.google/products/gemini/canvas-tips/", "Here are 4 things you didn't know about Canvas"
+    news_fetcher.mark_used(url, title)
+    assert daily.second_chance(url, title) is True
+    assert url not in news_fetcher.load_history()
+    assert url in guide_reel.returned_today()  # not again this morning
+    news_fetcher.mark_used(url, title)  # tried again tomorrow, rejected again
+    assert daily.second_chance(url, title) is False
+    assert url in news_fetcher.load_history()
+    root = Path(__file__).resolve().parent.parent
+    assert 'if kind == "guide" and tool.get("post_url"):' in (root / "daily.py").read_text(encoding="utf-8")
+    assert '"post_url": c["url"]' in (root / "src" / "guide_reel.py").read_text(encoding="utf-8")
