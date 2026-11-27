@@ -653,5 +653,110 @@
   "url": "https://heysquint.com/",
   "description": "Press a hotkey, drag a box around anything on your screen, and the answer starts streaming in beside it within moments. No switching apps, no chat window.",
   "date": "2026-11-23"
+ },
+ "gauthpersonalstudyagent": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-24"
+ },
+ "maiimage27": {
+  "url": "https://microsoft.ai/models/mai-image-2-7/",
+  "description": null,
+  "date": "2026-11-24"
+ },
+ "hydrilla": {
+  "url": "https://www.hydrilla.ai/",
+  "description": "Hydrilla is built for creators, studios, and teams who need fast generation of production-ready 3D assets for games, film, architecture, and digital products.",
+  "date": "2026-11-24"
+ },
+ "ashwa": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-24"
+ },
+ "plango": {
+  "url": "https://installplango.com/",
+  "description": "Plango checks your computer's security settings, installed apps, internet connections, and AI agents, MCP servers, plugins, and skills in plain English.",
+  "date": "2026-11-24"
+ },
+ "willowios20": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-25"
+ },
+ "tendor": {
+  "url": "https://tendor.md/",
+  "description": "One hotkey in any Windows app: jot a note or ask AI with your own key (Claude, GPT, Gemini and more). Notes stay on your PC as Markdown. Free to start.",
+  "date": "2026-11-25"
+ },
+ "astrolabio": {
+  "url": "https://glplabs.eu/en/astrolabio/",
+  "description": "A Mac app that keeps a notebook for every project. Claude Code, Codex, Cursor, Gemini CLI and Antigravity read it on their own at the start of every session: nothing to explain again. Try Pro free for 14 days.",
+  "date": "2026-11-25"
+ },
+ "astor": {
+  "url": "https://www.astor.app/",
+  "description": "Astor knows what you own, watches the market all day and texts you when something matters. You make the call. Free on iPhone.",
+  "date": "2026-11-25"
+ },
+ "juncts": {
+  "url": "https://juncts.com/",
+  "description": "Juncts puts your LinkedIn, X, Instagram, WhatsApp and Telegram messages in one keyboard-first inbox, and lets Claude or ChatGPT read and draft replies for you.",
+  "date": "2026-11-25"
+ },
+ "granularbuild": {
+  "url": "https://granular.build/",
+  "description": "An AI workspace for visionary builders. Plug in your existing AI subscriptions and all your tools to build anything. Mac and Windows.",
+  "date": "2026-11-25"
+ },
+ "canvamcp": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-26"
+ },
+ "qube": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-26"
+ },
+ "myclaw30": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-26"
+ },
+ "airbot": {
+  "url": "https://airbots.ai/",
+  "description": "One text away from your inbox, calendar, calls and CRM. Airbot keeps on top of the busywork so you don",
+  "date": "2026-11-26"
+ },
+ "magi2": {
+  "url": "https://sand.ai/",
+  "description": "Discover Sand.ai's Magi-1, an autoregressive video model delivering top-tier AI solutions for everyone. Join us in advancing AI technology. Advance AI to Benefit Everyone.",
+  "date": "2026-11-26"
+ },
+ "coderabbitverify": {
+  "url": "https://www.coderabbit.ai/verify",
+  "description": "Generate scenarios from PR changes, discover user journeys from your codebase and test the running application. Inspect evidence and send bugs to a coding agent.",
+  "date": "2026-11-26"
+ },
+ "iwantmyapp": {
+  "url": "https://iwantmy.app/",
+  "description": "Tell iwantmy.app what your app is for and who uses it. About a minute later it is running on a phone, with bookings, accounts, photos, maps and chat built in. Free to start, no code.",
+  "date": "2026-11-27"
+ },
+ "superframes": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-27"
+ },
+ "whipdesk": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-27"
+ },
+ "transeptai": {
+  "url": "https://transept.ai/",
+  "description": "AI translation for writers. Translate your novel, essays or newsletter and keep your voice: Transept remembers your names, tone and style.",
+  "date": "2026-11-27"
  }
 }

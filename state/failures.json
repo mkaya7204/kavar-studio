@@ -3492,5 +3492,478 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Organize and share your holiday memories with these five updates in Google Photos.",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "facts"
+  ],
+  "detail": "Slayt 4 karga satırı \"Sevdiklerin üstte, gerisi saklı.\" kaynakta olmayan bir şeyi söylüyor: sayfada yüz şeridine dokununca o kişinin/evcil hayvanın fotoğrafları görünür. Gizleme ise Koleksiyonlar sekmesinde kullanılmayanlar için. Karga satırını kaynağa uygun yaz, örn. \"Bir yüze dokun, o kişinin foto"
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "OpenAI rolls out a version of GPT-6.2 Sol that is \"optimized for everyday conversation\" to the Chat tab for Plus, Pro, B",
+  "rendered": false,
+  "host": "help.openai.com",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: https://help.openai.com/en/articles/6825453-chatgpt-release-notes returned HTTP 403"
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "Yapay zekâ ile şarkı yapmada Suno'ya rakip çıktı: ACE Music v1 ilk sıraya yerleşti",
+  "rendered": true,
+  "host": "acemusic.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "news",
+  "kind": "news",
+  "item": "A more tailored Google Search that’s uniquely yours",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "MAI Image 2.7",
+  "rendered": true,
+  "host": "microsoft.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kanıt görseli (kapak ve 0-2.5 sn) sitenin İngilizce sloganı 'Built for every way you create...'. Slogan kanıt sayılmaz ve metin kutunun altında yarım cümlede kesiliyor ('with greater control over').; Hook bir vaat vermiyor: 'Microsoft'un yeni görsel modeli' sadece kategori tanımı. Yazar 5 hook adayı"
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Hydrilla",
+  "rendered": true,
+  "host": "hydrilla.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-24",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Plango",
+  "rendered": true,
+  "host": "installplango.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Figma",
+  "rendered": true,
+  "host": "figma.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "New study enhancements for Flashcards in Gemini Notebook",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "news",
+  "kind": "news",
+  "item": "Meet Facebook’s Your Algorithm: How Meta Turns Plain-Language Preferences Into Ranking",
+  "rendered": true,
+  "host": "engineering.fb.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "Tarih tutmuyor: son slayttaki kaynak satırı \"24 Kasım 2026\" diyor. Ancak makalenin URL'si (2026/11/10) ve 2. slayttaki ekran görüntüsü (\"Posted on November 10, 2026\") yazıyı 10 Kasım'da yayımlanmış gösteriyor. 24 Kasım değeri feed'den geliyor ve sayfadaki tarihle çelişiyor. Tarih dersi: sayfa ile me"
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "news",
+  "kind": "news",
+  "item": "Anthropic rolls out \"Install as app\" in beta, which turns Claude artifacts into Mac and Windows apps with notifications,",
+  "rendered": true,
+  "host": "claude.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Tendor",
+  "rendered": true,
+  "host": "tendor.md",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "12 sn civarında kanıt kutusu neredeyse boş: üstte kesik bir 'Idea: cache provider model lists' kartı, altı boş, ortada yalnızca küçük İngilizce 'Ask AI without leaving your flow.' satırı. Kutu kesik ve boş olduğu için 2. nokta (başına ? koyup yapay zekâya sormak) kanıtlanmıyor.; Aynı görsel (görev/n"
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Astrolabio",
+  "rendered": true,
+  "host": "glplabs.eu",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanıt görseli zayıf ve tekrarlı: aynı İngilizce beyaz metin kartı 0-3 s, 10.9 s karelerinde ve kapak karesinde görünüyor. Her çekim yeni bir şey göstermiyor, bu da kanıt sayılmıyor (aynı resim üç kez kuralı).; Kanıt bir uygulama ekranı değil, sayfadaki İngilizce slogan paragrafı. Telefonda okunması "
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Astor",
+  "rendered": true,
+  "host": "astor.app",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "gezhi-sheets",
+  "rendered": true,
+  "host": "github.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanıtsız kanca: Başlık ve ses 'Formülü hâlâ elle mi yazıyorsun?' diyor, ama hiçbir görselde formül asistanı yok. Kapak ve ilk kare müşteri geri bildirimi tablosunu ve 'toplu sütun doldurma' (批量填列) panelini gösteriyor. Söz verilen özellik hiçbir yerde görünmüyor.; Görsel önce, kanca sonra kuralı çiğn"
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Granular.Build",
+  "rendered": true,
+  "host": "granular.build",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "facts"
+  ],
+  "detail": "6,7 s karesindeki ürün çekimi (KAYNAK / granular.build) neredeyse tamamen karanlık, küçük ve telefonda okunmuyor; boş bir uygulama kabuğu gibi duruyor, kanıt değil.; Kanca 'Terminal ajan için yetmiyor' diyor, ama ekrandaki kanıt yalnızca sosyal gönderi ve e-posta çıktılarını gösteriyor. Terminal ile"
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Juncts",
+  "rendered": true,
+  "host": "juncts.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "price"
+  ],
+  "detail": "Kapak ve 0-2.5 sn kanıt kutusu: site görseli soldan kesik. Metin yarım kalıyor ('ts', 'ry DM, one', 'ox, your', 'ncluded.'), bu yüzden okunmuyor. Kesik görsel kabul edilmez; brand son çaresinde bile reddedilir.; 5.7-6.7 sn site çekimi: 'KAYNAK juncts.com' etiketi sayfanın 'One inbox. Every app.' baş"
+ },
+ {
+  "date": "2026-11-25",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "ElevenLabs",
+  "rendered": true,
+  "host": "elevenlabs.io",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "off_concept"
+  ],
+  "detail": "Kanıt görseli yanlış: tüm Reel boyunca ödül töreninden sahne fotoğrafı var (Goa Başbakanı dahil insanlar sahnede poz veriyor). Ürünün arayüzü ya da bir film karesi değil; olay/başlık fotoğrafı kanıt sayılmaz.; Kapak ve hook 'Yapay zekâ filmleri festivalde' diyor, ama görselde hiçbir film ya da Flow "
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "facts"
+  ],
+  "detail": "Kanıt görseli okunmuyor: önerilen istem çipleri (\"Learn about Cymbal\", \"Automate catalog\", \"Search the web\") telefonda okunamayacak kadar küçük. Vaat olan \"üç öneri\" görselde seçilemiyor. Çipleri büyüten bir kırpmayla ya da okunur bir metin panelinden gösterilmeli (kırpma kesilmemeli).; Gerçek hatas"
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "news",
+  "kind": "news",
+  "item": "See what 5 builders are making with Gemini 4 Neon",
+  "rendered": true,
+  "host": "blog.google",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "news",
+  "kind": "news",
+  "item": "Introducing Muse in the UK: A Personal AI Agent You Control",
+  "rendered": true,
+  "host": "about.fb.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "openset-llm",
+  "rendered": true,
+  "host": "github.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Airbot",
+  "rendered": true,
+  "host": "airbots.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kanca yanıltıcı: 'artık WhatsApp'tan yazıyorsun' ürünün şimdi kullanılabildiğini söylüyor, oysa sitede 'kapılar çok yakında açılıyor' ve 'Join the waitlist' var. Bekleme listesi sadece açıklamada, kapak ve seste yok.; Kapaktaki ve 0-2.5 s kanıt görseli sohbet göstermiyor, sitenin üst menüsü (SOC 2, "
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "CodeRabbit Verify",
+  "rendered": true,
+  "host": "coderabbit.ai",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "Google Workspace",
+  "rendered": true,
+  "host": "workspaceupdates.googleblog.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof"
+  ],
+  "detail": "Kapak ve ilk kare kanıtı: resim yalnızca kod editörünü gösteriyor, Gemini paneli ya da yazılan bir istek görünmüyor. Başlık 'Kodu senin yerine Gemini yazıyor' diyor ama hiçbir resim bunu kanıtlamıyor.; Resim kutunun içinde küçük kalmış (kutunun yaklaşık üçte biri). Kod telefonda okunmuyor, kutunun a"
+ },
+ {
+  "date": "2026-11-26",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "What is AI transcription: The complete guide",
+  "rendered": true,
+  "host": "elevenlabs.io",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "news",
+  "kind": "news",
+  "item": "GPT-6 models demonstrate intrinsic protein-design capabilities",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "Slayt 4: Kavar'ın notu \"Hedefe göre sonuç çok değişiyor.\" slaytın metninde gösterilmiyor. Slayt hedef bazlı karşılaştırma vermiyor, iki ayrı deneyin oranını veriyor (%10,9 ve 75/88). Not, metnin gösterdiğinden fazlasını söylüyor.; Slayt 4: MDM2 sonucu kaynakta \"ilk laboratuvar taramalarında\" (initia"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "news",
+  "kind": "news",
+  "item": "FCC signs off on SpaceX’s plan to put up to 1 million data center satellites into space",
+  "rendered": false,
+  "host": "docs.fcc.gov",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: article has no cover image or too little text"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "news",
+  "kind": "news",
+  "item": "SpaceX gets authorization to launch one million satellites with AI hardware - Observatorio Blockchain",
+  "rendered": true,
+  "host": "spacex.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Agweb",
+  "rendered": true,
+  "host": "github.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "12 sn karesi: README tablosu/paneli yarım kesilmiş; metin 'and downloads are answered in' cümlesinin ortasında bitiyor. Kesik blok kanıt sayılmaz.; 12 sn panelinin metni İngilizce ve küçük; telefonda okunmuyor. Üstelik sesteki 'Boştaki sekmeler askıya alınıyor' noktasıyla değil, bellek tablosuyla ve"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Transept AI",
+  "rendered": true,
+  "host": "transept.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kart 3 ('Biçim yerinde kalıyor', ~11.6-12.6 s): ekranda bölüm/ilerleme tablosu var. Başlık ve italiklerin yerinde kaldığını gösteren bir şey yok. Kartın başlığı da iki karede görünmüyor, alt yarı boş. Resim konuşulan noktayı kanıtlamıyor.; Kart 2 ('Adlar ve üslup önceden çıkıyor'): aynı bölüm tablos"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "iwantmy.app",
+  "rendered": true,
+  "host": "iwantmy.app",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kanıt kutusundaki görsel üstten kesik: ilk satır 'Your own mobile' yarım görünüyor (kapakta, 0 s, 1 s ve 2.5 s karelerinde). Kesik görsel D-77 son çare Reel'inde bile kabul edilmez.; Kapak ve grid görseli de aynı kesik başlığı gösteriyor, yani profil kapağı yarım yazıyla çıkıyor.; Daha iyi görsel: s"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
  }
 ]

@@ -1,72 +1,72 @@
 [
   {
-    "tool": "Google Workspace",
-    "hook": "Aynı görseli tekrar yükleme",
-    "pattern": "question",
-    "spoken_hook": "Video üretirken aynı görseli tekrar mı yüklüyorsun?",
-    "cta": "Yorumlara yaz: hangi videoyu üretirdin?"
-  },
-  {
-    "tool": "KIKA AI",
-    "hook": "Cümle yaz, siteye menü eklensin",
-    "pattern": "result",
-    "spoken_hook": "Bir cümle yazıyorsun, kod editörü siteye menü ekliyor.",
-    "cta": "Kaydet, site yaparken lazım olur."
-  },
-  {
-    "tool": "AlterContacts",
-    "hook": "Müşteriyi arayacaktın, unuttun",
-    "pattern": "pain",
-    "spoken_hook": "Müşteriyi arayacaktın ama yine unuttun, değil mi?",
-    "cta": "Yorumlara yaz: takibi en çok neyde aksatıyorsun?"
-  },
-  {
-    "tool": "Shipyard",
-    "hook": "Kurulum günler değil saatler",
-    "pattern": "contrast",
-    "spoken_hook": "Kurulum günler sürer sanıyorsan yanılıyorsun.",
-    "cta": "Girişimci arkadaşına gönder."
-  },
-  {
     "tool": "ElevenLabs",
-    "hook": "Ses markanı yanlış mı okuyor?",
+    "hook": "Şarkı mı, video müziği mi?",
     "pattern": "question",
-    "spoken_hook": "Yapay ses markanı yanlış mı okuyor?",
-    "cta": "Kaydet, seslendirmede lazım olur."
+    "spoken_hook": "Şarkı mı yapacaksın, video müziği mi?",
+    "cta": "Kaydet, müzik gerektiğinde lazım olur."
   },
   {
-    "tool": "TeaserKit",
-    "hook": "Yapay zekâ videosu hep aynı",
-    "pattern": "contrast",
-    "spoken_hook": "Yapay zekâ videoları hep aynı mor parıltıya benziyor.",
-    "cta": "Yorumlara yaz: hangi ürünün filmini çekerdin?"
-  },
-  {
-    "tool": "Squint",
-    "hook": "Yemeğe kutu çiz, tarifi gör",
-    "pattern": "result",
-    "spoken_hook": "Ekrandaki yemeğe kutu çiziyorsun, nasıl yapıldığı yanında akıyor.",
-    "cta": "Yemek tarifi kaydeden arkadaşına gönder."
-  },
-  {
-    "tool": "MROffice",
-    "hook": "Claude Excel açabilir mi?",
-    "pattern": "question",
-    "spoken_hook": "Yapay zekâ senin Excel dosyanı düzenleyebilir mi?",
-    "cta": "Kaydet, sonra lazım olur."
+    "tool": "Google",
+    "hook": "Beş kısa film, tek stüdyo",
+    "pattern": "number",
+    "spoken_hook": "Beş kısa film aynı yapay zekâ stüdyosundan çıktı.",
+    "cta": "Yorumlara yaz: hangi filmi yapardın?"
   },
   {
     "tool": "Google Workspace",
-    "hook": "Video için kamera şart değil",
-    "pattern": "contrast",
-    "spoken_hook": "Video için kamera şart sanıyordun, değil.",
-    "cta": "Yorumlara yaz: avatarınla ne anlatırdın?"
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Mailler günlerce cevapsız mı?",
+    "hook": "Boş mesaj kutusuna bakıyorsun",
     "pattern": "pain",
-    "spoken_hook": "Mailler günlerce cevapsız mı kalıyor?",
-    "cta": "Kaydet, lazım olacak."
+    "spoken_hook": "Yeni ajana ilk mesajı yazmak hep zor.",
+    "cta": "Kaydet, ajan açınca lazım olur."
+  },
+  {
+    "tool": "openset-llm",
+    "hook": "8 GB RAM'e 27B sığdı",
+    "pattern": "curiosity",
+    "spoken_hook": "Sekiz gigabayt RAM'e 27 milyarlık model nasıl sığdı?",
+    "cta": "Yorumlara yaz: hangi işte denerdin?"
+  },
+  {
+    "tool": "Airbot",
+    "hook": "Yapay zekâ önce sana yazıyor",
+    "pattern": "curiosity",
+    "spoken_hook": "Yapay zekâ önce sana mesaj atıyor.",
+    "cta": "Yoğun arkadaşına gönder."
+  },
+  {
+    "tool": "CodeRabbit Verify",
+    "hook": "PR'ını ajan test ediyor",
+    "pattern": "result",
+    "spoken_hook": "Pull request'ini artık ajan test ediyor.",
+    "cta": "Yazılımcı arkadaşına gönder."
+  },
+  {
+    "tool": "Google Workspace",
+    "hook": "Otomasyon için kod şart değil",
+    "pattern": "contrast",
+    "spoken_hook": "Otomasyon kurmak için kod bilmen gerekmiyor.",
+    "cta": "Yorumlara yaz: hangi işi otomatikleştirirdin?"
+  },
+  {
+    "tool": "Agweb",
+    "hook": "Ajan klavyeni çalıyor",
+    "pattern": "pain",
+    "spoken_hook": "Ajanın açtığı pencere yazarken klavyeni çalıyor.",
+    "cta": "Kaydet, ajanların çoğalınca lazım olur."
+  },
+  {
+    "tool": "Transept AI",
+    "hook": "Çeviriden önce kitabı okuyor",
+    "pattern": "curiosity",
+    "spoken_hook": "Yapay zekâ çevirmeden önce kitabının hepsini okuyor.",
+    "cta": "Kaydet, kitabını çevirirken lazım olur."
+  },
+  {
+    "tool": "iwantmy.app",
+    "hook": "Mobil uygulama tek mesajda",
+    "pattern": "result",
+    "spoken_hook": "Stüdyon için mobil uygulama tek mesajla çıkıyor.",
+    "cta": "Yorumlara yaz: hangi uygulamayı isterdin?"
   }
 ]

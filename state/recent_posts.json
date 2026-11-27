@@ -250,5 +250,117 @@
   "kind": "reel",
   "title": "Google Workspace",
   "brand": "google"
+ },
+ {
+  "day": "2026-11-25",
+  "time": "07:30",
+  "kind": "reel",
+  "title": "Google",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-25",
+  "time": "11:45",
+  "kind": "reel",
+  "title": "Plango",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-25",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "Yapay zekâ ile şarkı yapmada Suno'ya rakip çıktı: ACE Music v1 ilk sıraya yerleşti",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-25",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "A more tailored Google Search that’s uniquely yours",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-25",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "Hydrilla",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-26",
+  "time": "07:30",
+  "kind": "reel",
+  "title": "Figma",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-26",
+  "time": "11:45",
+  "kind": "reel",
+  "title": "ElevenLabs",
+  "brand": "elevenlabs"
+ },
+ {
+  "day": "2026-11-26",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "Anthropic rolls out \"Install as app\" in beta, which turns Claude artifacts into Mac and Windows apps with notifications, optional full computer access, and more (Claude)",
+  "brand": "anthropic"
+ },
+ {
+  "day": "2026-11-26",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "New study enhancements for Flashcards in Gemini Notebook",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-26",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "Astor",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-27",
+  "time": "11:45",
+  "kind": "reel",
+  "title": "CodeRabbit Verify",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-27",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "See what 5 builders are making with Gemini 4 Neon",
+  "brand": "google"
+ },
+ {
+  "day": "2026-11-27",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "Introducing Muse in the UK: A Personal AI Agent You Control",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-27",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "openset-llm",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-28",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "SpaceX gets authorization to launch one million satellites with AI hardware - Observatorio Blockchain",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-28",
+  "time": "18:00",
+  "kind": "carousel",
+  "title": "What is AI transcription: The complete guide",
+  "brand": "elevenlabs"
  }
 ]
