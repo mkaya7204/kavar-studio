@@ -610,8 +610,11 @@ def _reel_attempt(cmd: list[str] | None = None, short: bool = False) -> tuple[di
         log(f"   video pipeline timed out after {REEL_TIMEOUT}s")
         return None, False
     lines = proc.stdout.splitlines()
-    picked = [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l or "▶" in l or "   rank " in l]
-    for line in picked[:16] + lines[-8:]:
+    # 11-27: "skipping <tool>: CaptureError" and the guide pool's reasons never reached the log, so why the best
+    # tool (iwantmy.app, rank 32) was passed over twice and why 0 guide posts fit could not be read
+    picked = [l for l in lines if "fetcher" in l or "Candidate" in l or "✖" in l or "▶" in l or "   rank " in l
+              or "skipping" in l or "[pool]" in l or "[gate]" in l]
+    for line in picked[:40] + lines[-8:]:
         log("   " + line)
     if proc.returncode != 0:
         log("   video pipeline failed")

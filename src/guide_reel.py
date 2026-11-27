@@ -249,13 +249,37 @@ def make_guide_reel() -> int:
     # A product we posted news about is still a guide topic ("haberi verdik, şimdi nasıl kullanılır"): the same
     # post is never reused (history), but a "repeat" product is kept, after the fresh ones (10-18: Gemini 4
     # Argon in the Gemini app was dropped as a repeat of the news carousel).
-    ranked = [c for c in rank(fresh, "guide_reel", kind_prefix="guide_reel") if (c.get("rank") or {}).get("fits", True)]
+    scored = rank(fresh, "guide_reel", kind_prefix="guide_reel")
+    ranked = [c for c in scored if (c.get("rank") or {}).get("fits", True)]
     candidates = sorted(ranked, key=lambda c: bool((c.get("rank") or {}).get("repeat")))
     print(f"▶ Rehber Reel: {len(fresh)} company posts, {len(candidates)} fit the guide concept", flush=True)
+    _log_pool(fresh, scored)
     for c in candidates[:10]:
         r = c.get("rank") or {}
         print(f"   rank {r.get('score', '-'):>2} [{c['source']}] {c['title'][:70]} ({str(r.get('reason', ''))[:80]})")
     return _make_from(candidates[:TRIES])
+
+
+def _log_pool(fresh: list[dict], scored: list[dict]) -> None:
+    """11-27: '100 company posts, 0 fit' three mornings running (8 fit on 11-12, when the 18:00 guide carousel
+    started sharing this pool) and the log never said why. Now it says: per source how many posts, how many the
+    ranker kept, and the best-scored posts it put off concept with its reason."""
+    by_source: dict[str, list[int]] = {}
+    for c in scored:
+        r = c.get("rank") or {}
+        n = by_source.setdefault(c.get("source", "?"), [0, 0])
+        n[0] += 1
+        n[1] += bool(r.get("fits", True))
+    print("   [pool] " + ", ".join(f"{s} {k}/{n}" for s, (n, k) in sorted(by_source.items())), flush=True)
+    off = sorted((c for c in scored if not (c.get("rank") or {}).get("fits", True)),
+                 key=lambda c: -(c.get("rank") or {}).get("score", 0))
+    for c in off[:8]:
+        r = c["rank"]
+        print(f"   [pool] OFF {r.get('score', '-'):>2} [{c.get('source', '?')}] {c['title'][:70]} "
+              f"({str(r.get('reason', ''))[:110]})", flush=True)
+    unscored = sum(1 for c in scored if not c.get("rank"))
+    if unscored:
+        print(f"   [pool] {unscored} posts got no score from the ranker", flush=True)
 
 
 def _make_from(candidates: list[dict]) -> int:
