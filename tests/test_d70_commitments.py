@@ -37,7 +37,13 @@ def test_every_session_starts_with_the_list_and_the_rule():
     # until then the hook script must exist and print the list
     assert (ROOT / ".claude" / "hooks" / "show_commitments.py").exists()
     # switched on 2026-11-13 with the user's OK ("Hepsine izin veriyorum")
-    settings = (ROOT / ".claude" / "settings.json").read_text(encoding="utf-8")
+    path = ROOT / ".claude" / "settings.json"
+    if path.exists():
+        settings = path.read_text(encoding="utf-8")
+    else:  # produce.yml drops the PC-only hook file before its tests (D-49); the committed copy is checked then
+        import subprocess
+        settings = subprocess.run(["git", "show", "HEAD:.claude/settings.json"], cwd=ROOT, capture_output=True,
+                                  text=True, encoding="utf-8").stdout
     assert "SessionStart" in settings and "show_commitments.py" in settings
     claude = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
     assert "Every promise goes into `COMMITMENTS.md`" in claude
