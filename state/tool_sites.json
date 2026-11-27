@@ -738,5 +738,25 @@
   "url": "https://www.coderabbit.ai/verify",
   "description": "Generate scenarios from PR changes, discover user journeys from your codebase and test the running application. Inspect evidence and send bugs to a coding agent.",
   "date": "2026-11-26"
+ },
+ "iwantmyapp": {
+  "url": "https://iwantmy.app/",
+  "description": "Tell iwantmy.app what your app is for and who uses it. About a minute later it is running on a phone, with bookings, accounts, photos, maps and chat built in. Free to start, no code.",
+  "date": "2026-11-27"
+ },
+ "superframes": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-27"
+ },
+ "whipdesk": {
+  "url": "",
+  "description": null,
+  "date": "2026-11-27"
+ },
+ "transeptai": {
+  "url": "https://transept.ai/",
+  "description": "AI translation for writers. Translate your novel, essays or newsletter and keep your voice: Transept remembers your names, tone and style.",
+  "date": "2026-11-27"
  }
 }

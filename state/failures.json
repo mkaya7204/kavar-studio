@@ -3836,5 +3836,134 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "What is AI transcription: The complete guide",
+  "rendered": true,
+  "host": "elevenlabs.io",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "news",
+  "kind": "news",
+  "item": "GPT-6 models demonstrate intrinsic protein-design capabilities",
+  "rendered": true,
+  "host": "openai.com",
+  "outcome": "failed",
+  "categories": [
+   "other"
+  ],
+  "detail": "Slayt 4: Kavar'ın notu \"Hedefe göre sonuç çok değişiyor.\" slaytın metninde gösterilmiyor. Slayt hedef bazlı karşılaştırma vermiyor, iki ayrı deneyin oranını veriyor (%10,9 ve 75/88). Not, metnin gösterdiğinden fazlasını söylüyor.; Slayt 4: MDM2 sonucu kaynakta \"ilk laboratuvar taramalarında\" (initia"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "news",
+  "kind": "news",
+  "item": "FCC signs off on SpaceX’s plan to put up to 1 million data center satellites into space",
+  "rendered": false,
+  "host": "docs.fcc.gov",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: article has no cover image or too little text"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "news",
+  "kind": "news",
+  "item": "SpaceX gets authorization to launch one million satellites with AI hardware - Observatorio Blockchain",
+  "rendered": true,
+  "host": "spacex.com",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Agweb",
+  "rendered": true,
+  "host": "github.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "12 sn karesi: README tablosu/paneli yarım kesilmiş; metin 'and downloads are answered in' cümlesinin ortasında bitiyor. Kesik blok kanıt sayılmaz.; 12 sn panelinin metni İngilizce ve küçük; telefonda okunmuyor. Üstelik sesteki 'Boştaki sekmeler askıya alınıyor' noktasıyla değil, bellek tablosuyla ve"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Transept AI",
+  "rendered": true,
+  "host": "transept.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kart 3 ('Biçim yerinde kalıyor', ~11.6-12.6 s): ekranda bölüm/ilerleme tablosu var. Başlık ve italiklerin yerinde kaldığını gösteren bir şey yok. Kartın başlığı da iki karede görünmüyor, alt yarı boş. Resim konuşulan noktayı kanıtlamıyor.; Kart 2 ('Adlar ve üslup önceden çıkıyor'): aynı bölüm tablos"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "iwantmy.app",
+  "rendered": true,
+  "host": "iwantmy.app",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kanıt kutusundaki görsel üstten kesik: ilk satır 'Your own mobile' yarım görünüyor (kapakta, 0 s, 1 s ve 2.5 s karelerinde). Kesik görsel D-77 son çare Reel'inde bile kabul edilmez.; Kapak ve grid görseli de aynı kesik başlığı gösteriyor, yani profil kapağı yarım yazıyla çıkıyor.; Daha iyi görsel: s"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-27",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
  }
 ]

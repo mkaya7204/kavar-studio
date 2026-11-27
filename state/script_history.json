@@ -1,26 +1,5 @@
 [
   {
-    "tool": "gezhi-sheets",
-    "hook": "Formülü hâlâ elle mi yazıyorsun?",
-    "pattern": "question",
-    "spoken_hook": "Formülü hâlâ elle mi yazıyorsun?",
-    "cta": "Kaydet, işine yarar."
-  },
-  {
-    "tool": "Granular.Build",
-    "hook": "Terminal ajan için yetmiyor",
-    "pattern": "contrast",
-    "spoken_hook": "Ajanlar için terminal yetmiyor, tek ekran lazım.",
-    "cta": "Builder arkadaşına gönder."
-  },
-  {
-    "tool": "Juncts",
-    "hook": "Mesajlar beş yerde mi dağınık?",
-    "pattern": "pain",
-    "spoken_hook": "Mesajların hâlâ beş yerde mi dağınık?",
-    "cta": "Satıştaki arkadaşına gönder."
-  },
-  {
     "tool": "ElevenLabs",
     "hook": "Şarkı mı, video müziği mi?",
     "pattern": "question",
@@ -68,5 +47,26 @@
     "pattern": "contrast",
     "spoken_hook": "Otomasyon kurmak için kod bilmen gerekmiyor.",
     "cta": "Yorumlara yaz: hangi işi otomatikleştirirdin?"
+  },
+  {
+    "tool": "Agweb",
+    "hook": "Ajan klavyeni çalıyor",
+    "pattern": "pain",
+    "spoken_hook": "Ajanın açtığı pencere yazarken klavyeni çalıyor.",
+    "cta": "Kaydet, ajanların çoğalınca lazım olur."
+  },
+  {
+    "tool": "Transept AI",
+    "hook": "Çeviriden önce kitabı okuyor",
+    "pattern": "curiosity",
+    "spoken_hook": "Yapay zekâ çevirmeden önce kitabının hepsini okuyor.",
+    "cta": "Kaydet, kitabını çevirirken lazım olur."
+  },
+  {
+    "tool": "iwantmy.app",
+    "hook": "Mobil uygulama tek mesajda",
+    "pattern": "result",
+    "spoken_hook": "Stüdyon için mobil uygulama tek mesajla çıkıyor.",
+    "cta": "Yorumlara yaz: hangi uygulamayı isterdin?"
   }
 ]

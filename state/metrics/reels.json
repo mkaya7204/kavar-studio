@@ -2261,5 +2261,44 @@
     "duration_sec": 23.3,
     "words": 38,
     "status": "rejected: Kapak ve ilk kare kanıtı: resim yalnızca kod editörünü gösteriyor, Gemini paneli ya da yazılan bir istek görünmüyor. Başlık 'Kodu senin yerine Gemini yazıyor' diyor ama hiçbir resim bunu kanıtlamıyor.; Resim kutunun içinde küçük kalmış (kutunun yaklaşık üçte biri). Kod telefonda okunmuyor, kutunun alt ve üst yarısı boş.; Aynı küçük editör resmi 0, 1 ve 2.5 s karelerinde tekrar ediyor. 11.6 ve 12.6 s kareleri de aynı 03 kartı; en uzun durağan an 5 sn."
+  },
+  {
+    "id": "2026-11-27_agweb",
+    "date": "2026-11-27",
+    "kind": "tool",
+    "tool": "Agweb",
+    "hook_pattern": "result",
+    "headline": "Ajanların sekmeleri tek ekranda",
+    "spoken_hook": "Bütün ajanların sekmeleri tek ekranda canlı akıyor.",
+    "cta": "Kaydet, ajanların çoğalınca lazım olur.",
+    "duration_sec": 23.3,
+    "words": 37,
+    "status": "rejected: 12 sn karesi: README tablosu/paneli yarım kesilmiş; metin 'and downloads are answered in' cümlesinin ortasında bitiyor. Kesik blok kanıt sayılmaz.; 12 sn panelinin metni İngilizce ve küçük; telefonda okunmuyor. Üstelik sesteki 'Boştaki sekmeler askıya alınıyor' noktasıyla değil, bellek tablosuyla ve 'Never steals focus' cümlesiyle eşleşiyor, kart ile ses uyuşmuyor.; 13 sn karesi: 'PENCERE ÖNE' etiketinin üstündeki cam kutu boş; 1 sn sonrası da dolu görünmüyor, ölü an gibi. Statik an en fazla 4.73 sn."
+  },
+  {
+    "id": "2026-11-27_transept-ai",
+    "date": "2026-11-27",
+    "kind": "tool",
+    "tool": "Transept AI",
+    "hook_pattern": "curiosity",
+    "headline": "Romanın yan yana çevriliyor",
+    "spoken_hook": "Romanının sayfası yan yana Lehçeye çevriliyor.",
+    "cta": "Kaydet, kitabını çevirirken lazım olur.",
+    "duration_sec": 22.8,
+    "words": 40,
+    "status": "rejected: Kart 3 ('Biçim yerinde kalıyor', ~11.6-12.6 s): ekranda bölüm/ilerleme tablosu var. Başlık ve italiklerin yerinde kaldığını gösteren bir şey yok. Kartın başlığı da iki karede görünmüyor, alt yarı boş. Resim konuşulan noktayı kanıtlamıyor.; Kart 2 ('Adlar ve üslup önceden çıkıyor'): aynı bölüm tablosu kullanılmış. Sözlük, üslup rehberi veya ad listesi görünmüyor. Nokta resimle kanıtlanmıyor.; Aynı iki resim (yan yana sayfa, bölüm tablosu) tekrar ediyor. Her nokta kendi sözüne uyan yeni bir şey göstermeli. Daha iyi resim: sayfanın alt çubuğundaki 'Headings, italics and notes come back in place' notunu ve DOCX/EPUB/Markdown seçeneklerini okunur büyüklükte gösteren kırpmasız kare. Ad/üslup noktası için sitenin Glossary / Style guide paneli."
+  },
+  {
+    "id": "2026-11-27_iwantmy-app",
+    "date": "2026-11-27",
+    "kind": "tool",
+    "tool": "iwantmy.app",
+    "hook_pattern": "result",
+    "headline": "Mobil uygulama tek mesajda",
+    "spoken_hook": "Stüdyon için mobil uygulama tek mesajla çıkıyor.",
+    "cta": "Yorumlara yaz: hangi uygulamayı isterdin?",
+    "duration_sec": 27.3,
+    "words": 40,
+    "status": "rejected: Kanıt kutusundaki görsel üstten kesik: ilk satır 'Your own mobile' yarım görünüyor (kapakta, 0 s, 1 s ve 2.5 s karelerinde). Kesik görsel D-77 son çare Reel'inde bile kabul edilmez.; Kapak ve grid görseli de aynı kesik başlığı gösteriyor, yani profil kapağı yarım yazıyla çıkıyor.; Daha iyi görsel: sitenin ana başlığını ('Your own mobile app, from one message.') tam gösteren bir kare, ya da Sunrise Yoga sınıf listesi telefon ekranı (Morning Flow, Yin & Restore). Görsel baştan sona kesilmeden sığdırılmalı."
   }
 ]
