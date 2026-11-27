@@ -116,7 +116,56 @@ def fetch_guide(limit: int = POOL) -> list[dict]:
                    key=lambda i: i["date"], reverse=True)
     for i in fresh:
         i["date"] = i["date"].isoformat()
-    return fresh[:limit]
+    # D-91 (user 11-27): the official help centres' how-to pages join the pool after the blog posts, so the guide
+    # slots never run dry (100 posts, 0 fit on 11-25..11-27); each page is used once (history), like a post
+    return fresh[:limit] + help_topics(config.get("guide_pages", []), used, used_titles)
+
+
+HELP_PER_PAGE = 12  # unused how-to pages per help centre offered each morning, in the centre's own order
+HELP_HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                              "Chrome/130 Safari/537.36"}
+HELP_LINK = re.compile(r'<a[^>]+href="((?:https://[a-z.]+)?/(?:[a-z]+/answer/\d+|en/articles/\d+[^"?#]*)[^"]*)"[^>]*>'
+                       r'(.*?)</a>', re.S)
+
+
+def help_links(html_text: str, index_url: str) -> list[tuple[str, str]]:
+    """(url, text) of the articles an official help centre's page lists, cleaned and once each."""
+    import html as html_lib
+    from urllib.parse import urljoin
+
+    out: dict[str, str] = {}
+    for href, inner in HELP_LINK.findall(html_text):
+        url = urljoin(index_url, html_lib.unescape(href))
+        parts = urlsplit(url)
+        lang = re.search(r"(?:^|&)hl=([a-z-]+)", parts.query or "")
+        url = f"{parts.scheme}://{parts.netloc}{parts.path}" + (f"?hl={lang.group(1)}" if lang else "")
+        text = re.sub(r"\s+", " ", html_lib.unescape(re.sub(r"<[^>]+>", " ", inner))).strip()
+        if text and url not in out:
+            out[url] = text
+    return list(out.items())
+
+
+def help_topics(pages: list[dict], used: set[str], used_titles: list[str]) -> list[dict]:
+    """Unused how-to pages of the help centres in news_sources.json "guide_pages" (D-91), as pool items."""
+    import requests
+
+    now = datetime.now(timezone.utc).isoformat()
+    items = []
+    for page in pages:
+        try:
+            r = requests.get(page["url"], headers=HELP_HEADERS, timeout=20)
+            r.raise_for_status()
+        except Exception as exc:  # noqa: BLE001  one dead help centre never stops the morning
+            print(f"[guide] {page['name']} skipped: {type(exc).__name__}")
+            continue
+        free = [(u, t) for u, t in help_links(r.text, page["url"])
+                if u not in used and not seen_story(t[:110], used_titles)]
+        # a different slice each day: pages the ranker never keeps (privacy, sign-in) don't hold the same 12 places
+        start = (datetime.now().timetuple().tm_yday * HELP_PER_PAGE) % len(free) if free else 0
+        for url, text in (free[start:] + free[:start])[:HELP_PER_PAGE]:
+            items.append({"title": text[:110], "url": url, "source": page["name"], "summary": text[:300],
+                          "date": now, "help_page": True})
+    return items
 
 
 def _video_frames(videos: list[str], folder: Path) -> list[str]:
@@ -317,7 +366,8 @@ def _make_from(candidates: list[dict]) -> int:
                 "kind": "07:30 GUIDE Reel (D-31): how to use a feature of a known AI product the right way. "
                         "Facts, steps and pictures come only from the company's own page (article).",
                 "article": page["text"][:6000],
-                "post_url": c["url"], "post_title": c.get("title", "")}  # daily.py: one second chance (11-27)
+                "post_url": c["url"], "post_title": c.get("title", ""),  # daily.py: one second chance (11-27)
+                "post_source": c.get("source", "")}  # D-91: the 18:00 guide carousel takes the same topic first
         script = _gated_script(product, page, tool, capture)
         if script is None:
             continue

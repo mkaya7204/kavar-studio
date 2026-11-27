@@ -334,5 +334,27 @@
       "name": "DonanimHaber",
       "url": "https://www.donanimhaber.com/rss/tum/"
     }
+  ],
+  "guide_pages": [
+    {
+      "name": "Gemini Help",
+      "url": "https://support.google.com/gemini/?hl=en"
+    },
+    {
+      "name": "ChatGPT Help",
+      "url": "https://help.openai.com/en/collections/3742473-chatgpt"
+    },
+    {
+      "name": "Google Search Help",
+      "url": "https://support.google.com/websearch/?hl=en"
+    },
+    {
+      "name": "Google Photos Help",
+      "url": "https://support.google.com/photos/?hl=en"
+    },
+    {
+      "name": "NotebookLM Help",
+      "url": "https://support.google.com/notebooklm/?hl=en"
+    }
   ]
 }

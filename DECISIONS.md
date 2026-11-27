@@ -896,3 +896,17 @@ the decisions that are currently locked; this file explains why they exist and h
   refuses a plan that puts a refused picture under the hook or in a shot. The tool Reel's proof choice also refuses
   video stills, faces, mascots, header / stock photos, blank shells and unreadable pages.
 - **Guarded by:** tests/test_picture_gate.py (13 tests, each on a recorded case).
+
+## D-91 (2026-11-27): the guide topics never run dry: help-center topics and one topic for both guide slots
+- **The user** (to "the 07:30 guide Reel has had 0 topics for 3 mornings; (a) official help-center guide topics or
+  (b) the same topic for the 07:30 Reel and the 18:00 carousel?"): "İkisi birlikte yapalım". Asked first: "red
+  edilenleri araştır, düzeltilebilir mi bak, çözüm geliştir ve bunu da sisteme öğret".
+- **Cause found (dry run 45954300422, `[pool]` lines):** 100 company posts, 0 fit; the best-scored were non-AI
+  (Samsung beta, Firefox update). Every AI-feature post of Gemini / Search in 14 days was used: the 18:00 guide
+  carousel (D-72, 11-12) and the guide Reel take from one pool, and a rejected guide try used its post up for good.
+  Fit count: 8 (11-12) -> 0 (11-26, 11-27).
+- **Built:** (a) news_sources.json "guide_pages": official help-center / docs pages of known AI products (D-31
+  already names official docs as the source), each used once, offered to the ranker with the blog posts;
+  (b) the 18:00 guide carousel first tries the topic of the morning's approved 07:30 guide Reel, then the pool;
+  a rejected guide post gets one second chance from the next day (daily.second_chance).
+- **Guarded by:** tests/test_daily.py (second chance, the carousel follows the morning Reel, help pages in the pool).

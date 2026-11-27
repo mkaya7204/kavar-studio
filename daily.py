@@ -289,12 +289,25 @@ MONEY_TOPIC = re.compile(r"\b(shop\w*|shopping|buy\w*|purchas\w*|checkout|pric\w
                          r"payments?|pay|wallet|cart|subscri\w*|billing|alışveriş|fiyat\w*|indirim\w*|ödeme\w*)\b", re.I)
 
 
+def _morning_guide_topic() -> list[dict]:
+    """The company post of this queue day's approved 07:30 guide Reel, as a guide carousel candidate (D-91)."""
+    for q in load_queue(queue_day()):
+        if q.get("kind") == "reel" and q.get("concept") == "guide" and q.get("status") == "ready" and q.get("post_url"):
+            return [{"url": q["post_url"], "title": q.get("post_title") or q.get("title", ""),
+                     "source": q.get("post_source") or q.get("title", ""), "summary": "", "morning_topic": True}]
+    return []
+
+
 def produce_guide_carousel() -> dict | None:
     """D-72 (user 2026-11-12: "D onay veriyorum olsun"): the 18:00 carousel is a saveable guide to an AI feature of
     a known product, from the company's own page (the guide Reel's sources, D-31/D-41), ranked for saving."""
     from guide_reel import fetch_guide
-    candidates = rank(fetch_guide(), "guide_carousel")
-    log(f"guide carousel: {len(candidates)} company posts")
+    # D-91 (user 11-27 "İkisi birlikte yapalım"): the morning's approved guide Reel's topic is tried first, so one
+    # good guide topic serves both guide slots and the shared pool lasts (it ran dry 11-25..11-27)
+    morning = _morning_guide_topic()
+    candidates = morning + rank(fetch_guide(), "guide_carousel")
+    log(f"guide carousel: {len(candidates)} company posts" + (f" (first the 07:30 Reel's topic: {morning[0]['title']})"
+                                                            if morning else ""))
     tries = 0
     for item in candidates:
         if _claude_limit():  # 11-19: no more tries after the limit answered
@@ -648,7 +661,7 @@ def _reel_attempt(cmd: list[str] | None = None, short: bool = False) -> tuple[di
         log("   approved in a test run: kept silent for voice.yml (George only for a Reel going out, D-46)")
         failures.ok("reel", kind, script["tool_name"], script.get("website_url", ""))
         return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], "needs_voice": True,
-                **_variant(script)}, True
+                **_variant(script), **{k: tool[k] for k in ("post_url", "post_title", "post_source") if tool.get(k)}}, True
     if verdict["verdict"] == "publish":
         # 11-03: three approved Reels were lost in one day when every ElevenLabs key was out of quota. Keep the
         # silent Reel's words and pictures first, so voice.yml can voice it later instead of losing it.
@@ -677,7 +690,8 @@ def _reel_attempt(cmd: list[str] | None = None, short: bool = False) -> tuple[di
     if tool.get("ranker_off"):  # D-87: made although the ranker said OFF; marked for the comparison
         log(f"   ranker OFF tool queued (D-87, measured): {script['tool_name']}")
     return {"kind": "reel", "folder": _rel(out), "title": script["tool_name"], **_variant(script),
-            **({"ranker_off": True} if tool.get("ranker_off") else {})}, True
+            **({"ranker_off": True} if tool.get("ranker_off") else {}),
+            **{k: tool[k] for k in ("post_url", "post_title", "post_source") if tool.get(k)}}, True  # D-91
 
 
 def second_chance(url: str, title: str = "") -> bool:
