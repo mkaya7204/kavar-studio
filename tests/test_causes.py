@@ -199,6 +199,28 @@ def test_a_proof_picture_is_whole_and_clear_of_the_hook_zoom(tmp_path):
     assert min(reds) >= margin - 2 and max(blues) <= PROOF_SIZE[0] - margin + 2
 
 
+def test_every_proof_path_reaches_the_box_whole(tmp_path):
+    """11-27 iwantmy.app: the D-77 brand picture (a share image, 1200x630) was copied raw into the proof box, whose
+    template crops with object-fit: cover; the top line 'Your own mobile' was cut and the editor rejected the Reel.
+    Whatever path picked the proof, prepare_project's asset is whole: its top and bottom rows survive."""
+    from hyperframes_builder import PROOF_SIZE, _fit_whole, _proof_asset
+
+    share = Image.new("RGB", (1200, 630), "white")
+    ImageDraw.Draw(share).rectangle((0, 0, 1199, 14), fill=(255, 0, 0))  # the top line of text
+    ImageDraw.Draw(share).rectangle((0, 615, 1199, 629), fill=(0, 0, 255))  # the bottom line
+    src = tmp_path / "brand.png"
+    share.save(src)
+    _proof_asset(src, tmp_path / "proof.png")
+    out = Image.open(tmp_path / "proof.png").convert("RGB")
+    assert out.size == PROOF_SIZE
+    col = [out.getpixel((PROOF_SIZE[0] // 2, y)) for y in range(PROOF_SIZE[1])]
+    assert any(p[0] > 200 and p[1] < 80 for p in col) and any(p[2] > 200 and p[0] < 80 for p in col)
+    fitted = _fit_whole(src)  # an already fitted proof is kept, not shrunk again
+    fitted.save(tmp_path / "fitted.png")
+    _proof_asset(tmp_path / "fitted.png", tmp_path / "again.png")
+    assert list(Image.open(tmp_path / "again.png").convert("RGB").getdata()) == list(fitted.getdata())
+
+
 def test_the_site_shot_zoom_keeps_a_960px_shot_whole():
     html = (Path(__file__).resolve().parent.parent / "templates" / "hyperframes_news" / "index.html").read_text(
         encoding="utf-8")

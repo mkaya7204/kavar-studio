@@ -434,6 +434,17 @@ def _fit_whole(src: str | Path | Image.Image) -> Image.Image:
     return box
 
 
+def _proof_asset(src: str | Path, out: Path) -> None:
+    """The proof box's picture, whole, whatever path chose it. The template shows it with object-fit: cover, so a
+    picture of another shape is cut: 11-27 the D-77 brand picture of iwantmy.app (its share image, copied raw) lost
+    the top line "Your own mobile" and the editor rejected the Reel. A picture already fitted (PROOF_SIZE) is kept."""
+    with Image.open(src) as img:
+        if img.size == PROOF_SIZE:
+            img.convert("RGB").save(out)
+            return
+    _fit_whole(src).save(out)
+
+
 def _row_activity(img: Image.Image) -> list[int]:
     """Edge activity per row at quarter scale: a low value is a gap between lines or cards."""
     from PIL import ImageFilter
@@ -539,7 +550,7 @@ def prepare_project(script: dict, capture: dict | None = None, audio_path: Path 
         fullpage_height = img.height
     picked = capture.get("proof_path")  # main.py picks it right after the capture
     if picked and Path(picked).exists():
-        shutil.copy2(picked, assets / "proof.png")
+        _proof_asset(picked, assets / "proof.png")
         has_proof = True
     else:
         picked = best_proof_crop(assets / "fullpage.png", assets / "proof.png", script.get("hook", ""))
