@@ -3965,5 +3965,126 @@
    "off_concept"
   ],
   "detail": "[carousel_writer] Writing with `claude -p`... ✖ no company post fit for a guide Reel this morning"
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "source_refused",
+   "off_concept"
+  ],
+  "detail": "lp] Get started with notebooks in AI Mode (Notebooks in AI Mode for organizing research, tryable now.)    rank 25 [Google Search Help] Try experiments in Labs (Labs lets anyone try new Search AI experiments, though it's broad.)    rank 25 [NotebookLM Help] Generate Video Overviews in Gemini Notebook"
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Exporting your ChatGPT history and data Learn how to request a copy of your ChatGPT data through the Privacy P",
+  "rendered": false,
+  "host": "help.openai.com",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: https://help.openai.com/en/articles/7260999-exporting-your-chatgpt-history-and-data returned HTTP 403"
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "news",
+  "kind": "guide_carousel",
+  "item": "Voice Dictation - FAQ Learn what happens when you use dictation (the microphone icon) in ChatGPT to record an ",
+  "rendered": false,
+  "host": "help.openai.com",
+  "outcome": "failed",
+  "categories": [
+   "source_refused"
+  ],
+  "detail": "CaptureError: https://help.openai.com/en/articles/12168547-voice-dictation-faq returned HTTP 403"
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "news",
+  "kind": "news",
+  "item": "Where scientists draw the line on AI agents",
+  "rendered": true,
+  "host": "allenai.org",
+  "outcome": "approved",
+  "categories": [],
+  "detail": ""
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Onset",
+  "rendered": true,
+  "host": "onsetapp.in",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text",
+   "facts"
+  ],
+  "detail": "Üçlü kanca tutmuyor: ekrandaki başlık \"Kapağı senin yerine taslaklıyor\" (kapak vaadi), ilk konuşulan cümle ise \"Kapak ve başlık işi çekim saatlerini yiyor\" (dert cümlesi). Aynı vaat değil. Seçilen kanca \"pain\" diye işaretli ama başlık sonuç vaadi. Sesin ilk cümlesi başlıkla aynı vaadi söylemeli, örn"
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "slay",
+  "rendered": true,
+  "host": "slaycamera.com",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kapak ve ilk sahnedeki kanıt İngilizce bir metin paneli (\"A guide for every kind of shot\"). Ürünün arayüzünü ya da çıktısını göstermiyor. Daha iyi kanıt: vizördeki kruvasan/kase fotoğrafı (proof_shows), bütün olarak.; 10.7 s ve 11.7 s karelerindeki \"Slay AI Composition Guide Camera\" logo/başlık kart"
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "reel",
+  "kind": "tool",
+  "item": "Depost AI",
+  "rendered": true,
+  "host": "depost.ai",
+  "outcome": "failed",
+  "categories": [
+   "no_proof",
+   "cut_text"
+  ],
+  "detail": "Kanıt görseli zayıf: sohbet alanı boş, altta alakasız bir manzara resmi var; kancanın vaat ettiği 'hangi paylaşım tutuyor' cevabı hiçbir yerde görünmüyor.; Sağdaki Claude paneli görselde kenardan kesik (yazılar 'Ran 2 comman', 'Behind-the-sce', 'Reply to Clau' diye yarım kalıyor); kesik metin kabul "
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "source_refused",
+   "off_concept"
+  ],
+  "detail": "Search Help] Make purchases and manage orders directly from AI Mode in Google Searc (Buying inside AI Mode in Google Search, but availability may be limited.)    rank 24 [Google Search Help] Stay updated on what matters to you with AI Mode (AI Mode follows topics you care about.) [article] reader an"
+ },
+ {
+  "date": "2026-11-28",
+  "stage": "reel",
+  "kind": "guide",
+  "item": "-",
+  "rendered": false,
+  "host": "",
+  "outcome": "failed",
+  "categories": [
+   "off_concept"
+  ],
+  "detail": "decks generated for school and work.)    rank 24 [Gemini Help] Control your smart home devices with the Gemini mobile app (Control smart home with Gemini, easy to demo.)    rank 23 [Gemini Help] Streamline your Google Photos workflows in Gemini Apps (Gemini working with Google Photos, relatable use."
  }
 ]

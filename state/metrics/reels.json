@@ -2300,5 +2300,44 @@
     "duration_sec": 27.3,
     "words": 40,
     "status": "rejected: Kanıt kutusundaki görsel üstten kesik: ilk satır 'Your own mobile' yarım görünüyor (kapakta, 0 s, 1 s ve 2.5 s karelerinde). Kesik görsel D-77 son çare Reel'inde bile kabul edilmez.; Kapak ve grid görseli de aynı kesik başlığı gösteriyor, yani profil kapağı yarım yazıyla çıkıyor.; Daha iyi görsel: sitenin ana başlığını ('Your own mobile app, from one message.') tam gösteren bir kare, ya da Sunrise Yoga sınıf listesi telefon ekranı (Morning Flow, Yin & Restore). Görsel baştan sona kesilmeden sığdırılmalı."
+  },
+  {
+    "id": "2026-11-28_onset",
+    "date": "2026-11-28",
+    "kind": "tool",
+    "tool": "Onset",
+    "hook_pattern": "pain",
+    "headline": "Kapağı senin yerine taslaklıyor",
+    "spoken_hook": "Kapak ve başlık işi çekim saatlerini yiyor.",
+    "cta": "Kaydet, liste açılınca lazım olur.",
+    "duration_sec": 22.1,
+    "words": 41,
+    "status": "rejected: Üçlü kanca tutmuyor: ekrandaki başlık \"Kapağı senin yerine taslaklıyor\" (kapak vaadi), ilk konuşulan cümle ise \"Kapak ve başlık işi çekim saatlerini yiyor\" (dert cümlesi). Aynı vaat değil. Seçilen kanca \"pain\" diye işaretli ama başlık sonuç vaadi. Sesin ilk cümlesi başlıkla aynı vaadi söylemeli, örneğin \"Yapay zekâ kapağı senin yerine taslaklıyor.\"; Kapak/1. kare kanıt görselinin üst satırı kutuda kesik: \"Thumbnails, titles...\" metni üstten yarım. Vaadi gösteren kısım (Today / With Onset, Ready to test) alt kenara yakın ve kutunun altında kesiliyor. Daha temiz bir kırpma gerekli.; Kart 01 \"En iyi videonun tarzında\" gösteriliyor, ama o sırada konuşulan cümle \"Adı Onset, YouTube için web uygulaması\" ile başlıyor. Kart ve ses bir adım kayık. İlk kartın konuşulan cümlesi kartın faydasıyla başlamalı, ürün adı ayrı verilmeli."
+  },
+  {
+    "id": "2026-11-28_slay",
+    "date": "2026-11-28",
+    "kind": "tool",
+    "tool": "slay",
+    "hook_pattern": "contrast",
+    "headline": "Kadrajı çekimden önce kuruyorsun",
+    "spoken_hook": "Fotoğrafı düzeltmek yerine kadrajı çekmeden önce kuruyorsun.",
+    "cta": "Kaydet, iPhone'unda dene.",
+    "duration_sec": 22.5,
+    "words": 40,
+    "status": "rejected: Kapak ve ilk sahnedeki kanıt İngilizce bir metin paneli (\"A guide for every kind of shot\"). Ürünün arayüzünü ya da çıktısını göstermiyor. Daha iyi kanıt: vizördeki kruvasan/kase fotoğrafı (proof_shows), bütün olarak.; 10.7 s ve 11.7 s karelerindeki \"Slay AI Composition Guide Camera\" logo/başlık kartı alttan kesik, altı bulanık. Kesik görsel kanıt sayılmaz. Aynı görsel iki sahnede tekrar ediyor.; Konuyu canlı takip etme ve kilitlenme (LOCKED) anlatılırken ekranda bunu gösteren görsel yok. Yalnızca site metni ve logo kartı var. Aynı görsel birden çok kez kullanılmış."
+  },
+  {
+    "id": "2026-11-28_depost-ai",
+    "date": "2026-11-28",
+    "kind": "tool",
+    "tool": "Depost AI",
+    "hook_pattern": "question",
+    "headline": "Hangi paylaşım tutuyor?",
+    "spoken_hook": "LinkedIn'de hangi paylaşımın işe yaradığını biliyor musun?",
+    "cta": "Yorumlara yaz: hangi konuda paylaşım yapıyorsun?",
+    "duration_sec": 23.9,
+    "words": 39,
+    "status": "rejected: Kanıt görseli zayıf: sohbet alanı boş, altta alakasız bir manzara resmi var; kancanın vaat ettiği 'hangi paylaşım tutuyor' cevabı hiçbir yerde görünmüyor.; Sağdaki Claude paneli görselde kenardan kesik (yazılar 'Ran 2 comman', 'Behind-the-sce', 'Reply to Clau' diye yarım kalıyor); kesik metin kabul edilemez.; Görsel küçük ve okunaksız: çerçevenin içinde ekran görüntüsü küçük kalıyor, telefonda okunmuyor."
   }
 ]

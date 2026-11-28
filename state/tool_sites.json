@@ -758,5 +758,35 @@
   "url": "https://transept.ai/",
   "description": "AI translation for writers. Translate your novel, essays or newsletter and keep your voice: Transept remembers your names, tone and style.",
   "date": "2026-11-27"
+ },
+ "chickytutor": {
+  "url": "https://www.chickytutor.com/",
+  "description": "AI language tutor for speaking practice in 70+ languages. Get instant feedback and real conversations with native-quality voices.",
+  "date": "2026-11-28"
+ },
+ "snibl": {
+  "url": "https://snibl.app/",
+  "description": "Save what you are looking at, with its source and context, and come back later.",
+  "date": "2026-11-28"
+ },
+ "onset": {
+  "url": "https://onsetapp.in/",
+  "description": "The AI crew for YouTube creators. Join the waitlist.",
+  "date": "2026-11-28"
+ },
+ "slay": {
+  "url": "https://www.slaycamera.com/",
+  "description": "Frame every shot like a pro. slay, the AI composition guide camera, tracks your subject and locks when the shot lines up.",
+  "date": "2026-11-28"
+ },
+ "woomool": {
+  "url": "https://woomool.ai/",
+  "description": "Clean, unobtrusive, and beautiful, it inspires you to focus and go deep into your thinking.",
+  "date": "2026-11-28"
+ },
+ "depostai": {
+  "url": "https://depost.ai/",
+  "description": "The LinkedIn AI agent that learns what works for your brand. It scores your posts against your own average, plans the month and writes in your voice.",
+  "date": "2026-11-28"
  }
 }

@@ -1,61 +1,5 @@
 [
   {
-    "tool": "ElevenLabs",
-    "hook": "Şarkı mı, video müziği mi?",
-    "pattern": "question",
-    "spoken_hook": "Şarkı mı yapacaksın, video müziği mi?",
-    "cta": "Kaydet, müzik gerektiğinde lazım olur."
-  },
-  {
-    "tool": "Google",
-    "hook": "Beş kısa film, tek stüdyo",
-    "pattern": "number",
-    "spoken_hook": "Beş kısa film aynı yapay zekâ stüdyosundan çıktı.",
-    "cta": "Yorumlara yaz: hangi filmi yapardın?"
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Boş mesaj kutusuna bakıyorsun",
-    "pattern": "pain",
-    "spoken_hook": "Yeni ajana ilk mesajı yazmak hep zor.",
-    "cta": "Kaydet, ajan açınca lazım olur."
-  },
-  {
-    "tool": "openset-llm",
-    "hook": "8 GB RAM'e 27B sığdı",
-    "pattern": "curiosity",
-    "spoken_hook": "Sekiz gigabayt RAM'e 27 milyarlık model nasıl sığdı?",
-    "cta": "Yorumlara yaz: hangi işte denerdin?"
-  },
-  {
-    "tool": "Airbot",
-    "hook": "Yapay zekâ önce sana yazıyor",
-    "pattern": "curiosity",
-    "spoken_hook": "Yapay zekâ önce sana mesaj atıyor.",
-    "cta": "Yoğun arkadaşına gönder."
-  },
-  {
-    "tool": "CodeRabbit Verify",
-    "hook": "PR'ını ajan test ediyor",
-    "pattern": "result",
-    "spoken_hook": "Pull request'ini artık ajan test ediyor.",
-    "cta": "Yazılımcı arkadaşına gönder."
-  },
-  {
-    "tool": "Google Workspace",
-    "hook": "Otomasyon için kod şart değil",
-    "pattern": "contrast",
-    "spoken_hook": "Otomasyon kurmak için kod bilmen gerekmiyor.",
-    "cta": "Yorumlara yaz: hangi işi otomatikleştirirdin?"
-  },
-  {
-    "tool": "Agweb",
-    "hook": "Ajan klavyeni çalıyor",
-    "pattern": "pain",
-    "spoken_hook": "Ajanın açtığı pencere yazarken klavyeni çalıyor.",
-    "cta": "Kaydet, ajanların çoğalınca lazım olur."
-  },
-  {
     "tool": "Transept AI",
     "hook": "Çeviriden önce kitabı okuyor",
     "pattern": "curiosity",
@@ -68,5 +12,61 @@
     "pattern": "result",
     "spoken_hook": "Stüdyon için mobil uygulama tek mesajla çıkıyor.",
     "cta": "Yorumlara yaz: hangi uygulamayı isterdin?"
+  },
+  {
+    "tool": "Onset",
+    "hook": "Kapak görseli tahmin mi?",
+    "pattern": "question",
+    "spoken_hook": "Kapak görselini hâlâ tahminle mi seçiyorsun?",
+    "cta": "YouTube'cu arkadaşına gönder."
+  },
+  {
+    "tool": "Onset",
+    "hook": "Her videonun ikinci bir işi var",
+    "pattern": "pain",
+    "spoken_hook": "Kapak ve başlık işi çekim saatlerini yiyor.",
+    "cta": "Kaydet, liste açılınca lazım olur."
+  },
+  {
+    "tool": "slay",
+    "hook": "Kadrajı gözle mi tutturuyorsun?",
+    "pattern": "question",
+    "spoken_hook": "Kadrajı hâlâ gözle mi tutturuyorsun?",
+    "cta": "Yorumlara yaz: ilk neyi çekerdin?"
+  },
+  {
+    "tool": "slay",
+    "hook": "Kadrajı çekimden önce kuruyorsun",
+    "pattern": "contrast",
+    "spoken_hook": "Fotoğrafı düzeltmek yerine kadrajı çekmeden önce kuruyorsun.",
+    "cta": "Kaydet, yemek çekerken lazım olur."
+  },
+  {
+    "tool": "Woomool",
+    "hook": "Fikirlerin notlarda kayboluyor",
+    "pattern": "pain",
+    "spoken_hook": "Fikirlerin düz notların arasında kayboluyor.",
+    "cta": "Yorumlara yaz: hangi işi burada yapardın?"
+  },
+  {
+    "tool": "Woomool",
+    "hook": "Not defteri değil, tuval",
+    "pattern": "contrast",
+    "spoken_hook": "Bu araçta fikirlerin sayfaya değil tuvale yayılıyor.",
+    "cta": "Ders çalışan arkadaşına gönder."
+  },
+  {
+    "tool": "Depost AI",
+    "hook": "Önce paylaşımlarını okuyor",
+    "pattern": "curiosity",
+    "spoken_hook": "Bu ajan yazmadan önce eski paylaşımlarını okuyor.",
+    "cta": "LinkedIn'de düzenli paylaşan girişimci arkadaşına gönder."
+  },
+  {
+    "tool": "Depost AI",
+    "hook": "Hangi paylaşım tutuyor?",
+    "pattern": "question",
+    "spoken_hook": "LinkedIn'de hangi paylaşımın işe yaradığını biliyor musun?",
+    "cta": "Yorumlara yaz: hangi konuda paylaşım yapıyorsun?"
   }
 ]

@@ -362,5 +362,19 @@
   "kind": "carousel",
   "title": "What is AI transcription: The complete guide",
   "brand": "elevenlabs"
+ },
+ {
+  "day": "2026-11-29",
+  "time": "12:30",
+  "kind": "carousel",
+  "title": "Where scientists draw the line on AI agents",
+  "brand": ""
+ },
+ {
+  "day": "2026-11-29",
+  "time": "20:30",
+  "kind": "reel",
+  "title": "Mika",
+  "brand": ""
  }
 ]
